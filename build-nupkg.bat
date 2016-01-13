@@ -15,4 +15,4 @@ rem WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 rem See the License for the specific language governing permissions and
 rem limitations under the License.
 
-.nuget\nuget pack CenterCLR.RelaxVersioner\CenterCLR.RelaxVersioner.csproj -Prop Platform=AnyCPU -Prop Configuration=Release
+.nuget\nuget pack CenterCLR.RelaxVersioner\CenterCLR.RelaxVersioner.nuspec -Prop Version=0.5.4 -Prop Configuration=Release

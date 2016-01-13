@@ -17,8 +17,7 @@
 -->
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
     <PropertyGroup>
-        <RelaxVersionerPath Condition="'$(RelaxVersionerPath)' == ''">$([System.IO.Path]::Combine('$(SolutionDir)','packages','RelaxVersionerPath.$(RelaxVersionerVersion)','lib','net40-Client'))</RelaxVersionerPath>
-        <RelaxVersionerOutputPath Condition="'$(RelaxVersionerOutputPath)' == ''">$([System.IO.Path]::Combine('$(ProjectDir)','$(IntermediateOutputPath)','RelaxVersioner$(DefaultLanguageSourceExtension)))'))</RelaxVersionerOutputPath>
+        <RelaxVersionerOutputPath Condition="'$(RelaxVersionerOutputPath)' == ''">$([System.IO.Path]::Combine('$(ProjectDir)','$(IntermediateOutputPath)','RelaxVersioner$(DefaultLanguageSourceExtension)'))</RelaxVersionerOutputPath>
 
         <!-- HACK: https://github.com/fsharp/fsharp/issues/289 -->
         <NoWarn Condition="'$(DefaultLanguageSourceExtension)' == '.fs'">$(NoWarn) 2003</NoWarn>
@@ -38,6 +37,6 @@
         <Exec
             Command="CenterCLR.RelaxVersioner.exe &quot;$(SolutionDir.Trim('\\'))&quot; &quot;$(RelaxVersionerOutputPath)&quot;"
             Outputs="$(RelaxVersionerOutputPath)"
-            WorkingDirectory="$(RelaxVersionerPath)" />
+            WorkingDirectory="$(MSBuildThisFileDirectory)" />
     </Target>
 </Project>
