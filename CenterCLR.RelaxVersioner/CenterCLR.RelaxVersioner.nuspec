@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+	CenterCLR.RelaxVersioner - Easy-usage, Git-based, auto-generate version informations toolset.
+	Copyright (c) 2016 Kouji Matsui (@kekyo2)
+
+	Licensed under the Apache License, Version 2.0 (the "License");
+	you may not use this file except in compliance with the License.
+	You may obtain a copy of the License at
+
+	http://www.apache.org/licenses/LICENSE-2.0
+
+	Unless required by applicable law or agreed to in writing, software
+	distributed under the License is distributed on an "AS IS" BASIS,
+	WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+	See the License for the specific language governing permissions and
+	limitations under the License.
+-->
+<package xmlns="http://schemas.microsoft.com/packaging/2010/07/nuspec.xsd">
+    <metadata>
+        <id>CenterCLR.RelaxVersioner</id>
+        <version>$version$</version>
+        <title>RelaxVersioner</title>
+        <authors>Kouji Matsui</authors>
+		<owners>Kouji Matsui</owners>
+        <description>Easy-usage, Git-based, auto-generate version informations toolset.</description>
+		<summary>Easy-usage, Git-based, auto-generate version informations toolset.</summary>
+		<licenseUrl>http://www.apache.org/licenses/LICENSE-2.0</licenseUrl>
+		<projectUrl>https://github.com/kekyo/CenterCLR.RelaxVersioner.git</projectUrl>
+		<copyright>Copyright (c) 2016 Kouji Matsui</copyright>
+		<requireLicenseAcceptance>false</requireLicenseAcceptance>
+        <tags>version generator git auto</tags>
+		<!-- Optional metadata
+			<frameworkAssemblies>
+				<frameworkAssembly assemblyName="System" targetFramework=".NETFramework4.0" />
+			</frameworkAssemblies>
+			<iconUrl></iconUrl>
+			<releaseNotes></releaseNotes>
+			<dependencies></dependencies>
+			<references></references>
+        -->
+    </metadata>
+    <files>
+        <file src="CenterCLR.RelaxVersioner.targets" target="lib/net40-Client" />
+        <file src="bin/$Configuration$/LibGit2Sharp.dll" target="lib/net40-Client" />
+        <file src="bin/$Configuration$/NativeBinaries/amd64/git2-e0902fb.dll" target="lib/net40-Client/NativeBinaries/amd64" />
+        <file src="bin/$Configuration$/NativeBinaries/x86/git2-e0902fb.dll" target="lib/net40-Client/NativeBinaries/x86" />
+    </files>
+</package>
