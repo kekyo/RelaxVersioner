@@ -32,6 +32,5 @@ using System.Runtime.InteropServices;
 [assembly: ComVisible(false)]
 [assembly: Guid("0b01c9d5-a685-4444-981b-e8b4d6bdbbf1")]
 
-//[assembly: AssemblyVersion("0.5.4.0")]
-//[assembly: AssemblyFileVersion("0.5.4.0")]
-[assembly: System.Reflection.AssemblyMetadataAttribute("Branch", "refs/heads/master")]
+[assembly: AssemblyVersion("0.5.5.0")]
+[assembly: AssemblyFileVersion("0.5.5.0")]

@@ -30,7 +30,11 @@ namespace CenterCLR.RelaxVersioner.Writers
     {
         public abstract string Extension { get; }
 
-        public void Write(string targetPath, Branch branch, Dictionary<string, IEnumerable<Tag>> tags)
+        public void Write(
+			string targetPath,
+			Branch branch,
+			Dictionary<string, IEnumerable<Tag>> tags,
+			bool requireMetadataAttribute)
         {
             Debug.Assert(string.IsNullOrWhiteSpace(targetPath) == false);
             Debug.Assert(branch != null);
@@ -48,7 +52,7 @@ namespace CenterCLR.RelaxVersioner.Writers
                 this.WriteComment(tw, "Generated date: {0:R}", DateTime.UtcNow);
                 tw.WriteLine();
 
-                this.WriteBeforeBody(tw, targetPath);
+                this.WriteBeforeBody(tw, requireMetadataAttribute);
 
                 this.WriteUsing(tw, "System.Reflection");
                 tw.WriteLine();
@@ -66,20 +70,20 @@ namespace CenterCLR.RelaxVersioner.Writers
 					Select(commit => tags.GetValue(commit.Sha)).
 					Where(tagList => tagList != null).
 					SelectMany(tagList => tagList).
-					Select(tag => Utilities.GetVersionFromGitLabel(tag.CanonicalName)).
+					Select(tag => Utilities.GetVersionFromGitLabel(tag.Name)).
 					FirstOrDefault(tagName => tagName != null) ??
-					Utilities.GetVersionFromGitLabel(branch.CanonicalName) ??
+					Utilities.GetVersionFromGitLabel(branch.Name) ??
 					fileVersion;
 
                 this.WriteAttributeWithArguments(tw, "AssemblyVersion", version);
                 this.WriteAttributeWithArguments(tw, "AssemblyFileVersion", fileVersion);
                 this.WriteAttributeWithArguments(tw, "AssemblyInformationalVersion", commitId);
-                this.WriteAttributeWithArguments(tw, "AssemblyMetadata", "Branch", branch.CanonicalName);
+                this.WriteAttributeWithArguments(tw, "AssemblyMetadata", "Branch", branch.Name);
                 this.WriteAttributeWithArguments(tw, "AssemblyMetadata", "Author", author);
                 this.WriteAttributeWithArguments(tw, "AssemblyMetadata", "Committer", committer);
                 this.WriteAttributeWithArguments(tw, "AssemblyMetadata", "Message", message);
 
-                this.WriteAfterBody(tw);
+                this.WriteAfterBody(tw, requireMetadataAttribute);
 
                 tw.Flush();
             }
@@ -90,7 +94,7 @@ namespace CenterCLR.RelaxVersioner.Writers
             tw.WriteLine("// " + format, args);
         }
 
-        protected virtual void WriteBeforeBody(TextWriter tw, string targetPath)
+        protected virtual void WriteBeforeBody(TextWriter tw, bool requireMetadataAttribute)
         {
         }
 
@@ -106,7 +110,7 @@ namespace CenterCLR.RelaxVersioner.Writers
 
         protected abstract void WriteUsing(TextWriter tw, string namespaceName);
 
-        protected virtual void WriteAfterBody(TextWriter tw)
+        protected virtual void WriteAfterBody(TextWriter tw, bool requireMetadataAttribute)
         {
         }
     }

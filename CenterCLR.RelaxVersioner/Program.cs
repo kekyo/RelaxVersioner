@@ -47,8 +47,10 @@ namespace CenterCLR.RelaxVersioner
             {
                 var solutionDirectory = args[0];
                 var targetPath = args[1];
+	            var targetFrameworkVersionIsNet40Client = bool.Parse(args[2]);
 
-                var writer = writers_[Path.GetExtension(targetPath)];
+
+				var writer = writers_[Path.GetExtension(targetPath)];
 
                 using (var repository = new Repository(solutionDirectory))
                 {
@@ -57,7 +59,11 @@ namespace CenterCLR.RelaxVersioner
 		                GroupBy(tag => tag.Target.Sha).
 		                ToDictionary(g => g.Key, g => g.ToList().AsEnumerable());
 
-                    writer.Write(targetPath, repository.Head, tags);
+                    writer.Write(
+						targetPath,
+						repository.Head,
+						tags,
+						targetFrameworkVersionIsNet40Client);
 
                     Console.WriteLine("RelaxVersioner: Generated versions code.");
                 }

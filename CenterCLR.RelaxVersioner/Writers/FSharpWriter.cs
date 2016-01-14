@@ -25,9 +25,28 @@ namespace CenterCLR.RelaxVersioner.Writers
     {
         public override string Extension => ".fs";
 
-        protected override void WriteBeforeBody(TextWriter tw, string targetPath)
+        protected override void WriteBeforeBody(TextWriter tw, bool requireMetadataAttribute)
         {
-            tw.WriteLine("module {0}", targetPath);
+			if (requireMetadataAttribute == true)
+			{
+				tw.WriteLine("namespace System.Reflection");
+				tw.WriteLine("{");
+				tw.WriteLine("	[AttributeUsage(AttributeTargets.All, AllowMultiple = true)]");
+				tw.WriteLine("	internal sealed class AssemblyMetadataAttribute : Attribute");
+				tw.WriteLine("	{");
+				tw.WriteLine("		public AssemblyMetadataAttribute(string key, string value)");
+				tw.WriteLine("		{");
+				tw.WriteLine("			this.Key = key;");
+				tw.WriteLine("			this.Value = value;");
+				tw.WriteLine("		}");
+				tw.WriteLine("		public string Key { get; private set; }");
+				tw.WriteLine("		public string Value { get; private set; }");
+				tw.WriteLine("	}");
+				tw.WriteLine("}");
+				tw.WriteLine();
+			}
+
+			tw.WriteLine("namespace global");
             tw.WriteLine();
         }
 
@@ -41,7 +60,7 @@ namespace CenterCLR.RelaxVersioner.Writers
             tw.WriteLine("[<assembly: {0}({1})>]", attributeName, args);
         }
 
-        protected override void WriteAfterBody(TextWriter tw)
+        protected override void WriteAfterBody(TextWriter tw, bool requireMetadataAttribute)
         {
             tw.WriteLine("do()");
         }

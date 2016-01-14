@@ -34,5 +34,31 @@ namespace CenterCLR.RelaxVersioner.Writers
         {
             tw.WriteLine("[assembly: {0}Attribute({1})];", attributeName, args);
         }
-    }
+
+		protected override void WriteAfterBody(TextWriter tw, bool requireMetadataAttribute)
+		{
+			if (requireMetadataAttribute == true)
+			{
+				tw.WriteLine("namespace System");
+				tw.WriteLine("{");
+				tw.WriteLine("	namespace Reflection");
+				tw.WriteLine("	{");
+				tw.WriteLine("		[AttributeUsage(AttributeTargets::All, AllowMultiple = true)]");
+				tw.WriteLine("		internal ref class AssemblyMetadataAttribute : public Attribute sealed");
+				tw.WriteLine("		{");
+				tw.WriteLine("		private:");
+				tw.WriteLine("			System::String^ key_;");
+				tw.WriteLine("			System::String^ value_;");
+				tw.WriteLine("		public:");
+				tw.WriteLine("			AssemblyMetadataAttribute(System::String^ key, System::String^ value)");
+				tw.WriteLine("				: key_(key), value_(value) { }");
+				tw.WriteLine("			property System::String^ Key { get() { return key_; } }");
+				tw.WriteLine("			property System::String^ Value { get() { return value_; }");
+				tw.WriteLine("		};");
+				tw.WriteLine("	}");
+				tw.WriteLine("}");
+				tw.WriteLine();
+			}
+		}
+	}
 }
