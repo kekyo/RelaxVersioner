@@ -47,8 +47,8 @@ namespace CenterCLR.RelaxVersioner
             {
                 var solutionDirectory = args[0];
                 var targetPath = args[1];
-	            var targetFrameworkVersionIsNet40Client = bool.Parse(args[2]);
-
+	            var targetFrameworkVersion = args[2];
+				var targetFrameworkProfile = args[3];
 
 				var writer = writers_[Path.GetExtension(targetPath)];
 
@@ -63,7 +63,7 @@ namespace CenterCLR.RelaxVersioner
 						targetPath,
 						repository.Head,
 						tags,
-						targetFrameworkVersionIsNet40Client);
+						(targetFrameworkVersion == "v4.0") && (targetFrameworkProfile == "Client"));
 
                     Console.WriteLine("RelaxVersioner: Generated versions code.");
                 }
