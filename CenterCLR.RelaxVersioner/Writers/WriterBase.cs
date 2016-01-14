@@ -54,7 +54,8 @@ namespace CenterCLR.RelaxVersioner.Writers
 
                 this.WriteBeforeBody(tw, requireMetadataAttribute);
 
-                this.WriteUsing(tw, "System.Reflection");
+				this.WriteUsing(tw, "System");
+				this.WriteUsing(tw, "System.Reflection");
                 tw.WriteLine();
 
                 var commitId = currentCommit.Sha;
@@ -75,15 +76,17 @@ namespace CenterCLR.RelaxVersioner.Writers
 					Utilities.GetVersionFromGitLabel(branch.Name) ??
 					fileVersion;
 
-                this.WriteAttributeWithArguments(tw, "AssemblyVersion", version);
-                this.WriteAttributeWithArguments(tw, "AssemblyFileVersion", fileVersion);
-                this.WriteAttributeWithArguments(tw, "AssemblyInformationalVersion", commitId);
-                this.WriteAttributeWithArguments(tw, "AssemblyMetadata", "Branch", branch.Name);
-                this.WriteAttributeWithArguments(tw, "AssemblyMetadata", "Author", author);
-                this.WriteAttributeWithArguments(tw, "AssemblyMetadata", "Committer", committer);
-                this.WriteAttributeWithArguments(tw, "AssemblyMetadata", "Message", message);
+                this.WriteAttributeWithArguments(tw, "AssemblyVersionAttribute", version);
+                this.WriteAttributeWithArguments(tw, "AssemblyFileVersionAttribute", fileVersion);
+                this.WriteAttributeWithArguments(tw, "AssemblyInformationalVersionAttribute", commitId);
 
-                this.WriteAfterBody(tw, requireMetadataAttribute);
+                this.WriteAttributeWithArguments(tw, "AssemblyMetadataAttribute", "Branch", branch.Name);
+                this.WriteAttributeWithArguments(tw, "AssemblyMetadataAttribute", "Author", author);
+                this.WriteAttributeWithArguments(tw, "AssemblyMetadataAttribute", "Committer", committer);
+                this.WriteAttributeWithArguments(tw, "AssemblyMetadataAttribute", "Message", message);
+				tw.WriteLine();
+
+				this.WriteAfterBody(tw, requireMetadataAttribute);
 
                 tw.Flush();
             }

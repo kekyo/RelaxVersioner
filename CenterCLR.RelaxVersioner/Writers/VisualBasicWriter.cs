@@ -44,20 +44,18 @@ namespace CenterCLR.RelaxVersioner.Writers
 		{
 			if (requireMetadataAttribute == true)
 			{
-				tw.WriteLine("namespace System.Reflection");
-				tw.WriteLine("{");
-				tw.WriteLine("	[AttributeUsage(AttributeTargets.All, AllowMultiple = true)]");
-				tw.WriteLine("	internal sealed class AssemblyMetadataAttribute : Attribute");
-				tw.WriteLine("	{");
-				tw.WriteLine("		public AssemblyMetadataAttribute(string key, string value)");
-				tw.WriteLine("		{");
-				tw.WriteLine("			this.Key = key;");
-				tw.WriteLine("			this.Value = value;");
-				tw.WriteLine("		}");
-				tw.WriteLine("		public string Key { get; private set; }");
-				tw.WriteLine("		public string Value { get; private set; }");
-				tw.WriteLine("	}");
-				tw.WriteLine("}");
+				tw.WriteLine("Namespace System.Reflection");
+				tw.WriteLine("	<AttributeUsage(AttributeTargets.Assembly, AllowMultiple := True)>");
+				tw.WriteLine("	Friend NotInheritable Class AssemblyMetadataAttribute");
+				tw.WriteLine("		Inherits Attribute");
+				tw.WriteLine("		Public Sub New(key As String, value As String)");
+				tw.WriteLine("			Me.Key = key");
+				tw.WriteLine("			Me.Value = value");
+				tw.WriteLine("		End Sub");
+				tw.WriteLine("		Public Property Key() As String");
+				tw.WriteLine("		Public Property Value() As String");
+				tw.WriteLine("	End Class");
+				tw.WriteLine("End Namespace");
 				tw.WriteLine();
 			}
 		}

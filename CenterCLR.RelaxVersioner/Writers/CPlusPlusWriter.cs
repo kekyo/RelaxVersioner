@@ -43,7 +43,7 @@ namespace CenterCLR.RelaxVersioner.Writers
 				tw.WriteLine("{");
 				tw.WriteLine("	namespace Reflection");
 				tw.WriteLine("	{");
-				tw.WriteLine("		[AttributeUsage(AttributeTargets::All, AllowMultiple = true)]");
+				tw.WriteLine("		[AttributeUsage(AttributeTargets::Assembly, AllowMultiple = true)]");
 				tw.WriteLine("		internal ref class AssemblyMetadataAttribute : public Attribute sealed");
 				tw.WriteLine("		{");
 				tw.WriteLine("		private:");
