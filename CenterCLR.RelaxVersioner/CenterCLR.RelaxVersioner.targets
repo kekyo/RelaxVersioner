@@ -26,7 +26,7 @@
     </PropertyGroup>
     
     <PropertyGroup Condition="'$(Language)' == 'C++'">
-        <RelaxVersionerLanguage Condition="('$(RelaxVersionerLanguage)' == '') AND ('$(CompileAsManaged)' == 'true')">C++/CLI</RelaxVersionerLanguage>
+        <RelaxVersionerLanguage Condition="('$(RelaxVersionerLanguage)' == '') AND ('$(CLRSupport)' == 'true')">C++/CLI</RelaxVersionerLanguage>
         <RelaxVersionerLanguage Condition="'$(RelaxVersionerLanguage)' == ''">C++</RelaxVersionerLanguage>
         <BuildCompileTargets>
             RelaxVersionerBuild;
@@ -52,10 +52,11 @@
             <ClCompile Include="$(RelaxVersionerOutputPath)" />
         </ItemGroup>
 
-        <ItemGroup>
+		<ItemGroup Condition="'$(Language)' != 'C++'">
             <!-- HACK: F#'s EntryPoint expression is ignoring namespace/module if source code last compilation.
                  So, RelaxVersioner code insert before any source codes. -->
-            <CompileBefore Condition="'$(Language)' != 'C++'" Include="$(RelaxVersionerOutputPath)" />
-        </ItemGroup>
+			<CompileBefore Condition="'$(Language)' == 'F#'" Include="$(RelaxVersionerOutputPath)" />
+			<Compile Condition="'$(Language)' != 'F#'" Include="$(RelaxVersionerOutputPath)" />
+		</ItemGroup>
     </Target>
 </Project>
