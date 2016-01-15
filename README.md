@@ -19,6 +19,7 @@
 ## TODO:
 * Known problem : Not valid Git tag search algorithm.
 * Custom attribute/format ruleset.
+* Support native C++ project.
 
 ## History
 * 0.5.30.0: Checked on 4 languages.
