@@ -16,47 +16,47 @@
 	limitations under the License.
 -->
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
-    <PropertyGroup>
-        <RelaxVersionerOutputPath Condition="'$(RelaxVersionerOutputPath)' == ''">$([System.IO.Path]::Combine('$(ProjectDir)','$(IntermediateOutputPath)','RelaxVersioner$(DefaultLanguageSourceExtension)'))</RelaxVersionerOutputPath>
-    </PropertyGroup>
+	<PropertyGroup>
+		<RelaxVersionerOutputPath Condition="'$(RelaxVersionerOutputPath)' == ''">$([System.IO.Path]::Combine('$(ProjectDir)','$(IntermediateOutputPath)','RelaxVersioner$(DefaultLanguageSourceExtension)'))</RelaxVersionerOutputPath>
+	</PropertyGroup>
 
-    <PropertyGroup Condition="'$(Language)' == 'F#'">
-        <!-- HACK: https://github.com/fsharp/fsharp/issues/289 -->
-        <NoWarn>$(NoWarn) 2003</NoWarn>
-    </PropertyGroup>
-    
-    <PropertyGroup Condition="'$(Language)' == 'C++'">
-        <RelaxVersionerLanguage Condition="('$(RelaxVersionerLanguage)' == '') AND ('$(CLRSupport)' == 'true')">C++/CLI</RelaxVersionerLanguage>
-        <RelaxVersionerLanguage Condition="'$(RelaxVersionerLanguage)' == ''">C++</RelaxVersionerLanguage>
-        <BuildCompileTargets>
-            RelaxVersionerBuild;
-            $(BuildCompileTargets);
-        </BuildCompileTargets>
-    </PropertyGroup>
+	<PropertyGroup Condition="'$(Language)' == 'F#'">
+		<!-- HACK: https://github.com/fsharp/fsharp/issues/289 -->
+		<NoWarn>$(NoWarn) 2003</NoWarn>
+	</PropertyGroup>
+	
+	<PropertyGroup Condition="'$(Language)' == 'C++'">
+		<RelaxVersionerLanguage Condition="('$(RelaxVersionerLanguage)' == '') AND ('$(CLRSupport)' == 'true')">C++/CLI</RelaxVersionerLanguage>
+		<RelaxVersionerLanguage Condition="'$(RelaxVersionerLanguage)' == ''">C++</RelaxVersionerLanguage>
+		<BuildCompileTargets>
+			RelaxVersionerBuild;
+			$(BuildCompileTargets);
+		</BuildCompileTargets>
+	</PropertyGroup>
 
-    <PropertyGroup Condition="'$(Language)' != 'C++'">
-        <RelaxVersionerLanguage Condition="'$(RelaxVersionerLanguage)' == ''">$(Language)</RelaxVersionerLanguage>
-        <CoreBuildDependsOn>
-            RelaxVersionerBuild;
-            $(CoreBuildDependsOn);
-        </CoreBuildDependsOn>
-    </PropertyGroup>
+	<PropertyGroup Condition="'$(Language)' != 'C++'">
+		<RelaxVersionerLanguage Condition="'$(RelaxVersionerLanguage)' == ''">$(Language)</RelaxVersionerLanguage>
+		<CoreBuildDependsOn>
+			RelaxVersionerBuild;
+			$(CoreBuildDependsOn);
+		</CoreBuildDependsOn>
+	</PropertyGroup>
 
-    <Target Name="RelaxVersionerBuild" BeforeTargets="BeforeCompile" Outputs="$(RelaxVersionerOutputPath)">
-        <Exec
-            Command="CenterCLR.RelaxVersioner.exe &quot;$(SolutionDir.TrimEnd('\\'))&quot; &quot;$(RelaxVersionerOutputPath)&quot; &quot;$(TargetFrameworkVersion)&quot; &quot;$(RelaxVersionerLanguage)&quot;"
-            Outputs="$(RelaxVersionerOutputPath)"
-            WorkingDirectory="$(MSBuildThisFileDirectory)" />
+	<Target Name="RelaxVersionerBuild" BeforeTargets="BeforeCompile" Outputs="$(RelaxVersionerOutputPath)">
+		<Exec
+			Command="CenterCLR.RelaxVersioner.exe &quot;$(SolutionDir.TrimEnd('\\'))&quot; &quot;$(RelaxVersionerOutputPath)&quot; &quot;$(TargetFrameworkVersion)&quot; &quot;$(RelaxVersionerLanguage)&quot;"
+			Outputs="$(RelaxVersionerOutputPath)"
+			WorkingDirectory="$(MSBuildThisFileDirectory)" />
 
-        <ItemGroup Condition="'$(Language)' == 'C++'">
-            <ClCompile Include="$(RelaxVersionerOutputPath)" />
-        </ItemGroup>
+		<ItemGroup Condition="'$(Language)' == 'C++'">
+			<ClCompile Include="$(RelaxVersionerOutputPath)" />
+		</ItemGroup>
 
 		<ItemGroup Condition="'$(Language)' != 'C++'">
-            <!-- HACK: F#'s EntryPoint expression is ignoring namespace/module if source code last compilation.
-                 So, RelaxVersioner code insert before any source codes. -->
+			<!-- HACK: F#'s EntryPoint expression is ignoring namespace/module if source code last compilation.
+				 So, RelaxVersioner code insert before any source codes. -->
 			<CompileBefore Condition="'$(Language)' == 'F#'" Include="$(RelaxVersionerOutputPath)" />
 			<Compile Condition="'$(Language)' != 'F#'" Include="$(RelaxVersionerOutputPath)" />
 		</ItemGroup>
-    </Target>
+	</Target>
 </Project>

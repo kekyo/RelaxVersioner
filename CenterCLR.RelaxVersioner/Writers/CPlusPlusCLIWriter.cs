@@ -21,47 +21,47 @@ using System.IO;
 
 namespace CenterCLR.RelaxVersioner.Writers
 {
-    internal sealed class CPlusPlusCLIWriter : WriterBase
-    {
-        public override string Language => "C++/CLI";
+	internal sealed class CPlusPlusCLIWriter : WriterBase
+	{
+		public override string Language => "C++/CLI";
 
-        protected override void WriteBeforeBody(TextWriter tw, bool requireMetadataAttribute)
-        {
-            tw.WriteLine("#include \"stdafx.h\"");
-            tw.WriteLine();
+		protected override void WriteBeforeBody(TextWriter tw, bool requireMetadataAttribute)
+		{
+			tw.WriteLine("#include \"stdafx.h\"");
+			tw.WriteLine();
 
-            if (requireMetadataAttribute == true)
-            {
-                tw.WriteLine("namespace System");
-                tw.WriteLine("{");
-                tw.WriteLine("	namespace Reflection");
-                tw.WriteLine("	{");
-                tw.WriteLine("		[AttributeUsage(AttributeTargets::Assembly, AllowMultiple = true, Inherited = false)]");
-                tw.WriteLine("		private ref class AssemblyMetadataAttribute sealed : public Attribute");
-                tw.WriteLine("		{");
-                tw.WriteLine("		private:");
-                tw.WriteLine("			System::String^ key_;");
-                tw.WriteLine("			System::String^ value_;");
-                tw.WriteLine("		public:");
-                tw.WriteLine("			AssemblyMetadataAttribute(System::String^ key, System::String^ value)");
-                tw.WriteLine("				: key_(key), value_(value) { }");
-                tw.WriteLine("			property System::String^ Key { System::String^ get() { return key_; } }");
-                tw.WriteLine("			property System::String^ Value { System::String^ get() { return value_; } }");
-                tw.WriteLine("		};");
-                tw.WriteLine("	}");
-                tw.WriteLine("}");
-                tw.WriteLine();
-            }
-        }
+			if (requireMetadataAttribute == true)
+			{
+				tw.WriteLine("namespace System");
+				tw.WriteLine("{");
+				tw.WriteLine("	namespace Reflection");
+				tw.WriteLine("	{");
+				tw.WriteLine("		[AttributeUsage(AttributeTargets::Assembly, AllowMultiple = true, Inherited = false)]");
+				tw.WriteLine("		private ref class AssemblyMetadataAttribute sealed : public Attribute");
+				tw.WriteLine("		{");
+				tw.WriteLine("		private:");
+				tw.WriteLine("			System::String^ key_;");
+				tw.WriteLine("			System::String^ value_;");
+				tw.WriteLine("		public:");
+				tw.WriteLine("			AssemblyMetadataAttribute(System::String^ key, System::String^ value)");
+				tw.WriteLine("				: key_(key), value_(value) { }");
+				tw.WriteLine("			property System::String^ Key { System::String^ get() { return key_; } }");
+				tw.WriteLine("			property System::String^ Value { System::String^ get() { return value_; } }");
+				tw.WriteLine("		};");
+				tw.WriteLine("	}");
+				tw.WriteLine("}");
+				tw.WriteLine();
+			}
+		}
 
-        protected override void WriteUsing(TextWriter tw, string namespaceName)
-        {
-            tw.WriteLine("using namespace {0};", namespaceName.Replace(".", "::"));
-        }
+		protected override void WriteUsing(TextWriter tw, string namespaceName)
+		{
+			tw.WriteLine("using namespace {0};", namespaceName.Replace(".", "::"));
+		}
 
-        protected override void WriteAttribute(TextWriter tw, string attributeName, string args)
-        {
-            tw.WriteLine("[assembly: {0}({1})];", attributeName, args);
-        }
+		protected override void WriteAttribute(TextWriter tw, string attributeName, string args)
+		{
+			tw.WriteLine("[assembly: {0}({1})];", attributeName, args);
+		}
 	}
 }

@@ -27,54 +27,54 @@ using CenterCLR.RelaxVersioner.Writers;
 
 namespace CenterCLR.RelaxVersioner
 {
-    public static class Program
-    {
-        private static readonly Dictionary<string, WriterBase> writers_;
+	public static class Program
+	{
+		private static readonly Dictionary<string, WriterBase> writers_;
 
-        static Program()
-        {
-            writers_ = typeof(Program).Assembly.
-                GetTypes().
-                Where(type => type.IsSealed && type.IsClass && typeof(WriterBase).IsAssignableFrom(type)).
-                Select(type => (WriterBase)Activator.CreateInstance(type)).
-                ToDictionary(writer => writer.Language, StringComparer.InvariantCultureIgnoreCase);
-        }
+		static Program()
+		{
+			writers_ = typeof(Program).Assembly.
+				GetTypes().
+				Where(type => type.IsSealed && type.IsClass && typeof(WriterBase).IsAssignableFrom(type)).
+				Select(type => (WriterBase)Activator.CreateInstance(type)).
+				ToDictionary(writer => writer.Language, StringComparer.InvariantCultureIgnoreCase);
+		}
 
-        public static int Main(string[] args)
-        {
-            try
-            {
-                var solutionDirectory = args[0];
-                var targetPath = args[1];
-	            var targetFrameworkVersion = args[2];
+		public static int Main(string[] args)
+		{
+			try
+			{
+				var solutionDirectory = args[0];
+				var targetPath = args[1];
+				var targetFrameworkVersion = args[2];
 				var language = args[3];
 
 				var writer = writers_[language];
 
-                using (var repository = new Repository(solutionDirectory))
-                {
-	                var tags = repository.Tags.
-		                Where(tag => tag.Target is Commit).
-		                GroupBy(tag => tag.Target.Sha).
-		                ToDictionary(g => g.Key, g => g.ToList().AsEnumerable());
+				using (var repository = new Repository(solutionDirectory))
+				{
+					var tags = repository.Tags.
+						Where(tag => tag.Target is Commit).
+						GroupBy(tag => tag.Target.Sha).
+						ToDictionary(g => g.Key, g => g.ToList().AsEnumerable());
 
-                    writer.Write(
+					writer.Write(
 						targetPath,
 						repository.Head,
 						tags,
 						targetFrameworkVersion == "v4.0",
-                        DateTime.UtcNow);
+						DateTime.UtcNow);
 
-                    Console.WriteLine("RelaxVersioner: Generated versions code: Language={0}", language);
-                }
-            }
-            catch (Exception ex)
-            {
-                Console.Error.WriteLine("RelaxVersioner: " + ex.Message);
-                return Marshal.GetHRForException(ex);
-            }
+					Console.WriteLine("RelaxVersioner: Generated versions code: Language={0}", language);
+				}
+			}
+			catch (Exception ex)
+			{
+				Console.Error.WriteLine("RelaxVersioner: " + ex.Message);
+				return Marshal.GetHRForException(ex);
+			}
 
-            return 0;
-        }
-    }
+			return 0;
+		}
+	}
 }

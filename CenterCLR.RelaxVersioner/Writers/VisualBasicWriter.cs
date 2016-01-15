@@ -21,24 +21,24 @@ using System.IO;
 
 namespace CenterCLR.RelaxVersioner.Writers
 {
-    internal sealed class VisualBasicWriter : WriterBase
-    {
-        public override string Language => "VB";
+	internal sealed class VisualBasicWriter : WriterBase
+	{
+		public override string Language => "VB";
 
-        protected override void WriteComment(TextWriter tw, string format, params object[] args)
-        {
-            tw.WriteLine("' " + format, args);
-        }
+		protected override void WriteComment(TextWriter tw, string format, params object[] args)
+		{
+			tw.WriteLine("' " + format, args);
+		}
 
-        protected override void WriteUsing(TextWriter tw, string namespaceName)
-        {
-            tw.WriteLine("Imports {0}", namespaceName);
-        }
+		protected override void WriteUsing(TextWriter tw, string namespaceName)
+		{
+			tw.WriteLine("Imports {0}", namespaceName);
+		}
 
-        protected override void WriteAttribute(TextWriter tw, string attributeName, string args)
-        {
-            tw.WriteLine("<Assembly: {0}({1})>", attributeName, args);
-        }
+		protected override void WriteAttribute(TextWriter tw, string attributeName, string args)
+		{
+			tw.WriteLine("<Assembly: {0}({1})>", attributeName, args);
+		}
 
 		protected override void WriteAfterBody(TextWriter tw, bool requireMetadataAttribute)
 		{
@@ -48,7 +48,7 @@ namespace CenterCLR.RelaxVersioner.Writers
 				tw.WriteLine("	<AttributeUsage(AttributeTargets.Assembly, AllowMultiple := True, Inherited := False)>");
 				tw.WriteLine("	Friend NotInheritable Class AssemblyMetadataAttribute");
 				tw.WriteLine("		Inherits Attribute");
-                tw.WriteLine("		Public Sub New(key As String, value As String)");
+				tw.WriteLine("		Public Sub New(key As String, value As String)");
 				tw.WriteLine("			Me.Key = key");
 				tw.WriteLine("			Me.Value = value");
 				tw.WriteLine("		End Sub");

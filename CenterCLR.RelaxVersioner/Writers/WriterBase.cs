@@ -26,48 +26,48 @@ using LibGit2Sharp;
 
 namespace CenterCLR.RelaxVersioner.Writers
 {
-    internal abstract class WriterBase
-    {
-        public abstract string Language { get; }
+	internal abstract class WriterBase
+	{
+		public abstract string Language { get; }
 
-        public virtual void Write(
+		public virtual void Write(
 			string targetPath,
 			Branch branch,
 			Dictionary<string, IEnumerable<Tag>> tags,
 			bool requireMetadataAttribute,
-            DateTime generatedDate)
-        {
-            Debug.Assert(string.IsNullOrWhiteSpace(targetPath) == false);
-            Debug.Assert(branch != null);
-            Debug.Assert(tags != null);
+			DateTime generatedDate)
+		{
+			Debug.Assert(string.IsNullOrWhiteSpace(targetPath) == false);
+			Debug.Assert(branch != null);
+			Debug.Assert(tags != null);
 
-            var currentCommit = branch.Commits.FirstOrDefault();
-            if (currentCommit == null)
-            {
-                throw new InvalidOperationException("No commits.");
-            }
+			var currentCommit = branch.Commits.FirstOrDefault();
+			if (currentCommit == null)
+			{
+				throw new InvalidOperationException("No commits.");
+			}
 
-            using (var tw = File.CreateText(targetPath))
-            {
-                this.WriteComment(tw, "This is auto-generated version information attributes by CenterCLR.RelaxVersioner.");
-                this.WriteComment(tw, "Do not edit.");
-                this.WriteComment(tw, "Generated date: {0:R}", generatedDate);
-                tw.WriteLine();
+			using (var tw = File.CreateText(targetPath))
+			{
+				this.WriteComment(tw, "This is auto-generated version information attributes by CenterCLR.RelaxVersioner.");
+				this.WriteComment(tw, "Do not edit.");
+				this.WriteComment(tw, "Generated date: {0:R}", generatedDate);
+				tw.WriteLine();
 
-                this.WriteBeforeBody(tw, requireMetadataAttribute);
+				this.WriteBeforeBody(tw, requireMetadataAttribute);
 
 				this.WriteUsing(tw, "System");
 				this.WriteUsing(tw, "System.Reflection");
-                tw.WriteLine();
+				tw.WriteLine();
 
-                var commitId = currentCommit.Sha;
-                var author = currentCommit.Author;
-                var committer = currentCommit.Committer;
-                var message = currentCommit.MessageShort;
+				var commitId = currentCommit.Sha;
+				var author = currentCommit.Author;
+				var committer = currentCommit.Committer;
+				var message = currentCommit.MessageShort;
 
-                var fileVersion = this.GetFileVersionFromDate(committer.When);
+				var fileVersion = this.GetFileVersionFromDate(committer.When);
 
-                var version = branch.Commits.
+				var version = branch.Commits.
 					Select(commit => tags.GetValue(commit.Sha)).
 					Where(tagList => tagList != null).
 					SelectMany(tagList => tagList).
@@ -76,52 +76,52 @@ namespace CenterCLR.RelaxVersioner.Writers
 					Utilities.GetVersionFromGitLabel(branch.Name) ??
 					fileVersion;
 
-                this.WriteAttributeWithArguments(tw, "AssemblyVersionAttribute", version);
-                this.WriteAttributeWithArguments(tw, "AssemblyFileVersionAttribute", fileVersion);
-                this.WriteAttributeWithArguments(tw, "AssemblyInformationalVersionAttribute", commitId);
+				this.WriteAttributeWithArguments(tw, "AssemblyVersionAttribute", version);
+				this.WriteAttributeWithArguments(tw, "AssemblyFileVersionAttribute", fileVersion);
+				this.WriteAttributeWithArguments(tw, "AssemblyInformationalVersionAttribute", commitId);
 
-                this.WriteAttributeWithArguments(tw, "AssemblyMetadataAttribute", "Build", $"{committer.When:R}");
-                this.WriteAttributeWithArguments(tw, "AssemblyMetadataAttribute", "Branch", branch.Name);
-                this.WriteAttributeWithArguments(tw, "AssemblyMetadataAttribute", "Author", author);
-                this.WriteAttributeWithArguments(tw, "AssemblyMetadataAttribute", "Committer", committer);
-                this.WriteAttributeWithArguments(tw, "AssemblyMetadataAttribute", "Message", message);
+				this.WriteAttributeWithArguments(tw, "AssemblyMetadataAttribute", "Build", $"{committer.When:R}");
+				this.WriteAttributeWithArguments(tw, "AssemblyMetadataAttribute", "Branch", branch.Name);
+				this.WriteAttributeWithArguments(tw, "AssemblyMetadataAttribute", "Author", author);
+				this.WriteAttributeWithArguments(tw, "AssemblyMetadataAttribute", "Committer", committer);
+				this.WriteAttributeWithArguments(tw, "AssemblyMetadataAttribute", "Message", message);
 				tw.WriteLine();
 
 				this.WriteAfterBody(tw, requireMetadataAttribute);
 
-                tw.Flush();
-            }
-        }
+				tw.Flush();
+			}
+		}
 
-        protected string GetFileVersionFromDate(DateTimeOffset date)
-        {
-            // Second range: 0..43200 (2sec prec.)
-            return $"{date.Year}.{date.Month}.{date.Day}.{(ushort)(date.TimeOfDay.TotalSeconds / 2)}";
-        }
+		protected string GetFileVersionFromDate(DateTimeOffset date)
+		{
+			// Second range: 0..43200 (2sec prec.)
+			return $"{date.Year}.{date.Month}.{date.Day}.{(ushort)(date.TimeOfDay.TotalSeconds / 2)}";
+		}
 
-        protected virtual void WriteComment(TextWriter tw, string format, params object[] args)
-        {
-            tw.WriteLine("// " + format, args);
-        }
+		protected virtual void WriteComment(TextWriter tw, string format, params object[] args)
+		{
+			tw.WriteLine("// " + format, args);
+		}
 
-        protected virtual void WriteBeforeBody(TextWriter tw, bool requireMetadataAttribute)
-        {
-        }
+		protected virtual void WriteBeforeBody(TextWriter tw, bool requireMetadataAttribute)
+		{
+		}
 
-        protected abstract void WriteAttribute(TextWriter tw, string attributeName, string args);
+		protected abstract void WriteAttribute(TextWriter tw, string attributeName, string args);
 
-        private void WriteAttributeWithArguments(TextWriter tw, string attributeName, params object[] args)
-        {
-            this.WriteAttribute(
-                tw,
-                attributeName,
-                string.Join(",", args.Select(arg => string.Format("\"{0}\"", arg))));
-        }
+		private void WriteAttributeWithArguments(TextWriter tw, string attributeName, params object[] args)
+		{
+			this.WriteAttribute(
+				tw,
+				attributeName,
+				string.Join(",", args.Select(arg => string.Format("\"{0}\"", arg))));
+		}
 
-        protected abstract void WriteUsing(TextWriter tw, string namespaceName);
+		protected abstract void WriteUsing(TextWriter tw, string namespaceName);
 
-        protected virtual void WriteAfterBody(TextWriter tw, bool requireMetadataAttribute)
-        {
-        }
-    }
+		protected virtual void WriteAfterBody(TextWriter tw, bool requireMetadataAttribute)
+		{
+		}
+	}
 }

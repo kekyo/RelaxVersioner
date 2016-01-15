@@ -16,20 +16,20 @@
 	limitations under the License.
 -->
 <package xmlns="http://schemas.microsoft.com/packaging/2010/07/nuspec.xsd">
-    <metadata>
-        <id>CenterCLR.RelaxVersioner</id>
-        <version>$Version$</version>
-        <title>RelaxVersioner</title>
-        <authors>Kouji Matsui</authors>
+	<metadata>
+		<id>CenterCLR.RelaxVersioner</id>
+		<version>$Version$</version>
+		<title>RelaxVersioner</title>
+		<authors>Kouji Matsui</authors>
 		<owners>Kouji Matsui</owners>
-        <description>Easy-usage, Git-based, auto-generate version informations toolset.</description>
+		<description>Easy-usage, Git-based, auto-generate version informations toolset.</description>
 		<summary>Easy-usage, Git-based, auto-generate version informations toolset.</summary>
 		<copyright>Copyright (c) 2016 Kouji Matsui</copyright>
 		<licenseUrl>http://www.apache.org/licenses/LICENSE-2.0</licenseUrl>
 		<projectUrl>https://github.com/kekyo/CenterCLR.RelaxVersioner</projectUrl>
 		<iconUrl>https://raw.githubusercontent.com/kekyo/CenterCLR.RelaxVersioner/master/Images/CenterCLR.RelaxVersioner.100.png</iconUrl>
 		<requireLicenseAcceptance>false</requireLicenseAcceptance>
-        <tags>version generator git auto easy</tags>
+		<tags>version generator git auto easy</tags>
 		<!-- Optional metadata
 			<frameworkAssemblies>
 				<frameworkAssembly assemblyName="System" targetFramework=".NETFramework4.0" />
@@ -37,13 +37,13 @@
 			<releaseNotes></releaseNotes>
 			<dependencies></dependencies>
 			<references></references>
-        -->
-    </metadata>
-    <files>
-        <file src="CenterCLR.RelaxVersioner.targets" target="build" />
+		-->
+	</metadata>
+	<files>
+		<file src="CenterCLR.RelaxVersioner.targets" target="build" />
 		<file src="bin/$Configuration$/CenterCLR.RelaxVersioner.exe" target="build" />
 		<file src="bin/$Configuration$/LibGit2Sharp.dll" target="build" />
-        <file src="bin/$Configuration$/NativeBinaries/amd64/git2-e0902fb.dll" target="build/NativeBinaries/amd64" />
-        <file src="bin/$Configuration$/NativeBinaries/x86/git2-e0902fb.dll" target="build/NativeBinaries/x86" />
-    </files>
+		<file src="bin/$Configuration$/NativeBinaries/amd64/git2-e0902fb.dll" target="build/NativeBinaries/amd64" />
+		<file src="bin/$Configuration$/NativeBinaries/x86/git2-e0902fb.dll" target="build/NativeBinaries/x86" />
+	</files>
 </package>

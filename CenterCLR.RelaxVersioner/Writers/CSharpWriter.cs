@@ -21,19 +21,19 @@ using System.IO;
 
 namespace CenterCLR.RelaxVersioner.Writers
 {
-    internal sealed class CSharpWriter : WriterBase
-    {
-        public override string Language => "C#";
+	internal sealed class CSharpWriter : WriterBase
+	{
+		public override string Language => "C#";
 
 		protected override void WriteUsing(TextWriter tw, string namespaceName)
-        {
-            tw.WriteLine("using {0};", namespaceName);
-        }
+		{
+			tw.WriteLine("using {0};", namespaceName);
+		}
 
-        protected override void WriteAttribute(TextWriter tw, string attributeName, string args)
-        {
-            tw.WriteLine("[assembly: {0}({1})]", attributeName, args);
-        }
+		protected override void WriteAttribute(TextWriter tw, string attributeName, string args)
+		{
+			tw.WriteLine("[assembly: {0}({1})]", attributeName, args);
+		}
 
 		protected override void WriteAfterBody(TextWriter tw, bool requireMetadataAttribute)
 		{
