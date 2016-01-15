@@ -23,7 +23,7 @@ namespace CenterCLR.RelaxVersioner.Writers
 {
     internal sealed class VisualBasicWriter : WriterBase
     {
-        public override string Extension => ".vb";
+        public override string Language => "VB";
 
         protected override void WriteComment(TextWriter tw, string format, params object[] args)
         {
@@ -44,16 +44,16 @@ namespace CenterCLR.RelaxVersioner.Writers
 		{
 			if (requireMetadataAttribute == true)
 			{
-				tw.WriteLine("Namespace System.Reflection");
-				tw.WriteLine("	<AttributeUsage(AttributeTargets.Assembly, AllowMultiple := True)>");
+				tw.WriteLine("Namespace global.System.Reflection");
+				tw.WriteLine("	<AttributeUsage(AttributeTargets.Assembly, AllowMultiple := True, Inherited := False)>");
 				tw.WriteLine("	Friend NotInheritable Class AssemblyMetadataAttribute");
 				tw.WriteLine("		Inherits Attribute");
-				tw.WriteLine("		Public Sub New(key As String, value As String)");
+                tw.WriteLine("		Public Sub New(key As String, value As String)");
 				tw.WriteLine("			Me.Key = key");
 				tw.WriteLine("			Me.Value = value");
 				tw.WriteLine("		End Sub");
-				tw.WriteLine("		Public Property Key() As String");
-				tw.WriteLine("		Public Property Value() As String");
+				tw.WriteLine("		Public ReadOnly Property Key As String");
+				tw.WriteLine("		Public ReadOnly Property Value As String");
 				tw.WriteLine("	End Class");
 				tw.WriteLine("End Namespace");
 				tw.WriteLine();

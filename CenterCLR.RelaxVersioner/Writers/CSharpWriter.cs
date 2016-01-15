@@ -23,7 +23,7 @@ namespace CenterCLR.RelaxVersioner.Writers
 {
     internal sealed class CSharpWriter : WriterBase
     {
-        public override string Extension => ".cs";
+        public override string Language => "C#";
 
 		protected override void WriteUsing(TextWriter tw, string namespaceName)
         {
@@ -41,7 +41,7 @@ namespace CenterCLR.RelaxVersioner.Writers
 			{
 				tw.WriteLine("namespace System.Reflection");
 				tw.WriteLine("{");
-				tw.WriteLine("	[AttributeUsage(AttributeTargets.Assembly, AllowMultiple = true)]");
+				tw.WriteLine("	[AttributeUsage(AttributeTargets.Assembly, AllowMultiple = true, Inherited = false)]");
 				tw.WriteLine("	internal sealed class AssemblyMetadataAttribute : Attribute");
 				tw.WriteLine("	{");
 				tw.WriteLine("		public AssemblyMetadataAttribute(string key, string value)");

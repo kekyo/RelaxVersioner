@@ -1,8 +1,8 @@
 # RelaxVersioner
-* Easy-usage, Git-based, auto-generate version informations toolset.
+![RelaxVersioner](https://raw.githubusercontent.com/kekyo/CenterCLR.RelaxVersioner/master/Images/CenterCLR.RelaxVersioner.128.png)
 
 ## What is this?
-* CenterCLR.RelaxVersioner is Git-based, auto-generate version informations in .NET source code. (Assembly attribute based)
+* RelaxVersioner is Easy-usage, Git-based, auto-generate version informations in .NET source code. (Assembly attribute based)
 * Target language/projects: C#, F#, VB.NET, C++/CLI
 * Auto collect version information from local Git repository tags/branch name.
 * Place source code location which isn't obstructive for Git. (ex: obj/Debug)

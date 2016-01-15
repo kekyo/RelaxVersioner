@@ -19,7 +19,6 @@
 
 using System;
 using System.Collections.Generic;
-using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices;
 using LibGit2Sharp;
@@ -37,8 +36,8 @@ namespace CenterCLR.RelaxVersioner
             writers_ = typeof(Program).Assembly.
                 GetTypes().
                 Where(type => type.IsSealed && type.IsClass && typeof(WriterBase).IsAssignableFrom(type)).
-                Select(type => (WriterBase) Activator.CreateInstance(type)).
-                ToDictionary(writer => writer.Extension, StringComparer.InvariantCultureIgnoreCase);
+                Select(type => (WriterBase)Activator.CreateInstance(type)).
+                ToDictionary(writer => writer.Language, StringComparer.InvariantCultureIgnoreCase);
         }
 
         public static int Main(string[] args)
@@ -48,9 +47,9 @@ namespace CenterCLR.RelaxVersioner
                 var solutionDirectory = args[0];
                 var targetPath = args[1];
 	            var targetFrameworkVersion = args[2];
-				var targetFrameworkProfile = args[3];
+				var language = args[3];
 
-				var writer = writers_[Path.GetExtension(targetPath)];
+				var writer = writers_[language];
 
                 using (var repository = new Repository(solutionDirectory))
                 {
@@ -63,9 +62,10 @@ namespace CenterCLR.RelaxVersioner
 						targetPath,
 						repository.Head,
 						tags,
-						(targetFrameworkVersion == "v4.0") && (targetFrameworkProfile == "Client"));
+						targetFrameworkVersion == "v4.0",
+                        DateTime.UtcNow);
 
-                    Console.WriteLine("RelaxVersioner: Generated versions code.");
+                    Console.WriteLine("RelaxVersioner: Generated versions code: Language={0}", language);
                 }
             }
             catch (Exception ex)

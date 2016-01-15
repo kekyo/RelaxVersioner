@@ -23,28 +23,22 @@ namespace CenterCLR.RelaxVersioner.Writers
 {
     internal sealed class FSharpWriter : WriterBase
     {
-        public override string Extension => ".fs";
+        public override string Language => "F#";
 
         protected override void WriteBeforeBody(TextWriter tw, bool requireMetadataAttribute)
         {
-			if (requireMetadataAttribute == true)
-			{
-				tw.WriteLine("namespace System.Reflection");
-				tw.WriteLine("{");
-				tw.WriteLine("	[AttributeUsage(AttributeTargets.Assembly, AllowMultiple = true)]");
-				tw.WriteLine("	internal sealed class AssemblyMetadataAttribute : Attribute");
-				tw.WriteLine("	{");
-				tw.WriteLine("		public AssemblyMetadataAttribute(string key, string value)");
-				tw.WriteLine("		{");
-				tw.WriteLine("			this.Key = key;");
-				tw.WriteLine("			this.Value = value;");
-				tw.WriteLine("		}");
-				tw.WriteLine("		public string Key { get; private set; }");
-				tw.WriteLine("		public string Value { get; private set; }");
-				tw.WriteLine("	}");
-				tw.WriteLine("}");
-				tw.WriteLine();
-			}
+            if (requireMetadataAttribute == true)
+            {
+                tw.WriteLine("namespace System.Reflection");
+                tw.WriteLine("    open System");
+                tw.WriteLine("    [<Sealed>]");
+                tw.WriteLine("    [<AttributeUsage(AttributeTargets.Assembly, AllowMultiple = true, Inherited = false)>]");
+                tw.WriteLine("    type internal AssemblyMetadataAttribute(key: string, value: string) =");
+                tw.WriteLine("        inherit Attribute()");
+                tw.WriteLine("        member this.Key = key");
+                tw.WriteLine("        member this.Value = value");
+                tw.WriteLine();
+            }
 
 			tw.WriteLine("namespace global");
             tw.WriteLine();
@@ -52,17 +46,19 @@ namespace CenterCLR.RelaxVersioner.Writers
 
         protected override void WriteUsing(TextWriter tw, string namespaceName)
         {
-            tw.WriteLine("open {0}", namespaceName);
+            tw.WriteLine("    open {0}", namespaceName);
         }
 
         protected override void WriteAttribute(TextWriter tw, string attributeName, string args)
         {
-            tw.WriteLine("[<assembly: {0}({1})>]", attributeName, args);
+            tw.WriteLine("    [<assembly: {0}({1})>]", attributeName, args);
         }
 
         protected override void WriteAfterBody(TextWriter tw, bool requireMetadataAttribute)
         {
-            tw.WriteLine("do()");
+            tw.WriteLine("    do()");
+            tw.WriteLine();
+
         }
     }
 }

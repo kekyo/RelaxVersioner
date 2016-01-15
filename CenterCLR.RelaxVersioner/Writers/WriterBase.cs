@@ -28,16 +28,18 @@ namespace CenterCLR.RelaxVersioner.Writers
 {
     internal abstract class WriterBase
     {
-        public abstract string Extension { get; }
+        public abstract string Language { get; }
 
-        public void Write(
+        public virtual void Write(
 			string targetPath,
 			Branch branch,
 			Dictionary<string, IEnumerable<Tag>> tags,
-			bool requireMetadataAttribute)
+			bool requireMetadataAttribute,
+            DateTime generatedDate)
         {
             Debug.Assert(string.IsNullOrWhiteSpace(targetPath) == false);
             Debug.Assert(branch != null);
+            Debug.Assert(tags != null);
 
             var currentCommit = branch.Commits.FirstOrDefault();
             if (currentCommit == null)
@@ -49,7 +51,7 @@ namespace CenterCLR.RelaxVersioner.Writers
             {
                 this.WriteComment(tw, "This is auto-generated version information attributes by CenterCLR.RelaxVersioner.");
                 this.WriteComment(tw, "Do not edit.");
-                this.WriteComment(tw, "Generated date: {0:R}", DateTime.UtcNow);
+                this.WriteComment(tw, "Generated date: {0:R}", generatedDate);
                 tw.WriteLine();
 
                 this.WriteBeforeBody(tw, requireMetadataAttribute);
@@ -63,9 +65,7 @@ namespace CenterCLR.RelaxVersioner.Writers
                 var committer = currentCommit.Committer;
                 var message = currentCommit.MessageShort;
 
-                // Second range: 0..43200 (2sec prec.)
-                var date = committer.When;
-                var fileVersion = $"{date.Year}.{date.Month}.{date.Day}.{(ushort)(date.TimeOfDay.TotalSeconds / 2)}";
+                var fileVersion = this.GetFileVersionFromDate(committer.When);
 
                 var version = branch.Commits.
 					Select(commit => tags.GetValue(commit.Sha)).
@@ -80,6 +80,7 @@ namespace CenterCLR.RelaxVersioner.Writers
                 this.WriteAttributeWithArguments(tw, "AssemblyFileVersionAttribute", fileVersion);
                 this.WriteAttributeWithArguments(tw, "AssemblyInformationalVersionAttribute", commitId);
 
+                this.WriteAttributeWithArguments(tw, "AssemblyMetadataAttribute", "Build", $"{committer.When:R}");
                 this.WriteAttributeWithArguments(tw, "AssemblyMetadataAttribute", "Branch", branch.Name);
                 this.WriteAttributeWithArguments(tw, "AssemblyMetadataAttribute", "Author", author);
                 this.WriteAttributeWithArguments(tw, "AssemblyMetadataAttribute", "Committer", committer);
@@ -90,6 +91,12 @@ namespace CenterCLR.RelaxVersioner.Writers
 
                 tw.Flush();
             }
+        }
+
+        protected string GetFileVersionFromDate(DateTimeOffset date)
+        {
+            // Second range: 0..43200 (2sec prec.)
+            return $"{date.Year}.{date.Month}.{date.Day}.{(ushort)(date.TimeOfDay.TotalSeconds / 2)}";
         }
 
         protected virtual void WriteComment(TextWriter tw, string format, params object[] args)

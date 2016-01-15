@@ -35,6 +35,9 @@
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
+  <PropertyGroup>
+    <ApplicationIcon>..\Images\CenterCLR.RelaxVersioner.ico</ApplicationIcon>
+  </PropertyGroup>
   <ItemGroup>
     <Reference Include="LibGit2Sharp">
       <HintPath>..\packages\LibGit2Sharp.0.21.0.176\lib\net40\LibGit2Sharp.dll</HintPath>
@@ -50,7 +53,7 @@
   <ItemGroup>
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Writers\CPlusPlusWriter.cs" />
+    <Compile Include="Writers\CPlusPlusCLIWriter.cs" />
     <Compile Include="Writers\Utilities.cs" />
     <Compile Include="Writers\VisualBasicWriter.cs" />
     <Compile Include="Writers\FSharpWriter.cs" />
@@ -60,8 +63,15 @@
   <ItemGroup>
     <None Include="app.config" />
     <None Include="CenterCLR.RelaxVersioner.nuspec" />
-    <None Include="CenterCLR.RelaxVersioner.targets" />
+    <None Include="CenterCLR.RelaxVersioner.targets">
+      <SubType>Designer</SubType>
+    </None>
     <None Include="packages.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="..\Images\CenterCLR.RelaxVersioner.ico">
+      <Link>CenterCLR.RelaxVersioner.ico</Link>
+    </Content>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
