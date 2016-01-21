@@ -6,6 +6,7 @@
 * RelaxVersioner is Very easy-usage, Git-based, auto-generate version informations in .NET source code. (Assembly attribute based)
 * Target language/projects: C#, F#, VB.NET, and C++/CLI
 * Auto collect version information from local Git repository tags/branch name.
+* Independent AssemblyInfo.cs file, RelaxVersioner is output into temporary file. (No direct manipulate AssemblyInfo file).
 * Place source code location which isn't obstructive for Git. (ex: obj/Debug)
 * You can customize output attribute/values with custom rule set file.
 
