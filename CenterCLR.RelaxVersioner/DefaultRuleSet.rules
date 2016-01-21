@@ -1,0 +1,67 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<!--
+	CenterCLR.RelaxVersioner - Easy-usage, Git-based, auto-generate version informations toolset.
+	Copyright (c) 2016 Kouji Matsui (@kekyo2)
+
+	Licensed under the Apache License, Version 2.0 (the "License");
+	you may not use this file except in compliance with the License.
+	You may obtain a copy of the License at
+
+	http://www.apache.org/licenses/LICENSE-2.0
+
+	Unless required by applicable law or agreed to in writing, software
+	distributed under the License is distributed on an "AS IS" BASIS,
+	WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+	See the License for the specific language governing permissions and
+	limitations under the License.
+-->
+<!--
+	This is sample of RelaxVersioner overridable rule sets.
+	Sample contains default rule sets below.
+	You can place custom version rule set file naming "RelaxVersioner.rules" into $(SolutionDir) or $(ProjectDir).
+	RelaxVersioner use files fallback with priority first $(ProjectDir), second $(SolutionDir), and default rule sets.
+-->
+<RelaxVersioner version="1.0">
+	<Rules>
+		<!-- Target languages -->
+		<Language>C#</Language>
+		<Language>F#</Language>
+		<Language>VB</Language>
+		<Language>C++/CLI</Language>
+
+		<!--
+			"gitLabel" is extract numerical-notate version string [1.2.3.4] from git repository tags/branches traverse start HEAD.
+			If not found, fallback to "safeVersion".
+		-->
+		<Rule name="System.Reflection.AssemblyVersionAttribute">{gitLabel}</Rule>
+
+		<!--
+			"safeVersion" is extract committed date (with commmiter) from git repository HEAD.
+			"safeVersion" specialized from "committer.When".
+			(The format is safe-numerical-notate version string [2016.2.14.12345]. (Last number is 2sec prec.))
+		-->
+		<Rule name="System.Reflection.AssemblyFileVersionAttribute">{safeVersion}</Rule>
+
+		<!--
+			"commitId" is extract commit id from git repository HEAD.
+			"commitId" alias to "commit.Sha".
+		-->
+		<Rule name="System.Reflection.AssemblyInformationalVersionAttribute">{commitId}</Rule>
+
+		<!--
+			"key" is only used "AssemblyMetadataAttribute".
+			If you use "AssemblyMetadataAttribute" and platform version == "v4.0",
+			cannot use mscorlib implementation.
+			Will auto define pseudo "AssemblyMetadataAttribute" class.
+		-->
+		<!--
+			"committer.When" or you can use another choice "author.When".
+			"author" and "committer" can use property "Name", "Email", and "When".
+		-->
+		<Rule name="System.Reflection.AssemblyMetadataAttribute" key="Build">{committer.When:R}</Rule>
+		<Rule name="System.Reflection.AssemblyMetadataAttribute" key="Branch">{branch.Name}</Rule>
+		<Rule name="System.Reflection.AssemblyMetadataAttribute" key="Author">{author}</Rule>
+		<Rule name="System.Reflection.AssemblyMetadataAttribute" key="Committer">{committer}</Rule>
+		<Rule name="System.Reflection.AssemblyMetadataAttribute" key="Message">{commit.MessageShort}</Rule>
+	</Rules>
+</RelaxVersioner>

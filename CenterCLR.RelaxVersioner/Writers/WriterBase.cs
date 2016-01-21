@@ -35,68 +35,72 @@ namespace CenterCLR.RelaxVersioner.Writers
 			Branch branch,
 			Dictionary<string, IEnumerable<Tag>> tags,
 			bool requireMetadataAttribute,
-			DateTime generatedDate)
+			DateTime generated,
+			IEnumerable<Rule> ruleSet)
 		{
 			Debug.Assert(string.IsNullOrWhiteSpace(targetPath) == false);
 			Debug.Assert(branch != null);
 			Debug.Assert(tags != null);
+			Debug.Assert(ruleSet != null);
 
-			var currentCommit = branch.Commits.FirstOrDefault();
-			if (currentCommit == null)
+			var commit = branch.Commits.FirstOrDefault();
+			if (commit == null)
 			{
 				throw new InvalidOperationException("No commits.");
 			}
 
 			using (var tw = File.CreateText(targetPath))
 			{
-				this.WriteComment(tw, "This is auto-generated version information attributes by CenterCLR.RelaxVersioner.");
+				this.WriteComment(tw, "This is auto-generated version information attributes by CenterCLR.RelaxVersioner.{0}",
+					this.GetType().Assembly.GetName().Version);
 				this.WriteComment(tw, "Do not edit.");
-				this.WriteComment(tw, "Generated date: {0:R}", generatedDate);
+				this.WriteComment(tw, "Generated date: {0:R}", generated);
 				tw.WriteLine();
 
 				this.WriteBeforeBody(tw, requireMetadataAttribute);
 
-				this.WriteUsing(tw, "System");
-				this.WriteUsing(tw, "System.Reflection");
+				var namespaces = Utilities.AggregateNamespacesFromRuleSet(ruleSet);
+				foreach (var namespaceName in namespaces)
+				{
+					this.WriteImport(tw, namespaceName);
+				}
 				tw.WriteLine();
 
-				var commitId = currentCommit.Sha;
-				var author = currentCommit.Author;
-				var committer = currentCommit.Committer;
-				var message = currentCommit.MessageShort;
+				var commitId = commit.Sha;
+				var author = commit.Author;
+				var committer = commit.Committer;
 
-				var fileVersion = this.GetFileVersionFromDate(committer.When);
+				var safeVersion = Utilities.GetSafeVersionFromDate(committer.When);
+				var gitLabel = Utilities.GetLabelWithFallback(branch, tags) ?? safeVersion;
 
-				var version = branch.Commits.
-					Select(commit => tags.GetValue(commit.Sha)).
-					Where(tagList => tagList != null).
-					SelectMany(tagList => tagList).
-					Select(tag => Utilities.GetVersionFromGitLabel(tag.Name)).
-					FirstOrDefault(tagName => tagName != null) ??
-					Utilities.GetVersionFromGitLabel(branch.Name) ??
-					fileVersion;
+				var keyValues = new SortedList<string, object>(new StringLengthDescComparer());
+				keyValues.Add("generated", generated);
+				keyValues.Add("branch", branch);
+				keyValues.Add("commit", commit);
+				keyValues.Add("author", author);
+				keyValues.Add("committer", committer);
+				keyValues.Add("commitId", commitId);
+				keyValues.Add("gitLabel", gitLabel);
+				keyValues.Add("safeVersion", safeVersion);
 
-				this.WriteAttributeWithArguments(tw, "AssemblyVersionAttribute", version);
-				this.WriteAttributeWithArguments(tw, "AssemblyFileVersionAttribute", fileVersion);
-				this.WriteAttributeWithArguments(tw, "AssemblyInformationalVersionAttribute", commitId);
-
-				this.WriteAttributeWithArguments(tw, "AssemblyMetadataAttribute", "Build", $"{committer.When:R}");
-				this.WriteAttributeWithArguments(tw, "AssemblyMetadataAttribute", "Branch", branch.Name);
-				this.WriteAttributeWithArguments(tw, "AssemblyMetadataAttribute", "Author", author);
-				this.WriteAttributeWithArguments(tw, "AssemblyMetadataAttribute", "Committer", committer);
-				this.WriteAttributeWithArguments(tw, "AssemblyMetadataAttribute", "Message", message);
+				foreach (var rule in ruleSet)
+				{
+					var formattedValue = Utilities.FormatByRule(rule.Format, keyValues);
+					if (!string.IsNullOrWhiteSpace(rule.Key))
+					{
+						this.WriteAttributeWithArguments(tw, rule.Name, rule.Key, formattedValue);
+					}
+					else
+					{
+						this.WriteAttributeWithArguments(tw, rule.Name, formattedValue);
+					}
+				}
 				tw.WriteLine();
 
 				this.WriteAfterBody(tw, requireMetadataAttribute);
 
 				tw.Flush();
 			}
-		}
-
-		protected string GetFileVersionFromDate(DateTimeOffset date)
-		{
-			// Second range: 0..43200 (2sec prec.)
-			return $"{date.Year}.{date.Month}.{date.Day}.{(ushort)(date.TimeOfDay.TotalSeconds / 2)}";
 		}
 
 		protected virtual void WriteComment(TextWriter tw, string format, params object[] args)
@@ -108,20 +112,34 @@ namespace CenterCLR.RelaxVersioner.Writers
 		{
 		}
 
-		protected abstract void WriteAttribute(TextWriter tw, string attributeName, string args);
+		protected abstract void WriteAttribute(TextWriter tw, string name, string args);
 
-		private void WriteAttributeWithArguments(TextWriter tw, string attributeName, params object[] args)
+		private void WriteAttributeWithArguments(TextWriter tw, string name, params object[] args)
 		{
 			this.WriteAttribute(
 				tw,
-				attributeName,
+				name,
 				string.Join(",", args.Select(arg => string.Format("\"{0}\"", arg))));
 		}
 
-		protected abstract void WriteUsing(TextWriter tw, string namespaceName);
+		protected virtual void WriteImport(TextWriter tw, string namespaceName)
+		{
+		}
 
 		protected virtual void WriteAfterBody(TextWriter tw, bool requireMetadataAttribute)
 		{
+		}
+
+		private sealed class StringLengthDescComparer : IComparer<string>
+		{
+			public int Compare(string x, string y)
+			{
+				return
+					x.Length < y.Length
+						? 1
+						: (x.Length > y.Length) ? -1
+						: x.CompareTo(y);
+			}
 		}
 	}
 }

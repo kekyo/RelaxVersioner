@@ -44,14 +44,9 @@ namespace CenterCLR.RelaxVersioner.Writers
 			tw.WriteLine();
 		}
 
-		protected override void WriteUsing(TextWriter tw, string namespaceName)
+		protected override void WriteAttribute(TextWriter tw, string name, string args)
 		{
-			tw.WriteLine("    open {0}", namespaceName);
-		}
-
-		protected override void WriteAttribute(TextWriter tw, string attributeName, string args)
-		{
-			tw.WriteLine("    [<assembly: {0}({1})>]", attributeName, args);
+			tw.WriteLine("    [<assembly: {0}({1})>]", name, args);
 		}
 
 		protected override void WriteAfterBody(TextWriter tw, bool requireMetadataAttribute)

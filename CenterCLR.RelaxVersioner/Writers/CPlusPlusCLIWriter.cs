@@ -36,8 +36,8 @@ namespace CenterCLR.RelaxVersioner.Writers
 				tw.WriteLine("{");
 				tw.WriteLine("	namespace Reflection");
 				tw.WriteLine("	{");
-				tw.WriteLine("		[AttributeUsage(AttributeTargets::Assembly, AllowMultiple = true, Inherited = false)]");
-				tw.WriteLine("		private ref class AssemblyMetadataAttribute sealed : public Attribute");
+				tw.WriteLine("		[System::AttributeUsage(System::AttributeTargets::Assembly, AllowMultiple = true, Inherited = false)]");
+				tw.WriteLine("		private ref class AssemblyMetadataAttribute sealed : public System::Attribute");
 				tw.WriteLine("		{");
 				tw.WriteLine("		private:");
 				tw.WriteLine("			System::String^ key_;");
@@ -54,14 +54,9 @@ namespace CenterCLR.RelaxVersioner.Writers
 			}
 		}
 
-		protected override void WriteUsing(TextWriter tw, string namespaceName)
+		protected override void WriteAttribute(TextWriter tw, string name, string args)
 		{
-			tw.WriteLine("using namespace {0};", namespaceName.Replace(".", "::"));
-		}
-
-		protected override void WriteAttribute(TextWriter tw, string attributeName, string args)
-		{
-			tw.WriteLine("[assembly: {0}({1})];", attributeName, args);
+			tw.WriteLine("[assembly: {0}({1})];", name.Replace(".", "::"), args);
 		}
 	}
 }

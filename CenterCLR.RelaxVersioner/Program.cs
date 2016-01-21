@@ -45,11 +45,19 @@ namespace CenterCLR.RelaxVersioner
 			try
 			{
 				var solutionDirectory = args[0];
-				var targetPath = args[1];
-				var targetFrameworkVersion = args[2];
-				var language = args[3];
+				var projectDirectory = args[1];
+				var targetPath = args[2];
+				var targetFrameworkVersion = args[3];
+				var language = args[4];
 
 				var writer = writers_[language];
+
+				var ruleSets = Utilities.AggregateRuleSets(
+					Utilities.LoadRuleSet(projectDirectory),
+					Utilities.LoadRuleSet(solutionDirectory),
+					Utilities.GetDefaultRuleSet());
+
+				var ruleSet = ruleSets[language];
 
 				using (var repository = new Repository(solutionDirectory))
 				{
@@ -63,7 +71,8 @@ namespace CenterCLR.RelaxVersioner
 						repository.Head,
 						tags,
 						targetFrameworkVersion == "v4.0",
-						DateTime.UtcNow);
+						DateTime.UtcNow,
+						ruleSet);
 
 					Console.WriteLine("RelaxVersioner: Generated versions code: Language={0}", language);
 				}

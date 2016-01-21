@@ -30,14 +30,14 @@ namespace CenterCLR.RelaxVersioner.Writers
 			tw.WriteLine("' " + format, args);
 		}
 
-		protected override void WriteUsing(TextWriter tw, string namespaceName)
+		protected override void WriteImport(TextWriter tw, string namespaceName)
 		{
 			tw.WriteLine("Imports {0}", namespaceName);
 		}
 
-		protected override void WriteAttribute(TextWriter tw, string attributeName, string args)
+		protected override void WriteAttribute(TextWriter tw, string name, string args)
 		{
-			tw.WriteLine("<Assembly: {0}({1})>", attributeName, args);
+			tw.WriteLine("<Assembly: {0}({1})>", name, args);
 		}
 
 		protected override void WriteAfterBody(TextWriter tw, bool requireMetadataAttribute)

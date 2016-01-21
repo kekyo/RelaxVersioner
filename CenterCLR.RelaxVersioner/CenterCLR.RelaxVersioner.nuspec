@@ -29,12 +29,15 @@
 		<projectUrl>https://github.com/kekyo/CenterCLR.RelaxVersioner</projectUrl>
 		<iconUrl>https://raw.githubusercontent.com/kekyo/CenterCLR.RelaxVersioner/master/Images/CenterCLR.RelaxVersioner.100.png</iconUrl>
 		<requireLicenseAcceptance>false</requireLicenseAcceptance>
+		<releaseNotes>RelaxVersioner is Very easy-usage, Git-based, auto-generate version informations in .NET source code. (Assembly attribute based)
+* Target language/projects: C#, F#, VB.NET, and C++/CLI
+* Auto collect version information from local Git repository tags/branch name.
+* After installed, build project. Auto-apply version informations into assembly attributes. Some attributes are looking for directory Windows Explorer property page.</releaseNotes>
 		<tags>version generator git auto easy</tags>
 		<!-- Optional metadata
 			<frameworkAssemblies>
 				<frameworkAssembly assemblyName="System" targetFramework=".NETFramework4.0" />
 			</frameworkAssemblies>
-			<releaseNotes></releaseNotes>
 			<dependencies></dependencies>
 			<references></references>
 		-->

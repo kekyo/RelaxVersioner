@@ -44,7 +44,7 @@
 
 	<Target Name="RelaxVersionerBuild" BeforeTargets="BeforeCompile" Outputs="$(RelaxVersionerOutputPath)">
 		<Exec
-			Command="CenterCLR.RelaxVersioner.exe &quot;$(SolutionDir.TrimEnd('\\'))&quot; &quot;$(RelaxVersionerOutputPath)&quot; &quot;$(TargetFrameworkVersion)&quot; &quot;$(RelaxVersionerLanguage)&quot;"
+			Command="CenterCLR.RelaxVersioner.exe &quot;$(SolutionDir.TrimEnd('\\'))&quot; &quot;$(ProjectDir.TrimEnd('\\'))&quot; &quot;$(RelaxVersionerOutputPath)&quot; &quot;$(TargetFrameworkVersion)&quot; &quot;$(RelaxVersionerLanguage)&quot;"
 			Outputs="$(RelaxVersionerOutputPath)"
 			WorkingDirectory="$(MSBuildThisFileDirectory)" />
 

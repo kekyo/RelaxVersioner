@@ -18,6 +18,7 @@
 /////////////////////////////////////////////////////////////////////////////////////////////////
 
 using System.IO;
+using System.Xml.Linq;
 
 namespace CenterCLR.RelaxVersioner.Writers
 {
@@ -25,14 +26,9 @@ namespace CenterCLR.RelaxVersioner.Writers
 	{
 		public override string Language => "C#";
 
-		protected override void WriteUsing(TextWriter tw, string namespaceName)
+		protected override void WriteAttribute(TextWriter tw, string name, string args)
 		{
-			tw.WriteLine("using {0};", namespaceName);
-		}
-
-		protected override void WriteAttribute(TextWriter tw, string attributeName, string args)
-		{
-			tw.WriteLine("[assembly: {0}({1})]", attributeName, args);
+			tw.WriteLine("[assembly: {0}({1})]", name, args);
 		}
 
 		protected override void WriteAfterBody(TextWriter tw, bool requireMetadataAttribute)

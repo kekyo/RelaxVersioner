@@ -17,20 +17,19 @@
 //
 /////////////////////////////////////////////////////////////////////////////////////////////////
 
-using System.Reflection;
-using System.Runtime.InteropServices;
+namespace CenterCLR.RelaxVersioner
+{
+	internal sealed class Rule
+	{
+		public readonly string Name;
+		public readonly string Key;
+		public readonly string Format;
 
-[assembly: AssemblyTitle("CenterCLR.RelaxVersioner")]
-[assembly: AssemblyDescription(".NET source code level versioning toolset")]
-[assembly: AssemblyConfiguration("")]
-[assembly: AssemblyCompany("")]
-[assembly: AssemblyProduct("CenterCLR.RelaxVersioner")]
-[assembly: AssemblyCopyright("Copyright (c) 2016 Kouji Matsui")]
-[assembly: AssemblyTrademark("RelaxVersioner")]
-[assembly: AssemblyCulture("")]
-
-[assembly: ComVisible(false)]
-[assembly: Guid("0b01c9d5-a685-4444-981b-e8b4d6bdbbf1")]
-
-[assembly: AssemblyVersion("0.7.1.0")]
-[assembly: AssemblyFileVersion("0.7.1.0")]
+		public Rule(string name, string key, string format)
+		{
+			this.Name = name;
+			this.Key = key;
+			this.Format = format;
+		}
+	}
+}
