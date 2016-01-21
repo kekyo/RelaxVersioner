@@ -7,6 +7,7 @@
 * Target language/projects: C#, F#, VB.NET, and C++/CLI
 * Auto collect version information from local Git repository tags/branch name.
 * Place source code location which isn't obstructive for Git. (ex: obj/Debug)
+* You can customize output attribute/values with custom rule set file.
 
 ## Sample output codes
 
@@ -66,7 +67,7 @@ Imports System.Reflection
 * Search NuGet repository: "CenterCLR.RelaxVersioner", and install. https://www.nuget.org/packages/CenterCLR.RelaxVersioner/
 * Before build, comment out "AssemblyVersion" and "AssemblyFileVersion" attribute in AssemblyInfo.cs default definitions (will cause build error by duplicate definition). If you use custom rule set, continue use this definitions.
 * After installed, build project. Auto-apply version informations into assembly attributes. Some attributes are looking for directory Windows Explorer property page.
-* You can use custom rule set file into project folder "$(ProjectDir)" or solution folder "$(SolutionDir)". Current no documentation custom rule set file, see also below.
+* You can use custom rule set file naming "RelaxVersioner.rules" into project folder "$(ProjectDir)" or solution folder "$(SolutionDir)". Current no documentation custom rule set file, see also below.
 
 ## Sample custom rule set file:
 ``` xml
