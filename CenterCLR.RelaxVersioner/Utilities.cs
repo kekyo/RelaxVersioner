@@ -65,13 +65,18 @@ namespace CenterCLR.RelaxVersioner
 
 		public static TValue GetValue<TKey, TValue>(
 			this Dictionary<TKey, TValue> dictionary,
-			TKey key)
+			TKey key,
+			TValue defaultValue)
 		{
 			Debug.Assert(dictionary != null);
 			Debug.Assert(key != null);
 
 			TValue value;
-			dictionary.TryGetValue(key, out value);
+			if (dictionary.TryGetValue(key, out value) == false)
+			{
+				value = defaultValue;
+			}
+
 			return value;
 		}
 
@@ -145,18 +150,21 @@ namespace CenterCLR.RelaxVersioner
 
 		public static string GetLabelWithFallback(
 			Branch branch,
-			Dictionary<string, IEnumerable<Tag>> tags)
+			Dictionary<string, IEnumerable<Tag>> tags,
+			Dictionary<string, IEnumerable<Branch>> branches)
 		{
 			Debug.Assert(branch != null);
 			Debug.Assert(tags != null);
+			Debug.Assert(branches != null);
 
-			return branch.Commits.
-				Select(commit => tags.GetValue(commit.Sha)).
-				Where(tagList => tagList != null).
-				SelectMany(tagList => tagList).
-				Select(tag => GetVersionFromGitLabel(tag.Name)).
-				FirstOrDefault(tagName => tagName != null) ??
-				GetVersionFromGitLabel(branch.Name);
+			var versions =
+				from commit in branch.Commits.Skip(1)
+				from label in
+					tags.GetValue(commit.Sha, Enumerable.Empty<Tag>()).Select(t => GetVersionFromGitLabel(t.Name)).
+					Concat(branches.GetValue(commit.Sha, Enumerable.Empty<Branch>()).Select(b => GetVersionFromGitLabel(b.Name)))
+				select label;
+
+			return versions.FirstOrDefault(label => label != null) ?? GetVersionFromGitLabel(branch.Name);
 		}
 
 		public static string FormatByRule(string ruleFormat, IEnumerable<KeyValuePair<string, object>> keyValues)

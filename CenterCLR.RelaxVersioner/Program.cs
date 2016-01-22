@@ -64,12 +64,26 @@ namespace CenterCLR.RelaxVersioner
 					var tags = repository.Tags.
 						Where(tag => tag.Target is Commit).
 						GroupBy(tag => tag.Target.Sha).
-						ToDictionary(g => g.Key, g => g.ToList().AsEnumerable());
+						ToDictionary(
+							g => g.Key,
+							g => g.ToList().AsEnumerable(),
+							StringComparer.InvariantCultureIgnoreCase);
+
+					var branches =
+						(from branch in repository.Branches
+						 where !branch.IsRemote
+						 from commit in branch.Commits
+						 group branch by commit.Sha).
+						ToDictionary(
+							g => g.Key,
+							g => g.ToList().AsEnumerable(),
+							StringComparer.InvariantCultureIgnoreCase);
 
 					writer.Write(
 						targetPath,
 						repository.Head,
 						tags,
+						branches,
 						targetFrameworkVersion == "v4.0",
 						DateTime.UtcNow,
 						ruleSet);

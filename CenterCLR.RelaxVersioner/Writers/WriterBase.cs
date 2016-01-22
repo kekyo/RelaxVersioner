@@ -34,6 +34,7 @@ namespace CenterCLR.RelaxVersioner.Writers
 			string targetPath,
 			Branch branch,
 			Dictionary<string, IEnumerable<Tag>> tags,
+			Dictionary<string, IEnumerable<Branch>> branches,
 			bool requireMetadataAttribute,
 			DateTime generated,
 			IEnumerable<Rule> ruleSet)
@@ -41,6 +42,7 @@ namespace CenterCLR.RelaxVersioner.Writers
 			Debug.Assert(string.IsNullOrWhiteSpace(targetPath) == false);
 			Debug.Assert(branch != null);
 			Debug.Assert(tags != null);
+			Debug.Assert(branches != null);
 			Debug.Assert(ruleSet != null);
 
 			var commit = branch.Commits.FirstOrDefault();
@@ -71,7 +73,7 @@ namespace CenterCLR.RelaxVersioner.Writers
 				var committer = commit.Committer;
 
 				var safeVersion = Utilities.GetSafeVersionFromDate(committer.When);
-				var gitLabel = Utilities.GetLabelWithFallback(branch, tags) ?? safeVersion;
+				var gitLabel = Utilities.GetLabelWithFallback(branch, tags, branches) ?? safeVersion;
 
 				var keyValues = new SortedList<string, object>(new StringLengthDescComparer());
 				keyValues.Add("generated", generated);
