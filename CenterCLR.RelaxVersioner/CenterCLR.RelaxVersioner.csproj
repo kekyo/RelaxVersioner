@@ -56,6 +56,8 @@
     <Compile Include="Rule.cs" />
     <Compile Include="Writers\CPlusPlusCLIWriter.cs" />
     <Compile Include="Utilities.cs" />
+    <Compile Include="Writers\UnknownCommit.cs" />
+    <Compile Include="Writers\UnknownBranch.cs" />
     <Compile Include="Writers\VisualBasicWriter.cs" />
     <Compile Include="Writers\FSharpWriter.cs" />
     <Compile Include="Writers\WriterBase.cs" />

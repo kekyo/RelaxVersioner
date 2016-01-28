@@ -24,12 +24,47 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using System.Xml.Linq;
+using CenterCLR.RelaxVersioner.Writers;
 using LibGit2Sharp;
 
 namespace CenterCLR.RelaxVersioner
 {
 	internal static class Utilities
 	{
+		public static Dictionary<string, WriterBase> GetWriters()
+		{
+			return typeof(Program).Assembly.
+				GetTypes().
+				Where(type => type.IsSealed && type.IsClass && typeof(WriterBase).IsAssignableFrom(type)).
+				Select(type => (WriterBase)Activator.CreateInstance(type)).
+				ToDictionary(writer => writer.Language, StringComparer.InvariantCultureIgnoreCase);
+		}
+
+		public static Repository OpenRepository(string candidatePath)
+		{
+			var currentPath = Path.GetFullPath(candidatePath).
+				Trim(Path.DirectorySeparatorChar, Path.AltDirectorySeparatorChar);
+
+			while (true)
+			{
+				try
+				{
+					return new Repository(currentPath + Path.DirectorySeparatorChar);
+				}
+				catch (RepositoryNotFoundException)
+				{
+					var index = currentPath.LastIndexOfAny(
+						new [] { Path.DirectorySeparatorChar, Path.AltDirectorySeparatorChar });
+					if (index == -1)
+					{
+						return null;
+					}
+
+					currentPath = currentPath.Substring(0, index);
+				}				
+			}
+		}
+
 		private static int GetVersionNumber(string stringValue)
 		{
 			Debug.Assert(stringValue != null);
@@ -153,9 +188,13 @@ namespace CenterCLR.RelaxVersioner
 			Dictionary<string, IEnumerable<Tag>> tags,
 			Dictionary<string, IEnumerable<Branch>> branches)
 		{
-			Debug.Assert(branch != null);
 			Debug.Assert(tags != null);
 			Debug.Assert(branches != null);
+
+			if (branch == null)
+			{
+				return null;
+			}
 
 			var versions =
 				from commit in branch.Commits.Skip(1)

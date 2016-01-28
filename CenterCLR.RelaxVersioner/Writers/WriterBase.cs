@@ -36,20 +36,16 @@ namespace CenterCLR.RelaxVersioner.Writers
 			Dictionary<string, IEnumerable<Tag>> tags,
 			Dictionary<string, IEnumerable<Branch>> branches,
 			bool requireMetadataAttribute,
-			DateTime generated,
-			IEnumerable<Rule> ruleSet)
+			DateTimeOffset generated,
+			ICollection<Rule> ruleSet)
 		{
 			Debug.Assert(string.IsNullOrWhiteSpace(targetPath) == false);
-			Debug.Assert(branch != null);
 			Debug.Assert(tags != null);
 			Debug.Assert(branches != null);
 			Debug.Assert(ruleSet != null);
 
-			var commit = branch.Commits.FirstOrDefault();
-			if (commit == null)
-			{
-				throw new InvalidOperationException("No commits.");
-			}
+			var altBranch = branch ?? new UnknownBranch(generated);
+			var commit = altBranch.Commits.FirstOrDefault();
 
 			using (var tw = File.CreateText(targetPath))
 			{
@@ -73,17 +69,19 @@ namespace CenterCLR.RelaxVersioner.Writers
 				var committer = commit.Committer;
 
 				var safeVersion = Utilities.GetSafeVersionFromDate(committer.When);
-				var gitLabel = Utilities.GetLabelWithFallback(branch, tags, branches) ?? safeVersion;
+				var gitLabel = Utilities.GetLabelWithFallback(altBranch, tags, branches) ?? safeVersion;
 
-				var keyValues = new SortedList<string, object>(new StringLengthDescComparer());
-				keyValues.Add("generated", generated);
-				keyValues.Add("branch", branch);
-				keyValues.Add("commit", commit);
-				keyValues.Add("author", author);
-				keyValues.Add("committer", committer);
-				keyValues.Add("commitId", commitId);
-				keyValues.Add("gitLabel", gitLabel);
-				keyValues.Add("safeVersion", safeVersion);
+				var keyValues = new SortedList<string, object>(new StringLengthDescComparer())
+				{
+					{"generated", generated},
+					{"branch", altBranch},
+					{"commit", commit},
+					{"author", author},
+					{"committer", committer},
+					{"commitId", commitId},
+					{"gitLabel", gitLabel},
+					{"safeVersion", safeVersion}
+				};
 
 				foreach (var rule in ruleSet)
 				{

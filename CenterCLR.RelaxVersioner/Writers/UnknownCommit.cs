@@ -17,20 +17,46 @@
 //
 /////////////////////////////////////////////////////////////////////////////////////////////////
 
-using System.Reflection;
-using System.Runtime.InteropServices;
+using System;
+using System.Diagnostics;
+using LibGit2Sharp;
 
-[assembly: AssemblyTitle("CenterCLR.RelaxVersioner")]
-[assembly: AssemblyDescription(".NET source code level versioning toolset")]
-[assembly: AssemblyConfiguration("")]
-[assembly: AssemblyCompany("")]
-[assembly: AssemblyProduct("CenterCLR.RelaxVersioner")]
-[assembly: AssemblyCopyright("Copyright (c) 2016 Kouji Matsui")]
-[assembly: AssemblyTrademark("RelaxVersioner")]
-[assembly: AssemblyCulture("")]
+namespace CenterCLR.RelaxVersioner.Writers
+{
+	internal sealed class UnknownCommit : Commit
+	{
+		private readonly Signature author_;
+		private readonly Signature committer_;
 
-[assembly: ComVisible(false)]
-[assembly: Guid("0b01c9d5-a685-4444-981b-e8b4d6bdbbf1")]
+		public UnknownCommit(DateTimeOffset when)
+		{
+			author_ = new Signature("(Unknown author)", "unknown@example.com", when);
+			committer_ = new Signature("(Unknown committer)", "unknown@example.com", when);
+		}
 
-[assembly: AssemblyVersion("0.7.5.0")]
-[assembly: AssemblyFileVersion("0.7.5.0")]
+		public override string Sha
+		{
+			get { return "(Unknown commit id)"; }
+		}
+
+		public override string Message
+		{
+			get { return "(Unknown commit message)"; }
+		}
+
+		public override string MessageShort
+		{
+			get { return "(Unknown commit message)"; }
+		}
+
+		public override Signature Author
+		{
+			get { return author_; }
+		}
+
+		public override Signature Committer
+		{
+			get { return committer_; }
+		}
+	}
+}
