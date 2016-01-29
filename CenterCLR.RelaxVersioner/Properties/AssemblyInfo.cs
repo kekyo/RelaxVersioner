@@ -22,15 +22,19 @@ using System.Runtime.InteropServices;
 
 [assembly: AssemblyTitle("CenterCLR.RelaxVersioner")]
 [assembly: AssemblyDescription(".NET source code level versioning toolset")]
-[assembly: AssemblyConfiguration("")]
-[assembly: AssemblyCompany("")]
+[assembly: AssemblyCompany("Kouji Matsui")]
 [assembly: AssemblyProduct("CenterCLR.RelaxVersioner")]
 [assembly: AssemblyCopyright("Copyright (c) 2016 Kouji Matsui")]
 [assembly: AssemblyTrademark("RelaxVersioner")]
-[assembly: AssemblyCulture("")]
+
+#if DEBUG
+[assembly: AssemblyConfiguration("DEBUG")]
+#else
+[assembly: AssemblyConfiguration("RELEASE")]
+#endif
 
 [assembly: ComVisible(false)]
 [assembly: Guid("0b01c9d5-a685-4444-981b-e8b4d6bdbbf1")]
 
-[assembly: AssemblyVersion("0.7.5.0")]
-[assembly: AssemblyFileVersion("0.7.5.0")]
+[assembly: AssemblyVersion("0.7.6.0")]
+[assembly: AssemblyFileVersion("0.7.6.0")]

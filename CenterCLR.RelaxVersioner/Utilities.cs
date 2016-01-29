@@ -65,6 +65,17 @@ namespace CenterCLR.RelaxVersioner
 			}
 		}
 
+		public static double GetFrameworkVersionNumber(string stringValue)
+		{
+			var split = stringValue.TrimStart('v').
+				Split(new [] { '.' }, StringSplitOptions.RemoveEmptyEntries);
+			double value;
+			double.TryParse(
+				$"{(split.ElementAtOrDefault(0) ?? "0")}.{(split.ElementAtOrDefault(1) ?? "0")}",
+				out value);
+			return value;
+		}
+
 		private static int GetVersionNumber(string stringValue)
 		{
 			Debug.Assert(stringValue != null);
