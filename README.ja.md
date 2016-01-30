@@ -27,15 +27,15 @@
 ### For F#:
 ``` fsharp
 namespace global
-    [<assembly: System.Reflection.AssemblyVersionAttribute("0.5.30")>]
-    [<assembly: System.Reflection.AssemblyFileVersionAttribute("2016.1.15.41306")>]
-    [<assembly: System.Reflection.AssemblyInformationalVersionAttribute("a05ab9fc87b22234596f4ddd43136e9e526ebb90")>]
-    [<assembly: System.Reflection.AssemblyMetadataAttribute("Build","Fri, 15 Jan 2016 13:56:53 GMT")>]
-    [<assembly: System.Reflection.AssemblyMetadataAttribute("Branch","master")>]
-    [<assembly: System.Reflection.AssemblyMetadataAttribute("Author","Kouji Matsui <k@kekyo.net>")>]
-    [<assembly: System.Reflection.AssemblyMetadataAttribute("Committer","Kouji Matsui <k@kekyo.net>")>]
-    [<assembly: System.Reflection.AssemblyMetadataAttribute("Message","Fixed tab")>]
-    do()
+	[<assembly: System.Reflection.AssemblyVersionAttribute("0.5.30")>]
+	[<assembly: System.Reflection.AssemblyFileVersionAttribute("2016.1.15.41306")>]
+	[<assembly: System.Reflection.AssemblyInformationalVersionAttribute("a05ab9fc87b22234596f4ddd43136e9e526ebb90")>]
+	[<assembly: System.Reflection.AssemblyMetadataAttribute("Build","Fri, 15 Jan 2016 13:56:53 GMT")>]
+	[<assembly: System.Reflection.AssemblyMetadataAttribute("Branch","master")>]
+	[<assembly: System.Reflection.AssemblyMetadataAttribute("Author","Kouji Matsui <k@kekyo.net>")>]
+	[<assembly: System.Reflection.AssemblyMetadataAttribute("Committer","Kouji Matsui <k@kekyo.net>")>]
+	[<assembly: System.Reflection.AssemblyMetadataAttribute("Message","Fixed tab")>]
+	do()
 ```
 
 ### For VB.NET:
@@ -125,6 +125,13 @@ Imports System.Reflection
 * Under Apache v2
 
 ## 履歴
+* 0.7.7:
+  * 最新のタグの検索漏れを修正
+* 0.7.6:
+  * 古い .NET Framework (2.0-3.5) に対応
+* 0.7.5:
+  * プロジェクトフォルダからルートフォルダに向かってgitリポジトリを検索するように変更
+  * gitリポジトリが見つからないか、コミットが存在しないような場合でも、ダミーの属性を生成するようにしてエラーを回避した
 * 0.7.1: カスタムルールセットファイルに対応
 * 0.5.30: 4言語で動作確認
 * 0.5.0: Initial public commit. (Broken, still under construction)

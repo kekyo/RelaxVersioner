@@ -125,6 +125,8 @@ Imports System.Reflection
 * Under Apache v2
 
 ## History
+* 0.7.7:
+  * Fixed lack of newest tag.
 * 0.7.6:
   * Support lower .NET Framework (2.0-3.5)
 * 0.7.5:

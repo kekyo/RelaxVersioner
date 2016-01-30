@@ -207,13 +207,22 @@ namespace CenterCLR.RelaxVersioner
 				return null;
 			}
 
+			// First commit: Tags only
+			// Second...   : Tags and Branches
+			//   If success label parse (GetVersionFromGitLabel), candidate it.
 			var versions =
-				from commit in branch.Commits.Skip(1)
-				from label in
-					tags.GetValue(commit.Sha, Enumerable.Empty<Tag>()).Select(t => GetVersionFromGitLabel(t.Name)).
-					Concat(branches.GetValue(commit.Sha, Enumerable.Empty<Branch>()).Select(b => GetVersionFromGitLabel(b.Name)))
-				select label;
+				(from commit in branch.Commits
+				 from label in
+					tags.GetValue(commit.Sha, Enumerable.Empty<Tag>()).Select(t => GetVersionFromGitLabel(t.Name))
+				 select label).
+				Concat(
+					from commit in branch.Commits.Skip(1)
+					from label in
+						tags.GetValue(commit.Sha, Enumerable.Empty<Tag>()).Select(t => GetVersionFromGitLabel(t.Name)).
+						Concat(branches.GetValue(commit.Sha, Enumerable.Empty<Branch>()).Select(b => GetVersionFromGitLabel(b.Name)))
+					select label);
 
+			// Use first version, if no candidate then use current branch name.
 			return versions.FirstOrDefault(label => label != null) ?? GetVersionFromGitLabel(branch.Name);
 		}
 
