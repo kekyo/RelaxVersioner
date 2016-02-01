@@ -125,6 +125,8 @@ Imports System.Reflection
 * Under Apache v2
 
 ## History
+* 0.7.11:
+  * Add {branches} and {tags} format.
 * 0.7.10:
   * Use NamingFormatter.
   * Use System.Version.Parse.

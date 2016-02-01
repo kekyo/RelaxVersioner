@@ -125,6 +125,11 @@ Imports System.Reflection
 * Under Apache v2
 
 ## 履歴
+* 0.7.11:
+  * {branches} と {tags} フォーマットを追加
+* 0.7.10:
+  * NamingFormatterを使うように変更
+  * System.Version.Parseを使うように変更
 * 0.7.7:
   * 最新のタグの検索漏れを修正
 * 0.7.6:

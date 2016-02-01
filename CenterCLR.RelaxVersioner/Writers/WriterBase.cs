@@ -44,7 +44,9 @@ namespace CenterCLR.RelaxVersioner.Writers
 			Debug.Assert(branches != null);
 			Debug.Assert(ruleSet != null);
 
-			var altBranch = branch ?? new UnknownBranch(generated);
+			var unknownBranch = new UnknownBranch(generated);
+
+			var altBranch = branch ?? unknownBranch;
 			var commit = altBranch.Commits.First();
 
 			using (var tw = File.CreateText(targetPath))
@@ -68,6 +70,15 @@ namespace CenterCLR.RelaxVersioner.Writers
 				var author = commit.Author;
 				var committer = commit.Committer;
 
+				var altBranches = string.Join(
+					",",
+					branches.GetValue(commitId, Enumerable.Empty<Branch>()).
+						Select(b => b.Name));
+				var altTags = string.Join(
+					",",
+					tags.GetValue(commitId, Enumerable.Empty<Tag>()).
+						Select(b => b.Name));
+
 				var safeVersion = Utilities.GetSafeVersionFromDate(committer.When);
 				var gitLabel = Utilities.GetLabelWithFallback(altBranch, tags, branches) ?? safeVersion;
 
@@ -75,6 +86,8 @@ namespace CenterCLR.RelaxVersioner.Writers
 				{
 					{"generated", generated},
 					{"branch", altBranch},
+					{"branches", altBranches},
+					{"tags", altTags},
 					{"commit", commit},
 					{"author", author},
 					{"committer", committer},

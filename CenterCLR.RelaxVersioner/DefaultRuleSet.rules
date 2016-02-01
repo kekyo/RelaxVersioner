@@ -60,6 +60,7 @@
 		-->
 		<Rule name="System.Reflection.AssemblyMetadataAttribute" key="Build">{committer.When:R}</Rule>
 		<Rule name="System.Reflection.AssemblyMetadataAttribute" key="Branch">{branch.Name}</Rule>
+		<Rule name="System.Reflection.AssemblyMetadataAttribute" key="Tags">{tags}</Rule>
 		<Rule name="System.Reflection.AssemblyMetadataAttribute" key="Author">{author}</Rule>
 		<Rule name="System.Reflection.AssemblyMetadataAttribute" key="Committer">{committer}</Rule>
 		<Rule name="System.Reflection.AssemblyMetadataAttribute" key="Message">{commit.MessageShort}</Rule>
