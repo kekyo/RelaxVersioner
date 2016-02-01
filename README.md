@@ -125,6 +125,9 @@ Imports System.Reflection
 * Under Apache v2
 
 ## History
+* 0.7.10:
+  * Use NamingFormatter.
+  * Use System.Version.Parse.
 * 0.7.7:
   * Fixed lack of newest tag.
 * 0.7.6:
