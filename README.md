@@ -14,11 +14,12 @@
 
 ### For C#:
 ``` csharp
-[assembly: System.Reflection.AssemblyVersionAttribute("0.5.30")]
+[assembly: System.Reflection.AssemblyVersionAttribute("0.5.30.0")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("2016.1.15.41306")]
 [assembly: System.Reflection.AssemblyInformationalVersionAttribute("a05ab9fc87b22234596f4ddd43136e9e526ebb90")]
 [assembly: System.Reflection.AssemblyMetadataAttribute("Build","Fri, 15 Jan 2016 13:56:53 GMT")]
 [assembly: System.Reflection.AssemblyMetadataAttribute("Branch","master")]
+[assembly: System.Reflection.AssemblyMetadataAttribute("Tags","0.5.30")]
 [assembly: System.Reflection.AssemblyMetadataAttribute("Author","Kouji Matsui <k@kekyo.net>")]
 [assembly: System.Reflection.AssemblyMetadataAttribute("Committer","Kouji Matsui <k@kekyo.net>")]
 [assembly: System.Reflection.AssemblyMetadataAttribute("Message","Fixed tab")]
@@ -27,11 +28,12 @@
 ### For F#:
 ``` fsharp
 namespace global
-	[<assembly: System.Reflection.AssemblyVersionAttribute("0.5.30")>]
+	[<assembly: System.Reflection.AssemblyVersionAttribute("0.5.30.0")>]
 	[<assembly: System.Reflection.AssemblyFileVersionAttribute("2016.1.15.41306")>]
 	[<assembly: System.Reflection.AssemblyInformationalVersionAttribute("a05ab9fc87b22234596f4ddd43136e9e526ebb90")>]
 	[<assembly: System.Reflection.AssemblyMetadataAttribute("Build","Fri, 15 Jan 2016 13:56:53 GMT")>]
 	[<assembly: System.Reflection.AssemblyMetadataAttribute("Branch","master")>]
+	[<assembly: System.Reflection.AssemblyMetadataAttribute("Tags","0.5.30")>]
 	[<assembly: System.Reflection.AssemblyMetadataAttribute("Author","Kouji Matsui <k@kekyo.net>")>]
 	[<assembly: System.Reflection.AssemblyMetadataAttribute("Committer","Kouji Matsui <k@kekyo.net>")>]
 	[<assembly: System.Reflection.AssemblyMetadataAttribute("Message","Fixed tab")>]
@@ -41,11 +43,12 @@ namespace global
 ### For VB.NET:
 ``` visualbasic
 Imports System.Reflection
-<Assembly: System.Reflection.AssemblyVersionAttribute("0.5.30")>
+<Assembly: System.Reflection.AssemblyVersionAttribute("0.5.30.0")>
 <Assembly: System.Reflection.AssemblyFileVersionAttribute("2016.1.15.41306")>
 <Assembly: System.Reflection.AssemblyInformationalVersionAttribute("a05ab9fc87b22234596f4ddd43136e9e526ebb90")>
 <Assembly: System.Reflection.AssemblyMetadataAttribute("Build","Fri, 15 Jan 2016 13:56:53 GMT")>
 <Assembly: System.Reflection.AssemblyMetadataAttribute("Branch","master")>
+<Assembly: System.Reflection.AssemblyMetadataAttribute("Tags","0.5.30")>
 <Assembly: System.Reflection.AssemblyMetadataAttribute("Author","Kouji Matsui <k@kekyo.net>")>
 <Assembly: System.Reflection.AssemblyMetadataAttribute("Committer","Kouji Matsui <k@kekyo.net>")>
 <Assembly: System.Reflection.AssemblyMetadataAttribute("Message","Fixed tab")>
@@ -53,15 +56,15 @@ Imports System.Reflection
 
 ### For C++/CLI:
 ``` cpp
-[assembly: System::Reflection::AssemblyVersionAttribute("0.5.30")];
+[assembly: System::Reflection::AssemblyVersionAttribute("0.5.30.0")];
 [assembly: System::Reflection::AssemblyFileVersionAttribute("2016.1.15.41306")];
 [assembly: System::Reflection::AssemblyInformationalVersionAttribute("a05ab9fc87b22234596f4ddd43136e9e526ebb90")];
 [assembly: System::Reflection::AssemblyMetadataAttribute("Build","Fri, 15 Jan 2016 13:56:53 GMT")];
 [assembly: System::Reflection::AssemblyMetadataAttribute("Branch","master")];
+[assembly: System::Reflection::AssemblyMetadataAttribute("Tags","0.5.30")];
 [assembly: System::Reflection::AssemblyMetadataAttribute("Author","Kouji Matsui <k@kekyo.net>")];
 [assembly: System::Reflection::AssemblyMetadataAttribute("Committer","Kouji Matsui <k@kekyo.net>")];
 [assembly: System::Reflection::AssemblyMetadataAttribute("Message","Fixed tab")];
-
 ```
 
 ## How to use
@@ -108,6 +111,7 @@ Imports System.Reflection
 		-->
 		<Rule name="System.Reflection.AssemblyMetadataAttribute" key="Build">{committer.When:R}</Rule>
 		<Rule name="System.Reflection.AssemblyMetadataAttribute" key="Branch">{branch.Name}</Rule>
+		<Rule name="System.Reflection.AssemblyMetadataAttribute" key="Tags">{tags}</Rule>
 		<Rule name="System.Reflection.AssemblyMetadataAttribute" key="Author">{author}</Rule>
 		<Rule name="System.Reflection.AssemblyMetadataAttribute" key="Committer">{committer}</Rule>
 		<Rule name="System.Reflection.AssemblyMetadataAttribute" key="Message">{commit.MessageShort}</Rule>
@@ -116,7 +120,6 @@ Imports System.Reflection
 ```
 
 ## TODO:
-* Known problem : Not valid Git tag search algorithm.
 * Support exclude rule set.
 * Support native C++ project.
 
