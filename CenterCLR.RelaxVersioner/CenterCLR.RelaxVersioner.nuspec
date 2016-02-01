@@ -45,6 +45,7 @@
 	<files>
 		<file src="CenterCLR.RelaxVersioner.targets" target="build" />
 		<file src="bin/$Configuration$/CenterCLR.RelaxVersioner.exe" target="build" />
+		<file src="bin/$Configuration$/CenterCLR.NamingFormatter.dll" target="build" />
 		<file src="bin/$Configuration$/LibGit2Sharp.dll" target="build" />
 		<file src="bin/$Configuration$/NativeBinaries/amd64/git2-e0902fb.dll" target="build/NativeBinaries/amd64" />
 		<file src="bin/$Configuration$/NativeBinaries/x86/git2-e0902fb.dll" target="build/NativeBinaries/x86" />

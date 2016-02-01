@@ -45,7 +45,7 @@ namespace CenterCLR.RelaxVersioner.Writers
 			Debug.Assert(ruleSet != null);
 
 			var altBranch = branch ?? new UnknownBranch(generated);
-			var commit = altBranch.Commits.FirstOrDefault();
+			var commit = altBranch.Commits.First();
 
 			using (var tw = File.CreateText(targetPath))
 			{
@@ -71,7 +71,7 @@ namespace CenterCLR.RelaxVersioner.Writers
 				var safeVersion = Utilities.GetSafeVersionFromDate(committer.When);
 				var gitLabel = Utilities.GetLabelWithFallback(altBranch, tags, branches) ?? safeVersion;
 
-				var keyValues = new SortedList<string, object>(new StringLengthDescComparer())
+				var keyValues = new Dictionary<string, object>(StringComparer.InvariantCultureIgnoreCase)
 				{
 					{"generated", generated},
 					{"branch", altBranch},
@@ -85,7 +85,7 @@ namespace CenterCLR.RelaxVersioner.Writers
 
 				foreach (var rule in ruleSet)
 				{
-					var formattedValue = Utilities.FormatByRule(rule.Format, keyValues);
+					var formattedValue = Named.Format(rule.Format, keyValues);
 					if (!string.IsNullOrWhiteSpace(rule.Key))
 					{
 						this.WriteAttributeWithArguments(tw, rule.Name, rule.Key, formattedValue);
@@ -128,18 +128,6 @@ namespace CenterCLR.RelaxVersioner.Writers
 
 		protected virtual void WriteAfterBody(TextWriter tw, bool requireMetadataAttribute)
 		{
-		}
-
-		private sealed class StringLengthDescComparer : IComparer<string>
-		{
-			public int Compare(string x, string y)
-			{
-				return
-					x.Length < y.Length
-						? 1
-						: (x.Length > y.Length) ? -1
-						: x.CompareTo(y);
-			}
 		}
 	}
 }

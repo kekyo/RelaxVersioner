@@ -39,6 +39,10 @@
     <ApplicationIcon>..\Images\CenterCLR.RelaxVersioner.ico</ApplicationIcon>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="CenterCLR.NamingFormatter, Version=0.9.7.0, Culture=neutral, PublicKeyToken=08a63ca5aab14733, processorArchitecture=MSIL">
+      <HintPath>..\packages\CenterCLR.NamingFormatter.0.9.7\lib\net35\CenterCLR.NamingFormatter.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
     <Reference Include="LibGit2Sharp">
       <HintPath>..\packages\LibGit2Sharp.0.21.0.176\lib\net40\LibGit2Sharp.dll</HintPath>
       <Private>True</Private>
