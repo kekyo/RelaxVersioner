@@ -1,4 +1,6 @@
 # RelaxVersioner
+
+[![Join the chat at https://gitter.im/kekyo/CenterCLR.RelaxVersioner](https://badges.gitter.im/kekyo/CenterCLR.RelaxVersioner.svg)](https://gitter.im/kekyo/CenterCLR.RelaxVersioner?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
 ![RelaxVersioner](https://raw.githubusercontent.com/kekyo/CenterCLR.RelaxVersioner/master/Images/CenterCLR.RelaxVersioner.128.png)
 * ![Japanese language](https://raw.githubusercontent.com/kekyo/CenterCLR.RelaxVersioner/master/Images/Japanese.256.png) https://github.com/kekyo/CenterCLR.RelaxVersioner/blob/master/README.ja.md
 
