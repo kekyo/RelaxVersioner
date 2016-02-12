@@ -132,6 +132,8 @@ Imports System.Reflection
 * Under Apache v2
 
 ## 履歴
+* 0.7.12:
+  * まだコミットがないリポジトリを使用した場合にクラッシュする問題を修正
 * 0.7.11:
   * {branches} と {tags} フォーマットを追加
 * 0.7.10:

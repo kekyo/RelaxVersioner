@@ -47,7 +47,7 @@ namespace CenterCLR.RelaxVersioner.Writers
 			var unknownBranch = new UnknownBranch(generated);
 
 			var altBranch = branch ?? unknownBranch;
-			var commit = altBranch.Commits.First();
+			var commit = altBranch.Commits.FirstOrDefault() ?? unknownBranch.Commits.First();
 
 			using (var tw = File.CreateText(targetPath))
 			{

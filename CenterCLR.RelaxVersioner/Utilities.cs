@@ -22,7 +22,6 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
-using System.Text;
 using System.Xml.Linq;
 using CenterCLR.RelaxVersioner.Writers;
 using LibGit2Sharp;
@@ -134,7 +133,13 @@ namespace CenterCLR.RelaxVersioner
 
 			try
 			{
-				return XElement.Load(Path.Combine(path, "RelaxVersioner.rules"));
+			    var rulePath = Path.Combine(path, "RelaxVersioner.rules");
+			    if (File.Exists(rulePath) == false)
+			    {
+			        return null;
+			    }
+
+                return XElement.Load(rulePath);
 			}
 			catch
 			{

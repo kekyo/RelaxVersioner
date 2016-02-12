@@ -132,6 +132,8 @@ Imports System.Reflection
 * Under Apache v2
 
 ## History
+* 0.7.12:
+  * Fix crashed when using non-committed repository.
 * 0.7.11:
   * Add {branches} and {tags} format.
 * 0.7.10:

@@ -39,8 +39,8 @@
     <ApplicationIcon>..\Images\CenterCLR.RelaxVersioner.ico</ApplicationIcon>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="CenterCLR.NamingFormatter, Version=0.9.7.0, Culture=neutral, PublicKeyToken=08a63ca5aab14733, processorArchitecture=MSIL">
-      <HintPath>..\packages\CenterCLR.NamingFormatter.0.9.7\lib\net35\CenterCLR.NamingFormatter.dll</HintPath>
+    <Reference Include="CenterCLR.NamingFormatter, Version=1.0.0.0, Culture=neutral, PublicKeyToken=08a63ca5aab14733, processorArchitecture=MSIL">
+      <HintPath>..\packages\CenterCLR.NamingFormatter.1.0.0\lib\net35\CenterCLR.NamingFormatter.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="LibGit2Sharp">
