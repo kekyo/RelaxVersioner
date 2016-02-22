@@ -132,6 +132,11 @@ Imports System.Reflection
 * Under Apache v2
 
 ## History
+* 0.7.14:
+  * Add support SemVer's optional prefix/postfix.
+  * Change git traverse strategy, tags retreive only HEAD commit.
+* 0.7.13:
+  * Fixing build fail included dirty string attributes. Example: Dirty\String"Test"
 * 0.7.12:
   * Fix crashed when using non-committed repository.
 * 0.7.11:
