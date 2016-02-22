@@ -44,7 +44,12 @@ namespace CenterCLR.RelaxVersioner.Writers
 			tw.WriteLine();
 		}
 
-		protected override void WriteAttribute(TextWriter tw, string name, string args)
+        protected override string GetArgumentString(string argumentValue)
+        {
+            return string.Format("@\"{0}\"", argumentValue.Replace("\"", "\"\""));
+        }
+
+        protected override void WriteAttribute(TextWriter tw, string name, string args)
 		{
 			tw.WriteLine("    [<assembly: {0}({1})>]", name, args);
 		}

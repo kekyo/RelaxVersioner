@@ -40,7 +40,7 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="CenterCLR.NamingFormatter, Version=1.0.0.0, Culture=neutral, PublicKeyToken=08a63ca5aab14733, processorArchitecture=MSIL">
-      <HintPath>..\packages\CenterCLR.NamingFormatter.1.0.0\lib\net35\CenterCLR.NamingFormatter.dll</HintPath>
+      <HintPath>..\packages\CenterCLR.NamingFormatter.1.0.1\lib\net35\CenterCLR.NamingFormatter.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="LibGit2Sharp">
