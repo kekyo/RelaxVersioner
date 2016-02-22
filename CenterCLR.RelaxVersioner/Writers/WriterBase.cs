@@ -127,12 +127,17 @@ namespace CenterCLR.RelaxVersioner.Writers
 
 		protected abstract void WriteAttribute(TextWriter tw, string name, string args);
 
-		private void WriteAttributeWithArguments(TextWriter tw, string name, params object[] args)
+        protected virtual string GetArgumentString(string argumentValue)
+        {
+            return string.Format("\"{0}\"", argumentValue.Replace("\"", "\"\""));
+        }
+
+        private void WriteAttributeWithArguments(TextWriter tw, string name, params object[] args)
 		{
 			this.WriteAttribute(
 				tw,
 				name,
-				string.Join(",", args.Select(arg => string.Format("\"{0}\"", arg))));
+				string.Join(",", args.Select(arg => this.GetArgumentString((arg != null) ? arg.ToString() : string.Empty))));
 		}
 
 		protected virtual void WriteImport(TextWriter tw, string namespaceName)
