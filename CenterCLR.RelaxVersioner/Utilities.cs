@@ -30,6 +30,8 @@ namespace CenterCLR.RelaxVersioner
 {
 	internal static class Utilities
 	{
+		private static readonly char[] versionSeparators_ = new[] {'/', '-', '_'};
+
 		public static Dictionary<string, WriterBase> GetWriters()
 		{
 			return typeof (Program).Assembly.
@@ -83,21 +85,23 @@ namespace CenterCLR.RelaxVersioner
 			return ushort.TryParse(stringValue, out value) ? value : -1;
 		}
 
+		private static System.Version TryParseVersion(string versionString)
+		{
+			Debug.Assert(versionString != null);
+
+			System.Version version;
+			System.Version.TryParse(versionString, out version);
+			return version;
+		}
+
 		public static System.Version GetVersionFromGitLabel(string label)
 		{
 			Debug.Assert(label != null);
 
-			var splittedLast = label.
-				Split(new[] {'/'}, StringSplitOptions.RemoveEmptyEntries).
-				LastOrDefault();
-			if (string.IsNullOrWhiteSpace(splittedLast))
-			{
-				return null;
-			}
-
-			System.Version version;
-			System.Version.TryParse(splittedLast, out version);
-			return version;
+			return label.
+				Split(versionSeparators_, StringSplitOptions.RemoveEmptyEntries).
+				Select(TryParseVersion).
+				LastOrDefault(version => version != null); // Separate and search last valid version string
 		}
 
 		public static TValue GetValue<TKey, TValue>(
@@ -133,13 +137,13 @@ namespace CenterCLR.RelaxVersioner
 
 			try
 			{
-			    var rulePath = Path.Combine(path, "RelaxVersioner.rules");
-			    if (File.Exists(rulePath) == false)
-			    {
-			        return null;
-			    }
+				var rulePath = Path.Combine(path, "RelaxVersioner.rules");
+				if (File.Exists(rulePath) == false)
+				{
+					return null;
+				}
 
-                return XElement.Load(rulePath);
+				return XElement.Load(rulePath);
 			}
 			catch
 			{
@@ -154,23 +158,23 @@ namespace CenterCLR.RelaxVersioner
 
 			return
 				(from ruleSet in ruleSets
-					where (ruleSet != null) && (ruleSet.Name.LocalName == "RelaxVersioner")
-					from rules in ruleSet.Elements("Rules")
-					from language in rules.Elements("Language")
-					where !string.IsNullOrWhiteSpace(language?.Value)
-					select new {language, rules}).
-					GroupBy(
-						entry => entry.language.Value.Trim(),
-						entry => entry.rules,
-						StringComparer.InvariantCultureIgnoreCase).
-					ToDictionary(
-						g => g.Key,
-						g => from rule in g.Elements("Rule")
-							let name = rule.Attribute("name")
-							let key = rule.Attribute("key")
-							where !string.IsNullOrWhiteSpace(name?.Value)
-							select new Rule(name.Value.Trim(), key?.Value.Trim(), rule.Value.Trim()),
-						StringComparer.InvariantCultureIgnoreCase);
+				 where (ruleSet != null) && (ruleSet.Name.LocalName == "RelaxVersioner")
+				 from rules in ruleSet.Elements("Rules")
+				 from language in rules.Elements("Language")
+				 where !string.IsNullOrWhiteSpace(language?.Value)
+				 select new {language, rules}).
+				GroupBy(
+					entry => entry.language.Value.Trim(),
+					entry => entry.rules,
+					StringComparer.InvariantCultureIgnoreCase).
+				ToDictionary(
+					g => g.Key,
+					g => from rule in g.Elements("Rule")
+						let name = rule.Attribute("name")
+						let key = rule.Attribute("key")
+						where !string.IsNullOrWhiteSpace(name?.Value)
+						select new Rule(name.Value.Trim(), key?.Value.Trim(), rule.Value.Trim()),
+					StringComparer.InvariantCultureIgnoreCase);
 		}
 
 		public static IEnumerable<string> AggregateNamespacesFromRuleSet(
@@ -196,35 +200,35 @@ namespace CenterCLR.RelaxVersioner
 		}
 
 		public static System.Version GetLabelWithFallback(
-			Branch branch,
+			Branch targetBranch,
 			Dictionary<string, IEnumerable<Tag>> tags,
 			Dictionary<string, IEnumerable<Branch>> branches)
 		{
 			Debug.Assert(tags != null);
 			Debug.Assert(branches != null);
 
-			if (branch == null)
+			if (targetBranch == null)
 			{
 				return null;
 			}
 
 			// First commit: Tags only
-			// Second...   : Tags and Branches
+			// Second...   : Branches only
 			//   If success label parse (GetVersionFromGitLabel), candidate it.
 			var versions =
-				(from commit in branch.Commits
+				(from commit in targetBranch.Commits
+				 from label in
+					tags.GetValue(commit.Sha, Enumerable.Empty<Tag>()).Select(tag => GetVersionFromGitLabel(tag.Name))
+				 select label).
+				Concat(
+					from commit in targetBranch.Commits.Skip(1)
 					from label in
-						tags.GetValue(commit.Sha, Enumerable.Empty<Tag>()).Select(t => GetVersionFromGitLabel(t.Name))
-					select label).
-					Concat(
-						from commit in branch.Commits.Skip(1)
-						from label in
-							tags.GetValue(commit.Sha, Enumerable.Empty<Tag>()).Select(t => GetVersionFromGitLabel(t.Name)).
-								Concat(branches.GetValue(commit.Sha, Enumerable.Empty<Branch>()).Select(b => GetVersionFromGitLabel(b.Name)))
-						select label);
+						branches.GetValue(commit.Sha, Enumerable.Empty<Branch>()).Select(branch => GetVersionFromGitLabel(branch.Name))
+					select label);
 
-			// Use first version, if no candidate then use current branch name.
-			return versions.FirstOrDefault(label => label != null) ?? GetVersionFromGitLabel(branch.Name);
+			// Use first version, if no candidate then try current branch name.
+			return versions.FirstOrDefault(label => label != null) ??
+				GetVersionFromGitLabel(targetBranch.Name);
 		}
 	}
 }
