@@ -184,9 +184,9 @@ namespace CenterCLR.RelaxVersioner
 
 			return
 				(from rule in ruleSet
-					let symbolElements = rule.Name.Split(new[] {'.'}, StringSplitOptions.RemoveEmptyEntries)
-					select string.Join(".", symbolElements.Take(symbolElements.Length - 1))).
-					Distinct();
+				 let symbolElements = rule.Name.Split(new[] {'.'}, StringSplitOptions.RemoveEmptyEntries)
+				 select string.Join(".", symbolElements.Take(symbolElements.Length - 1))).
+				Distinct();
 		}
 
 		public static XElement GetDefaultRuleSet()

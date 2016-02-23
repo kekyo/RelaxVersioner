@@ -49,6 +49,20 @@ namespace CenterCLR.RelaxVersioner.Writers
 			var altBranch = branch ?? unknownBranch;
 			var commit = altBranch.Commits.FirstOrDefault() ?? unknownBranch.Commits.First();
 
+			var targetFolder = Path.GetDirectoryName(targetPath);
+			if (Directory.Exists(targetFolder) == false)
+			{
+				try
+				{
+					// Construct sub folders (ex: obj\Debug).
+					// May fail if parallel-building on MSBuild, ignoring exceptions.
+					Directory.CreateDirectory(targetFolder);
+				}
+				catch
+				{
+				}
+			}
+
 			using (var tw = File.CreateText(targetPath))
 			{
 				this.WriteComment(tw, "This is auto-generated version information attributes by CenterCLR.RelaxVersioner.{0}",
