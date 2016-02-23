@@ -132,6 +132,8 @@ Imports System.Reflection
 * Under Apache v2
 
 ## 履歴
+* 0.7.16:
+  * libgit2sharpとNamingFormatterを更新
 * 0.7.14:
   * SemVerで使用される、プレフィックス・ポストフィックスを除外してバージョン番号をパースするように変更
   * Gitリポジトリのトラバース方法を変更し、TagsについてはHEADコミットのみを参照するように変更

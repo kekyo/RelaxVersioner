@@ -132,6 +132,8 @@ Imports System.Reflection
 * Under Apache v2
 
 ## History
+* 0.7.16:
+  * Update libgit2sharp and NamingFormatter
 * 0.7.14:
   * Add support SemVer's optional prefix/postfix.
   * Change git traverse strategy, tags retreive only HEAD commit.
