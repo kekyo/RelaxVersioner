@@ -48,6 +48,10 @@
 		<file src="bin/$Configuration$/CenterCLR.NamingFormatter.dll" target="build" />
 		<file src="bin/$Configuration$/LibGit2Sharp.dll" target="build" />
 		<file src="bin/$Configuration$/NativeBinaries/amd64/git2-e0902fb.dll" target="build/NativeBinaries/amd64" />
+		<file src="bin/$Configuration$/NativeBinaries/amd64/git2-6aa06b6.dll" target="build/NativeBinaries/amd64" /> <!-- pre -->
 		<file src="bin/$Configuration$/NativeBinaries/x86/git2-e0902fb.dll" target="build/NativeBinaries/x86" />
+		<file src="bin/$Configuration$/NativeBinaries/x86/git2-6aa06b6.dll" target="build/NativeBinaries/x86" /> <!-- pre -->
+		<file src="bin/$Configuration$/NativeBinaries/linux/amd64/libgit2-6aa06b6.so" target="build/NativeBinaries/linux/amd64" /> <!-- pre -->
+		<file src="bin/$Configuration$/NativeBinaries/osx/libgit2-6aa06b6.dylib" target="build/NativeBinaries/osx" /> <!-- pre -->
 	</files>
 </package>
