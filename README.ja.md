@@ -132,6 +132,8 @@ Imports System.Reflection
 * Under Apache v2
 
 ## 履歴
+* 0.7.17:
+  * TargetPathに対応するフォルダが存在しない環境（CI等）で例外が発生していた問題を修正
 * 0.7.16:
   * libgit2sharpとNamingFormatterを更新
 * 0.7.14:
