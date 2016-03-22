@@ -35,7 +35,8 @@ namespace CenterCLR.RelaxVersioner
 				var projectDirectory = args[1];
 				var targetPath = args[2];
 				var targetFrameworkVersion = Utilities.GetFrameworkVersionNumber(args[3]);
-				var language = args[4];
+				var targetFrameworkProfile = args[4];
+				var language = args[5];
 
 				var writers = Utilities.GetWriters();
 				var writer = writers[language];
@@ -81,7 +82,7 @@ namespace CenterCLR.RelaxVersioner
 						repository?.Head,
 						tags,
 						branches,
-						targetFrameworkVersion < 4.5,
+						(targetFrameworkVersion < 4.5) || !string.IsNullOrWhiteSpace(targetFrameworkProfile),
 						DateTimeOffset.Now,
 						ruleSet);
 

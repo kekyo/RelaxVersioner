@@ -137,6 +137,8 @@ Imports System.Reflection
 * Under Apache v2
 
 ## History
+* 0.7.18:
+  * Fixed PCL target project cause AssemblyMetadataAttribute not found.
 * 0.7.17:
   * Fixed not exist TargetPath folders on CI environments.
 * 0.7.16:

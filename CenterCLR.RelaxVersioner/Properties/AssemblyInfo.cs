@@ -37,5 +37,5 @@ using System.Runtime.InteropServices;
 [assembly: Guid("0b01c9d5-a685-4444-981b-e8b4d6bdbbf1")]
 
 // TODO: Will be removed if stable self.
-[assembly: AssemblyVersion("0.7.17.0")]
-[assembly: AssemblyFileVersion("0.7.17.0")]
+[assembly: AssemblyVersion("0.7.18.0")]
+[assembly: AssemblyFileVersion("0.7.18.0")]
