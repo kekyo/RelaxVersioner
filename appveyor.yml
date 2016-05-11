@@ -1,0 +1,8 @@
+version: 1.0.{build}
+configuration: Release
+before_build:
+- cmd: .nuget\nuget.exe restore
+build:
+  verbosity: minimal
+after_build:
+- cmd: build-nupkg.bat
