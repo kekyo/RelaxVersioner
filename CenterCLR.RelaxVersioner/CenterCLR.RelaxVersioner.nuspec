@@ -1,57 +1,57 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-	CenterCLR.RelaxVersioner - Easy-usage, Git-based, auto-generate version informations toolset.
-	Copyright (c) 2016 Kouji Matsui (@kekyo2)
+    CenterCLR.RelaxVersioner - Easy-usage, Git-based, auto-generate version informations toolset.
+    Copyright (c) 2016 Kouji Matsui (@kekyo2)
 
-	Licensed under the Apache License, Version 2.0 (the "License");
-	you may not use this file except in compliance with the License.
-	You may obtain a copy of the License at
+    Licensed under the Apache License, Version 2.0 (the "License");
+    you may not use this file except in compliance with the License.
+    You may obtain a copy of the License at
 
-	http://www.apache.org/licenses/LICENSE-2.0
+    http://www.apache.org/licenses/LICENSE-2.0
 
-	Unless required by applicable law or agreed to in writing, software
-	distributed under the License is distributed on an "AS IS" BASIS,
-	WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-	See the License for the specific language governing permissions and
-	limitations under the License.
+    Unless required by applicable law or agreed to in writing, software
+    distributed under the License is distributed on an "AS IS" BASIS,
+    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+    See the License for the specific language governing permissions and
+    limitations under the License.
 -->
 <package xmlns="http://schemas.microsoft.com/packaging/2010/07/nuspec.xsd">
-	<metadata>
-		<id>CenterCLR.RelaxVersioner</id>
-		<version>$Version$</version>
-		<title>RelaxVersioner</title>
-		<authors>Kouji Matsui</authors>
-		<owners>Kouji Matsui</owners>
-		<description>Easy-usage, Git-based, auto-generate version informations toolset.</description>
-		<summary>Easy-usage, Git-based, auto-generate version informations toolset.</summary>
-		<copyright>Copyright (c) 2016 Kouji Matsui</copyright>
-		<licenseUrl>http://www.apache.org/licenses/LICENSE-2.0</licenseUrl>
-		<projectUrl>https://github.com/kekyo/CenterCLR.RelaxVersioner</projectUrl>
-		<iconUrl>https://raw.githubusercontent.com/kekyo/CenterCLR.RelaxVersioner/master/Images/CenterCLR.RelaxVersioner.100.png</iconUrl>
-		<requireLicenseAcceptance>false</requireLicenseAcceptance>
-		<releaseNotes>RelaxVersioner is very easy-usage, Git-based, auto-generate version informations in .NET source code. (Assembly attribute based)
+    <metadata>
+        <id>CenterCLR.RelaxVersioner</id>
+        <version>$Version$</version>
+        <title>RelaxVersioner</title>
+        <authors>Kouji Matsui</authors>
+        <owners>Kouji Matsui</owners>
+        <description>Easy-usage, Git-based, auto-generate version informations toolset.</description>
+        <summary>Easy-usage, Git-based, auto-generate version informations toolset.</summary>
+        <copyright>Copyright (c) 2016 Kouji Matsui</copyright>
+        <licenseUrl>http://www.apache.org/licenses/LICENSE-2.0</licenseUrl>
+        <projectUrl>https://github.com/kekyo/CenterCLR.RelaxVersioner</projectUrl>
+        <iconUrl>https://raw.githubusercontent.com/kekyo/CenterCLR.RelaxVersioner/master/Images/CenterCLR.RelaxVersioner.100.png</iconUrl>
+        <requireLicenseAcceptance>false</requireLicenseAcceptance>
+        <releaseNotes>RelaxVersioner is very easy-usage, Git-based, auto-generate version informations in .NET source code. (Assembly attribute based)
 * Target language/projects: C#, F#, VB.NET, and C++/CLI
 * Auto collect version information from local Git repository tags/branch name.
 * After installed, build project. Auto-apply version informations into assembly attributes. Some attributes are looking for directory Windows Explorer property page.</releaseNotes>
-		<tags>version generator git auto easy generate versioning continuous integration delivery tag branch assemblyinfo msbuild tool</tags>
-		<!-- Optional metadata
-			<frameworkAssemblies>
-				<frameworkAssembly assemblyName="System" targetFramework=".NETFramework4.0" />
-			</frameworkAssemblies>
-			<dependencies></dependencies>
-			<references></references>
-		-->
-	</metadata>
-	<files>
-		<file src="CenterCLR.RelaxVersioner.targets" target="build" />
-		<file src="bin/$Configuration$/CenterCLR.RelaxVersioner.exe" target="build" />
-		<file src="bin/$Configuration$/CenterCLR.NamingFormatter.dll" target="build" />
-		<file src="bin/$Configuration$/LibGit2Sharp.dll" target="build" />
-		<file src="bin/$Configuration$/NativeBinaries/amd64/git2-e0902fb.dll" target="build/NativeBinaries/amd64" />
-		<file src="bin/$Configuration$/NativeBinaries/amd64/git2-6aa06b6.dll" target="build/NativeBinaries/amd64" /> <!-- pre -->
-		<file src="bin/$Configuration$/NativeBinaries/x86/git2-e0902fb.dll" target="build/NativeBinaries/x86" />
-		<file src="bin/$Configuration$/NativeBinaries/x86/git2-6aa06b6.dll" target="build/NativeBinaries/x86" /> <!-- pre -->
-		<file src="bin/$Configuration$/NativeBinaries/linux/amd64/libgit2-6aa06b6.so" target="build/NativeBinaries/linux/amd64" /> <!-- pre -->
-		<file src="bin/$Configuration$/NativeBinaries/osx/libgit2-6aa06b6.dylib" target="build/NativeBinaries/osx" /> <!-- pre -->
-	</files>
+        <tags>version generator git auto easy generate versioning continuous integration delivery tag branch assemblyinfo msbuild tool</tags>
+        <!-- Optional metadata
+            <frameworkAssemblies>
+                <frameworkAssembly assemblyName="System" targetFramework=".NETFramework4.0" />
+            </frameworkAssemblies>
+            <dependencies></dependencies>
+            <references></references>
+        -->
+    </metadata>
+    <files>
+        <file src="CenterCLR.RelaxVersioner.targets" target="build" />
+        <file src="bin/$Configuration$/CenterCLR.RelaxVersioner.exe" target="build" />
+        <file src="bin/$Configuration$/CenterCLR.NamingFormatter.dll" target="build" />
+        <file src="bin/$Configuration$/LibGit2Sharp.dll" target="build" />
+        <file src="bin/$Configuration$/NativeBinaries/amd64/git2-e0902fb.dll" target="build/NativeBinaries/amd64" />
+        <file src="bin/$Configuration$/NativeBinaries/amd64/git2-6aa06b6.dll" target="build/NativeBinaries/amd64" /> <!-- pre -->
+        <file src="bin/$Configuration$/NativeBinaries/x86/git2-e0902fb.dll" target="build/NativeBinaries/x86" />
+        <file src="bin/$Configuration$/NativeBinaries/x86/git2-6aa06b6.dll" target="build/NativeBinaries/x86" /> <!-- pre -->
+        <file src="bin/$Configuration$/NativeBinaries/linux/amd64/libgit2-6aa06b6.so" target="build/NativeBinaries/linux/amd64" /> <!-- pre -->
+        <file src="bin/$Configuration$/NativeBinaries/osx/libgit2-6aa06b6.dylib" target="build/NativeBinaries/osx" /> <!-- pre -->
+    </files>
 </package>

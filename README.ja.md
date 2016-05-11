@@ -4,6 +4,7 @@
 
 # Status
 * NuGet Package: [![NuGet RelaxVersioner](https://img.shields.io/nuget/v/CenterCLR.RelaxVersioner.svg?style=flat)](https://www.nuget.org/packages/CenterCLR.RelaxVersioner)
+* Continuous integration: [![AppVeyor RelaxVersioner](https://img.shields.io/appveyor/ci/kekyo/centerclr-relaxversioner.svg?style=flat)](https://ci.appveyor.com/project/kekyo/centerclr-relaxversioner)
 * Gitter: [![Gitter RelaxVersioner](https://img.shields.io/gitter/room/kekyo/CenterCLR.RelaxVersioner.svg?style=flat)](https://gitter.im/kekyo/CenterCLR.RelaxVersioner)
 
 ## これは何？
@@ -111,7 +112,7 @@ Imports System.Reflection
 		-->
 		<!--
 			"committer.When" or you can use another choice "author.When".
-			"author" and "committer" can use property "Name", "Email", and "When".
+			"author" and "committer" can use property "Name", "Email", and "When". (Derived from libgit2sharp)
 		-->
 		<Rule name="System.Reflection.AssemblyMetadataAttribute" key="Build">{committer.When:R}</Rule>
 		<Rule name="System.Reflection.AssemblyMetadataAttribute" key="Branch">{branch.Name}</Rule>
@@ -124,14 +125,21 @@ Imports System.Reflection
 ```
 
 ## TODO:
-* 除外ルールのサポート。
-* ネイティブC++プロジェクトに対応させる。
+* 除外ルールのサポート
+* ネイティブC++プロジェクトに対応させる
+* テンプレート出力をサポートする
+* フォールバックルールを指定可能にする
 
 ## License
 * Copyright (c) 2015 Kouji Matsui (@kekyo2)
 * Under Apache v2
 
 ## 履歴
+* 0.8.1:
+  * ルールセットの "Rules" を "WriterRules" に変更 (Breaking change)
+  * "gitLabel" のフォールバック値を "safeVersion" から、固定の "0.0.0.0" に変更
+  * ビルド時に、適用されたバージョンを出力するようにした
+  * ソースコード上のタブを修正
 * 0.7.18:
   * PCLプロジェクトで、AssemblyMetadataAttributeが見つからない問題を修正
 * 0.7.17:

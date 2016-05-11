@@ -26,140 +26,144 @@ using LibGit2Sharp;
 
 namespace CenterCLR.RelaxVersioner.Writers
 {
-	internal abstract class WriterBase
-	{
-		public abstract string Language { get; }
+    internal abstract class WriterBase
+    {
+        private static readonly System.Version zeroVersion_ = new System.Version(0, 0, 0, 0);
 
-		public virtual void Write(
-			string targetPath,
-			Branch branch,
-			Dictionary<string, IEnumerable<Tag>> tags,
-			Dictionary<string, IEnumerable<Branch>> branches,
-			bool requireMetadataAttribute,
-			DateTimeOffset generated,
-			ICollection<Rule> ruleSet)
-		{
-			Debug.Assert(string.IsNullOrWhiteSpace(targetPath) == false);
-			Debug.Assert(tags != null);
-			Debug.Assert(branches != null);
-			Debug.Assert(ruleSet != null);
+        public abstract string Language { get; }
 
-			var unknownBranch = new UnknownBranch(generated);
+        public virtual string Write(
+            string targetPath,
+            Branch branch,
+            Dictionary<string, IEnumerable<Tag>> tags,
+            Dictionary<string, IEnumerable<Branch>> branches,
+            bool requireMetadataAttribute,
+            DateTimeOffset generated,
+            ICollection<Rule> ruleSet)
+        {
+            Debug.Assert(string.IsNullOrWhiteSpace(targetPath) == false);
+            Debug.Assert(tags != null);
+            Debug.Assert(branches != null);
+            Debug.Assert(ruleSet != null);
 
-			var altBranch = branch ?? unknownBranch;
-			var commit = altBranch.Commits.FirstOrDefault() ?? unknownBranch.Commits.First();
+            var unknownBranch = new UnknownBranch(generated);
 
-			var targetFolder = Path.GetDirectoryName(targetPath);
-			if (Directory.Exists(targetFolder) == false)
-			{
-				try
-				{
-					// Construct sub folders (ex: obj\Debug).
-					// May fail if parallel-building on MSBuild, ignoring exceptions.
-					Directory.CreateDirectory(targetFolder);
-				}
-				catch
-				{
-				}
-			}
+            var altBranch = branch ?? unknownBranch;
+            var commit = altBranch.Commits.FirstOrDefault() ?? unknownBranch.Commits.First();
 
-			using (var tw = File.CreateText(targetPath))
-			{
-				this.WriteComment(tw, "This is auto-generated version information attributes by CenterCLR.RelaxVersioner.{0}",
-					this.GetType().Assembly.GetName().Version);
-				this.WriteComment(tw, "Do not edit.");
-				this.WriteComment(tw, "Generated date: {0:R}", generated);
-				tw.WriteLine();
+            var targetFolder = Path.GetDirectoryName(targetPath);
+            if (Directory.Exists(targetFolder) == false)
+            {
+                try
+                {
+                    // Construct sub folders (ex: obj\Debug).
+                    // May fail if parallel-building on MSBuild, ignoring exceptions.
+                    Directory.CreateDirectory(targetFolder);
+                }
+                catch
+                {
+                }
+            }
 
-				this.WriteBeforeBody(tw, requireMetadataAttribute);
+            using (var tw = File.CreateText(targetPath))
+            {
+                this.WriteComment(tw, "This is auto-generated version information attributes by CenterCLR.RelaxVersioner.{0}",
+                    this.GetType().Assembly.GetName().Version);
+                this.WriteComment(tw, "Do not edit.");
+                this.WriteComment(tw, "Generated date: {0:R}", generated);
+                tw.WriteLine();
 
-				var namespaces = Utilities.AggregateNamespacesFromRuleSet(ruleSet);
-				foreach (var namespaceName in namespaces)
-				{
-					this.WriteImport(tw, namespaceName);
-				}
-				tw.WriteLine();
+                this.WriteBeforeBody(tw, requireMetadataAttribute);
 
-				var commitId = commit.Sha;
-				var author = commit.Author;
-				var committer = commit.Committer;
+                var namespaces = Utilities.AggregateNamespacesFromRuleSet(ruleSet);
+                foreach (var namespaceName in namespaces)
+                {
+                    this.WriteImport(tw, namespaceName);
+                }
+                tw.WriteLine();
 
-				var altBranches = string.Join(
-					",",
-					branches.GetValue(commitId, Enumerable.Empty<Branch>()).
-						Select(b => b.Name));
-				var altTags = string.Join(
-					",",
-					tags.GetValue(commitId, Enumerable.Empty<Tag>()).
-						Select(b => b.Name));
+                var commitId = commit.Sha;
+                var author = commit.Author;
+                var committer = commit.Committer;
 
-				var safeVersion = Utilities.GetSafeVersionFromDate(committer.When);
-				var gitLabel = Utilities.GetLabelWithFallback(altBranch, tags, branches) ?? safeVersion;
+                var altBranches = string.Join(
+                    ",",
+                    branches.GetValue(commitId, Enumerable.Empty<Branch>()).
+                        Select(b => b.Name));
+                var altTags = string.Join(
+                    ",",
+                    tags.GetValue(commitId, Enumerable.Empty<Tag>()).
+                        Select(b => b.Name));
 
-				var keyValues = new Dictionary<string, object>(StringComparer.InvariantCultureIgnoreCase)
-				{
-					{"generated", generated},
-					{"branch", altBranch},
-					{"branches", altBranches},
-					{"tags", altTags},
-					{"commit", commit},
-					{"author", author},
-					{"committer", committer},
-					{"commitId", commitId},
-					{"gitLabel", gitLabel},
-					{"safeVersion", safeVersion}
-				};
+                var safeVersion = Utilities.GetSafeVersionFromDate(committer.When);
+                var gitLabel = Utilities.GetLabelWithFallback(altBranch, tags, branches) ?? zeroVersion_;
 
-				foreach (var rule in ruleSet)
-				{
-					var formattedValue = Named.Format(rule.Format, keyValues);
-					if (!string.IsNullOrWhiteSpace(rule.Key))
-					{
-						this.WriteAttributeWithArguments(tw, rule.Name, rule.Key, formattedValue);
-					}
-					else
-					{
-						this.WriteAttributeWithArguments(tw, rule.Name, formattedValue);
-					}
-				}
-				tw.WriteLine();
+                var keyValues = new Dictionary<string, object>(StringComparer.InvariantCultureIgnoreCase)
+                {
+                    {"generated", generated},
+                    {"branch", altBranch},
+                    {"branches", altBranches},
+                    {"tags", altTags},
+                    {"commit", commit},
+                    {"author", author},
+                    {"committer", committer},
+                    {"commitId", commitId},
+                    {"gitLabel", gitLabel},
+                    {"safeVersion", safeVersion}
+                };
 
-				this.WriteAfterBody(tw, requireMetadataAttribute);
+                foreach (var rule in ruleSet)
+                {
+                    var formattedValue = Named.Format(rule.Format, keyValues);
+                    if (!string.IsNullOrWhiteSpace(rule.Key))
+                    {
+                        this.WriteAttributeWithArguments(tw, rule.Name, rule.Key, formattedValue);
+                    }
+                    else
+                    {
+                        this.WriteAttributeWithArguments(tw, rule.Name, formattedValue);
+                    }
+                }
+                tw.WriteLine();
 
-				tw.Flush();
-			}
-		}
+                this.WriteAfterBody(tw, requireMetadataAttribute);
 
-		protected virtual void WriteComment(TextWriter tw, string format, params object[] args)
-		{
-			tw.WriteLine("// " + format, args);
-		}
+                tw.Flush();
 
-		protected virtual void WriteBeforeBody(TextWriter tw, bool requireMetadataAttribute)
-		{
-		}
+                return gitLabel.ToString();
+            }
+        }
 
-		protected abstract void WriteAttribute(TextWriter tw, string name, string args);
+        protected virtual void WriteComment(TextWriter tw, string format, params object[] args)
+        {
+            tw.WriteLine("// " + format, args);
+        }
 
-		protected virtual string GetArgumentString(string argumentValue)
-		{
-			return string.Format("\"{0}\"", argumentValue.Replace("\"", "\"\""));
-		}
+        protected virtual void WriteBeforeBody(TextWriter tw, bool requireMetadataAttribute)
+        {
+        }
 
-		private void WriteAttributeWithArguments(TextWriter tw, string name, params object[] args)
-		{
-			this.WriteAttribute(
-				tw,
-				name,
-				string.Join(",", args.Select(arg => this.GetArgumentString((arg != null) ? arg.ToString() : string.Empty))));
-		}
+        protected abstract void WriteAttribute(TextWriter tw, string name, string args);
 
-		protected virtual void WriteImport(TextWriter tw, string namespaceName)
-		{
-		}
+        protected virtual string GetArgumentString(string argumentValue)
+        {
+            return string.Format("\"{0}\"", argumentValue.Replace("\"", "\"\""));
+        }
 
-		protected virtual void WriteAfterBody(TextWriter tw, bool requireMetadataAttribute)
-		{
-		}
-	}
+        private void WriteAttributeWithArguments(TextWriter tw, string name, params object[] args)
+        {
+            this.WriteAttribute(
+                tw,
+                name,
+                string.Join(",", args.Select(arg => this.GetArgumentString((arg != null) ? arg.ToString() : string.Empty))));
+        }
+
+        protected virtual void WriteImport(TextWriter tw, string namespaceName)
+        {
+        }
+
+        protected virtual void WriteAfterBody(TextWriter tw, bool requireMetadataAttribute)
+        {
+        }
+    }
 }

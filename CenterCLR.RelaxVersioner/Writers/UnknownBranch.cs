@@ -24,53 +24,53 @@ using LibGit2Sharp;
 
 namespace CenterCLR.RelaxVersioner.Writers
 {
-	internal sealed class UnknownBranch : Branch
-	{
-		private readonly ICommitLog commits_;
+    internal sealed class UnknownBranch : Branch
+    {
+        private readonly ICommitLog commits_;
 
-		public UnknownBranch(DateTimeOffset when)
-		{
-			commits_ = new UnknownCommitLog(when);
-		}
+        public UnknownBranch(DateTimeOffset when)
+        {
+            commits_ = new UnknownCommitLog(when);
+        }
 
-		public override string Name
-		{
-			get { return "(Unknown branch)"; }
-		}
+        public override string Name
+        {
+            get { return "(Unknown branch)"; }
+        }
 
-		public override string CanonicalName
-		{
-			get { return "(Unknown branch)"; }
-		}
+        public override string CanonicalName
+        {
+            get { return "(Unknown branch)"; }
+        }
 
-		public override ICommitLog Commits
-		{
-			get { return commits_; }
-		}
+        public override ICommitLog Commits
+        {
+            get { return commits_; }
+        }
 
-		private sealed class UnknownCommitLog : ICommitLog
-		{
-			private readonly IEnumerable<Commit> commits_;
+        private sealed class UnknownCommitLog : ICommitLog
+        {
+            private readonly IEnumerable<Commit> commits_;
 
-			public UnknownCommitLog(DateTimeOffset when)
-			{
-				commits_ = new[] {new UnknownCommit(when)};
-			}
+            public UnknownCommitLog(DateTimeOffset when)
+            {
+                commits_ = new[] {new UnknownCommit(when)};
+            }
 
-			public CommitSortStrategies SortedBy
-			{
-				get { return CommitSortStrategies.Time; }
-			}
+            public CommitSortStrategies SortedBy
+            {
+                get { return CommitSortStrategies.Time; }
+            }
 
-			public IEnumerator<Commit> GetEnumerator()
-			{
-				return commits_.GetEnumerator();
-			}
+            public IEnumerator<Commit> GetEnumerator()
+            {
+                return commits_.GetEnumerator();
+            }
 
-			IEnumerator IEnumerable.GetEnumerator()
-			{
-				return commits_.GetEnumerator();
-			}
-		}
-	}
+            IEnumerator IEnumerable.GetEnumerator()
+            {
+                return commits_.GetEnumerator();
+            }
+        }
+    }
 }

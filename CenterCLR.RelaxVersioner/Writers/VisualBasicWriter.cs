@@ -21,48 +21,48 @@ using System.IO;
 
 namespace CenterCLR.RelaxVersioner.Writers
 {
-	internal sealed class VisualBasicWriter : WriterBase
-	{
-		public override string Language => "VB";
+    internal sealed class VisualBasicWriter : WriterBase
+    {
+        public override string Language => "VB";
 
-		protected override void WriteComment(TextWriter tw, string format, params object[] args)
-		{
-			tw.WriteLine("' " + format, args);
-		}
+        protected override void WriteComment(TextWriter tw, string format, params object[] args)
+        {
+            tw.WriteLine("' " + format, args);
+        }
 
-		protected override void WriteImport(TextWriter tw, string namespaceName)
-		{
-			tw.WriteLine("Imports {0}", namespaceName);
-		}
+        protected override void WriteImport(TextWriter tw, string namespaceName)
+        {
+            tw.WriteLine("Imports {0}", namespaceName);
+        }
 
-		protected override string GetArgumentString(string argumentValue)
-		{
-			return string.Format("\"{0}\"", argumentValue.Replace("\"", "\"\""));
-		}
+        protected override string GetArgumentString(string argumentValue)
+        {
+            return string.Format("\"{0}\"", argumentValue.Replace("\"", "\"\""));
+        }
 
-		protected override void WriteAttribute(TextWriter tw, string name, string args)
-		{
-			tw.WriteLine("<Assembly: {0}({1})>", name, args);
-		}
+        protected override void WriteAttribute(TextWriter tw, string name, string args)
+        {
+            tw.WriteLine("<Assembly: {0}({1})>", name, args);
+        }
 
-		protected override void WriteAfterBody(TextWriter tw, bool requireMetadataAttribute)
-		{
-			if (requireMetadataAttribute == true)
-			{
-				tw.WriteLine("Namespace global.System.Reflection");
-				tw.WriteLine("	<AttributeUsage(AttributeTargets.Assembly, AllowMultiple := True, Inherited := False)>");
-				tw.WriteLine("	Friend NotInheritable Class AssemblyMetadataAttribute");
-				tw.WriteLine("		Inherits Attribute");
-				tw.WriteLine("		Public Sub New(key As String, value As String)");
-				tw.WriteLine("			Me.Key = key");
-				tw.WriteLine("			Me.Value = value");
-				tw.WriteLine("		End Sub");
-				tw.WriteLine("		Public ReadOnly Property Key As String");
-				tw.WriteLine("		Public ReadOnly Property Value As String");
-				tw.WriteLine("	End Class");
-				tw.WriteLine("End Namespace");
-				tw.WriteLine();
-			}
-		}
-	}
+        protected override void WriteAfterBody(TextWriter tw, bool requireMetadataAttribute)
+        {
+            if (requireMetadataAttribute == true)
+            {
+                tw.WriteLine("Namespace global.System.Reflection");
+                tw.WriteLine("	<AttributeUsage(AttributeTargets.Assembly, AllowMultiple := True, Inherited := False)>");
+                tw.WriteLine("	Friend NotInheritable Class AssemblyMetadataAttribute");
+                tw.WriteLine("		Inherits Attribute");
+                tw.WriteLine("		Public Sub New(key As String, value As String)");
+                tw.WriteLine("			Me.Key = key");
+                tw.WriteLine("			Me.Value = value");
+                tw.WriteLine("		End Sub");
+                tw.WriteLine("		Public ReadOnly Property Key As String");
+                tw.WriteLine("		Public ReadOnly Property Value As String");
+                tw.WriteLine("	End Class");
+                tw.WriteLine("End Namespace");
+                tw.WriteLine();
+            }
+        }
+    }
 }

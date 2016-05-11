@@ -23,40 +23,40 @@ using LibGit2Sharp;
 
 namespace CenterCLR.RelaxVersioner.Writers
 {
-	internal sealed class UnknownCommit : Commit
-	{
-		private readonly Signature author_;
-		private readonly Signature committer_;
+    internal sealed class UnknownCommit : Commit
+    {
+        private readonly Signature author_;
+        private readonly Signature committer_;
 
-		public UnknownCommit(DateTimeOffset when)
-		{
-			author_ = new Signature("(Unknown author)", "unknown@example.com", when);
-			committer_ = new Signature("(Unknown committer)", "unknown@example.com", when);
-		}
+        public UnknownCommit(DateTimeOffset when)
+        {
+            author_ = new Signature("(Unknown author)", "unknown@example.com", when);
+            committer_ = new Signature("(Unknown committer)", "unknown@example.com", when);
+        }
 
-		public override string Sha
-		{
-			get { return "(Unknown commit id)"; }
-		}
+        public override string Sha
+        {
+            get { return "(Unknown commit id)"; }
+        }
 
-		public override string Message
-		{
-			get { return "(Unknown commit message)"; }
-		}
+        public override string Message
+        {
+            get { return "(Unknown commit message)"; }
+        }
 
-		public override string MessageShort
-		{
-			get { return "(Unknown commit message)"; }
-		}
+        public override string MessageShort
+        {
+            get { return "(Unknown commit message)"; }
+        }
 
-		public override Signature Author
-		{
-			get { return author_; }
-		}
+        public override Signature Author
+        {
+            get { return author_; }
+        }
 
-		public override Signature Committer
-		{
-			get { return committer_; }
-		}
-	}
+        public override Signature Committer
+        {
+            get { return committer_; }
+        }
+    }
 }

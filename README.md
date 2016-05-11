@@ -5,10 +5,6 @@
 # Status
 * NuGet Package: [![NuGet RelaxVersioner](https://img.shields.io/nuget/v/CenterCLR.RelaxVersioner.svg?style=flat)](https://www.nuget.org/packages/CenterCLR.RelaxVersioner)
 * Continuous integration: [![AppVeyor RelaxVersioner](https://img.shields.io/appveyor/ci/kekyo/centerclr-relaxversioner.svg?style=flat)](https://ci.appveyor.com/project/kekyo/centerclr-relaxversioner)
-
-
-
-
 * Gitter: [![Gitter RelaxVersioner](https://img.shields.io/gitter/room/kekyo/CenterCLR.RelaxVersioner.svg?style=flat)](https://gitter.im/kekyo/CenterCLR.RelaxVersioner)
 
 ## What is this?
@@ -86,7 +82,7 @@ Imports System.Reflection
 ``` xml
 <?xml version="1.0" encoding="utf-8"?>
 <RelaxVersioner version="1.0">
-	<Rules>
+	<WriterRules>
 		<!-- Target languages -->
 		<Language>C#</Language>
 		<Language>F#</Language>
@@ -116,7 +112,7 @@ Imports System.Reflection
 		-->
 		<!--
 			"committer.When" or you can use another choice "author.When".
-			"author" and "committer" can use property "Name", "Email", and "When".
+			"author" and "committer" can use property "Name", "Email", and "When". (Derived from libgit2sharp)
 		-->
 		<Rule name="System.Reflection.AssemblyMetadataAttribute" key="Build">{committer.When:R}</Rule>
 		<Rule name="System.Reflection.AssemblyMetadataAttribute" key="Branch">{branch.Name}</Rule>
@@ -124,19 +120,26 @@ Imports System.Reflection
 		<Rule name="System.Reflection.AssemblyMetadataAttribute" key="Author">{author}</Rule>
 		<Rule name="System.Reflection.AssemblyMetadataAttribute" key="Committer">{committer}</Rule>
 		<Rule name="System.Reflection.AssemblyMetadataAttribute" key="Message">{commit.MessageShort}</Rule>
-	</Rules>
+	</WriterRules>
 </RelaxVersioner>
 ```
 
 ## TODO:
 * Support exclude rule set.
 * Support native C++ project.
+* Support templated output.
+* Support fallback rule set.
 
 ## License
 * Copyright (c) 2015 Kouji Matsui (@kekyo2)
 * Under Apache v2
 
 ## History
+* 0.8.1:
+  * Change ruleset element name "Rules" -> "WriterRules" (Breaking change)
+  * Change "gitLabel" fallback value, "safeVersion" -> "0.0.0.0"
+  * Output version information diagnostics on build time
+  * Tabs fixed
 * 0.7.18:
   * Fixed PCL target project cause AssemblyMetadataAttribute not found.
 * 0.7.17:
