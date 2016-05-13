@@ -85,7 +85,7 @@ Imports System.Reflection
 4. Let's build now! Output binary applied version informations.
   * Default declaration of AssemblyVersion="0.0.0.0", AssemblyFileVersion="(Build date on 2sec prec.)" (ex:"2016.05.12.11523"）
 	* Applied AssemblyMetadata from local Git repository (Author, Branch, Tags）. But this example git repository not created , so there declarations containing "Unknown".
-5. Create Git local repository (command: git init).
+5. Create Git local repository (command: git init). And commit with message.
 6. Build retry. Output binary applied Author, Branch, Tags now.
 7. You are tagging current commit. For example "0.5.4". Build retry, contains AssemblyVersion is "0.5.4" now.
 8. All rights codes, tags. Push to remote repository, all done.
