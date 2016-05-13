@@ -78,6 +78,19 @@ Imports System.Reflection
 * After installed, build project. Auto-apply version informations into assembly attributes. Some attributes are looking for directory Windows Explorer property page.
 * You can use custom rule set file naming "RelaxVersioner.rules" into project folder "$(ProjectDir)" or solution folder "$(SolutionDir)". Current no documentation custom rule set file, see also below.
 
+## Example for development cycles
+1. You create new C#,F# or another project.
+2. Install "RelaxVersioner" from NuGet.
+3. Comment outs default "AssemblyVersion" and "AssemblyFileVersion" declarations in AssemblyInfo.cs.
+4. Let's build now! Output binary applied version informations.
+  * Default declaration of AssemblyVersion="0.0.0.0", AssemblyFileVersion="(Build date on 2sec prec.)" (ex:"2016.05.12.11523"）
+	* Applied AssemblyMetadata from local Git repository (Author, Branch, Tags）. But this example git repository not created , so there declarations containing "Unknown".
+5. Create Git local repository (command: git init).
+6. Build retry. Output binary applied Author, Branch, Tags now.
+7. You are tagging current commit. For example "0.5.4". Build retry, contains AssemblyVersion is "0.5.4" now.
+8. All rights codes, tags. Push to remote repository, all done.
+9. Development cycles: next codes change and ready to release, you are tagging new version and then build, output binary auto tagged in AssemblyVersion and store informations.
+
 ## Sample custom rule set file:
 ``` xml
 <?xml version="1.0" encoding="utf-8"?>

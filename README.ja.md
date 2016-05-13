@@ -73,10 +73,24 @@ Imports System.Reflection
 ```
 
 ## 使い方
-* NuGetで"CenterCLR.RelaxVersioner"を検索して導入してください。 https://www.nuget.org/packages/CenterCLR.RelaxVersioner/
-* あらかじめ、AssemblyInfo.cs等に定義されている、デフォルトの"AssemblyVersion"と"AssemblyFileVersion"属性をコメントアウトして下さい（ビルド時に重複定義エラーが発生します）。これらはカスタムルールを用いて定義を除外するのであれば、引き続き使用する事もできます。
+* NuGetで"RelaxVersioner"を検索して導入してください。 https://www.nuget.org/packages/CenterCLR.RelaxVersioner/
+* あらかじめ、AssemblyInfo.cs等に定義されている、デフォルトの"AssemblyVersion"と"AssemblyFileVersion"属性をコメントアウトして下さい（ビルド時に重複定義エラーが発生します）。
+  * これらはカスタムルールを用いて定義を除外するのであれば、引き続き使用する事もできます。
 * ビルドすると、自動的にアセンブリ属性が適用されます。ILSpy等で確認するか、一部の属性はエクスプローラーのプロパティから確認することが出来ます。
 * プロジェクトフォルダ、又はソリューションフォルダに"RelaxVersioner.rules"ファイルを配置することで、カスタムルールを定義出来ます。まだドキュメントを用意できていないので、サンプルとして以下の定義例を参照してください。
+
+## 開発運用の例
+1. C#・F#などでプロジェクトを新規に作ります。
+2. NuGetで"RelaxVersioner"を検索して、プロジェクトに追加します。
+3. AssemblyInfo.csなどに定義されている、デフォルトの"AssemblyVersion"と"AssemblyFileVersion"属性をコメントアウトします。
+4. この状態でビルドするだけで、バージョンが適用されたバイナリが生成されます。
+  * デフォルトでは、AssemblyVersionが"0.0.0.0"、AssemblyFileVersionがビルド時の日時を2秒精度でバージョン化した値（例:"2016.05.12.11523"）となります。
+	* また、AssemblyMetadataに、ローカルGitリポジトリから得られる情報が埋め込まれます（Author・ブランチ・タグなど）。しかし、この例ではまだgit initしてないので"Unknown"として埋め込まれます。
+5. ソリューションフォルダでgit initして適当にコミットしてください。
+6. この状態でビルドすると、Author・ブランチやコミットメッセージが埋め込まれます。
+7. 現在のコミットにタグをつけてください。例えば"0.5.4"のようなバージョン表記です。これでビルドすれば、このバージョン番号が自動的にAssemblyVersionに反映されるようになります。
+8. 全て良ければ、リモートリポジトリにpushして完了です。
+9. 以後、コードを変更してリリースの準備が出来たら、新たにタグをつければそれがAssemblyVersionに反映されるので、ビルドしてバイナリをリリースします。
 
 ## カスタムルールファイルの例:
 ``` xml
