@@ -46,7 +46,14 @@
 
     <Target Name="RelaxVersionerBuild" BeforeTargets="BeforeCompile" Outputs="$(RelaxVersionerOutputPath)">
         <Exec
+            Condition="'$(OS)' == 'Windows_NT'"
             Command="CenterCLR.RelaxVersioner.exe &quot;$(SolutionDir.TrimEnd('\\'))&quot; &quot;$(ProjectDir.TrimEnd('\\'))&quot; &quot;$(RelaxVersionerOutputPath)&quot; &quot;$(TargetFrameworkVersion)&quot; &quot;$(TargetFrameworkProfile)&quot; &quot;$(RelaxVersionerLanguage)&quot;"
+            Outputs="$(RelaxVersionerOutputPath)"
+            WorkingDirectory="$(MSBuildThisFileDirectory)" />
+
+        <Exec
+            Condition="'$(OS)' != 'Windows_NT'"
+            Command="mono --runtime=v4.0.30319 CenterCLR.RelaxVersioner.exe &quot;$(SolutionDir.TrimEnd('\\'))&quot; &quot;$(ProjectDir.TrimEnd('\\'))&quot; &quot;$(RelaxVersionerOutputPath)&quot; &quot;$(TargetFrameworkVersion)&quot; &quot;$(TargetFrameworkProfile)&quot; &quot;$(RelaxVersionerLanguage)&quot;"
             Outputs="$(RelaxVersionerOutputPath)"
             WorkingDirectory="$(MSBuildThisFileDirectory)" />
 

@@ -18,6 +18,7 @@
 ## Sample output codes
 
 ### For C#:
+
 ``` csharp
 [assembly: System.Reflection.AssemblyVersionAttribute("0.5.30.0")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("2016.1.15.41306")]
@@ -31,6 +32,7 @@
 ```
 
 ### For F#:
+
 ``` fsharp
 namespace global
 	[<assembly: System.Reflection.AssemblyVersionAttribute("0.5.30.0")>]
@@ -46,6 +48,7 @@ namespace global
 ```
 
 ### For VB.NET:
+
 ``` visualbasic
 Imports System.Reflection
 <Assembly: System.Reflection.AssemblyVersionAttribute("0.5.30.0")>
@@ -60,6 +63,7 @@ Imports System.Reflection
 ```
 
 ### For C++/CLI:
+
 ``` cpp
 [assembly: System::Reflection::AssemblyVersionAttribute("0.5.30.0")];
 [assembly: System::Reflection::AssemblyFileVersionAttribute("2016.1.15.41306")];
@@ -92,6 +96,7 @@ Imports System.Reflection
 9. Development cycles: next codes change and ready to release, you are tagging new version and then build, output binary auto tagged in AssemblyVersion and store informations.
 
 ## Sample custom rule set file:
+
 ``` xml
 <?xml version="1.0" encoding="utf-8"?>
 <RelaxVersioner version="1.0">

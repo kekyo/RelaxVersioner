@@ -18,6 +18,7 @@
 ## 出力されるコードの例:
 
 ### For C#:
+
 ``` csharp
 [assembly: System.Reflection.AssemblyVersionAttribute("0.5.30.0")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("2016.1.15.41306")]
@@ -31,6 +32,7 @@
 ```
 
 ### For F#:
+
 ``` fsharp
 namespace global
 	[<assembly: System.Reflection.AssemblyVersionAttribute("0.5.30.0")>]
@@ -46,6 +48,7 @@ namespace global
 ```
 
 ### For VB.NET:
+
 ``` visualbasic
 Imports System.Reflection
 <Assembly: System.Reflection.AssemblyVersionAttribute("0.5.30.0")>
@@ -60,6 +63,7 @@ Imports System.Reflection
 ```
 
 ### For C++/CLI:
+
 ``` cpp
 [assembly: System::Reflection::AssemblyVersionAttribute("0.5.30.0")];
 [assembly: System::Reflection::AssemblyFileVersionAttribute("2016.1.15.41306")];
@@ -93,6 +97,7 @@ Imports System.Reflection
 9. 以後、コードを変更してリリースの準備が出来たら、新たにタグをつければそれがAssemblyVersionに反映されるので、ビルドしてバイナリをリリースします。
 
 ## カスタムルールファイルの例:
+
 ``` xml
 <?xml version="1.0" encoding="utf-8"?>
 <RelaxVersioner version="1.0">
