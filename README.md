@@ -9,7 +9,9 @@
 
 ## What is this?
 * RelaxVersioner is Very easy-usage, Git-based, auto-generate version informations in .NET source code. (Assembly attribute based)
-* Target language/projects: C#, F#, VB.NET, and C++/CLI
+* If you use RelaxVersioner, version handling ONLY use for Git tags/branches/commit messages. Of course you don't need more tooling usage, and easy managing continuous-integration environments.
+* Target language/projects: C#, F#, VB.NET, C++/CLI, and Wix (wixproj/wxs).
+  * Currently, Wix is WIP.
 * Auto collect version information from local Git repository tags/branch name.
 * Independent AssemblyInfo.cs file, RelaxVersioner is output into temporary file. (No direct manipulate AssemblyInfo file).
 * Place source code location which isn't obstructive for Git. (ex: obj/Debug)
@@ -145,14 +147,20 @@ Imports System.Reflection
 ## TODO:
 * Support exclude rule set.
 * Support native C++ project.
+* Support NuGet output project. (nuproj?, nubuild? and/or other projects?)
 * Support templated output.
 * Support fallback rule set.
+* Support Mono environments (and CI environments on *nix, Please PR for complete :)
 
 ## License
 * Copyright (c) 2015 Kouji Matsui (@kekyo2)
 * Under Apache v2
 
 ## History
+* 0.8.3:
+  * Add Wix support.
+* 0.8.2:
+  * Add mono support. (WIP, Please PR for complete :)
 * 0.8.1:
   * Change ruleset element name "Rules" -> "WriterRules" (Breaking change)
   * Change "gitLabel" fallback value, "safeVersion" -> "0.0.0.0"

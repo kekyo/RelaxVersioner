@@ -16,17 +16,28 @@
     limitations under the License.
 -->
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+
+    <!-- ============================================================================= -->
+    <!-- Properties definition -->
+
+    <!-- ======================== -->
+    <!-- Common -->
     <PropertyGroup>
+        <!-- This path identicate auto-generated source code by RelaxVersioner. -->
         <RelaxVersionerOutputPath Condition="'$(RelaxVersionerOutputPath)' == ''">$([System.IO.Path]::Combine('$(ProjectDir)','$(IntermediateOutputPath)','RelaxVersioner$(DefaultLanguageSourceExtension)'))</RelaxVersionerOutputPath>
         <!-- HACK: Code analysis cause CA1016 "Add AssemblyVersion attribute..." if not defined or version is [0.0.0.0] -->
         <NoWarn>$(NoWarn) 1016</NoWarn>
     </PropertyGroup>
 
+    <!-- ======================== -->
+    <!-- For F# -->
     <PropertyGroup Condition="'$(Language)' == 'F#'">
         <!-- HACK: https://github.com/fsharp/fsharp/issues/289 -->
         <NoWarn>$(NoWarn) 2003</NoWarn>
     </PropertyGroup>
-    
+
+    <!-- ======================== -->
+    <!-- For C++ (or C++/CLI) -->
     <PropertyGroup Condition="'$(Language)' == 'C++'">
         <RelaxVersionerLanguage Condition="('$(RelaxVersionerLanguage)' == '') AND ('$(CLRSupport)' == 'true')">C++/CLI</RelaxVersionerLanguage>
         <RelaxVersionerLanguage Condition="'$(RelaxVersionerLanguage)' == ''">C++</RelaxVersionerLanguage>
@@ -36,6 +47,14 @@
         </BuildCompileTargets>
     </PropertyGroup>
 
+    <!-- ======================== -->
+    <!-- For Wix -->
+    <PropertyGroup Condition="'$(WixInstallPath)' != ''">
+        <RelaxVersionerLanguage>Wix</RelaxVersionerLanguage>
+    </PropertyGroup>
+
+    <!-- ======================== -->
+    <!-- For all languages except C++ -->
     <PropertyGroup Condition="'$(Language)' != 'C++'">
         <RelaxVersionerLanguage Condition="'$(RelaxVersionerLanguage)' == ''">$(Language)</RelaxVersionerLanguage>
         <CoreBuildDependsOn>
@@ -44,28 +63,48 @@
         </CoreBuildDependsOn>
     </PropertyGroup>
 
+    <!-- ============================================================================= -->
+    <!-- Build definition -->
+
     <Target Name="RelaxVersionerBuild" BeforeTargets="BeforeCompile" Outputs="$(RelaxVersionerOutputPath)">
+
+        <!-- ======================== -->
+        <!-- For Windows environment -->
         <Exec
             Condition="'$(OS)' == 'Windows_NT'"
             Command="CenterCLR.RelaxVersioner.exe &quot;$(SolutionDir.TrimEnd('\\'))&quot; &quot;$(ProjectDir.TrimEnd('\\'))&quot; &quot;$(RelaxVersionerOutputPath)&quot; &quot;$(TargetFrameworkVersion)&quot; &quot;$(TargetFrameworkProfile)&quot; &quot;$(RelaxVersionerLanguage)&quot;"
             Outputs="$(RelaxVersionerOutputPath)"
             WorkingDirectory="$(MSBuildThisFileDirectory)" />
 
+        <!-- ======================== -->
+        <!-- TODO: Mono environment -->
         <Exec
             Condition="'$(OS)' != 'Windows_NT'"
             Command="mono --runtime=v4.0.30319 CenterCLR.RelaxVersioner.exe &quot;$(SolutionDir.TrimEnd('\\'))&quot; &quot;$(ProjectDir.TrimEnd('\\'))&quot; &quot;$(RelaxVersionerOutputPath)&quot; &quot;$(TargetFrameworkVersion)&quot; &quot;$(TargetFrameworkProfile)&quot; &quot;$(RelaxVersionerLanguage)&quot;"
             Outputs="$(RelaxVersionerOutputPath)"
             WorkingDirectory="$(MSBuildThisFileDirectory)" />
 
+        <!-- ============================================================================= -->
+        <!-- Add output rule -->
+
+        <!-- ======================== -->
+        <!-- For F# -->
+        <ItemGroup Condition="'$(Language)' == 'F#'">
+            <!-- HACK: F#'s EntryPoint expression is ignoring namespace/module if source code last compilation.
+                 So, RelaxVersioner code insert before any source codes. -->
+            <CompileBefore Include="$(RelaxVersionerOutputPath)" />
+        </ItemGroup>
+
+        <!-- ======================== -->
+        <!-- For C++ (or C++/CLI) -->
         <ItemGroup Condition="'$(Language)' == 'C++'">
             <ClCompile Include="$(RelaxVersionerOutputPath)" />
         </ItemGroup>
 
-        <ItemGroup Condition="'$(Language)' != 'C++'">
-            <!-- HACK: F#'s EntryPoint expression is ignoring namespace/module if source code last compilation.
-                 So, RelaxVersioner code insert before any source codes. -->
-            <CompileBefore Condition="'$(Language)' == 'F#'" Include="$(RelaxVersionerOutputPath)" />
-            <Compile Condition="'$(Language)' != 'F#'" Include="$(RelaxVersionerOutputPath)" />
+        <!-- ======================== -->
+        <!-- For other languages -->
+        <ItemGroup Condition="('$(Language)' != 'F#') and ('$(Language)' != 'C++')">
+            <Compile Include="$(RelaxVersionerOutputPath)" />
         </ItemGroup>
     </Target>
 </Project>

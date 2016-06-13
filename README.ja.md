@@ -9,7 +9,9 @@
 
 ## これは何？
 * RelaxVersionerは、軽量で非常に簡単に使用することが出来る、Gitベースの「自動バージョニング」ツールセットです。.NETベースのソースコードを対象としていて、ビルド時にアセンブリ属性を自動的に適用します。
-* サポートしている言語は、.NETで標準的に使用される、C#・F#・VB.NET・C++/CLIです。
+* RelaxVersionerを使うと、Gitのタグ・ブランチ・コミットメッセージだけを使って、バージョン管理が出来ます。つまり、追加のツール操作が不要なため、Gitを知ってさえいれば学習コストがほとんどなく、CI環境にも容易に対応できます。
+* サポートしている言語は、.NETで標準的に使用される、C#・F#・VB.NET・C++/CLI、そしてWix（wixprojとwxs）です。
+  * Wixは現在作業中です。
 * ローカルのGitリポジトリから、自動的にタグ・ブランチの名称を取得し、アセンブリ属性に適用することが出来ます。
 * AssemblyInfo.csファイルを直接変更しません。RelaxVersionerはテンポラリファイルに定義を出力し、それをコンパイルさせます。
 * Visual Studio/MSBuildの中間出力フォルダーを自動的に使用するため、Gitリポジトリ内を汚すことがありません。
@@ -146,14 +148,20 @@ Imports System.Reflection
 ## TODO:
 * 除外ルールのサポート
 * ネイティブC++プロジェクトに対応させる
+* NuGetを出力するプロジェクトに対応させる (nuproj?, nubuild? and/or other projects?)
 * テンプレート出力をサポートする
 * フォールバックルールを指定可能にする
+* Mono環境のサポート (そして *nix 環境でのCIのサポート / 詳しい方のPRウェルカム)
 
 ## License
 * Copyright (c) 2015 Kouji Matsui (@kekyo2)
 * Under Apache v2
 
 ## 履歴
+* 0.8.3:
+  * Wixプロジェクトのサポート
+* 0.8.2:
+  * Mono環境のサポート (未完了・詳しい方のPRウェルカム)
 * 0.8.1:
   * ルールセットの "Rules" を "WriterRules" に変更 (Breaking change)
   * "gitLabel" のフォールバック値を "safeVersion" から、固定の "0.0.0.0" に変更
