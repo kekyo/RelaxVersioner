@@ -39,12 +39,14 @@ namespace CenterCLR.RelaxVersioner.Writers
             Dictionary<string, IEnumerable<Branch>> branches,
             bool requireMetadataAttribute,
             DateTimeOffset generated,
-            ICollection<Rule> ruleSet)
+            ICollection<Rule> ruleSet,
+            List<string> combineDefinitions)
         {
             Debug.Assert(string.IsNullOrWhiteSpace(targetPath) == false);
             Debug.Assert(tags != null);
             Debug.Assert(branches != null);
             Debug.Assert(ruleSet != null);
+            Debug.Assert(combineDefinitions != null);
 
             var unknownBranch = new UnknownBranch(generated);
 

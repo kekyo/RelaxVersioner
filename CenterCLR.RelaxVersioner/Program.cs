@@ -19,9 +19,8 @@
 
 using System;
 using System.Collections.Generic;
-using System.Linq;
+using System.Diagnostics;
 using System.Runtime.InteropServices;
-using LibGit2Sharp;
 
 namespace CenterCLR.RelaxVersioner
 {
@@ -38,68 +37,28 @@ namespace CenterCLR.RelaxVersioner
                 var targetFrameworkProfile = args[4];
                 var language = args[5];
 
-                var writers = Utilities.GetWriters();
-                var writer = writers[language];
+                var combineDefinitions = new List<string>();
 
-                var ruleSets = Utilities.AggregateRuleSets(
-                    Utilities.LoadRuleSet(projectDirectory),
-                    Utilities.LoadRuleSet(solutionDirectory),
-                    Utilities.GetDefaultRuleSet());
+                var result = Executor.Execute(
+                    solutionDirectory,
+                    projectDirectory,
+                    targetPath,
+                    targetFrameworkVersion,
+                    targetFrameworkProfile,
+                    language,
+                    combineDefinitions,
+                    Console.WriteLine);
+                
+                // TODO: Executable cannot handle output parameters.
+                Debug.Assert(combineDefinitions.Count == 0);
 
-                var ruleSet = ruleSets[language].ToList();
-
-                // Traverse git repository between projectDirectory and the root.
-                // Why use projectDirectory instead solutionDirectory ?
-                //   Because solution file (*.sln) is only aggregate project's pointers.
-                //   Some use case, solution file placed exterior of git work folder,
-                //   but project folder always placed interior git work folder.
-                var repository = Utilities.OpenRepository(projectDirectory);
-
-                try
-                {
-                    var tags = repository?.Tags.
-                        Where(tag => tag.Target is Commit).
-                        GroupBy(tag => tag.Target.Sha).
-                        ToDictionary(
-                            g => g.Key,
-                            g => g.ToList().AsEnumerable(),
-                            StringComparer.InvariantCultureIgnoreCase) ??
-                        new Dictionary<string, IEnumerable<Tag>>();
-
-                    var branches = (repository != null) ?
-                        (from branch in repository.Branches
-                        where !branch.IsRemote
-                        from commit in branch.Commits
-                        group branch by commit.Sha).
-                        ToDictionary(
-                            g => g.Key,
-                            g => g.ToList().AsEnumerable(),
-                            StringComparer.InvariantCultureIgnoreCase) :
-                        new Dictionary<string, IEnumerable<Branch>>();
-
-                    var gitLabel = writer.Write(
-                        targetPath,
-                        repository?.Head,
-                        tags,
-                        branches,
-                        (targetFrameworkVersion < 4.5) || !string.IsNullOrWhiteSpace(targetFrameworkProfile),
-                        DateTimeOffset.Now,
-                        ruleSet);
-
-                    Console.WriteLine("RelaxVersioner: Generated versions code: Language={0}, Version={1}", language, gitLabel);
-                }
-                finally
-                {
-                    repository?.Dispose();
-                }
+                return result;
             }
             catch (Exception ex)
             {
                 Console.Error.WriteLine("RelaxVersioner: " + ex.Message);
                 return Marshal.GetHRForException(ex);
             }
-
-            return 0;
         }
     }
 }
