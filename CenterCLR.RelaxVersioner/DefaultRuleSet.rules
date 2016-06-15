@@ -31,7 +31,7 @@
 
         <!--
             "gitLabel" is extract numerical-notate version string [1.2.3.4] from git repository tags/branches traverse start HEAD.
-            If not found, use [0.0.0.0].
+            If not found, use [0.0.1.0].
         -->
         <Rule name="System.Reflection.AssemblyVersionAttribute">{gitLabel}</Rule>
 
@@ -64,5 +64,12 @@
         <Rule name="System.Reflection.AssemblyMetadataAttribute" key="Author">{author}</Rule>
         <Rule name="System.Reflection.AssemblyMetadataAttribute" key="Committer">{committer}</Rule>
         <Rule name="System.Reflection.AssemblyMetadataAttribute" key="Message">{commit.MessageShort}</Rule>
+    </WriterRules>
+    <WriterRules>
+        <!-- Target languages -->
+        <Language>Wix</Language>
+
+        <Rule name="VERSION">{gitLabel}</Rule>
+        <Rule name="DESCRIPTION">{gitLabel}</Rule>
     </WriterRules>
 </RelaxVersioner>
