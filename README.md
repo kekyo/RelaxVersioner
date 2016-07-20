@@ -158,7 +158,7 @@ Imports System.Reflection
 
 ## History
 * 0.8.3:
-  * Add Wix support.
+  * Add Wix support. (WIP)
 * 0.8.2:
   * Add mono support. (WIP, Please PR for complete :)
 * 0.8.1:
