@@ -79,13 +79,23 @@ namespace CenterCLR.RelaxVersioner
                         StringComparer.InvariantCultureIgnoreCase) :
                     new Dictionary<string, IEnumerable<Branch>>();
 
-                var gitLabel = writer.Write(
-                    targetPath,
-                    repository?.Head,
+                var targetBranch = repository?.Head;
+                var generated = DateTimeOffset.Now;
+
+                System.Version gitLabel;
+                var keyValues = Utilities.ConstructFormatParameters(
+                    targetBranch,
                     tags,
                     branches,
+                    generated,
+                    out gitLabel);
+
+                writer.Write(
+                    targetPath,
+                    keyValues,
+                    targetBranch,
                     (targetFrameworkVersion < 4.5) || !string.IsNullOrWhiteSpace(targetFrameworkProfile),
-                    DateTimeOffset.Now,
+                    generated,
                     ruleSet,
                     combineDefinitions);
 

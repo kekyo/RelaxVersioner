@@ -90,7 +90,7 @@ Imports System.Reflection
 2. NuGetで"RelaxVersioner"を検索して、プロジェクトに追加します。
 3. AssemblyInfo.csなどに定義されている、デフォルトの"AssemblyVersion"と"AssemblyFileVersion"属性をコメントアウトします。
 4. この状態でビルドするだけで、バージョンが適用されたバイナリが生成されます。
-  * デフォルトでは、AssemblyVersionが"0.0.0.0"、AssemblyFileVersionがビルド時の日時を2秒精度でバージョン化した値（例:"2016.05.12.11523"）となります。
+  * デフォルトでは、AssemblyVersionが"0.0.1.0"、AssemblyFileVersionがビルド時の日時を2秒精度でバージョン化した値（例:"2016.05.12.11523"）となります。
 	* また、AssemblyMetadataに、ローカルGitリポジトリから得られる情報が埋め込まれます（Author・ブランチ・タグなど）。しかし、この例ではまだgit initしてないので"Unknown"として埋め込まれます。
 5. ソリューションフォルダでgit initして適当にコミットしてください。
 6. この状態でビルドすると、Author・ブランチやコミットメッセージが埋め込まれます。

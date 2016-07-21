@@ -89,7 +89,7 @@ Imports System.Reflection
 2. Install "RelaxVersioner" from NuGet.
 3. Comment outs default "AssemblyVersion" and "AssemblyFileVersion" declarations in AssemblyInfo.cs.
 4. Let's build now! Output binary applied version informations.
-  * Default declaration of AssemblyVersion="0.0.0.0", AssemblyFileVersion="(Build date on 2sec prec.)" (ex:"2016.05.12.11523"）
+  * Default declaration of AssemblyVersion="0.0.1.0", AssemblyFileVersion="(Build date on 2sec prec.)" (ex:"2016.05.12.11523"）
 	* Applied AssemblyMetadata from local Git repository (Author, Branch, Tags）. But this example git repository not created , so there declarations containing "Unknown".
 5. Create Git local repository (command: git init). And commit with message.
 6. Build retry. Output binary applied Author, Branch, Tags now.

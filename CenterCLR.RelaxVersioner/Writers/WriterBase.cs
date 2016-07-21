@@ -28,30 +28,21 @@ namespace CenterCLR.RelaxVersioner.Writers
 {
     internal abstract class WriterBase
     {
-        private static readonly System.Version zeroVersion_ = new System.Version(0, 0, 0, 0);
-
         public abstract string Language { get; }
 
-        public virtual string Write(
+        public virtual void Write(
             string targetPath,
+            Dictionary<string, object> keyValues,
             Branch branch,
-            Dictionary<string, IEnumerable<Tag>> tags,
-            Dictionary<string, IEnumerable<Branch>> branches,
             bool requireMetadataAttribute,
             DateTimeOffset generated,
             ICollection<Rule> ruleSet,
             List<string> combineDefinitions)
         {
             Debug.Assert(string.IsNullOrWhiteSpace(targetPath) == false);
-            Debug.Assert(tags != null);
-            Debug.Assert(branches != null);
+            Debug.Assert(keyValues != null);
             Debug.Assert(ruleSet != null);
             Debug.Assert(combineDefinitions != null);
-
-            var unknownBranch = new UnknownBranch(generated);
-
-            var altBranch = branch ?? unknownBranch;
-            var commit = altBranch.Commits.FirstOrDefault() ?? unknownBranch.Commits.First();
 
             var targetFolder = Path.GetDirectoryName(targetPath);
             if (Directory.Exists(targetFolder) == false)
@@ -84,36 +75,6 @@ namespace CenterCLR.RelaxVersioner.Writers
                 }
                 tw.WriteLine();
 
-                var commitId = commit.Sha;
-                var author = commit.Author;
-                var committer = commit.Committer;
-
-                var altBranches = string.Join(
-                    ",",
-                    branches.GetValue(commitId, Enumerable.Empty<Branch>()).
-                        Select(b => b.Name));
-                var altTags = string.Join(
-                    ",",
-                    tags.GetValue(commitId, Enumerable.Empty<Tag>()).
-                        Select(b => b.Name));
-
-                var safeVersion = Utilities.GetSafeVersionFromDate(committer.When);
-                var gitLabel = Utilities.GetLabelWithFallback(altBranch, tags, branches) ?? zeroVersion_;
-
-                var keyValues = new Dictionary<string, object>(StringComparer.InvariantCultureIgnoreCase)
-                {
-                    {"generated", generated},
-                    {"branch", altBranch},
-                    {"branches", altBranches},
-                    {"tags", altTags},
-                    {"commit", commit},
-                    {"author", author},
-                    {"committer", committer},
-                    {"commitId", commitId},
-                    {"gitLabel", gitLabel},
-                    {"safeVersion", safeVersion}
-                };
-
                 foreach (var rule in ruleSet)
                 {
                     var formattedValue = Named.Format(rule.Format, keyValues);
@@ -131,8 +92,6 @@ namespace CenterCLR.RelaxVersioner.Writers
                 this.WriteAfterBody(tw, requireMetadataAttribute);
 
                 tw.Flush();
-
-                return gitLabel.ToString();
             }
         }
 

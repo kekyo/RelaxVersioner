@@ -30,6 +30,7 @@ namespace CenterCLR.RelaxVersioner
 {
     internal static class Utilities
     {
+        private static readonly System.Version emptyVersion_ = new System.Version(0, 0, 1, 0);
         private static readonly char[] versionSeparators_ = {'/', '-', '_'};
 
         public static Dictionary<string, WriterBase> GetWriters()
@@ -218,17 +219,63 @@ namespace CenterCLR.RelaxVersioner
             var versions =
                 (from commit in targetBranch.Commits
                  from label in
-                    tags.GetValue(commit.Sha, Enumerable.Empty<Tag>()).Select(tag => GetVersionFromGitLabel(tag.Name))
+                    tags.GetValue(commit.Sha, Enumerable.Empty<Tag>()).Select(tag => GetVersionFromGitLabel(tag.FriendlyName))
                  select label).
                 Concat(
                     from commit in targetBranch.Commits.Skip(1)
                     from label in
-                        branches.GetValue(commit.Sha, Enumerable.Empty<Branch>()).Select(branch => GetVersionFromGitLabel(branch.Name))
+                        branches.GetValue(commit.Sha, Enumerable.Empty<Branch>()).Select(branch => GetVersionFromGitLabel(branch.FriendlyName))
                     select label);
 
             // Use first version, if no candidate then try current branch name.
             return versions.FirstOrDefault(label => label != null) ??
-                GetVersionFromGitLabel(targetBranch.Name);
+                GetVersionFromGitLabel(targetBranch.FriendlyName);
+        }
+
+        public static Dictionary<string, object> ConstructFormatParameters(
+            Branch branch,
+            Dictionary<string, IEnumerable<Tag>> tags,
+            Dictionary<string, IEnumerable<Branch>> branches,
+            DateTimeOffset generated,
+            out System.Version gitLabel)
+        {
+            Debug.Assert(tags != null);
+            Debug.Assert(branches != null);
+
+            var unknownBranch = new UnknownBranch(generated);
+
+            var altBranch = branch ?? unknownBranch;
+            var commit = altBranch.Commits.FirstOrDefault() ?? unknownBranch.Commits.First();
+
+            var commitId = commit.Sha;
+            var author = commit.Author;
+            var committer = commit.Committer;
+
+            var altBranches = string.Join(
+                ",",
+                branches.GetValue(commitId, Enumerable.Empty<Branch>()).
+                    Select(b => b.FriendlyName));
+            var altTags = string.Join(
+                ",",
+                tags.GetValue(commitId, Enumerable.Empty<Tag>()).
+                    Select(b => b.FriendlyName));
+
+            var safeVersion = Utilities.GetSafeVersionFromDate(committer.When);
+            gitLabel = Utilities.GetLabelWithFallback(altBranch, tags, branches) ?? emptyVersion_;
+
+            return new Dictionary<string, object>(StringComparer.InvariantCultureIgnoreCase)
+            {
+                {"generated", generated},
+                {"branch", altBranch},
+                {"branches", altBranches},
+                {"tags", altTags},
+                {"commit", commit},
+                {"author", author},
+                {"committer", committer},
+                {"commitId", commitId},
+                {"gitLabel", gitLabel},
+                {"safeVersion", safeVersion}
+            };
         }
     }
 }

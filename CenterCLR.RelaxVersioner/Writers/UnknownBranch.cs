@@ -33,7 +33,7 @@ namespace CenterCLR.RelaxVersioner.Writers
             commits_ = new UnknownCommitLog(when);
         }
 
-        public override string Name
+        public override string FriendlyName
         {
             get { return "(Unknown branch)"; }
         }
