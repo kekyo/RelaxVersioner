@@ -28,7 +28,7 @@ namespace CenterCLR.RelaxVersioner.Writers
 {
     internal abstract class WriterBase
     {
-        private static readonly System.Version zeroVersion_ = new System.Version(0, 0, 0, 0);
+        private static readonly System.Version baseVersion_ = new System.Version(0, 0, 1, 0);
 
         public abstract string Language { get; }
 
@@ -37,7 +37,6 @@ namespace CenterCLR.RelaxVersioner.Writers
             Branch branch,
             Dictionary<string, IEnumerable<Tag>> tags,
             Dictionary<string, IEnumerable<Branch>> branches,
-            bool requireMetadataAttribute,
             DateTimeOffset generated,
             ICollection<Rule> ruleSet)
         {
@@ -73,7 +72,7 @@ namespace CenterCLR.RelaxVersioner.Writers
                 this.WriteComment(tw, "Generated date: {0:R}", generated);
                 tw.WriteLine();
 
-                this.WriteBeforeBody(tw, requireMetadataAttribute);
+                this.WriteBeforeBody(tw);
 
                 var namespaces = Utilities.AggregateNamespacesFromRuleSet(ruleSet);
                 foreach (var namespaceName in namespaces)
@@ -89,14 +88,14 @@ namespace CenterCLR.RelaxVersioner.Writers
                 var altBranches = string.Join(
                     ",",
                     branches.GetValue(commitId, Enumerable.Empty<Branch>()).
-                        Select(b => b.Name));
+                        Select(b => b.FriendlyName));
                 var altTags = string.Join(
                     ",",
                     tags.GetValue(commitId, Enumerable.Empty<Tag>()).
-                        Select(b => b.Name));
+                        Select(b => b.FriendlyName));
 
                 var safeVersion = Utilities.GetSafeVersionFromDate(committer.When);
-                var gitLabel = Utilities.GetLabelWithFallback(altBranch, tags, branches) ?? zeroVersion_;
+                var gitLabel = Utilities.GetLabelWithFallback(altBranch, tags, branches) ?? baseVersion_;
 
                 var keyValues = new Dictionary<string, object>(StringComparer.InvariantCultureIgnoreCase)
                 {
@@ -126,7 +125,7 @@ namespace CenterCLR.RelaxVersioner.Writers
                 }
                 tw.WriteLine();
 
-                this.WriteAfterBody(tw, requireMetadataAttribute);
+                this.WriteAfterBody(tw);
 
                 tw.Flush();
 
@@ -139,7 +138,7 @@ namespace CenterCLR.RelaxVersioner.Writers
             tw.WriteLine("// " + format, args);
         }
 
-        protected virtual void WriteBeforeBody(TextWriter tw, bool requireMetadataAttribute)
+        protected virtual void WriteBeforeBody(TextWriter tw)
         {
         }
 
@@ -162,7 +161,7 @@ namespace CenterCLR.RelaxVersioner.Writers
         {
         }
 
-        protected virtual void WriteAfterBody(TextWriter tw, bool requireMetadataAttribute)
+        protected virtual void WriteAfterBody(TextWriter tw)
         {
         }
     }

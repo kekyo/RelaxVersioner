@@ -25,20 +25,20 @@ namespace CenterCLR.RelaxVersioner.Writers
     {
         public override string Language => "F#";
 
-        protected override void WriteBeforeBody(TextWriter tw, bool requireMetadataAttribute)
+        protected override void WriteBeforeBody(TextWriter tw)
         {
-            if (requireMetadataAttribute == true)
-            {
-                tw.WriteLine("namespace System.Reflection");
-                tw.WriteLine("    open System");
-                tw.WriteLine("    [<Sealed>]");
-                tw.WriteLine("    [<AttributeUsage(AttributeTargets.Assembly, AllowMultiple = true, Inherited = false)>]");
-                tw.WriteLine("    type internal AssemblyMetadataAttribute(key: string, value: string) =");
-                tw.WriteLine("        inherit Attribute()");
-                tw.WriteLine("        member this.Key = key");
-                tw.WriteLine("        member this.Value = value");
-                tw.WriteLine();
-            }
+            tw.WriteLine("namespace System.Reflection");
+            tw.WriteLine("    open System");
+            tw.WriteLine("    [<Sealed>]");
+            tw.WriteLine("    [<NoEquality>]");
+            tw.WriteLine("    [<NoComparison>]");
+            tw.WriteLine("    [<AutoSerializable(false)>]");
+            tw.WriteLine("    [<AttributeUsage(AttributeTargets.Assembly, AllowMultiple = true, Inherited = false)>]");
+            tw.WriteLine("    type internal AssemblyVersionMetadataAttribute(key: string, value: string) =");
+            tw.WriteLine("        inherit Attribute()");
+            tw.WriteLine("        member this.Key = key");
+            tw.WriteLine("        member this.Value = value");
+            tw.WriteLine();
 
             tw.WriteLine("namespace global");
             tw.WriteLine();
@@ -54,7 +54,7 @@ namespace CenterCLR.RelaxVersioner.Writers
             tw.WriteLine("    [<assembly: {0}({1})>]", name, args);
         }
 
-        protected override void WriteAfterBody(TextWriter tw, bool requireMetadataAttribute)
+        protected override void WriteAfterBody(TextWriter tw)
         {
             tw.WriteLine("    do()");
             tw.WriteLine();

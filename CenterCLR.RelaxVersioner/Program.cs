@@ -82,7 +82,6 @@ namespace CenterCLR.RelaxVersioner
                         repository?.Head,
                         tags,
                         branches,
-                        (targetFrameworkVersion < 4.5) || !string.IsNullOrWhiteSpace(targetFrameworkProfile),
                         DateTimeOffset.Now,
                         ruleSet);
 

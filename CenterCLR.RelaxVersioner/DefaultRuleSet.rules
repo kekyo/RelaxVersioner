@@ -49,21 +49,16 @@
         <Rule name="System.Reflection.AssemblyInformationalVersionAttribute">{commitId}</Rule>
 
         <!--
-            "key" is only used "AssemblyMetadataAttribute".
-            If you use "AssemblyMetadataAttribute" and platform version == "v4.0",
-            cannot use mscorlib implementation.
-            Will auto define pseudo "AssemblyMetadataAttribute" class.
-        -->
-        <!--
+            "key" is only using for "AssemblyVersionMetadataAttribute".
             "committer.When" or you can use another choice "author.When".
             "author" and "committer" can use property "Name", "Email", and "When". (Derived from libgit2sharp)
         -->
-        <Rule name="System.Reflection.AssemblyMetadataAttribute" key="Build">{committer.When:R}</Rule>
-        <Rule name="System.Reflection.AssemblyMetadataAttribute" key="Branch">{branch.Name}</Rule>
-        <Rule name="System.Reflection.AssemblyMetadataAttribute" key="Tags">{tags}</Rule>
-        <Rule name="System.Reflection.AssemblyMetadataAttribute" key="Author">{author}</Rule>
-        <Rule name="System.Reflection.AssemblyMetadataAttribute" key="Committer">{committer}</Rule>
-        <Rule name="System.Reflection.AssemblyMetadataAttribute" key="Message">{commit.MessageShort}</Rule>
+        <Rule name="System.Reflection.AssemblyVersionMetadataAttribute" key="Build">{committer.When:R}</Rule>
+        <Rule name="System.Reflection.AssemblyVersionMetadataAttribute" key="Branch">{branch.Name}</Rule>
+        <Rule name="System.Reflection.AssemblyVersionMetadataAttribute" key="Tags">{tags}</Rule>
+        <Rule name="System.Reflection.AssemblyVersionMetadataAttribute" key="Author">{author}</Rule>
+        <Rule name="System.Reflection.AssemblyVersionMetadataAttribute" key="Committer">{committer}</Rule>
+        <Rule name="System.Reflection.AssemblyVersionMetadataAttribute" key="Message">{commit.MessageShort}</Rule>
     </WriterRules>
     <WriterRules>
         <!-- Target languages -->

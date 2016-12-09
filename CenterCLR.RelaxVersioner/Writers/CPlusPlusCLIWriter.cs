@@ -25,33 +25,30 @@ namespace CenterCLR.RelaxVersioner.Writers
     {
         public override string Language => "C++/CLI";
 
-        protected override void WriteBeforeBody(TextWriter tw, bool requireMetadataAttribute)
+        protected override void WriteBeforeBody(TextWriter tw)
         {
             tw.WriteLine("#include \"stdafx.h\"");
             tw.WriteLine();
 
-            if (requireMetadataAttribute == true)
-            {
-                tw.WriteLine("namespace System");
-                tw.WriteLine("{");
-                tw.WriteLine("	namespace Reflection");
-                tw.WriteLine("	{");
-                tw.WriteLine("		[System::AttributeUsage(System::AttributeTargets::Assembly, AllowMultiple = true, Inherited = false)]");
-                tw.WriteLine("		private ref class AssemblyMetadataAttribute sealed : public System::Attribute");
-                tw.WriteLine("		{");
-                tw.WriteLine("		private:");
-                tw.WriteLine("			System::String^ key_;");
-                tw.WriteLine("			System::String^ value_;");
-                tw.WriteLine("		public:");
-                tw.WriteLine("			AssemblyMetadataAttribute(System::String^ key, System::String^ value)");
-                tw.WriteLine("				: key_(key), value_(value) { }");
-                tw.WriteLine("			property System::String^ Key { System::String^ get() { return key_; } }");
-                tw.WriteLine("			property System::String^ Value { System::String^ get() { return value_; } }");
-                tw.WriteLine("		};");
-                tw.WriteLine("	}");
-                tw.WriteLine("}");
-                tw.WriteLine();
-            }
+            tw.WriteLine("namespace System");
+            tw.WriteLine("{");
+            tw.WriteLine("	namespace Reflection");
+            tw.WriteLine("	{");
+            tw.WriteLine("		[System::AttributeUsage(System::AttributeTargets::Assembly, AllowMultiple = true, Inherited = false)]");
+            tw.WriteLine("		private ref class AssemblyVersionMetadataAttribute sealed : public System::Attribute");
+            tw.WriteLine("		{");
+            tw.WriteLine("		private:");
+            tw.WriteLine("			System::String^ key_;");
+            tw.WriteLine("			System::String^ value_;");
+            tw.WriteLine("		public:");
+            tw.WriteLine("			AssemblyVersionMetadataAttribute(System::String^ key, System::String^ value)");
+            tw.WriteLine("				: key_(key), value_(value) { }");
+            tw.WriteLine("			property System::String^ Key { System::String^ get() { return key_; } }");
+            tw.WriteLine("			property System::String^ Value { System::String^ get() { return value_; } }");
+            tw.WriteLine("		};");
+            tw.WriteLine("	}");
+            tw.WriteLine("}");
+            tw.WriteLine();
         }
 
         protected override string GetArgumentString(string argumentValue)

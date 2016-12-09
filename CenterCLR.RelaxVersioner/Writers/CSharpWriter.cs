@@ -36,26 +36,23 @@ namespace CenterCLR.RelaxVersioner.Writers
             tw.WriteLine("[assembly: {0}({1})]", name, args);
         }
 
-        protected override void WriteAfterBody(TextWriter tw, bool requireMetadataAttribute)
+        protected override void WriteAfterBody(TextWriter tw)
         {
-            if (requireMetadataAttribute == true)
-            {
-                tw.WriteLine("namespace System.Reflection");
-                tw.WriteLine("{");
-                tw.WriteLine("	[AttributeUsage(AttributeTargets.Assembly, AllowMultiple = true, Inherited = false)]");
-                tw.WriteLine("	internal sealed class AssemblyMetadataAttribute : Attribute");
-                tw.WriteLine("	{");
-                tw.WriteLine("		public AssemblyMetadataAttribute(string key, string value)");
-                tw.WriteLine("		{");
-                tw.WriteLine("			this.Key = key;");
-                tw.WriteLine("			this.Value = value;");
-                tw.WriteLine("		}");
-                tw.WriteLine("		public string Key { get; private set; }");
-                tw.WriteLine("		public string Value { get; private set; }");
-                tw.WriteLine("	}");
-                tw.WriteLine("}");
-                tw.WriteLine();
-            }
+            tw.WriteLine("namespace System.Reflection");
+            tw.WriteLine("{");
+            tw.WriteLine("	[AttributeUsage(AttributeTargets.Assembly, AllowMultiple = true, Inherited = false)]");
+            tw.WriteLine("	internal sealed class AssemblyVersionMetadataAttribute : Attribute");
+            tw.WriteLine("	{");
+            tw.WriteLine("		public AssemblyVersionMetadataAttribute(string key, string value)");
+            tw.WriteLine("		{");
+            tw.WriteLine("			this.Key = key;");
+            tw.WriteLine("			this.Value = value;");
+            tw.WriteLine("		}");
+            tw.WriteLine("		public string Key { get; private set; }");
+            tw.WriteLine("		public string Value { get; private set; }");
+            tw.WriteLine("	}");
+            tw.WriteLine("}");
+            tw.WriteLine();
         }
     }
 }

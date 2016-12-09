@@ -25,12 +25,12 @@
 [assembly: System.Reflection.AssemblyVersionAttribute("0.5.30.0")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("2016.1.15.41306")]
 [assembly: System.Reflection.AssemblyInformationalVersionAttribute("a05ab9fc87b22234596f4ddd43136e9e526ebb90")]
-[assembly: System.Reflection.AssemblyMetadataAttribute("Build","Fri, 15 Jan 2016 13:56:53 GMT")]
-[assembly: System.Reflection.AssemblyMetadataAttribute("Branch","master")]
-[assembly: System.Reflection.AssemblyMetadataAttribute("Tags","0.5.30")]
-[assembly: System.Reflection.AssemblyMetadataAttribute("Author","Kouji Matsui <k@kekyo.net>")]
-[assembly: System.Reflection.AssemblyMetadataAttribute("Committer","Kouji Matsui <k@kekyo.net>")]
-[assembly: System.Reflection.AssemblyMetadataAttribute("Message","Fixed tab")]
+[assembly: System.Reflection.AssemblyVersionMetadataAttribute("Build","Fri, 15 Jan 2016 13:56:53 GMT")]
+[assembly: System.Reflection.AssemblyVersionMetadataAttribute("Branch","master")]
+[assembly: System.Reflection.AssemblyVersionMetadataAttribute("Tags","0.5.30")]
+[assembly: System.Reflection.AssemblyVersionMetadataAttribute("Author","Kouji Matsui <k@kekyo.net>")]
+[assembly: System.Reflection.AssemblyVersionMetadataAttribute("Committer","Kouji Matsui <k@kekyo.net>")]
+[assembly: System.Reflection.AssemblyVersionMetadataAttribute("Message","Fixed tab")]
 ```
 
 ### For F#:
@@ -40,12 +40,12 @@ namespace global
 	[<assembly: System.Reflection.AssemblyVersionAttribute("0.5.30.0")>]
 	[<assembly: System.Reflection.AssemblyFileVersionAttribute("2016.1.15.41306")>]
 	[<assembly: System.Reflection.AssemblyInformationalVersionAttribute("a05ab9fc87b22234596f4ddd43136e9e526ebb90")>]
-	[<assembly: System.Reflection.AssemblyMetadataAttribute("Build","Fri, 15 Jan 2016 13:56:53 GMT")>]
-	[<assembly: System.Reflection.AssemblyMetadataAttribute("Branch","master")>]
-	[<assembly: System.Reflection.AssemblyMetadataAttribute("Tags","0.5.30")>]
-	[<assembly: System.Reflection.AssemblyMetadataAttribute("Author","Kouji Matsui <k@kekyo.net>")>]
-	[<assembly: System.Reflection.AssemblyMetadataAttribute("Committer","Kouji Matsui <k@kekyo.net>")>]
-	[<assembly: System.Reflection.AssemblyMetadataAttribute("Message","Fixed tab")>]
+	[<assembly: System.Reflection.AssemblyVersionMetadataAttribute("Build","Fri, 15 Jan 2016 13:56:53 GMT")>]
+	[<assembly: System.Reflection.AssemblyVersionMetadataAttribute("Branch","master")>]
+	[<assembly: System.Reflection.AssemblyVersionMetadataAttribute("Tags","0.5.30")>]
+	[<assembly: System.Reflection.AssemblyVersionMetadataAttribute("Author","Kouji Matsui <k@kekyo.net>")>]
+	[<assembly: System.Reflection.AssemblyVersionMetadataAttribute("Committer","Kouji Matsui <k@kekyo.net>")>]
+	[<assembly: System.Reflection.AssemblyVersionMetadataAttribute("Message","Fixed tab")>]
 	do()
 ```
 
@@ -56,12 +56,12 @@ Imports System.Reflection
 <Assembly: System.Reflection.AssemblyVersionAttribute("0.5.30.0")>
 <Assembly: System.Reflection.AssemblyFileVersionAttribute("2016.1.15.41306")>
 <Assembly: System.Reflection.AssemblyInformationalVersionAttribute("a05ab9fc87b22234596f4ddd43136e9e526ebb90")>
-<Assembly: System.Reflection.AssemblyMetadataAttribute("Build","Fri, 15 Jan 2016 13:56:53 GMT")>
-<Assembly: System.Reflection.AssemblyMetadataAttribute("Branch","master")>
-<Assembly: System.Reflection.AssemblyMetadataAttribute("Tags","0.5.30")>
-<Assembly: System.Reflection.AssemblyMetadataAttribute("Author","Kouji Matsui <k@kekyo.net>")>
-<Assembly: System.Reflection.AssemblyMetadataAttribute("Committer","Kouji Matsui <k@kekyo.net>")>
-<Assembly: System.Reflection.AssemblyMetadataAttribute("Message","Fixed tab")>
+<Assembly: System.Reflection.AssemblyVersionMetadataAttribute("Build","Fri, 15 Jan 2016 13:56:53 GMT")>
+<Assembly: System.Reflection.AssemblyVersionMetadataAttribute("Branch","master")>
+<Assembly: System.Reflection.AssemblyVersionMetadataAttribute("Tags","0.5.30")>
+<Assembly: System.Reflection.AssemblyVersionMetadataAttribute("Author","Kouji Matsui <k@kekyo.net>")>
+<Assembly: System.Reflection.AssemblyVersionMetadataAttribute("Committer","Kouji Matsui <k@kekyo.net>")>
+<Assembly: System.Reflection.AssemblyVersionMetadataAttribute("Message","Fixed tab")>
 ```
 
 ### For C++/CLI:
@@ -70,12 +70,12 @@ Imports System.Reflection
 [assembly: System::Reflection::AssemblyVersionAttribute("0.5.30.0")];
 [assembly: System::Reflection::AssemblyFileVersionAttribute("2016.1.15.41306")];
 [assembly: System::Reflection::AssemblyInformationalVersionAttribute("a05ab9fc87b22234596f4ddd43136e9e526ebb90")];
-[assembly: System::Reflection::AssemblyMetadataAttribute("Build","Fri, 15 Jan 2016 13:56:53 GMT")];
-[assembly: System::Reflection::AssemblyMetadataAttribute("Branch","master")];
-[assembly: System::Reflection::AssemblyMetadataAttribute("Tags","0.5.30")];
-[assembly: System::Reflection::AssemblyMetadataAttribute("Author","Kouji Matsui <k@kekyo.net>")];
-[assembly: System::Reflection::AssemblyMetadataAttribute("Committer","Kouji Matsui <k@kekyo.net>")];
-[assembly: System::Reflection::AssemblyMetadataAttribute("Message","Fixed tab")];
+[assembly: System::Reflection::AssemblyVersionMetadataAttribute("Build","Fri, 15 Jan 2016 13:56:53 GMT")];
+[assembly: System::Reflection::AssemblyVersionMetadataAttribute("Branch","master")];
+[assembly: System::Reflection::AssemblyVersionMetadataAttribute("Tags","0.5.30")];
+[assembly: System::Reflection::AssemblyVersionMetadataAttribute("Author","Kouji Matsui <k@kekyo.net>")];
+[assembly: System::Reflection::AssemblyVersionMetadataAttribute("Committer","Kouji Matsui <k@kekyo.net>")];
+[assembly: System::Reflection::AssemblyVersionMetadataAttribute("Message","Fixed tab")];
 ```
 
 ## How to use
@@ -89,8 +89,8 @@ Imports System.Reflection
 2. Install "RelaxVersioner" from NuGet.
 3. Comment outs default "AssemblyVersion" and "AssemblyFileVersion" declarations in AssemblyInfo.cs.
 4. Let's build now! Output binary applied version informations.
-  * Default declaration of AssemblyVersion="0.0.0.0", AssemblyFileVersion="(Build date on 2sec prec.)" (ex:"2016.05.12.11523"）
-	* Applied AssemblyMetadata from local Git repository (Author, Branch, Tags）. But this example git repository not created , so there declarations containing "Unknown".
+  * Default declaration of AssemblyVersion="0.0.1.0", AssemblyFileVersion="(Build date on 2sec prec.)" (ex:"2016.05.12.11523"）
+  * Applied AssemblyVersionMetadata from local Git repository (Author, Branch, Tags）. But this example git repository not created , so there declarations containing "Unknown".
 5. Create Git local repository (command: git init). And commit with message.
 6. Build retry. Output binary applied Author, Branch, Tags now.
 7. You are tagging current commit. For example "0.5.4". Build retry, contains AssemblyVersion is "0.5.4" now.
@@ -125,21 +125,16 @@ Imports System.Reflection
 		-->
 		<Rule name="System.Reflection.AssemblyInformationalVersionAttribute">{commitId}</Rule>
 		<!--
-			"key" is only used "AssemblyMetadataAttribute".
-			If you use "AssemblyMetadataAttribute" and platform version == "v4.0",
-			cannot use mscorlib implementation.
-			Will auto define pseudo "AssemblyMetadataAttribute" class.
-		-->
-		<!--
+			"key" is only used "AssemblyVersionMetadataAttribute".
 			"committer.When" or you can use another choice "author.When".
 			"author" and "committer" can use property "Name", "Email", and "When". (Derived from libgit2sharp)
 		-->
-		<Rule name="System.Reflection.AssemblyMetadataAttribute" key="Build">{committer.When:R}</Rule>
-		<Rule name="System.Reflection.AssemblyMetadataAttribute" key="Branch">{branch.Name}</Rule>
-		<Rule name="System.Reflection.AssemblyMetadataAttribute" key="Tags">{tags}</Rule>
-		<Rule name="System.Reflection.AssemblyMetadataAttribute" key="Author">{author}</Rule>
-		<Rule name="System.Reflection.AssemblyMetadataAttribute" key="Committer">{committer}</Rule>
-		<Rule name="System.Reflection.AssemblyMetadataAttribute" key="Message">{commit.MessageShort}</Rule>
+		<Rule name="System.Reflection.AssemblyVersionMetadataAttribute" key="Build">{committer.When:R}</Rule>
+		<Rule name="System.Reflection.AssemblyVersionMetadataAttribute" key="Branch">{branch.Name}</Rule>
+		<Rule name="System.Reflection.AssemblyVersionMetadataAttribute" key="Tags">{tags}</Rule>
+		<Rule name="System.Reflection.AssemblyVersionMetadataAttribute" key="Author">{author}</Rule>
+		<Rule name="System.Reflection.AssemblyVersionMetadataAttribute" key="Committer">{committer}</Rule>
+		<Rule name="System.Reflection.AssemblyVersionMetadataAttribute" key="Message">{commit.MessageShort}</Rule>
 	</WriterRules>
 </RelaxVersioner>
 ```
@@ -157,6 +152,10 @@ Imports System.Reflection
 * Under Apache v2
 
 ## History
+* 0.8.11:
+  * Embed metadatas use for always self defined AssemblyVersionMetadataAttribute instead mscorlib::AssemblyMetadataAttribute.
+  * Default versioning uses "0.0.1.0" for non-committed git repository.
+  * Updated LibGit2Sharp to 0.22.0/1.0.129.
 * 0.8.3:
   * Add Wix support. (WIP)
 * 0.8.2:

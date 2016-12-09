@@ -45,24 +45,21 @@ namespace CenterCLR.RelaxVersioner.Writers
             tw.WriteLine("<Assembly: {0}({1})>", name, args);
         }
 
-        protected override void WriteAfterBody(TextWriter tw, bool requireMetadataAttribute)
+        protected override void WriteAfterBody(TextWriter tw)
         {
-            if (requireMetadataAttribute == true)
-            {
-                tw.WriteLine("Namespace global.System.Reflection");
-                tw.WriteLine("	<AttributeUsage(AttributeTargets.Assembly, AllowMultiple := True, Inherited := False)>");
-                tw.WriteLine("	Friend NotInheritable Class AssemblyMetadataAttribute");
-                tw.WriteLine("		Inherits Attribute");
-                tw.WriteLine("		Public Sub New(key As String, value As String)");
-                tw.WriteLine("			Me.Key = key");
-                tw.WriteLine("			Me.Value = value");
-                tw.WriteLine("		End Sub");
-                tw.WriteLine("		Public ReadOnly Property Key As String");
-                tw.WriteLine("		Public ReadOnly Property Value As String");
-                tw.WriteLine("	End Class");
-                tw.WriteLine("End Namespace");
-                tw.WriteLine();
-            }
+            tw.WriteLine("Namespace global.System.Reflection");
+            tw.WriteLine("	<AttributeUsage(AttributeTargets.Assembly, AllowMultiple := True, Inherited := False)>");
+            tw.WriteLine("	Friend NotInheritable Class AssemblyVersionMetadataAttribute");
+            tw.WriteLine("		Inherits Attribute");
+            tw.WriteLine("		Public Sub New(key As String, value As String)");
+            tw.WriteLine("			Me.Key = key");
+            tw.WriteLine("			Me.Value = value");
+            tw.WriteLine("		End Sub");
+            tw.WriteLine("		Public ReadOnly Property Key As String");
+            tw.WriteLine("		Public ReadOnly Property Value As String");
+            tw.WriteLine("	End Class");
+            tw.WriteLine("End Namespace");
+            tw.WriteLine();
         }
     }
 }

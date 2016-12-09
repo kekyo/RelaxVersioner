@@ -218,17 +218,17 @@ namespace CenterCLR.RelaxVersioner
             var versions =
                 (from commit in targetBranch.Commits
                  from label in
-                    tags.GetValue(commit.Sha, Enumerable.Empty<Tag>()).Select(tag => GetVersionFromGitLabel(tag.Name))
+                    tags.GetValue(commit.Sha, Enumerable.Empty<Tag>()).Select(tag => GetVersionFromGitLabel(tag.FriendlyName))
                  select label).
                 Concat(
                     from commit in targetBranch.Commits.Skip(1)
                     from label in
-                        branches.GetValue(commit.Sha, Enumerable.Empty<Branch>()).Select(branch => GetVersionFromGitLabel(branch.Name))
+                        branches.GetValue(commit.Sha, Enumerable.Empty<Branch>()).Select(branch => GetVersionFromGitLabel(branch.FriendlyName))
                     select label);
 
             // Use first version, if no candidate then try current branch name.
             return versions.FirstOrDefault(label => label != null) ??
-                GetVersionFromGitLabel(targetBranch.Name);
+                GetVersionFromGitLabel(targetBranch.FriendlyName);
         }
     }
 }
