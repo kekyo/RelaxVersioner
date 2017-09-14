@@ -169,7 +169,7 @@ namespace CenterCLR.RelaxVersioner
                     StringComparer.InvariantCultureIgnoreCase).
                 ToDictionary(
                     g => g.Key,
-                    g => from rule in g.Elements("Rule")
+                    g => from rule in g.First().Elements("Rule")
                         let name = rule.Attribute("name")
                         let key = rule.Attribute("key")
                         where !string.IsNullOrWhiteSpace(name?.Value)
