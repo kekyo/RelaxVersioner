@@ -23,6 +23,7 @@
         <authors>Kouji Matsui</authors>
         <owners>Kouji Matsui</owners>
         <description>Easy-usage, Git-based, auto-generate version informations toolset.</description>
+        <developmentDependency>true</developmentDependency>
         <summary>Easy-usage, Git-based, auto-generate version informations toolset.</summary>
         <copyright>Copyright (c) 2016 Kouji Matsui</copyright>
         <licenseUrl>http://www.apache.org/licenses/LICENSE-2.0</licenseUrl>
