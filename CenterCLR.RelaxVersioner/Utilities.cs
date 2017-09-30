@@ -99,6 +99,7 @@ namespace CenterCLR.RelaxVersioner
             Debug.Assert(label != null);
 
             return label.
+                TrimStart('v').
                 Split(versionSeparators_, StringSplitOptions.RemoveEmptyEntries).
                 Select(TryParseVersion).
                 LastOrDefault(version => version != null); // Separate and search last valid version string
