@@ -25,6 +25,7 @@
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+    <LangVersion>6</LangVersion>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <PlatformTarget>AnyCPU</PlatformTarget>
@@ -34,6 +35,7 @@
     <DefineConstants>TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+    <LangVersion>6</LangVersion>
   </PropertyGroup>
   <PropertyGroup>
     <ApplicationIcon>..\Images\CenterCLR.RelaxVersioner.ico</ApplicationIcon>
@@ -92,6 +94,13 @@
       <ErrorText>このプロジェクトは、このコンピューター上にない NuGet パッケージを参照しています。それらのパッケージをダウンロードするには、[NuGet パッケージの復元] を使用します。詳細については、http://go.microsoft.com/fwlink/?LinkID=322105 を参照してください。見つからないファイルは {0} です。</ErrorText>
     </PropertyGroup>
     <Error Condition="!Exists('..\packages\LibGit2Sharp.NativeBinaries.1.0.129\build\LibGit2Sharp.NativeBinaries.props')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\LibGit2Sharp.NativeBinaries.1.0.129\build\LibGit2Sharp.NativeBinaries.props'))" />
+  </Target>
+  <Target Name="ExportNugetPackage" DependsOnTargets="Build">
+    <PropertyGroup>
+      <NugetExe Condition="'$(OS)' == 'Windows_NT'">.nuget\nuget</NugetExe>
+      <NugetExe Condition="'$(OS)' != 'Windows_NT'">mono .\nuget\nuget.exe</NugetExe>
+    </PropertyGroup>
+    <Exec Command="$(NugetExe) pack CenterCLR.RelaxVersioner\CenterCLR.RelaxVersioner.nuspec -Prop Version=0.8.11 -Prop Configuration=Release" WorkingDirectory="..\"/>
   </Target>
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
