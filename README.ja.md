@@ -149,10 +149,14 @@ Imports System.Reflection
 * Mono環境のサポート (そして *nix 環境でのCIのサポート / 詳しい方のPRウェルカム)
 
 ## License
-* Copyright (c) 2015 Kouji Matsui (@kekyo2)
+* Copyright (c) 2015-2018 Kouji Matsui (@kozy_kekyo, @kekyo2)
 * Under Apache v2
 
 ## 履歴
+* 0.8.20:
+  * Ruleエレメントが複数存在する場合に複数の属性を定義してエラーが発生する問題を修正 (Thanks @zizi4n5)
+  * NuGetパッケージがdevelopmentDependencyとなっていないのを修正 (Thanks @zizi4n5)
+  * labelのバージョン番号の先頭に'v'が付与されている場合に無視するように修正 (Thanks @zizi4n5)
 * 0.8.11:
   * メタデータ情報の埋め込みは、常にAssemblyVersionMetadataAttributeを使用するように変更しました。以前はmscorlib::AssemblyMetadataAttributeを使う場合がありましたが、NET4・PCL環境で不可視のためにトラブルが起きる事がありました。
   * まだコミットされていないGitリポジトリを使った場合の、デフォルトのバージョンとして"0.0.1.0"を使うように変更しました。以前は"0.0.0.0"でしたが、コンパイラによっては警告を発していました。

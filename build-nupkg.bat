@@ -1,7 +1,7 @@
 @echo off
 
 rem CenterCLR.RelaxVersioner - Easy-usage, Git-based, auto-generate version informations toolset.
-rem Copyright (c) 2016 Kouji Matsui (@kekyo2)
+rem Copyright (c) 2016-2018 Kouji Matsui (@kozy_kekyo, @kekyo2)
 rem 
 rem Licensed under the Apache License, Version 2.0 (the "License");
 rem you may not use this file except in compliance with the License.
@@ -15,4 +15,4 @@ rem WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 rem See the License for the specific language governing permissions and
 rem limitations under the License.
 
-.nuget\nuget pack CenterCLR.RelaxVersioner\CenterCLR.RelaxVersioner.nuspec -Prop Version=0.8.11 -Prop Configuration=Release
+.nuget\nuget pack CenterCLR.RelaxVersioner\CenterCLR.RelaxVersioner.nuspec -Prop Version=0.8.20 -Prop Configuration=Release

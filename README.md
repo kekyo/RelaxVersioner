@@ -148,10 +148,14 @@ Imports System.Reflection
 * Support Mono environments (and CI environments on *nix, Please PR for complete :)
 
 ## License
-* Copyright (c) 2015 Kouji Matsui (@kekyo2)
+* Copyright (c) 2015-2018 Kouji Matsui (@kozy_kekyo, kekyo2)
 * Under Apache v2
 
 ## History
+* 0.8.20:
+  * Fixed adopt the first found rule set (Thanks @zizi4n5)
+  * Fixed package attribute, set to the developmentDependency (Thanks @zizi4n5)
+  * Fixed trimming the git label version start with 'v' prefix (Thanks @zizi4n5)
 * 0.8.11:
   * Embed metadatas use for always self defined AssemblyVersionMetadataAttribute instead mscorlib::AssemblyMetadataAttribute.
   * Default versioning uses "0.0.1.0" for non-committed git repository.
