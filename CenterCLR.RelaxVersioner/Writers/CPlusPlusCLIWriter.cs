@@ -51,6 +51,11 @@ namespace CenterCLR.RelaxVersioner.Writers
             tw.WriteLine();
         }
 
+        protected override void WriteImport(TextWriter tw, string namespaceName)
+        {
+            tw.WriteLine("using namespace {0};");
+        }
+        
         protected override string GetArgumentString(string argumentValue)
         {
             return string.Format("\"{0}\"", argumentValue.Replace("\\", "\\\\").Replace("\"", "\\\""));

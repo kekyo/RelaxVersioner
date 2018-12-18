@@ -26,6 +26,11 @@ namespace CenterCLR.RelaxVersioner.Writers
     {
         public override string Language => "C#";
 
+        protected override void WriteImport(TextWriter tw, string namespaceName)
+        {
+            tw.WriteLine("using {0};", namespaceName);
+        }
+        
         protected override string GetArgumentString(string argumentValue)
         {
             return string.Format("@\"{0}\"", argumentValue.Replace("\"", "\"\""));
