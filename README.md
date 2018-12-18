@@ -156,6 +156,7 @@ Imports System.Reflection
   * Fixed adopt the first found rule set (Thanks @zizi4n5)
   * Fixed package attribute, set to the developmentDependency (Thanks @zizi4n5)
   * Fixed trimming the git label version start with 'v' prefix (Thanks @zizi4n5)
+  * Improved NuGet package generation, switched to the MSBuild script (Thanks @biobox)
 * 0.8.11:
   * Embed metadatas use for always self defined AssemblyVersionMetadataAttribute instead mscorlib::AssemblyMetadataAttribute.
   * Default versioning uses "0.0.1.0" for non-committed git repository.
