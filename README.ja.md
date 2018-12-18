@@ -103,7 +103,7 @@ Imports System.Reflection
 ``` xml
 <?xml version="1.0" encoding="utf-8"?>
 <RelaxVersioner version="1.0">
-	<Rules>
+	<WriterRules>
 		<!-- Target languages -->
 		<Language>C#</Language>
 		<Language>F#</Language>
@@ -136,7 +136,7 @@ Imports System.Reflection
 		<Rule name="System.Reflection.AssemblyVersionMetadataAttribute" key="Author">{author}</Rule>
 		<Rule name="System.Reflection.AssemblyVersionMetadataAttribute" key="Committer">{committer}</Rule>
 		<Rule name="System.Reflection.AssemblyVersionMetadataAttribute" key="Message">{commit.MessageShort}</Rule>
-	</Rules>
+	</WriterRules>
 </RelaxVersioner>
 ```
 
