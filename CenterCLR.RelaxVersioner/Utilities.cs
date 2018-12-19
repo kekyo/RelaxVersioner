@@ -1,7 +1,7 @@
 ﻿/////////////////////////////////////////////////////////////////////////////////////////////////
 //
 // CenterCLR.RelaxVersioner - Easy-usage, Git-based, auto-generate version informations toolset.
-// Copyright (c) 2016 Kouji Matsui (@kekyo2)
+// Copyright (c) 2016-2018 Kouji Matsui (@kozy_kekyo, @kekyo2)
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -99,6 +99,7 @@ namespace CenterCLR.RelaxVersioner
             Debug.Assert(label != null);
 
             return label.
+                TrimStart('v').
                 Split(versionSeparators_, StringSplitOptions.RemoveEmptyEntries).
                 Select(TryParseVersion).
                 LastOrDefault(version => version != null); // Separate and search last valid version string
