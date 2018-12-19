@@ -46,7 +46,7 @@ namespace CenterCLR.RelaxVersioner.Writers
 
         protected override void WriteImport(TextWriter tw, string namespaceName)
         {
-            tw.WriteLine("open {0}", namespaceName);
+            // tw.WriteLine("open {0}", namespaceName);
         }
         
         protected override string GetArgumentString(string argumentValue)

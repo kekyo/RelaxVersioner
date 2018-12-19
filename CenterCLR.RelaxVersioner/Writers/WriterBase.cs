@@ -38,7 +38,8 @@ namespace CenterCLR.RelaxVersioner.Writers
             Dictionary<string, IEnumerable<Tag>> tags,
             Dictionary<string, IEnumerable<Branch>> branches,
             DateTimeOffset generated,
-            ICollection<Rule> ruleSet)
+            IEnumerable<Rule> ruleSet,
+            IEnumerable<string> importSet)
         {
             Debug.Assert(string.IsNullOrWhiteSpace(targetPath) == false);
             Debug.Assert(tags != null);
@@ -74,8 +75,7 @@ namespace CenterCLR.RelaxVersioner.Writers
 
                 this.WriteBeforeBody(tw);
 
-                var namespaces = Utilities.AggregateNamespacesFromRuleSet(ruleSet);
-                foreach (var namespaceName in namespaces)
+                foreach (var namespaceName in importSet)
                 {
                     this.WriteImport(tw, namespaceName);
                 }
