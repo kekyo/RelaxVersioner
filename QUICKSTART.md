@@ -1,4 +1,4 @@
-# Welcome to the RelaxVersioner Wiki!
+# Welcome to the RelaxVersioner Documentation!
 
 ### Quick-start Guide
 
