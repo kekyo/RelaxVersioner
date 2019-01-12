@@ -41,12 +41,11 @@ namespace CenterCLR.RelaxVersioner.Writers
             tw.WriteLine();
 
             tw.WriteLine("namespace global");
-            tw.WriteLine();
         }
 
         protected override void WriteImport(TextWriter tw, string namespaceName)
         {
-            // tw.WriteLine("open {0}", namespaceName);
+            tw.WriteLine("    open {0}", namespaceName);
         }
         
         protected override string GetArgumentString(string argumentValue)
