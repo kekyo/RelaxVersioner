@@ -44,7 +44,6 @@
         -->
     </metadata>
     <files>
-        <file src="CenterCLR.RelaxVersioner.props" target="build" />
         <file src="CenterCLR.RelaxVersioner.targets" target="build" />
         <file src="bin/$Configuration$/CenterCLR.RelaxVersioner.exe" target="build" />
         <file src="bin/$Configuration$/CenterCLR.NamingFormatter.dll" target="build" />
