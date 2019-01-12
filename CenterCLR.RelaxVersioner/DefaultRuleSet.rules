@@ -29,36 +29,38 @@
         <Language>VB</Language>
         <Language>C++/CLI</Language>
 
+        <Import>System.Reflection</Import>
+
         <!--
             "gitLabel" is extract numerical-notate version string [1.2.3.4] from git repository tags/branches traverse start HEAD.
             If not found, use [0.0.1.0].
         -->
-        <Rule name="System.Reflection.AssemblyVersionAttribute">{gitLabel}</Rule>
+        <Rule name="AssemblyVersionAttribute">{gitLabel}</Rule>
 
         <!--
             "safeVersion" is extract committed date (with commmiter) from git repository HEAD.
             "safeVersion" specialized from "committer.When".
             (The format is safe-numerical-notate version string [2016.2.14.12345]. (Last number is 2sec prec.))
         -->
-        <Rule name="System.Reflection.AssemblyFileVersionAttribute">{safeVersion}</Rule>
+        <Rule name="AssemblyFileVersionAttribute">{safeVersion}</Rule>
 
         <!--
             "commitId" is extract commit id from git repository HEAD.
             "commitId" alias to "commit.Sha".
         -->
-        <Rule name="System.Reflection.AssemblyInformationalVersionAttribute">{commitId}</Rule>
+        <Rule name="AssemblyInformationalVersionAttribute">{commitId}</Rule>
 
         <!--
             "key" is only using for "AssemblyVersionMetadataAttribute".
             "committer.When" or you can use another choice "author.When".
             "author" and "committer" can use property "Name", "Email", and "When". (Derived from libgit2sharp)
         -->
-        <Rule name="System.Reflection.AssemblyVersionMetadataAttribute" key="Build">{committer.When:R}</Rule>
-        <Rule name="System.Reflection.AssemblyVersionMetadataAttribute" key="Branch">{branch.Name}</Rule>
-        <Rule name="System.Reflection.AssemblyVersionMetadataAttribute" key="Tags">{tags}</Rule>
-        <Rule name="System.Reflection.AssemblyVersionMetadataAttribute" key="Author">{author}</Rule>
-        <Rule name="System.Reflection.AssemblyVersionMetadataAttribute" key="Committer">{committer}</Rule>
-        <Rule name="System.Reflection.AssemblyVersionMetadataAttribute" key="Message">{commit.MessageShort}</Rule>
+        <Rule name="AssemblyVersionMetadataAttribute" key="Build">{committer.When:R}</Rule>
+        <Rule name="AssemblyVersionMetadataAttribute" key="Branch">{branch.Name}</Rule>
+        <Rule name="AssemblyVersionMetadataAttribute" key="Tags">{tags}</Rule>
+        <Rule name="AssemblyVersionMetadataAttribute" key="Author">{author}</Rule>
+        <Rule name="AssemblyVersionMetadataAttribute" key="Committer">{committer}</Rule>
+        <Rule name="AssemblyVersionMetadataAttribute" key="Message">{commit.MessageShort}</Rule>
     </WriterRules>
     <WriterRules>
         <!-- Target languages -->
