@@ -72,9 +72,6 @@
   <ItemGroup>
     <None Include="app.config" />
     <None Include="CenterCLR.RelaxVersioner.nuspec" />
-    <None Include="CenterCLR.RelaxVersioner.props">
-      <SubType>Designer</SubType>
-    </None>
     <None Include="CenterCLR.RelaxVersioner.targets">
       <SubType>Designer</SubType>
     </None>

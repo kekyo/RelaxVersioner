@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 14
-VisualStudioVersion = 14.0.25123.0
+VisualStudioVersion = 14.0.25420.1
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{C3592BB3-F62F-499E-B1E8-2B497161C389}"
 	ProjectSection(SolutionItems) = preProject
@@ -17,12 +17,24 @@ EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "TestProjects", "TestProjects", "{9CE053C2-3668-444B-91ED-24DA5FA909D9}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CSharpTestProject", "TestProjects\CSharpTestProject\CSharpTestProject.csproj", "{5CAE93C9-0C7E-4310-A463-8FF039126E08}"
+	ProjectSection(ProjectDependencies) = postProject
+		{0B01C9D5-A685-4444-981B-E8B4D6BDBBF1} = {0B01C9D5-A685-4444-981B-E8B4D6BDBBF1}
+	EndProjectSection
 EndProject
 Project("{F184B08F-C81C-45F6-A57F-5ABD9991F28F}") = "VisualBasicTestProject", "TestProjects\VisualBasicTestProject\VisualBasicTestProject.vbproj", "{86854272-C4BB-4BC8-B215-C86FE8E2EB22}"
+	ProjectSection(ProjectDependencies) = postProject
+		{0B01C9D5-A685-4444-981B-E8B4D6BDBBF1} = {0B01C9D5-A685-4444-981B-E8B4D6BDBBF1}
+	EndProjectSection
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "CPlusPlusTestProject", "TestProjects\CPlusPlusTestProject\CPlusPlusTestProject.vcxproj", "{8B8335DE-1FF6-4AAE-8712-B695820A3180}"
+	ProjectSection(ProjectDependencies) = postProject
+		{0B01C9D5-A685-4444-981B-E8B4D6BDBBF1} = {0B01C9D5-A685-4444-981B-E8B4D6BDBBF1}
+	EndProjectSection
 EndProject
 Project("{F2A71F9B-5D33-465A-A702-920D77279786}") = "FSharpTestProject", "TestProjects\FSharpTestProject\FSharpTestProject.fsproj", "{B18F5E8C-FDF7-40D6-80F8-B912D29AE273}"
+	ProjectSection(ProjectDependencies) = postProject
+		{0B01C9D5-A685-4444-981B-E8B4D6BDBBF1} = {0B01C9D5-A685-4444-981B-E8B4D6BDBBF1}
+	EndProjectSection
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Images", "Images", "{98ADE163-2FFB-47B0-AA7A-1A294DD7276F}"
 	ProjectSection(SolutionItems) = preProject
