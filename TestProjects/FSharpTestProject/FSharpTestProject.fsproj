@@ -15,7 +15,7 @@
     <Name>FSharpTestProject</Name>
     <NuGetPackageImportStamp>
     </NuGetPackageImportStamp>
-    <RelaxVersionerPath>$(MSBuildProjectDirectory)\..\..\CenterCLR.RelaxVersioner\bin\Debug\CenterCLR.RelaxVersioner.exe</RelaxVersionerPath>
+    <RelaxVersionerPath>$(MSBuildProjectDirectory)\..\..\CenterCLR.RelaxVersioner\bin\$(Configuration)\CenterCLR.RelaxVersioner.exe</RelaxVersionerPath>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
