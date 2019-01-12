@@ -100,7 +100,7 @@
       <NugetExe Condition="'$(OS)' == 'Windows_NT'">.nuget\nuget</NugetExe>
       <NugetExe Condition="'$(OS)' != 'Windows_NT'">mono .\nuget\nuget.exe</NugetExe>
     </PropertyGroup>
-    <Exec Command="$(NugetExe) pack CenterCLR.RelaxVersioner\CenterCLR.RelaxVersioner.nuspec -Prop Version=0.8.20 -Prop Configuration=Release" WorkingDirectory="..\" />
+    <Exec Command="$(NugetExe) pack CenterCLR.RelaxVersioner\CenterCLR.RelaxVersioner.nuspec -Prop Version=0.8.30 -Prop Configuration=Release" WorkingDirectory="..\" />
   </Target>
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

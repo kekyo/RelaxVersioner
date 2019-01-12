@@ -22,30 +22,32 @@
 ### For C#:
 
 ``` csharp
-[assembly: System.Reflection.AssemblyVersionAttribute("0.5.30.0")]
-[assembly: System.Reflection.AssemblyFileVersionAttribute("2016.1.15.41306")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("a05ab9fc87b22234596f4ddd43136e9e526ebb90")]
-[assembly: System.Reflection.AssemblyVersionMetadataAttribute("Build","Fri, 15 Jan 2016 13:56:53 GMT")]
-[assembly: System.Reflection.AssemblyVersionMetadataAttribute("Branch","master")]
-[assembly: System.Reflection.AssemblyVersionMetadataAttribute("Tags","0.5.30")]
-[assembly: System.Reflection.AssemblyVersionMetadataAttribute("Author","Kouji Matsui <k@kekyo.net>")]
-[assembly: System.Reflection.AssemblyVersionMetadataAttribute("Committer","Kouji Matsui <k@kekyo.net>")]
-[assembly: System.Reflection.AssemblyVersionMetadataAttribute("Message","Fixed tab")]
+using System.Reflection;
+[assembly: AssemblyVersionAttribute("0.5.30.0")]
+[assembly: AssemblyFileVersionAttribute("2016.1.15.41306")]
+[assembly: AssemblyInformationalVersionAttribute("a05ab9fc87b22234596f4ddd43136e9e526ebb90")]
+[assembly: AssemblyVersionMetadataAttribute("Build","Fri, 15 Jan 2016 13:56:53 GMT")]
+[assembly: AssemblyVersionMetadataAttribute("Branch","master")]
+[assembly: AssemblyVersionMetadataAttribute("Tags","0.5.30")]
+[assembly: AssemblyVersionMetadataAttribute("Author","Kouji Matsui <k@kekyo.net>")]
+[assembly: AssemblyVersionMetadataAttribute("Committer","Kouji Matsui <k@kekyo.net>")]
+[assembly: AssemblyVersionMetadataAttribute("Message","Fixed tab")]
 ```
 
 ### For F#:
 
 ``` fsharp
 namespace global
-	[<assembly: System.Reflection.AssemblyVersionAttribute("0.5.30.0")>]
-	[<assembly: System.Reflection.AssemblyFileVersionAttribute("2016.1.15.41306")>]
-	[<assembly: System.Reflection.AssemblyInformationalVersionAttribute("a05ab9fc87b22234596f4ddd43136e9e526ebb90")>]
-	[<assembly: System.Reflection.AssemblyVersionMetadataAttribute("Build","Fri, 15 Jan 2016 13:56:53 GMT")>]
-	[<assembly: System.Reflection.AssemblyVersionMetadataAttribute("Branch","master")>]
-	[<assembly: System.Reflection.AssemblyVersionMetadataAttribute("Tags","0.5.30")>]
-	[<assembly: System.Reflection.AssemblyVersionMetadataAttribute("Author","Kouji Matsui <k@kekyo.net>")>]
-	[<assembly: System.Reflection.AssemblyVersionMetadataAttribute("Committer","Kouji Matsui <k@kekyo.net>")>]
-	[<assembly: System.Reflection.AssemblyVersionMetadataAttribute("Message","Fixed tab")>]
+	open System.Reflection
+	[<assembly: AssemblyVersionAttribute("0.5.30.0")>]
+	[<assembly: AssemblyFileVersionAttribute("2016.1.15.41306")>]
+	[<assembly: AssemblyInformationalVersionAttribute("a05ab9fc87b22234596f4ddd43136e9e526ebb90")>]
+	[<assembly: AssemblyVersionMetadataAttribute("Build","Fri, 15 Jan 2016 13:56:53 GMT")>]
+	[<assembly: AssemblyVersionMetadataAttribute("Branch","master")>]
+	[<assembly: AssemblyVersionMetadataAttribute("Tags","0.5.30")>]
+	[<assembly: AssemblyVersionMetadataAttribute("Author","Kouji Matsui <k@kekyo.net>")>]
+	[<assembly: AssemblyVersionMetadataAttribute("Committer","Kouji Matsui <k@kekyo.net>")>]
+	[<assembly: AssemblyVersionMetadataAttribute("Message","Fixed tab")>]
 	do()
 ```
 
@@ -53,29 +55,30 @@ namespace global
 
 ``` visualbasic
 Imports System.Reflection
-<Assembly: System.Reflection.AssemblyVersionAttribute("0.5.30.0")>
-<Assembly: System.Reflection.AssemblyFileVersionAttribute("2016.1.15.41306")>
-<Assembly: System.Reflection.AssemblyInformationalVersionAttribute("a05ab9fc87b22234596f4ddd43136e9e526ebb90")>
-<Assembly: System.Reflection.AssemblyVersionMetadataAttribute("Build","Fri, 15 Jan 2016 13:56:53 GMT")>
-<Assembly: System.Reflection.AssemblyVersionMetadataAttribute("Branch","master")>
-<Assembly: System.Reflection.AssemblyVersionMetadataAttribute("Tags","0.5.30")>
-<Assembly: System.Reflection.AssemblyVersionMetadataAttribute("Author","Kouji Matsui <k@kekyo.net>")>
-<Assembly: System.Reflection.AssemblyVersionMetadataAttribute("Committer","Kouji Matsui <k@kekyo.net>")>
-<Assembly: System.Reflection.AssemblyVersionMetadataAttribute("Message","Fixed tab")>
+<Assembly: AssemblyVersionAttribute("0.5.30.0")>
+<Assembly: AssemblyFileVersionAttribute("2016.1.15.41306")>
+<Assembly: AssemblyInformationalVersionAttribute("a05ab9fc87b22234596f4ddd43136e9e526ebb90")>
+<Assembly: AssemblyVersionMetadataAttribute("Build","Fri, 15 Jan 2016 13:56:53 GMT")>
+<Assembly: AssemblyVersionMetadataAttribute("Branch","master")>
+<Assembly: AssemblyVersionMetadataAttribute("Tags","0.5.30")>
+<Assembly: AssemblyVersionMetadataAttribute("Author","Kouji Matsui <k@kekyo.net>")>
+<Assembly: AssemblyVersionMetadataAttribute("Committer","Kouji Matsui <k@kekyo.net>")>
+<Assembly: AssemblyVersionMetadataAttribute("Message","Fixed tab")>
 ```
 
 ### For C++/CLI:
 
 ``` cpp
-[assembly: System::Reflection::AssemblyVersionAttribute("0.5.30.0")];
-[assembly: System::Reflection::AssemblyFileVersionAttribute("2016.1.15.41306")];
-[assembly: System::Reflection::AssemblyInformationalVersionAttribute("a05ab9fc87b22234596f4ddd43136e9e526ebb90")];
-[assembly: System::Reflection::AssemblyVersionMetadataAttribute("Build","Fri, 15 Jan 2016 13:56:53 GMT")];
-[assembly: System::Reflection::AssemblyVersionMetadataAttribute("Branch","master")];
-[assembly: System::Reflection::AssemblyVersionMetadataAttribute("Tags","0.5.30")];
-[assembly: System::Reflection::AssemblyVersionMetadataAttribute("Author","Kouji Matsui <k@kekyo.net>")];
-[assembly: System::Reflection::AssemblyVersionMetadataAttribute("Committer","Kouji Matsui <k@kekyo.net>")];
-[assembly: System::Reflection::AssemblyVersionMetadataAttribute("Message","Fixed tab")];
+using namespace System::Reflection;
+[assembly: AssemblyVersionAttribute("0.5.30.0")];
+[assembly: AssemblyFileVersionAttribute("2016.1.15.41306")];
+[assembly: AssemblyInformationalVersionAttribute("a05ab9fc87b22234596f4ddd43136e9e526ebb90")];
+[assembly: AssemblyVersionMetadataAttribute("Build","Fri, 15 Jan 2016 13:56:53 GMT")];
+[assembly: AssemblyVersionMetadataAttribute("Branch","master")];
+[assembly: AssemblyVersionMetadataAttribute("Tags","0.5.30")];
+[assembly: AssemblyVersionMetadataAttribute("Author","Kouji Matsui <k@kekyo.net>")];
+[assembly: AssemblyVersionMetadataAttribute("Committer","Kouji Matsui <k@kekyo.net>")];
+[assembly: AssemblyVersionMetadataAttribute("Message","Fixed tab")];
 ```
 
 ## 使い方
@@ -109,6 +112,7 @@ Imports System.Reflection
 		<Language>F#</Language>
 		<Language>VB</Language>
 		<Language>C++/CLI</Language>
+		<Import>System.Reflection</Import>
 		<!--
 			"gitLabel" is extract numerical-notate version string [1.2.3.4] from git repository tags/branches traverse start HEAD.
 			If not found, fallback to "safeVersion".
@@ -153,6 +157,8 @@ Imports System.Reflection
 * Under Apache v2
 
 ## 履歴
+* 0.8.30:
+  * Importエレメントに対応 (Thanks @biobox)
 * 0.8.20:
   * Ruleエレメントが複数存在する場合に複数の属性を定義してエラーが発生する問題を修正 (Thanks @zizi4n5)
   * NuGetパッケージがdevelopmentDependencyとなっていないのを修正 (Thanks @zizi4n5)
