@@ -152,8 +152,7 @@ namespace CenterCLR.RelaxVersioner
             }
         }
 
-        public static Dictionary<string, IEnumerable<Rule>> AggregateRuleSets(
-            params XElement[] ruleSets)
+        public static Dictionary<string, XElement> GetElementSets(params XElement[] ruleSets)
         {
             Debug.Assert(ruleSets != null);
 
@@ -170,12 +169,23 @@ namespace CenterCLR.RelaxVersioner
                     StringComparer.InvariantCultureIgnoreCase).
                 ToDictionary(
                     g => g.Key,
-                    g => from rule in g.First().Elements("Rule")
-                        let name = rule.Attribute("name")
-                        let key = rule.Attribute("key")
-                        where !string.IsNullOrWhiteSpace(name?.Value)
-                        select new Rule(name.Value.Trim(), key?.Value.Trim(), rule.Value.Trim()),
+                    g => g.First(),
                     StringComparer.InvariantCultureIgnoreCase);
+        }
+
+        public static IEnumerable<string> AggregateImports(XElement wrules)
+        {
+            return (from import in wrules.Elements("Import")
+                    select import.Value.Trim());
+        }
+
+        public static IEnumerable<Rule> AggregateRules(XElement wrules)
+        {
+            return (from rule in wrules.Elements("Rule")
+                    let name = rule.Attribute("name")
+                    let key = rule.Attribute("key")
+                    where !string.IsNullOrWhiteSpace(name?.Value)
+                    select new Rule(name.Value.Trim(), key?.Value.Trim(), rule.Value.Trim()));
         }
 
         public static IEnumerable<string> AggregateNamespacesFromRuleSet(

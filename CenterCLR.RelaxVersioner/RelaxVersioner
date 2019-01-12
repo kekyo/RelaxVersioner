@@ -1,0 +1,30 @@
+// This is auto-generated version information attributes by CenterCLR.RelaxVersioner.0.8.20.0
+// Do not edit.
+// Generated date: Sat, 12 Jan 2019 08:28:58 GMT
+
+
+[assembly: System.Reflection.AssemblyVersionAttribute(@"0.8.20")]
+[assembly: System.Reflection.AssemblyFileVersionAttribute(@"2018.12.18.19088")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute(@"9953a509507e6f5097b46bb02c2aef7f4577f523")]
+[assembly: System.Reflection.AssemblyVersionMetadataAttribute(@"Build",@"Tue, 18 Dec 2018 01:36:17 GMT")]
+[assembly: System.Reflection.AssemblyVersionMetadataAttribute(@"Branch",@"master")]
+[assembly: System.Reflection.AssemblyVersionMetadataAttribute(@"Tags",@"0.8.20")]
+[assembly: System.Reflection.AssemblyVersionMetadataAttribute(@"Author",@"Kouji Matsui <k@kekyo.net>")]
+[assembly: System.Reflection.AssemblyVersionMetadataAttribute(@"Committer",@"Kouji Matsui <k@kekyo.net>")]
+[assembly: System.Reflection.AssemblyVersionMetadataAttribute(@"Message",@"Update version.")]
+
+namespace System.Reflection
+{
+	[AttributeUsage(AttributeTargets.Assembly, AllowMultiple = true, Inherited = false)]
+	internal sealed class AssemblyVersionMetadataAttribute : Attribute
+	{
+		public AssemblyVersionMetadataAttribute(string key, string value)
+		{
+			this.Key = key;
+			this.Value = value;
+		}
+		public string Key { get; private set; }
+		public string Value { get; private set; }
+	}
+}
+

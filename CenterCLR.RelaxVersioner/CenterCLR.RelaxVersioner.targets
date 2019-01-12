@@ -23,10 +23,10 @@
     <!-- ======================== -->
     <!-- Common -->
     <PropertyGroup>
+        <!-- This path identicate the RelaxVersioner binary. -->
+        <RelaxVersionerPath Condition="'$(RelaxVersionerPath)' == ''">CenterCLR.RelaxVersioner.exe</RelaxVersionerPath>
         <!-- This path identicate auto-generated source code by RelaxVersioner. -->
-        <RelaxVersionerOutputPath Condition="'$(RelaxVersionerOutputPath)' == ''">$([System.IO.Path]::Combine('$(ProjectDir)','$(IntermediateOutputPath)','RelaxVersioner$(DefaultLanguageSourceExtension)'))</RelaxVersionerOutputPath>
-        <!-- HACK: Code analysis cause CA1016 "Add AssemblyVersion attribute..." if not defined or version is [0.0.0.0] -->
-        <NoWarn>$(NoWarn) 1016</NoWarn>
+        <RelaxVersionerOutputPath Condition="'$(RelaxVersionerOutputPath)' == ''">$([System.IO.Path]::Combine('$(MSBuildProjectDirectory)','$(IntermediateOutputPath)','RelaxVersioner$(DefaultLanguageSourceExtension)'))</RelaxVersionerOutputPath>
     </PropertyGroup>
 
     <!-- ======================== -->
@@ -72,7 +72,7 @@
         <!-- For Windows environment -->
         <Exec
             Condition="'$(OS)' == 'Windows_NT'"
-            Command="CenterCLR.RelaxVersioner.exe &quot;$(SolutionDir.TrimEnd('\\'))&quot; &quot;$(ProjectDir.TrimEnd('\\'))&quot; &quot;$(RelaxVersionerOutputPath)&quot; &quot;$(TargetFrameworkVersion)&quot; &quot;$(TargetFrameworkProfile)&quot; &quot;$(RelaxVersionerLanguage)&quot;"
+            Command="&quot;$(RelaxVersionerPath)&quot; &quot;$(SolutionDir.TrimEnd('\\'))&quot; &quot;$(ProjectDir.TrimEnd('\\'))&quot; &quot;$(RelaxVersionerOutputPath)&quot; &quot;$(TargetFrameworkVersion)&quot; &quot;$(TargetFrameworkProfile)&quot; &quot;$(RelaxVersionerLanguage)&quot;"
             Outputs="$(RelaxVersionerOutputPath)"
             WorkingDirectory="$(MSBuildThisFileDirectory)" />
 
@@ -80,7 +80,7 @@
         <!-- TODO: Mono environment -->
         <Exec
             Condition="'$(OS)' != 'Windows_NT'"
-            Command="mono --runtime=v4.0.30319 CenterCLR.RelaxVersioner.exe &quot;$(SolutionDir.TrimEnd('\\'))&quot; &quot;$(ProjectDir.TrimEnd('\\'))&quot; &quot;$(RelaxVersionerOutputPath)&quot; &quot;$(TargetFrameworkVersion)&quot; &quot;$(TargetFrameworkProfile)&quot; &quot;$(RelaxVersionerLanguage)&quot;"
+            Command="mono --runtime=v4.0.30319 &quot;$(RelaxVersionerPath)&quot; &quot;$(SolutionDir.TrimEnd('\\'))&quot; &quot;$(ProjectDir.TrimEnd('\\'))&quot; &quot;$(RelaxVersionerOutputPath)&quot; &quot;$(TargetFrameworkVersion)&quot; &quot;$(TargetFrameworkProfile)&quot; &quot;$(RelaxVersionerLanguage)&quot;"
             Outputs="$(RelaxVersionerOutputPath)"
             WorkingDirectory="$(MSBuildThisFileDirectory)" />
 

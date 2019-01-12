@@ -41,12 +41,14 @@ namespace CenterCLR.RelaxVersioner
                 var writers = Utilities.GetWriters();
                 var writer = writers[language];
 
-                var ruleSets = Utilities.AggregateRuleSets(
+                var elementSets = Utilities.GetElementSets(
                     Utilities.LoadRuleSet(projectDirectory),
                     Utilities.LoadRuleSet(solutionDirectory),
                     Utilities.GetDefaultRuleSet());
 
-                var ruleSet = ruleSets[language].ToList();
+                var elementSet = elementSets[language];
+                var importSet = Utilities.AggregateImports(elementSet);
+                var ruleSet = Utilities.AggregateRules(elementSet);
 
                 // Traverse git repository between projectDirectory and the root.
                 // Why use projectDirectory instead solutionDirectory ?
@@ -83,7 +85,8 @@ namespace CenterCLR.RelaxVersioner
                         tags,
                         branches,
                         DateTimeOffset.Now,
-                        ruleSet);
+                        ruleSet,
+                        importSet);
 
                     Console.WriteLine("RelaxVersioner: Generated versions code: Language={0}, Version={1}", language, gitLabel);
                 }
