@@ -37,8 +37,6 @@ The `WriterRules` element may have three kinds of child elements:
    * Wix
 2. `Import` elements, which import a namespace given its value.
    
-   Imports **do not work with F#**, so none will be written down even with the use of `Import`, and you'll have to write the full name of the attribute.
-   
 3. `Rule` elements, which define an assembly attribute to be written down.
 
 Rule elements are explained more in detail in the [next page](More-On-Rules.md).
