@@ -17,6 +17,9 @@
 * Place source code location which isn't obstructive for Git. (ex: obj/Debug)
 * You can customize output attribute/values with custom rule set file.
 
+## Quick start guide
+[Refer quick start guides.](./QUICKSTART.md)
+
 ## Sample output codes
 
 ### For C#:
