@@ -150,7 +150,8 @@ using namespace System::Reflection;
 * Support fallback rule set.
 * Support Mono environments (and CI environments on *nix, Please PR for complete :)
   * For 0.9.1, I supported .NET Standard platform. So I think may already run on these environments. (But not verified)
- 
+* Switch CI to Azure Pipelines. 
+
 ## License
 * Copyright (c) 2015-2019 Kouji Matsui (@kozy_kekyo, kekyo2)
 * Under Apache v2

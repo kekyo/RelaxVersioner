@@ -151,6 +151,7 @@ using namespace System::Reflection;
 * フォールバックルールを指定可能にする
 * Mono環境のサポート (そして *nix 環境でのCIのサポート / 詳しい方のPRウェルカム)
   * 0.9.1にて.NET Standardに対応したため、もしかするとすでに動作するようになっているかもしれません（まだ未検証です）
+* CIプロセスをAzure Pipelinesに変更する
 
 ## License
 * Copyright (c) 2015-2018 Kouji Matsui (@kozy_kekyo, @kekyo2)
