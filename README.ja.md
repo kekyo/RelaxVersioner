@@ -8,10 +8,9 @@
 * Gitter: [![Gitter RelaxVersioner](https://img.shields.io/gitter/room/kekyo/CenterCLR.RelaxVersioner.svg?style=flat)](https://gitter.im/kekyo/CenterCLR.RelaxVersioner)
 
 ## これは何？
-* RelaxVersionerは、軽量で非常に簡単に使用することが出来る、Gitベースの「自動バージョニング」ツールセットです。.NETベースのソースコードを対象としていて、ビルド時にアセンブリ属性を自動的に適用します。
+* RelaxVersionerは、軽量で非常に簡単に使用することが出来る、Gitベースの「自動バージョニング」ツールセットです。.NET Core/.NET Frameworkベースのソースコードを対象としていて、ビルド時にアセンブリ属性を自動的に適用します。
 * RelaxVersionerを使うと、Gitのタグ・ブランチ・コミットメッセージだけを使って、バージョン管理が出来ます。つまり、追加のツール操作が不要なため、Gitを知ってさえいれば学習コストがほとんどなく、CI環境にも容易に対応できます。
-* サポートしている言語は、.NETで標準的に使用される、C#・F#・VB.NET・C++/CLI、そしてWix（wixprojとwxs）です。
-  * Wixは現在作業中です。
+* サポートしている言語は、.NETで標準的に使用される、C#・F#・VB.NET そして C++/CLIです。
 * ローカルのGitリポジトリから、自動的にタグ・ブランチの名称を取得し、アセンブリ属性に適用することが出来ます。
 * AssemblyInfo.csファイルを直接変更しません。RelaxVersionerはテンポラリファイルに定義を出力し、それをコンパイルさせます。
 * Visual Studio/MSBuildの中間出力フォルダーを自動的に使用するため、Gitリポジトリ内を汚すことがありません。
@@ -151,12 +150,17 @@ using namespace System::Reflection;
 * テンプレート出力をサポートする
 * フォールバックルールを指定可能にする
 * Mono環境のサポート (そして *nix 環境でのCIのサポート / 詳しい方のPRウェルカム)
+  * 0.9.1にて.NET Standardに対応したため、もしかするとすでに動作するようになっているかもしれません（まだ未検証です）
 
 ## License
 * Copyright (c) 2015-2018 Kouji Matsui (@kozy_kekyo, @kekyo2)
 * Under Apache v2
 
 ## 履歴
+* 0.9.1:
+  * 新しいMSBuildスクリプトの形式に対応しました (つまり、.NET Core 2/.NET Standardに使われる新しい形式のプロジェクトで使用できます)
+  * LibGit2Sharpを0.26.1/2.0.289に更新しました。
+  * WiXサポートを削除しました。
 * 0.8.30:
   * Importエレメントに対応 (Thanks @biobox)
 * 0.8.20:

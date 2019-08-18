@@ -8,10 +8,9 @@
 * Gitter: [![Gitter RelaxVersioner](https://img.shields.io/gitter/room/kekyo/CenterCLR.RelaxVersioner.svg?style=flat)](https://gitter.im/kekyo/CenterCLR.RelaxVersioner)
 
 ## What is this?
-* RelaxVersioner is Very easy-usage, Git-based, auto-generate version informations in .NET source code. (Assembly attribute based)
+* RelaxVersioner is Very easy-usage, Git-based, auto-generate version informations in .NET Core/.NET Framework source code. (Assembly attribute based)
 * If you use RelaxVersioner, version handling ONLY use for Git tags/branches/commit messages. Of course you don't need more tooling usage, and easy managing continuous-integration environments.
-* Target language/projects: C#, F#, VB.NET, C++/CLI, and Wix (wixproj/wxs).
-  * Currently, Wix is WIP.
+* Target language/projects: C#, F#, VB.NET and C++/CLI.
 * Auto collect version information from local Git repository tags/branch name.
 * Independent AssemblyInfo.cs file, RelaxVersioner is output into temporary file. (No direct manipulate AssemblyInfo file).
 * Place source code location which isn't obstructive for Git. (ex: obj/Debug)
@@ -150,12 +149,17 @@ using namespace System::Reflection;
 * Support templated output.
 * Support fallback rule set.
 * Support Mono environments (and CI environments on *nix, Please PR for complete :)
-
+  * For 0.9.1, I supported .NET Standard platform. So I think may already run on these environments. (But not verified)
+ 
 ## License
-* Copyright (c) 2015-2018 Kouji Matsui (@kozy_kekyo, kekyo2)
+* Copyright (c) 2015-2019 Kouji Matsui (@kozy_kekyo, kekyo2)
 * Under Apache v2
 
 ## History
+* 0.9.1:
+  * Upgraded handlers on the new MSBuild scripts (Formally .NET Core 2/.NET Standard projects)
+  * Upgraded LibGit2Sharp 0.26.1/2.0.289
+  * Sorry dropped WiX supporting.
 * 0.8.30:
   * Added Import feature. (Thanks @biobox)
 * 0.8.20:
