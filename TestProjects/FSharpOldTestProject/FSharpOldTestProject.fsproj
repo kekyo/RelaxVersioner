@@ -1,5 +1,6 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="14.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="..\..\packages\CenterCLR.RelaxVersioner.0.9.1\build\CenterCLR.RelaxVersioner.props" Condition="Exists('..\..\packages\CenterCLR.RelaxVersioner.0.9.1\build\CenterCLR.RelaxVersioner.props')" />
   <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
@@ -8,14 +9,13 @@
     <ProjectGuid>b18f5e8c-fdf7-40d6-80f8-b912d29ae273</ProjectGuid>
     <OutputType>Exe</OutputType>
     <RootNamespace>FSharpTestProject</RootNamespace>
-    <AssemblyName>FSharpTestProject</AssemblyName>
+    <AssemblyName>FSharpOldTestProject</AssemblyName>
     <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
     <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
     <TargetFSharpCoreVersion>4.4.0.0</TargetFSharpCoreVersion>
-    <Name>FSharpTestProject</Name>
+    <Name>FSharpOldTestProject</Name>
     <NuGetPackageImportStamp>
     </NuGetPackageImportStamp>
-    <RelaxVersionerPath>$(MSBuildProjectDirectory)\..\..\CenterCLR.RelaxVersioner\bin\$(Configuration)\CenterCLR.RelaxVersioner.exe</RelaxVersionerPath>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -26,7 +26,7 @@
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <WarningLevel>3</WarningLevel>
     <PlatformTarget>AnyCPU</PlatformTarget>
-    <DocumentationFile>bin\Debug\FSharpTestProject.XML</DocumentationFile>
+    <DocumentationFile>bin\Debug\FSharpOldTestProject.XML</DocumentationFile>
     <Prefer32Bit>true</Prefer32Bit>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
@@ -37,7 +37,7 @@
     <DefineConstants>TRACE</DefineConstants>
     <WarningLevel>3</WarningLevel>
     <PlatformTarget>AnyCPU</PlatformTarget>
-    <DocumentationFile>bin\Release\FSharpTestProject.XML</DocumentationFile>
+    <DocumentationFile>bin\Release\FSharpOldTestProject.XML</DocumentationFile>
     <Prefer32Bit>true</Prefer32Bit>
   </PropertyGroup>
   <PropertyGroup>
@@ -56,11 +56,19 @@
     </Otherwise>
   </Choose>
   <Import Project="$(FSharpTargetsPath)" />
-  <Import Project="..\..\CenterCLR.RelaxVersioner\CenterCLR.RelaxVersioner.targets" />
+  <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
+    <PropertyGroup>
+      <ErrorText>This project references NuGet package(s) that are missing on this computer. Use NuGet Package Restore to download them.  For more information, see http://go.microsoft.com/fwlink/?LinkID=322105. The missing file is {0}.</ErrorText>
+    </PropertyGroup>
+    <Error Condition="!Exists('..\..\packages\CenterCLR.RelaxVersioner.0.9.1\build\CenterCLR.RelaxVersioner.props')" Text="$([System.String]::Format('$(ErrorText)', '..\..\packages\CenterCLR.RelaxVersioner.0.9.1\build\CenterCLR.RelaxVersioner.props'))" />
+    <Error Condition="!Exists('..\..\packages\CenterCLR.RelaxVersioner.0.9.1\build\CenterCLR.RelaxVersioner.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\..\packages\CenterCLR.RelaxVersioner.0.9.1\build\CenterCLR.RelaxVersioner.targets'))" />
+  </Target>
+  <Import Project="..\..\packages\CenterCLR.RelaxVersioner.0.9.1\build\CenterCLR.RelaxVersioner.targets" Condition="Exists('..\..\packages\CenterCLR.RelaxVersioner.0.9.1\build\CenterCLR.RelaxVersioner.targets')" />
   <ItemGroup>
     <Compile Include="AssemblyInfo.fs" />
     <Compile Include="Program.fs" />
     <None Include="App.config" />
+    <Content Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="mscorlib" />

@@ -1,5 +1,6 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="14.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="..\..\packages\CenterCLR.RelaxVersioner.0.9.1\build\CenterCLR.RelaxVersioner.props" Condition="Exists('..\..\packages\CenterCLR.RelaxVersioner.0.9.1\build\CenterCLR.RelaxVersioner.props')" />
   <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
@@ -15,7 +16,6 @@
     <TargetFrameworkProfile>Client</TargetFrameworkProfile>
     <NuGetPackageImportStamp>
     </NuGetPackageImportStamp>
-    <RelaxVersionerPath>$(MSBuildProjectDirectory)\..\..\CenterCLR.RelaxVersioner\bin\$(Configuration)\CenterCLR.RelaxVersioner.exe</RelaxVersionerPath>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <PlatformTarget>AnyCPU</PlatformTarget>
@@ -105,9 +105,17 @@
       <CustomToolNamespace>My</CustomToolNamespace>
       <LastGenOutput>Settings.Designer.vb</LastGenOutput>
     </None>
+    <None Include="packages.config" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.VisualBasic.targets" />
-  <Import Project="..\..\CenterCLR.RelaxVersioner\CenterCLR.RelaxVersioner.targets" />
+  <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
+    <PropertyGroup>
+      <ErrorText>This project references NuGet package(s) that are missing on this computer. Use NuGet Package Restore to download them.  For more information, see http://go.microsoft.com/fwlink/?LinkID=322105. The missing file is {0}.</ErrorText>
+    </PropertyGroup>
+    <Error Condition="!Exists('..\..\packages\CenterCLR.RelaxVersioner.0.9.1\build\CenterCLR.RelaxVersioner.props')" Text="$([System.String]::Format('$(ErrorText)', '..\..\packages\CenterCLR.RelaxVersioner.0.9.1\build\CenterCLR.RelaxVersioner.props'))" />
+    <Error Condition="!Exists('..\..\packages\CenterCLR.RelaxVersioner.0.9.1\build\CenterCLR.RelaxVersioner.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\..\packages\CenterCLR.RelaxVersioner.0.9.1\build\CenterCLR.RelaxVersioner.targets'))" />
+  </Target>
+  <Import Project="..\..\packages\CenterCLR.RelaxVersioner.0.9.1\build\CenterCLR.RelaxVersioner.targets" Condition="Exists('..\..\packages\CenterCLR.RelaxVersioner.0.9.1\build\CenterCLR.RelaxVersioner.targets')" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
   <Target Name="BeforeBuild">
