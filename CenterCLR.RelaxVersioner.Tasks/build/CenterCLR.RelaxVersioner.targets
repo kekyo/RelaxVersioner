@@ -1,0 +1,103 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+    CenterCLR.RelaxVersioner - Easy-usage, Git-based, auto-generate version informations toolset.
+    Copyright (c) 2016-2019 Kouji Matsui (@kozy_kekyo, @kekyo2)
+
+    Licensed under the Apache License, Version 2.0 (the "License");
+    you may not use this file except in compliance with the License.
+    You may obtain a copy of the License at
+
+    http://www.apache.org/licenses/LICENSE-2.0
+
+    Unless required by applicable law or agreed to in writing, software
+    distributed under the License is distributed on an "AS IS" BASIS,
+    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+    See the License for the specific language governing permissions and
+    limitations under the License.
+-->
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+
+    <!-- ============================================================================= -->
+    <!-- Properties definition -->
+
+    <!-- ======================== -->
+    <!-- Common -->
+    <PropertyGroup>
+        <!-- This path identicate auto-generated source code by RelaxVersioner. -->
+        <RelaxVersionerOutputPath Condition="'$(RelaxVersionerOutputPath)' == ''">$([System.IO.Path]::Combine('$(MSBuildProjectDirectory)','$(IntermediateOutputPath)','RelaxVersioner$(DefaultLanguageSourceExtension)'))</RelaxVersionerOutputPath>
+    </PropertyGroup>
+
+    <!-- ======================== -->
+    <!-- For F# -->
+    <PropertyGroup Condition="'$(Language)' == 'F#'">
+        <!-- HACK: https://github.com/fsharp/fsharp/issues/289 -->
+        <NoWarn>$(NoWarn) 2003</NoWarn>
+    </PropertyGroup>
+
+    <!-- ======================== -->
+    <!-- For C++ (or C++/CLI) -->
+    <PropertyGroup Condition="'$(Language)' == 'C++'">
+        <RelaxVersionerLanguage Condition="('$(RelaxVersionerLanguage)' == '') AND ('$(CLRSupport)' == 'true')">C++/CLI</RelaxVersionerLanguage>
+        <RelaxVersionerLanguage Condition="'$(RelaxVersionerLanguage)' == ''">C++</RelaxVersionerLanguage>
+        <BuildCompileTargets>
+            RelaxVersionerBuild;
+            $(BuildCompileTargets);
+        </BuildCompileTargets>
+    </PropertyGroup>
+
+    <!-- ======================== -->
+    <!-- For all languages except C++ -->
+    <PropertyGroup Condition="'$(Language)' != 'C++'">
+        <RelaxVersionerLanguage Condition="'$(RelaxVersionerLanguage)' == ''">$(Language)</RelaxVersionerLanguage>
+        <CoreBuildDependsOn>
+            RelaxVersionerBuild;
+            $(CoreBuildDependsOn);
+        </CoreBuildDependsOn>
+    </PropertyGroup>
+
+    <!-- ============================================================================= -->
+    <!-- Build definition -->
+    <Target Name="RelaxVersionerBuild" BeforeTargets="BeforeCompile" Outputs="$(RelaxVersionerOutputPath)">
+
+        <!-- ======================== -->
+        <!-- Execute RelaxVersioner -->
+        <RelaxVersionerTask
+            SolutionDirectory="$(SolutionDir)"
+            ProjectDirectory="$(ProjectDir)"
+            OutputPath="$(RelaxVersionerOutputPath)"
+            Language="$(RelaxVersionerLanguage)">
+            <Output TaskParameter="DetectedIdentity" PropertyName="RelaxVersionerDetectedIdentity" />
+            <Output TaskParameter="DetectedShortIdentity" PropertyName="RelaxVersionerDetectedShortIdentity" />
+            <Output TaskParameter="DetectedMessage" PropertyName="RelaxVersionerDetectedMessage" />
+        </RelaxVersionerTask>
+
+        <!-- ============================================================================= -->
+        <!-- Add output rule -->
+
+        <PropertyGroup>
+          <!-- Apply NuGet versioning -->
+          <PackageVersion Condition="'$(PackageVersion)' == ''">$(RelaxVersionerDetectedShortIdentity)</PackageVersion>
+          <PackageReleaseNotes Condition="'$(PackageReleaseNotes)' == ''">$(RelaxVersionerDetectedMessage)</PackageReleaseNotes>
+        </PropertyGroup>
+
+        <!-- ======================== -->
+        <!-- For F# -->
+        <ItemGroup Condition="'$(Language)' == 'F#'">
+            <!-- HACK: F#'s EntryPoint expression is ignoring namespace/module if source code is last compilation.
+                 So, RelaxVersioner code insert before any source codes. -->
+            <CompileBefore Include="$(RelaxVersionerOutputPath)" />
+        </ItemGroup>
+
+        <!-- ======================== -->
+        <!-- For C++ (or C++/CLI) -->
+        <ItemGroup Condition="'$(Language)' == 'C++'">
+            <ClCompile Include="$(RelaxVersionerOutputPath)" />
+        </ItemGroup>
+
+        <!-- ======================== -->
+        <!-- For other languages -->
+        <ItemGroup Condition="('$(Language)' != 'F#') and ('$(Language)' != 'C++')">
+            <Compile Include="$(RelaxVersionerOutputPath)" />
+        </ItemGroup>
+    </Target>
+</Project>

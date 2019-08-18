@@ -1,53 +1,33 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 14
-VisualStudioVersion = 14.0.25420.1
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.29123.88
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{C3592BB3-F62F-499E-B1E8-2B497161C389}"
 	ProjectSection(SolutionItems) = preProject
 		.gitignore = .gitignore
 		appveyor.yml = appveyor.yml
 		build-nupkg.bat = build-nupkg.bat
+		Images\CenterCLR.RelaxVersioner.100.png = Images\CenterCLR.RelaxVersioner.100.png
+		CenterCLR.RelaxVersioner.sln.licenseheader = CenterCLR.RelaxVersioner.sln.licenseheader
 		README.ja.md = README.ja.md
 		README.md = README.md
 	EndProjectSection
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CenterCLR.RelaxVersioner", "CenterCLR.RelaxVersioner\CenterCLR.RelaxVersioner.csproj", "{0B01C9D5-A685-4444-981B-E8B4D6BDBBF1}"
-EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "TestProjects", "TestProjects", "{9CE053C2-3668-444B-91ED-24DA5FA909D9}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CSharpTestProject", "TestProjects\CSharpTestProject\CSharpTestProject.csproj", "{5CAE93C9-0C7E-4310-A463-8FF039126E08}"
-	ProjectSection(ProjectDependencies) = postProject
-		{0B01C9D5-A685-4444-981B-E8B4D6BDBBF1} = {0B01C9D5-A685-4444-981B-E8B4D6BDBBF1}
-	EndProjectSection
 EndProject
 Project("{F184B08F-C81C-45F6-A57F-5ABD9991F28F}") = "VisualBasicTestProject", "TestProjects\VisualBasicTestProject\VisualBasicTestProject.vbproj", "{86854272-C4BB-4BC8-B215-C86FE8E2EB22}"
-	ProjectSection(ProjectDependencies) = postProject
-		{0B01C9D5-A685-4444-981B-E8B4D6BDBBF1} = {0B01C9D5-A685-4444-981B-E8B4D6BDBBF1}
-	EndProjectSection
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "CPlusPlusTestProject", "TestProjects\CPlusPlusTestProject\CPlusPlusTestProject.vcxproj", "{8B8335DE-1FF6-4AAE-8712-B695820A3180}"
-	ProjectSection(ProjectDependencies) = postProject
-		{0B01C9D5-A685-4444-981B-E8B4D6BDBBF1} = {0B01C9D5-A685-4444-981B-E8B4D6BDBBF1}
-	EndProjectSection
 EndProject
 Project("{F2A71F9B-5D33-465A-A702-920D77279786}") = "FSharpTestProject", "TestProjects\FSharpTestProject\FSharpTestProject.fsproj", "{B18F5E8C-FDF7-40D6-80F8-B912D29AE273}"
-	ProjectSection(ProjectDependencies) = postProject
-		{0B01C9D5-A685-4444-981B-E8B4D6BDBBF1} = {0B01C9D5-A685-4444-981B-E8B4D6BDBBF1}
-	EndProjectSection
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Images", "Images", "{98ADE163-2FFB-47B0-AA7A-1A294DD7276F}"
 	ProjectSection(SolutionItems) = preProject
-		Images\CenterCLR.RelaxVersioner.100.png = Images\CenterCLR.RelaxVersioner.100.png
-		Images\CenterCLR.RelaxVersioner.128.png = Images\CenterCLR.RelaxVersioner.128.png
-		Images\CenterCLR.RelaxVersioner.16.png = Images\CenterCLR.RelaxVersioner.16.png
-		Images\CenterCLR.RelaxVersioner.24.png = Images\CenterCLR.RelaxVersioner.24.png
 		Images\CenterCLR.RelaxVersioner.256.png = Images\CenterCLR.RelaxVersioner.256.png
-		Images\CenterCLR.RelaxVersioner.32.png = Images\CenterCLR.RelaxVersioner.32.png
-		Images\CenterCLR.RelaxVersioner.48.png = Images\CenterCLR.RelaxVersioner.48.png
-		Images\CenterCLR.RelaxVersioner.64.png = Images\CenterCLR.RelaxVersioner.64.png
 		Images\CenterCLR.RelaxVersioner.design = Images\CenterCLR.RelaxVersioner.design
-		Images\CenterCLR.RelaxVersioner.ico = Images\CenterCLR.RelaxVersioner.ico
 		Images\Japanese.256.png = Images\Japanese.256.png
 	EndProjectSection
 EndProject
@@ -56,6 +36,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".nuget", ".nuget", "{D0C0F1
 		.nuget\NuGet.Config = .nuget\NuGet.Config
 		.nuget\nuget.exe = .nuget\nuget.exe
 	EndProjectSection
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CenterCLR.RelaxVersioner.Tasks", "CenterCLR.RelaxVersioner.Tasks\CenterCLR.RelaxVersioner.Tasks.csproj", "{49303547-1E7B-4794-9A35-0FE188670E56}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -67,18 +49,6 @@ Global
 		Release|x86 = Release|x86
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{0B01C9D5-A685-4444-981B-E8B4D6BDBBF1}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{0B01C9D5-A685-4444-981B-E8B4D6BDBBF1}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{0B01C9D5-A685-4444-981B-E8B4D6BDBBF1}.Debug|x64.ActiveCfg = Debug|Any CPU
-		{0B01C9D5-A685-4444-981B-E8B4D6BDBBF1}.Debug|x64.Build.0 = Debug|Any CPU
-		{0B01C9D5-A685-4444-981B-E8B4D6BDBBF1}.Debug|x86.ActiveCfg = Debug|Any CPU
-		{0B01C9D5-A685-4444-981B-E8B4D6BDBBF1}.Debug|x86.Build.0 = Debug|Any CPU
-		{0B01C9D5-A685-4444-981B-E8B4D6BDBBF1}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{0B01C9D5-A685-4444-981B-E8B4D6BDBBF1}.Release|Any CPU.Build.0 = Release|Any CPU
-		{0B01C9D5-A685-4444-981B-E8B4D6BDBBF1}.Release|x64.ActiveCfg = Release|Any CPU
-		{0B01C9D5-A685-4444-981B-E8B4D6BDBBF1}.Release|x64.Build.0 = Release|Any CPU
-		{0B01C9D5-A685-4444-981B-E8B4D6BDBBF1}.Release|x86.ActiveCfg = Release|Any CPU
-		{0B01C9D5-A685-4444-981B-E8B4D6BDBBF1}.Release|x86.Build.0 = Release|Any CPU
 		{5CAE93C9-0C7E-4310-A463-8FF039126E08}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{5CAE93C9-0C7E-4310-A463-8FF039126E08}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{5CAE93C9-0C7E-4310-A463-8FF039126E08}.Debug|x64.ActiveCfg = Debug|Any CPU
@@ -126,6 +96,18 @@ Global
 		{B18F5E8C-FDF7-40D6-80F8-B912D29AE273}.Release|x64.Build.0 = Release|Any CPU
 		{B18F5E8C-FDF7-40D6-80F8-B912D29AE273}.Release|x86.ActiveCfg = Release|Any CPU
 		{B18F5E8C-FDF7-40D6-80F8-B912D29AE273}.Release|x86.Build.0 = Release|Any CPU
+		{49303547-1E7B-4794-9A35-0FE188670E56}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{49303547-1E7B-4794-9A35-0FE188670E56}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{49303547-1E7B-4794-9A35-0FE188670E56}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{49303547-1E7B-4794-9A35-0FE188670E56}.Debug|x64.Build.0 = Debug|Any CPU
+		{49303547-1E7B-4794-9A35-0FE188670E56}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{49303547-1E7B-4794-9A35-0FE188670E56}.Debug|x86.Build.0 = Debug|Any CPU
+		{49303547-1E7B-4794-9A35-0FE188670E56}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{49303547-1E7B-4794-9A35-0FE188670E56}.Release|Any CPU.Build.0 = Release|Any CPU
+		{49303547-1E7B-4794-9A35-0FE188670E56}.Release|x64.ActiveCfg = Release|Any CPU
+		{49303547-1E7B-4794-9A35-0FE188670E56}.Release|x64.Build.0 = Release|Any CPU
+		{49303547-1E7B-4794-9A35-0FE188670E56}.Release|x86.ActiveCfg = Release|Any CPU
+		{49303547-1E7B-4794-9A35-0FE188670E56}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -136,5 +118,8 @@ Global
 		{8B8335DE-1FF6-4AAE-8712-B695820A3180} = {9CE053C2-3668-444B-91ED-24DA5FA909D9}
 		{B18F5E8C-FDF7-40D6-80F8-B912D29AE273} = {9CE053C2-3668-444B-91ED-24DA5FA909D9}
 		{98ADE163-2FFB-47B0-AA7A-1A294DD7276F} = {C3592BB3-F62F-499E-B1E8-2B497161C389}
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {63C3485B-CB64-44B8-B861-FF23BE00BBA8}
 	EndGlobalSection
 EndGlobal
