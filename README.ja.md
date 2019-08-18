@@ -1,6 +1,7 @@
 # RelaxVersioner
 ![RelaxVersioner](https://raw.githubusercontent.com/kekyo/CenterCLR.RelaxVersioner/master/Images/CenterCLR.RelaxVersioner.128.png)
-* English language https://github.com/kekyo/CenterCLR.RelaxVersioner
+
+[English language is here](https://github.com/kekyo/CenterCLR.RelaxVersioner)
 
 # Status
 * NuGet Package: [![NuGet RelaxVersioner](https://img.shields.io/nuget/v/CenterCLR.RelaxVersioner.svg?style=flat)](https://www.nuget.org/packages/CenterCLR.RelaxVersioner)
