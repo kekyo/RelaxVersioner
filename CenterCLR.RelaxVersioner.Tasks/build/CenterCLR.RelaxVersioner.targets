@@ -43,10 +43,10 @@
             RelaxVersionerBuild;
             $(BuildCompileTargets);
         </BuildCompileTargets>
-        <PublishDependsOn>
-            RelaxVersionerBeforePublish;
-            $(PublishDependsOn);
-        </PublishDependsOn>
+        <GenerateNuspecDependsOn>
+            RelaxVersionerBeforePack;
+            $(GenerateNuspecDependsOn);
+        </GenerateNuspecDependsOn>
     </PropertyGroup>
 
     <!-- ======================== -->
@@ -57,10 +57,10 @@
             RelaxVersionerBuild;
             $(CoreBuildDependsOn);
         </CoreBuildDependsOn>
-        <PublishDependsOn>
-            RelaxVersionerBeforePublish;
-            $(PublishDependsOn);
-        </PublishDependsOn>
+        <GenerateNuspecDependsOn>
+            RelaxVersionerBeforePack;
+            $(GenerateNuspecDependsOn);
+        </GenerateNuspecDependsOn>
     </PropertyGroup>
 
     <!-- ============================================================================= -->
@@ -111,7 +111,7 @@
 
   <!-- ============================================================================= -->
   <!-- Pre publish definition -->
-  <Target Name="RelaxVersionerBeforePublish" BeforeTargets="BeforePublish">
+  <Target Name="RelaxVersionerBeforePack" BeforeTargets="SetNuSpecProperties">
 
     <!-- ======================== -->
     <!-- Execute RelaxVersioner -->

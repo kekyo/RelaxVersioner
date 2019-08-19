@@ -70,7 +70,6 @@ namespace CenterCLR.RelaxVersioner
 
                         // Set LibGit2Sharp native library folder.
                         var arch = Environment.Is64BitProcess ? "-x64" : "-x86";
-                        string nativeLibraryPath;
                         switch (Environment.OSVersion.Platform)
                         {
                             case PlatformID.Unix:
