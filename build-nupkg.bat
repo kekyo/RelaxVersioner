@@ -17,4 +17,4 @@ rem limitations under the License.
 
 dotnet build -c Release -p:Platform=AnyCPU CenterCLR.RelaxVersioner.Tasks\CenterCLR.RelaxVersioner.Tasks.csproj
 
-dotnet pack -p:PackageVersion=0.9.2 -p:Configuration=Release -p:Platform=AnyCPU --include-symbols CenterCLR.RelaxVersioner.Tasks\CenterCLR.RelaxVersioner.Tasks.csproj
+dotnet pack -p:PackageVersion=0.9.3 -p:Configuration=Release -p:Platform=AnyCPU --include-symbols CenterCLR.RelaxVersioner.Tasks\CenterCLR.RelaxVersioner.Tasks.csproj

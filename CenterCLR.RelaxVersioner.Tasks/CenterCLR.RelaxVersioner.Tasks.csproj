@@ -30,7 +30,7 @@
 
     <NoPackageAnalysis>true</NoPackageAnalysis>
     <IncludeBuildOutput>false</IncludeBuildOutput>
-    <TargetsForTfmSpecificContentInPackage>$(TargetsForTfmSpecificContentInPackage);GetPublishFilesForPack</TargetsForTfmSpecificContentInPackage>
+    <TargetsForTfmSpecificContentInPackage>$(TargetsForTfmSpecificContentInPackage);CopyUnplacedNativeBinaries;GetPublishFilesForPack</TargetsForTfmSpecificContentInPackage>
     
     <GenerateAssemblyVersionAttribute>false</GenerateAssemblyVersionAttribute>
     <GenerateAssemblyFileVersionAttribute>false</GenerateAssemblyFileVersionAttribute>
@@ -62,6 +62,14 @@
     <Content Include="buildMultiTargeting\CenterCLR.RelaxVersioner.targets" PackagePath="buildMultiTargeting/" />
     <EmbeddedResource Include="DefaultRuleSet.rules" />
   </ItemGroup>
+
+  <!-- HACK: LibGit2Sharp.NativeBinaries copied native libs into net46, but didn't copy into netstandard2.0 (don't know why) -->
+  <Target Name="CopyUnplacedNativeBinaries" DependsOnTargets="Publish" Condition="'$(TargetFramework)' == 'netstandard2.0'">
+    <ItemGroup>
+      <UnplacedNativeBinaries Include="$(PublishDir)/../../net46/lib/**" />
+    </ItemGroup>
+    <Copy SourceFiles="@(UnplacedNativeBinaries)" DestinationFiles="@(UnplacedNativeBinaries->'$(PublishDir)/lib/%(RecursiveDir)%(Filename)%(Extension)')" SkipUnchangedFiles="true" />
+  </Target>
 
   <Target Name="GetPublishFilesForPack" DependsOnTargets="Publish">
     <ItemGroup>
