@@ -95,7 +95,7 @@ using namespace System::Reflection;
 ### 開発運用の例
 1. C#・F#などでプロジェクトを新規に作ります。
 2. NuGetで"RelaxVersioner"を検索して、プロジェクトに追加します。
-3. AssemblyInfo.csなどに定義されている、デフォルトの"AssemblyVersion"と"AssemblyFileVersion"属性をコメントアウトします。
+3. (オプション): AssemblyInfo.csなどに定義されている、デフォルトの"AssemblyVersion"と"AssemblyFileVersion"属性をコメントアウトします。
 4. この状態でビルドするだけで、バージョンが適用されたバイナリが生成されます。
   * デフォルトでは、AssemblyVersionが"0.0.1.0"、AssemblyFileVersionがビルド時の日時を2秒精度でバージョン化した値（例:"2016.05.12.11523"）となります。
   * また、AssemblyVersionMetadataに、ローカルGitリポジトリから得られる情報が埋め込まれます（Author・ブランチ・タグなど）。しかし、この例ではまだgit initしてないので"Unknown"として埋め込まれます。

@@ -94,7 +94,7 @@ using namespace System::Reflection;
 ### Example for development cycles
 1. You create new C#,F# or another project.
 2. Install "RelaxVersioner" from NuGet.
-3. Comment outs default "AssemblyVersion" and "AssemblyFileVersion" declarations in AssemblyInfo.cs.
+3. (Optional): Comment outs default "AssemblyVersion" and "AssemblyFileVersion" declarations in AssemblyInfo.cs.
 4. Let's build now! Output binary applied version informations.
   * Default declaration of AssemblyVersion="0.0.1.0", AssemblyFileVersion="(Build date on 2sec prec.)" (ex:"2016.05.12.11523"）
   * Applied AssemblyVersionMetadata from local Git repository (Author, Branch, Tags）. But this example git repository not created , so there declarations containing "Unknown".
