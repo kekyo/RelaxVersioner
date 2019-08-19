@@ -14,6 +14,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 		CenterCLR.RelaxVersioner.sln.licenseheader = CenterCLR.RelaxVersioner.sln.licenseheader
 		README.ja.md = README.ja.md
 		README.md = README.md
+		STARTGUIDE.md = STARTGUIDE.md
 	EndProjectSection
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "TestProjects", "TestProjects", "{9CE053C2-3668-444B-91ED-24DA5FA909D9}"

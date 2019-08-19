@@ -11,14 +11,11 @@
 ## これは何？
 * RelaxVersionerは、軽量で非常に簡単に使用することが出来る、Gitベースの「自動バージョニング」ツールセットです。.NET Core/.NET Frameworkベースのソースコードを対象としていて、ビルド時にアセンブリ属性を自動的に適用します。
 * RelaxVersionerを使うと、Gitのタグ・ブランチ・コミットメッセージだけを使って、バージョン管理が出来ます。つまり、追加のツール操作が不要なため、Gitを知ってさえいれば学習コストがほとんどなく、CI環境にも容易に対応できます。
-* サポートしている言語は、.NETで標準的に使用される、C#・F#・VB.NET そして C++/CLIです。
+* サポートしている言語は、.NETで標準的に使用される、C#・F#・VB.NET・C++/CLI、そしてNuGetパッケージング (dotnet cli packコマンド) です。
 * ローカルのGitリポジトリから、自動的にタグ・ブランチの名称を取得し、アセンブリ属性に適用することが出来ます。
 * AssemblyInfo.csファイルを直接変更しません。RelaxVersionerはテンポラリファイルに定義を出力し、それをコンパイルさせます。
 * Visual Studio/MSBuildの中間出力フォルダーを自動的に使用するため、Gitリポジトリ内を汚すことがありません。
 * カスタムルールセットを定義することで、出力する属性と内容をカスタマイズすることが出来ます。
-
-## クイックスタートガイド
-[Refer quick start guides. (英語)](./QUICKSTART.md)
 
 ## 出力されるコードの例:
 
@@ -84,14 +81,19 @@ using namespace System::Reflection;
 [assembly: AssemblyVersionMetadataAttribute("Message","Fixed tab")];
 ```
 
-## 使い方
-* NuGetで"RelaxVersioner"を検索して導入してください。 https://www.nuget.org/packages/CenterCLR.RelaxVersioner/
+## RelaxVersionerの使い方
+
+### スタートガイド
+[Refer start guides. (英語)](./STARTGUIDE.md)
+
+### 使い方
+* NuGetで["RelaxVersioner"](https://www.nuget.org/packages/CenterCLR.RelaxVersioner/)を検索して、導入してください。
 * あらかじめ、AssemblyInfo.cs等に定義されている、デフォルトの"AssemblyVersion"と"AssemblyFileVersion"属性をコメントアウトして下さい（ビルド時に重複定義エラーが発生します）。
   * これらはカスタムルールを用いて定義を除外するのであれば、引き続き使用する事もできます。
 * ビルドすると、自動的にアセンブリ属性が適用されます。ILSpy等で確認するか、一部の属性はエクスプローラーのプロパティから確認することが出来ます。
 * プロジェクトフォルダ、又はソリューションフォルダに"RelaxVersioner.rules"ファイルを配置することで、カスタムルールを定義出来ます。まだドキュメントを用意できていないので、サンプルとして以下の定義例を参照してください。
 
-## 開発運用の例
+### 開発運用の例
 1. C#・F#などでプロジェクトを新規に作ります。
 2. NuGetで"RelaxVersioner"を検索して、プロジェクトに追加します。
 3. AssemblyInfo.csなどに定義されている、デフォルトの"AssemblyVersion"と"AssemblyFileVersion"属性をコメントアウトします。
@@ -103,6 +105,7 @@ using namespace System::Reflection;
 7. 現在のコミットにタグをつけてください。例えば"0.5.4"のようなバージョン表記です。これでビルドすれば、このバージョン番号が自動的にAssemblyVersionに反映されるようになります。
 8. 全て良ければ、リモートリポジトリにpushして完了です。
 9. 以後、コードを変更してリリースの準備が出来たら、新たにタグをつければそれがAssemblyVersionに反映されるので、ビルドしてバイナリをリリースします。
+  * dotnet cliを使用してNuGetのパッケージをビルドする場合にも、`PackageVersion`と`PackageReleaseNotes`は自動的に適用されます。完成してデプロイする場合は、`dotnet pack`コマンドを使えば、NuGetのバージョンを一元管理できます。
 
 ## カスタムルールファイルの例:
 

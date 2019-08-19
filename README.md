@@ -11,14 +11,11 @@
 ## What is this?
 * RelaxVersioner is Very easy-usage, Git-based, auto-generate version informations in .NET Core/.NET Framework source code. (Assembly attribute based)
 * If you use RelaxVersioner, version handling ONLY use for Git tags/branches/commit messages. Of course you don't need more tooling usage, and easy managing continuous-integration environments.
-* Target language/projects: C#, F#, VB.NET and C++/CLI.
+* Target language/projects: C#, F#, VB.NET, C++/CLI and NuGet packaging (dotnet cli pack).
 * Auto collect version information from local Git repository tags/branch name.
 * Independent AssemblyInfo.cs file, RelaxVersioner is output into temporary file. (No direct manipulate AssemblyInfo file).
 * Place source code location which isn't obstructive for Git. (ex: obj/Debug)
 * You can customize output attribute/values with custom rule set file.
-
-## Quick start guide
-[Refer quick start guides.](./QUICKSTART.md)
 
 ## Sample output codes
 
@@ -84,13 +81,18 @@ using namespace System::Reflection;
 [assembly: AssemblyVersionMetadataAttribute("Message","Fixed tab")];
 ```
 
-## How to use
-* Search NuGet repository: "CenterCLR.RelaxVersioner", and install. https://www.nuget.org/packages/CenterCLR.RelaxVersioner/
+## Getting started
+
+### Start guide
+[Refer start guides.](./STARTGUIDE.md)
+
+### How to use
+* Search NuGet repository: ["RelaxVersioner"](https://www.nuget.org/packages/CenterCLR.RelaxVersioner/), and install.
 * Before build, comment out "AssemblyVersion" and "AssemblyFileVersion" attribute in AssemblyInfo.cs default definitions (will cause build error by duplicate definition). If you use custom rule set, continue use this definitions.
 * After installed, build project. Auto-apply version informations into assembly attributes. Some attributes are looking for directory Windows Explorer property page.
 * You can use custom rule set file naming "RelaxVersioner.rules" into project folder "$(ProjectDir)" or solution folder "$(SolutionDir)". Current no documentation custom rule set file, see also below.
 
-## Example for development cycles
+### Example for development cycles
 1. You create new C#,F# or another project.
 2. Install "RelaxVersioner" from NuGet.
 3. Comment outs default "AssemblyVersion" and "AssemblyFileVersion" declarations in AssemblyInfo.cs.
@@ -102,6 +104,7 @@ using namespace System::Reflection;
 7. You are tagging current commit. For example "0.5.4". Build retry, contains AssemblyVersion is "0.5.4" now.
 8. All rights codes, tags. Push to remote repository, all done.
 9. Development cycles: next codes change and ready to release, you are tagging new version and then build, output binary auto tagged in AssemblyVersion and store informations.
+  * We can apply with automated version number when "dotnet cli" for generate NuGet package (`PackageVersion` and `PackageReleaseNotes` attributes). You can use only `dotnet pack` command.
 
 ## Sample custom rule set file:
 

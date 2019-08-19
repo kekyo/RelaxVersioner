@@ -1,6 +1,6 @@
 # Welcome to the RelaxVersioner Documentation!
 
-### Quick-start Guide
+### Start Guide
 
 * [Compiling RelaxVersioner](docs/Compiling-RelaxVersioner.md)
 * [Customizing RelaxVersioner](docs/Customizing-RelaxVersioner.md)
