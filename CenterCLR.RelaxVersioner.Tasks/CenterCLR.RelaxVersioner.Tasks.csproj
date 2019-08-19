@@ -49,7 +49,6 @@
   <ItemGroup Condition="'$(TargetFramework)' == 'net40'">
     <Reference Include="Microsoft.Build.Framework" />
     <Reference Include="Microsoft.Build.Utilities.v4.0" />
-   
     <PackageReference Include="LibGit2Sharp" version="0.24.1" PrivateAssets="All" Publish="true" />
     <PackageReference Include="LibGit2Sharp.NativeBinaries" version="1.0.205" PrivateAssets="All" Publish="true" />
   </ItemGroup>
@@ -58,7 +57,7 @@
     <PackageReference Include="Microsoft.Build.Framework" Version="15.6.82" PrivateAssets="All" />
     <PackageReference Include="Microsoft.Build.Utilities.Core" Version="15.6.82" PrivateAssets="All" />
     <PackageReference Include="LibGit2Sharp" version="0.26.1" PrivateAssets="All" Publish="true" />
-    <PackageReference Include="LibGit2Sharp.NativeBinaries" version="2.0.289" PrivateAssets="All" Publish="true" />
+    <PackageReference Include="LibGit2Sharp.NativeBinaries" version="2.0.289" PrivateAssets="All" />
   </ItemGroup>
 
   <ItemGroup>
@@ -73,7 +72,7 @@
     https://github.com/libgit2/libgit2sharp.nativebinaries/blob/ca1db58a914ba8b24faef3ee2066a2b9b26542e8/nuget.package/build/net46/LibGit2Sharp.NativeBinaries.props#L8
   -->
   <ItemGroup Condition="'$(TargetFramework)' == 'netstandard2.0'">
-    <ContentWithTargetPath Include="$(libgit2_propsfile)\..\..\runtimes\**\*" TargetPath="lib\%(RecursiveDir)..\%(Filename)%(Extension)" CopyToOutputDirectory="PreserveNewest" />
+    <ContentWithTargetPath Include="$(libgit2_propsfile)\..\..\runtimes\**\*" TargetPath="runtimes\%(RecursiveDir)%(Filename)%(Extension)" CopyToOutputDirectory="PreserveNewest" />
     <ContentWithTargetPath Include="$(libgit2_propsfile)\..\..\libgit2\LibGit2Sharp.dll.config" TargetPath="LibGit2Sharp.dll.config" CopyToOutputDirectory="PreserveNewest" />
   </ItemGroup>
 
