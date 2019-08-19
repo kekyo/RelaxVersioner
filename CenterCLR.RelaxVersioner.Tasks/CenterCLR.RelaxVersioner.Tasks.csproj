@@ -4,6 +4,11 @@
     <TargetFrameworks>net46;netstandard2.0</TargetFrameworks>
     <OutputType>Library</OutputType>
 
+    <LangVersion>8.0</LangVersion>
+    <DebugType>portable</DebugType>
+    <DebugSymbols>true</DebugSymbols>
+    <Platforms>AnyCPU</Platforms>
+    
     <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
     <RestoreProjectStyle>PackageReference</RestoreProjectStyle>
     <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
@@ -23,10 +28,7 @@
     <PackageIconUrl>https://github.com/kekyo/CenterCLR.RelaxVersioner/raw/master/Images/CenterCLR.RelaxVersioner.100.png</PackageIconUrl>
     <RepositoryUrl>https://github.com/kekyo/CenterCLR.RelaxVersioner.git</RepositoryUrl>
     <PackageTags>version;generator;git;auto;easy;generate;versioning;continuous;integration;delivery;tag;branch;assemblyinfo;msbuild;tool</PackageTags>
-    <LangVersion>8.0</LangVersion>
-    <DebugType>portable</DebugType>
-    <DebugSymbols>true</DebugSymbols>
-    <Platforms>AnyCPU</Platforms>
+    <DevelopmentDependency>true</DevelopmentDependency>
 
     <NoPackageAnalysis>true</NoPackageAnalysis>
     <IncludeBuildOutput>false</IncludeBuildOutput>
