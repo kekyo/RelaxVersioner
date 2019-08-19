@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFrameworks>net46;netstandard2.0</TargetFrameworks>
+    <TargetFrameworks>net40;net46;netstandard2.0</TargetFrameworks>
     <OutputType>Library</OutputType>
 
     <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
@@ -38,14 +38,21 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="CenterCLR.NamingFormatter" version="2.0.0" />
-    <PackageReference Include="LibGit2Sharp" version="0.26.1" />
-    <PackageReference Include="LibGit2Sharp.NativeBinaries" version="2.0.289" />
+    <PackageReference Include="CenterCLR.NamingFormatter" version="2.0.0" PrivateAssets="All" />
   </ItemGroup>
 
-  <ItemGroup>
+  <ItemGroup Condition="'$(TargetFramework)' == 'net40'">
+    <Reference Include="Microsoft.Build.Framework" />
+    <Reference Include="Microsoft.Build.Utilities.v4.0" />
+    <PackageReference Include="LibGit2Sharp" version="0.24.1" PrivateAssets="All" />
+    <PackageReference Include="LibGit2Sharp.NativeBinaries" version="1.0.205" PrivateAssets="All" />
+  </ItemGroup>
+
+  <ItemGroup Condition="'$(TargetFramework)' != 'net40'">
     <PackageReference Include="Microsoft.Build.Framework" Version="15.6.82" PrivateAssets="All" />
     <PackageReference Include="Microsoft.Build.Utilities.Core" Version="15.6.82" PrivateAssets="All" />
+    <PackageReference Include="LibGit2Sharp" version="0.26.1" PrivateAssets="All" />
+    <PackageReference Include="LibGit2Sharp.NativeBinaries" version="2.0.289" PrivateAssets="All" />
   </ItemGroup>
 
   <ItemGroup>
