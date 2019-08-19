@@ -24,6 +24,7 @@ using Microsoft.Build.Framework;
 using LibGit2Sharp;
 using System.IO;
 using System.Reflection;
+using System.Runtime.InteropServices;
 
 namespace CenterCLR.RelaxVersioner
 {
@@ -97,7 +98,19 @@ namespace CenterCLR.RelaxVersioner
                         }
 
                         // Set LibGit2Sharp native library folder.
-                        GlobalSettings.NativeLibraryPath = Path.Combine(libraryBasePath, "lib");
+                        var arch = Environment.Is64BitProcess ? "-x64" : "-x86";
+                        var nativeLibraryPath = Environment.OSVersion.Platform switch
+                        {
+                            PlatformID.Unix => Path.Combine(libraryBasePath, "runtimes", "linux" + arch, "native"),
+                            PlatformID.MacOSX => Path.Combine(libraryBasePath, "runtimes", "osx" /* + arch */, "native"),
+                            _ => Path.Combine(libraryBasePath, "runtimes", "win" + arch, "native"),
+                        };
+
+                        base.Log.LogMessage(
+                            MessageImportance.Normal,
+                            $"RelaxVersioner: Resolve libgit2: {nativeLibraryPath}");
+
+                        GlobalSettings.NativeLibraryPath = nativeLibraryPath;
 
                         loaded = true;
                     }

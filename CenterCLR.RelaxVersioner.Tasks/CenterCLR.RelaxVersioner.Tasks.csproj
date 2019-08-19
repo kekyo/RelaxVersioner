@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFrameworks>net40;net46;netstandard2.0</TargetFrameworks>
+    <TargetFrameworks>net46;netstandard2.0</TargetFrameworks>
     <OutputType>Library</OutputType>
 
     <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
@@ -23,7 +23,7 @@
     <PackageIconUrl>https://github.com/kekyo/CenterCLR.RelaxVersioner/raw/master/Images/CenterCLR.RelaxVersioner.100.png</PackageIconUrl>
     <RepositoryUrl>https://github.com/kekyo/CenterCLR.RelaxVersioner.git</RepositoryUrl>
     <PackageTags>version;generator;git;auto;easy;generate;versioning;continuous;integration;delivery;tag;branch;assemblyinfo;msbuild;tool</PackageTags>
-    <LangVersion>7.3</LangVersion>
+    <LangVersion>8.0</LangVersion>
     <DebugType>portable</DebugType>
     <DebugSymbols>true</DebugSymbols>
     <Platforms>AnyCPU</Platforms>
@@ -46,18 +46,21 @@
     <PackageReference Include="CenterCLR.NamingFormatter" version="2.0.0" PrivateAssets="All" Publish="true" />
   </ItemGroup>
 
-  <ItemGroup Condition="'$(TargetFramework)' == 'net40'">
-    <Reference Include="Microsoft.Build.Framework" />
-    <Reference Include="Microsoft.Build.Utilities.v4.0" />
-    <PackageReference Include="LibGit2Sharp" version="0.24.1" PrivateAssets="All" Publish="true" />
-    <PackageReference Include="LibGit2Sharp.NativeBinaries" version="1.0.205" PrivateAssets="All" Publish="true" />
-  </ItemGroup>
-
-  <ItemGroup Condition="'$(TargetFramework)' != 'net40'">
+  <ItemGroup>
     <PackageReference Include="Microsoft.Build.Framework" Version="15.6.82" PrivateAssets="All" />
     <PackageReference Include="Microsoft.Build.Utilities.Core" Version="15.6.82" PrivateAssets="All" />
     <PackageReference Include="LibGit2Sharp" version="0.26.1" PrivateAssets="All" Publish="true" />
     <PackageReference Include="LibGit2Sharp.NativeBinaries" version="2.0.289" PrivateAssets="All" />
+  </ItemGroup>
+
+  <ItemGroup Condition="'$(TargetFramework)' == 'net46'">
+    <ContentWithTargetPath Include="$(libgit2_propsfile)\..\..\..\runtimes\**\*" TargetPath="runtimes\%(RecursiveDir)%(Filename)%(Extension)" CopyToOutputDirectory="PreserveNewest" />
+    <ContentWithTargetPath Include="$(libgit2_propsfile)\..\..\..\libgit2\LibGit2Sharp.dll.config" TargetPath="LibGit2Sharp.dll.config" CopyToOutputDirectory="PreserveNewest" />
+  </ItemGroup>
+
+  <ItemGroup Condition="'$(TargetFramework)' == 'netstandard2.0'">
+    <ContentWithTargetPath Include="$(libgit2_propsfile)\..\..\runtimes\**\*" TargetPath="runtimes\%(RecursiveDir)%(Filename)%(Extension)" CopyToOutputDirectory="PreserveNewest" />
+    <ContentWithTargetPath Include="$(libgit2_propsfile)\..\..\libgit2\LibGit2Sharp.dll.config" TargetPath="LibGit2Sharp.dll.config" CopyToOutputDirectory="PreserveNewest" />
   </ItemGroup>
 
   <ItemGroup>
@@ -66,14 +69,6 @@
     <Content Include="buildMultiTargeting\CenterCLR.RelaxVersioner.props" PackagePath="buildMultiTargeting/" />
     <Content Include="buildMultiTargeting\CenterCLR.RelaxVersioner.targets" PackagePath="buildMultiTargeting/" />
     <EmbeddedResource Include="DefaultRuleSet.rules" />
-  </ItemGroup>
-
-  <!-- HACK: LibGit2Sharp.NativeBinaries copied native libs into net46, but didn't copy into netstandard2.0 because it has content directives only net46 (in 2.0.289)
-    https://github.com/libgit2/libgit2sharp.nativebinaries/blob/ca1db58a914ba8b24faef3ee2066a2b9b26542e8/nuget.package/build/net46/LibGit2Sharp.NativeBinaries.props#L8
-  -->
-  <ItemGroup Condition="'$(TargetFramework)' == 'netstandard2.0'">
-    <ContentWithTargetPath Include="$(libgit2_propsfile)\..\..\runtimes\**\*" TargetPath="runtimes\%(RecursiveDir)%(Filename)%(Extension)" CopyToOutputDirectory="PreserveNewest" />
-    <ContentWithTargetPath Include="$(libgit2_propsfile)\..\..\libgit2\LibGit2Sharp.dll.config" TargetPath="LibGit2Sharp.dll.config" CopyToOutputDirectory="PreserveNewest" />
   </ItemGroup>
 
   <Target Name="GetPublishFilesForPack" DependsOnTargets="Publish">
