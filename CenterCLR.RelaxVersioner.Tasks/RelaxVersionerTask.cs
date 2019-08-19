@@ -80,21 +80,24 @@ namespace CenterCLR.RelaxVersioner
 
         private void LoadAdditionalAssemblies()
         {
-            // HACK: LibGit2Sharp is strongly signed and doesn't install any GAC storages.
-            //   May cause failure LibGit2Sharp assembly loading.
-            //   It's helping for manually loading.
             if (!loaded)
             {
                 lock (loadLock)
                 {
                     if (!loaded)
                     {
-                        var location = Path.GetDirectoryName(
-                            (new Uri(this.GetType().Assembly.CodeBase, UriKind.RelativeOrAbsolute)).LocalPath);
-                        foreach (var path in Directory.EnumerateFiles(location, "*.dll", SearchOption.TopDirectoryOnly))
+                        // HACK: LibGit2Sharp is strongly signed and doesn't install any GAC storages.
+                        //   May cause failure LibGit2Sharp assembly loading.
+                        //   It's helping for manually loading.
+                        var libraryBasePath = Path.GetDirectoryName(
+                            (new Uri(GetType().Assembly.CodeBase, UriKind.RelativeOrAbsolute)).LocalPath);
+                        foreach (var path in Directory.EnumerateFiles(libraryBasePath, "*.dll", SearchOption.TopDirectoryOnly))
                         {
                             Assembly.LoadFrom(path);
                         }
+
+                        // Set LibGit2Sharp native library folder.
+                        GlobalSettings.NativeLibraryPath = libraryBasePath;
 
                         loaded = true;
                     }
@@ -163,6 +166,7 @@ namespace CenterCLR.RelaxVersioner
                     this.DetectedMessage = result.Message;
 
                     base.Log.LogMessage(
+                        MessageImportance.High,
                         $"RelaxVersioner: Generated versions code: Language={this.Language}, Version={this.DetectedIdentity}");
                 }
                 finally

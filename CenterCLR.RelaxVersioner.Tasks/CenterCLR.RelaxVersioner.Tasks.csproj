@@ -73,9 +73,7 @@
     https://github.com/libgit2/libgit2sharp.nativebinaries/blob/ca1db58a914ba8b24faef3ee2066a2b9b26542e8/nuget.package/build/net46/LibGit2Sharp.NativeBinaries.props#L8
   -->
   <ItemGroup Condition="'$(TargetFramework)' == 'netstandard2.0'">
-    <ContentWithTargetPath Include="$(libgit2_propsfile)\..\..\runtimes\win-x86\native\*" TargetPath="lib\win-x86\%(Filename)%(Extension)" CopyToOutputDirectory="PreserveNewest" />
-    <ContentWithTargetPath Include="$(libgit2_propsfile)\..\..\runtimes\win-x64\native\*" TargetPath="lib\win-x64\%(Filename)%(Extension)" CopyToOutputDirectory="PreserveNewest" />
-    <ContentWithTargetPath Include="$(libgit2_propsfile)\..\..\runtimes\**\*" Exclude="$(libgit2_propsfile)\..\..\runtimes\win-*\**\*" TargetPath="lib\%(RecursiveDir)..\%(Filename)%(Extension)" CopyToOutputDirectory="PreserveNewest" />
+    <ContentWithTargetPath Include="$(libgit2_propsfile)\..\..\runtimes\**\*" TargetPath="lib\%(RecursiveDir)..\%(Filename)%(Extension)" CopyToOutputDirectory="PreserveNewest" />
     <ContentWithTargetPath Include="$(libgit2_propsfile)\..\..\libgit2\LibGit2Sharp.dll.config" TargetPath="LibGit2Sharp.dll.config" CopyToOutputDirectory="PreserveNewest" />
   </ItemGroup>
 
