@@ -97,7 +97,7 @@ namespace CenterCLR.RelaxVersioner
                         }
 
                         // Set LibGit2Sharp native library folder.
-                        GlobalSettings.NativeLibraryPath = libraryBasePath;
+                        GlobalSettings.NativeLibraryPath = Path.Combine(libraryBasePath, "lib");
 
                         loaded = true;
                     }
