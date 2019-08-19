@@ -163,6 +163,8 @@ using namespace System::Reflection;
 * Under Apache v2
 
 ## History
+* 0.9.14:
+  * Added developmentDependency attribute.
 * 0.9.13:
   * Fixed failure loading native library by dotnet cli.
   * Added applying nuget package version feature. (dotnet pack)

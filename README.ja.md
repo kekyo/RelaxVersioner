@@ -164,6 +164,8 @@ using namespace System::Reflection;
 * Under Apache v2
 
 ## 履歴
+* 0.9.14:
+  * developmentDependency属性を追加し、RelaxVersionerパッケージへの依存を排除しました。
 * 0.9.13:
   * dotnet cliからビルドした場合に、ライブラリのロードに失敗していたのを修正。
   * NuGetのパッケージをビルドした場合 (dotnet pack) に、PackageVersionにバージョンを反映させるようにした。
