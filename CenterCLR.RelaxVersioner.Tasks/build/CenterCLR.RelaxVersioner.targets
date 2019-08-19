@@ -43,6 +43,10 @@
             RelaxVersionerBuild;
             $(BuildCompileTargets);
         </BuildCompileTargets>
+        <PublishDependsOn>
+            RelaxVersionerBeforePublish;
+            $(PublishDependsOn);
+        </PublishDependsOn>
     </PropertyGroup>
 
     <!-- ======================== -->
@@ -53,6 +57,10 @@
             RelaxVersionerBuild;
             $(CoreBuildDependsOn);
         </CoreBuildDependsOn>
+        <PublishDependsOn>
+            RelaxVersionerBeforePublish;
+            $(PublishDependsOn);
+        </PublishDependsOn>
     </PropertyGroup>
 
     <!-- ============================================================================= -->
@@ -100,4 +108,31 @@
             <Compile Include="$(RelaxVersionerOutputPath)" />
         </ItemGroup>
     </Target>
+
+  <!-- ============================================================================= -->
+  <!-- Pre publish definition -->
+  <Target Name="RelaxVersionerBeforePublish" BeforeTargets="BeforePublish">
+
+    <!-- ======================== -->
+    <!-- Execute RelaxVersioner -->
+    <RelaxVersionerTask
+        SolutionDirectory="$(SolutionDir)"
+        ProjectDirectory="$(ProjectDir)"
+        OutputPath="$(RelaxVersionerOutputPath)"
+        Language="$(RelaxVersionerLanguage)"
+        IsDryRun="true">
+      <Output TaskParameter="DetectedIdentity" PropertyName="RelaxVersionerDetectedIdentity" />
+      <Output TaskParameter="DetectedShortIdentity" PropertyName="RelaxVersionerDetectedShortIdentity" />
+      <Output TaskParameter="DetectedMessage" PropertyName="RelaxVersionerDetectedMessage" />
+    </RelaxVersionerTask>
+
+    <!-- ============================================================================= -->
+    <!-- Add output rule -->
+
+    <PropertyGroup>
+      <!-- Apply NuGet versioning -->
+      <PackageVersion Condition="'$(PackageVersion)' == ''">$(RelaxVersionerDetectedShortIdentity)</PackageVersion>
+      <PackageReleaseNotes Condition="'$(PackageReleaseNotes)' == ''">$(RelaxVersionerDetectedMessage)</PackageReleaseNotes>
+    </PropertyGroup>
+  </Target>
 </Project>

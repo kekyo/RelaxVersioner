@@ -18,4 +18,4 @@ rem limitations under the License.
 dotnet clean -c Release -p:Platform=AnyCPU CenterCLR.RelaxVersioner.Tasks\CenterCLR.RelaxVersioner.Tasks.csproj
 dotnet build -c Release -p:Platform=AnyCPU CenterCLR.RelaxVersioner.Tasks\CenterCLR.RelaxVersioner.Tasks.csproj
 
-dotnet pack -p:PackageVersion=0.9.9 -p:Configuration=Release -p:Platform=AnyCPU --include-symbols -o artifacts CenterCLR.RelaxVersioner.Tasks\CenterCLR.RelaxVersioner.Tasks.csproj
+dotnet pack -p:PackageVersion=0.9.10 -p:Configuration=Release -p:Platform=AnyCPU --include-symbols -o artifacts CenterCLR.RelaxVersioner.Tasks\CenterCLR.RelaxVersioner.Tasks.csproj

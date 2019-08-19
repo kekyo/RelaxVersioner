@@ -39,7 +39,8 @@ namespace CenterCLR.RelaxVersioner.Writers
             Dictionary<string, IEnumerable<Branch>> branches,
             DateTimeOffset generated,
             IEnumerable<Rule> ruleSet,
-            IEnumerable<string> importSet)
+            IEnumerable<string> importSet,
+            bool isDryRun)
         {
             Debug.Assert(string.IsNullOrWhiteSpace(targetPath) == false);
             Debug.Assert(tags != null);
@@ -52,7 +53,7 @@ namespace CenterCLR.RelaxVersioner.Writers
             var commit = altBranch.Commits.FirstOrDefault() ?? unknownBranch.Commits.First();
 
             var targetFolder = Path.GetDirectoryName(targetPath);
-            if (Directory.Exists(targetFolder) == false)
+            if (!Directory.Exists(targetFolder) && !isDryRun)
             {
                 try
                 {
@@ -65,7 +66,7 @@ namespace CenterCLR.RelaxVersioner.Writers
                 }
             }
 
-            using (var tw = File.CreateText(targetPath))
+            using (var tw = isDryRun ? (TextWriter)new StringWriter() : File.CreateText(targetPath))
             {
                 this.WriteComment(tw,
                     $"This is auto-generated version information attributes by CenterCLR.RelaxVersioner.{this.GetType().Assembly.GetName().Version}");

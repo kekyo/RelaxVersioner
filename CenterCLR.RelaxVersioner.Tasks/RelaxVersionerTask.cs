@@ -19,12 +19,11 @@
 
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
+using System.Reflection;
 using Microsoft.Build.Framework;
 using LibGit2Sharp;
-using System.IO;
-using System.Reflection;
-using System.Runtime.InteropServices;
 
 namespace CenterCLR.RelaxVersioner
 {
@@ -57,6 +56,11 @@ namespace CenterCLR.RelaxVersioner
 
         [Required]
         public string Language
+        {
+            get; set;
+        }
+
+        public bool IsDryRun
         {
             get; set;
         }
@@ -172,7 +176,8 @@ namespace CenterCLR.RelaxVersioner
                         branches,
                         DateTimeOffset.Now,
                         ruleSet,
-                        importSet);
+                        importSet,
+                        this.IsDryRun);
 
                     this.DetectedIdentity = result.Identity;
                     this.DetectedShortIdentity = result.ShortIdentity;
