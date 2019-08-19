@@ -141,7 +141,7 @@ namespace CenterCLR.RelaxVersioner
             }
             catch (Exception ex)
             {
-                base.Log.LogError($"RelaxVersioner: {ex.Message}");
+                base.Log.LogErrorFromException(ex, true, true, null);
                 return false;
             }
 
