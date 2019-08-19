@@ -6,7 +6,6 @@
 # Status
 * NuGet Package: [![NuGet RelaxVersioner](https://img.shields.io/nuget/v/CenterCLR.RelaxVersioner.svg?style=flat)](https://www.nuget.org/packages/CenterCLR.RelaxVersioner)
 * Continuous integration: [![AppVeyor RelaxVersioner](https://img.shields.io/appveyor/ci/kekyo/centerclr-relaxversioner.svg?style=flat)](https://ci.appveyor.com/project/kekyo/centerclr-relaxversioner)
-* Gitter: [![Gitter RelaxVersioner](https://img.shields.io/gitter/room/kekyo/CenterCLR.RelaxVersioner.svg?style=flat)](https://gitter.im/kekyo/CenterCLR.RelaxVersioner)
 
 ## これは何？
 * RelaxVersionerは、軽量で非常に簡単に使用することが出来る、Gitベースの「自動バージョニング」ツールセットです。.NET Core/.NET Frameworkベースのソースコードを対象としていて、ビルド時にアセンブリ属性を自動的に適用します。
@@ -160,7 +159,7 @@ using namespace System::Reflection;
 * CIプロセスをAzure Pipelinesに変更する
 
 ## License
-* Copyright (c) 2015-2018 Kouji Matsui (@kozy_kekyo, @kekyo2)
+* Copyright (c) 2015-2019 Kouji Matsui (@kozy_kekyo, @kekyo2)
 * Under Apache v2
 
 ## 履歴

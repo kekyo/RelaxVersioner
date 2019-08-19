@@ -6,7 +6,6 @@
 # Status
 * NuGet Package: [![NuGet RelaxVersioner](https://img.shields.io/nuget/v/CenterCLR.RelaxVersioner.svg?style=flat)](https://www.nuget.org/packages/CenterCLR.RelaxVersioner)
 * Continuous integration: [![AppVeyor RelaxVersioner](https://img.shields.io/appveyor/ci/kekyo/centerclr-relaxversioner.svg?style=flat)](https://ci.appveyor.com/project/kekyo/centerclr-relaxversioner)
-* Gitter: [![Gitter RelaxVersioner](https://img.shields.io/gitter/room/kekyo/CenterCLR.RelaxVersioner.svg?style=flat)](https://gitter.im/kekyo/CenterCLR.RelaxVersioner)
 
 ## What is this?
 * RelaxVersioner is Very easy-usage, Git-based, auto-generate version informations in .NET Core/.NET Framework source code. (Assembly attribute based)
