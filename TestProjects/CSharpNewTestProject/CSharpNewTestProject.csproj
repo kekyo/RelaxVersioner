@@ -19,7 +19,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="CenterCLR.RelaxVersioner" Version="0.9.9" />
+    <PackageReference Include="CenterCLR.RelaxVersioner" Version="0.9.10" />
   </ItemGroup>
 
   <ItemGroup>

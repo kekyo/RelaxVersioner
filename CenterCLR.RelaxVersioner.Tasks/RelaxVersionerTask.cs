@@ -19,9 +19,7 @@
 
 using System;
 using System.Collections.Generic;
-using System.IO;
 using System.Linq;
-using System.Reflection;
 using Microsoft.Build.Framework;
 using LibGit2Sharp;
 
@@ -29,9 +27,6 @@ namespace CenterCLR.RelaxVersioner
 {
     public sealed class RelaxVersionerTask : Microsoft.Build.Utilities.Task
     {
-        private static object loadLock = new object();
-        private static bool loaded = false;
-
         public RelaxVersionerTask()
         {
         }
@@ -83,50 +78,14 @@ namespace CenterCLR.RelaxVersioner
             get; set;
         }
 
-        private void LoadAdditionalAssemblies()
-        {
-            if (!loaded)
-            {
-                lock (loadLock)
-                {
-                    if (!loaded)
-                    {
-                        // HACK: LibGit2Sharp is strongly signed and doesn't install any GAC storages.
-                        //   May cause failure LibGit2Sharp assembly loading.
-                        //   It's helping for manually loading.
-                        var libraryBasePath = Path.GetDirectoryName(
-                            (new Uri(GetType().Assembly.CodeBase, UriKind.RelativeOrAbsolute)).LocalPath);
-                        foreach (var path in Directory.EnumerateFiles(libraryBasePath, "*.dll", SearchOption.TopDirectoryOnly))
-                        {
-                            Assembly.LoadFrom(path);
-                        }
-
-                        // Set LibGit2Sharp native library folder.
-                        var arch = Environment.Is64BitProcess ? "-x64" : "-x86";
-                        var nativeLibraryPath = Environment.OSVersion.Platform switch
-                        {
-                            PlatformID.Unix => Path.Combine(libraryBasePath, "runtimes", "linux" + arch, "native"),
-                            PlatformID.MacOSX => Path.Combine(libraryBasePath, "runtimes", "osx" /* + arch */, "native"),
-                            _ => Path.Combine(libraryBasePath, "runtimes", "win" + arch, "native"),
-                        };
-
-                        base.Log.LogMessage(
-                            MessageImportance.Normal,
-                            $"RelaxVersioner: Resolve libgit2: {nativeLibraryPath}");
-
-                        GlobalSettings.NativeLibraryPath = nativeLibraryPath;
-
-                        loaded = true;
-                    }
-                }
-            }
-        }
-
         public override bool Execute()
         {
             try
             {
-                this.LoadAdditionalAssemblies();
+                var libgit2Path = Utilities.LoadAdditionalAssemblies();
+                base.Log.LogMessage(
+                    MessageImportance.Normal,
+                    $"RelaxVersioner: Resolve libgit2: {libgit2Path}");
 
                 var writers = Utilities.GetWriters();
                 var writer = writers[this.Language];
