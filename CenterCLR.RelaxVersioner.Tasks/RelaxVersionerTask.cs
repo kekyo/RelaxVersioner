@@ -22,11 +22,16 @@ using System.Collections.Generic;
 using System.Linq;
 using Microsoft.Build.Framework;
 using LibGit2Sharp;
+using System.IO;
+using System.Reflection;
 
 namespace CenterCLR.RelaxVersioner
 {
     public sealed class RelaxVersionerTask : Microsoft.Build.Utilities.Task
     {
+        private static object loadLock = new object();
+        private static bool loaded = false;
+
         public RelaxVersionerTask()
         {
         }
@@ -73,10 +78,33 @@ namespace CenterCLR.RelaxVersioner
             get; set;
         }
 
+        private void LoadAdditionalAssemblies()
+        {
+            if (!loaded)
+            {
+                lock (loadLock)
+                {
+                    if (!loaded)
+                    {
+                        var location = Path.GetDirectoryName(
+                            (new Uri(this.GetType().Assembly.CodeBase, UriKind.RelativeOrAbsolute)).LocalPath);
+                        foreach (var path in Directory.EnumerateFiles(location, "*.dll", SearchOption.TopDirectoryOnly))
+                        {
+                            Assembly.LoadFrom(path);
+                        }
+
+                        loaded = true;
+                    }
+                }
+            }
+        }
+
         public override bool Execute()
         {
             try
             {
+                this.LoadAdditionalAssemblies();
+
                 var writers = Utilities.GetWriters();
                 var writer = writers[this.Language];
 
