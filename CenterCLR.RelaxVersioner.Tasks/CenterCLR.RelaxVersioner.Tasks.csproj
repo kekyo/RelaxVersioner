@@ -37,22 +37,28 @@
     <GenerateAssemblyInformationalVersionAttribute>false</GenerateAssemblyInformationalVersionAttribute>
   </PropertyGroup>
 
+  <!-- HACK: The publish folder doesn't contain any required assemblies when invoke from dotnet cli.
+    https://github.com/dotnet/cli/issues/8340
+    Applied Publish attribute.
+  -->
+
   <ItemGroup>
-    <PackageReference Include="CenterCLR.NamingFormatter" version="2.0.0" PrivateAssets="All" />
+    <PackageReference Include="CenterCLR.NamingFormatter" version="2.0.0" PrivateAssets="All" Publish="true" />
   </ItemGroup>
 
   <ItemGroup Condition="'$(TargetFramework)' == 'net40'">
     <Reference Include="Microsoft.Build.Framework" />
     <Reference Include="Microsoft.Build.Utilities.v4.0" />
-    <PackageReference Include="LibGit2Sharp" version="0.24.1" PrivateAssets="All" />
-    <PackageReference Include="LibGit2Sharp.NativeBinaries" version="1.0.205" PrivateAssets="All" />
+   
+    <PackageReference Include="LibGit2Sharp" version="0.24.1" PrivateAssets="All" Publish="true" />
+    <PackageReference Include="LibGit2Sharp.NativeBinaries" version="1.0.205" PrivateAssets="All" Publish="true" />
   </ItemGroup>
 
   <ItemGroup Condition="'$(TargetFramework)' != 'net40'">
     <PackageReference Include="Microsoft.Build.Framework" Version="15.6.82" PrivateAssets="All" />
     <PackageReference Include="Microsoft.Build.Utilities.Core" Version="15.6.82" PrivateAssets="All" />
-    <PackageReference Include="LibGit2Sharp" version="0.26.1" PrivateAssets="All" />
-    <PackageReference Include="LibGit2Sharp.NativeBinaries" version="2.0.289" PrivateAssets="All" />
+    <PackageReference Include="LibGit2Sharp" version="0.26.1" PrivateAssets="All" Publish="true" />
+    <PackageReference Include="LibGit2Sharp.NativeBinaries" version="2.0.289" PrivateAssets="All" Publish="true" />
   </ItemGroup>
 
   <ItemGroup>

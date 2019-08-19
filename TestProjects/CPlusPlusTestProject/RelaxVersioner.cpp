@@ -1,6 +1,6 @@
 // This is auto-generated version information attributes by CenterCLR.RelaxVersioner.0.9.1.0
 // Do not edit.
-// Generated date: Sun, 18 Aug 2019 13:23:36 GMT
+// Generated date: Mon, 19 Aug 2019 02:11:53 GMT
 
 #include "stdafx.h"
 
@@ -26,13 +26,13 @@ namespace System
 using namespace System::Reflection;
 using namespace System::Runtime::InteropServices;
 
-[assembly: AssemblyVersionAttribute("0.9.1")];
-[assembly: AssemblyFileVersionAttribute("2019.8.18.38636")];
-[assembly: AssemblyInformationalVersionAttribute("3b6510b099971163f959c0fa69331417c4499758")];
-[assembly: AssemblyVersionMetadataAttribute("Build","Sun, 18 Aug 2019 12:27:53 GMT")];
+[assembly: AssemblyVersionAttribute("0.9.4")];
+[assembly: AssemblyFileVersionAttribute("2019.8.19.19534")];
+[assembly: AssemblyInformationalVersionAttribute("f9f26da013074e51e792c60a0ef1d3b40f647c09")];
+[assembly: AssemblyVersionMetadataAttribute("Build","Mon, 19 Aug 2019 01:51:09 GMT")];
 [assembly: AssemblyVersionMetadataAttribute("Branch","")];
-[assembly: AssemblyVersionMetadataAttribute("Tags","0.9.1")];
+[assembly: AssemblyVersionMetadataAttribute("Tags","0.9.4")];
 [assembly: AssemblyVersionMetadataAttribute("Author","Kouji Matsui <k@kekyo.net>")];
 [assembly: AssemblyVersionMetadataAttribute("Committer","Kouji Matsui <k@kekyo.net>")];
-[assembly: AssemblyVersionMetadataAttribute("Message","Upgrading new MSBuild scripts (formaly .NET Core envs)")];
+[assembly: AssemblyVersionMetadataAttribute("Message","Adjusted asset flags.")];
 

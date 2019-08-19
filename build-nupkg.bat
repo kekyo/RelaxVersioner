@@ -15,6 +15,7 @@ rem WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 rem See the License for the specific language governing permissions and
 rem limitations under the License.
 
+dotnet clean -c Release -p:Platform=AnyCPU CenterCLR.RelaxVersioner.Tasks\CenterCLR.RelaxVersioner.Tasks.csproj
 dotnet build -c Release -p:Platform=AnyCPU CenterCLR.RelaxVersioner.Tasks\CenterCLR.RelaxVersioner.Tasks.csproj
 
-dotnet pack -p:PackageVersion=0.9.3 -p:Configuration=Release -p:Platform=AnyCPU --include-symbols CenterCLR.RelaxVersioner.Tasks\CenterCLR.RelaxVersioner.Tasks.csproj
+dotnet pack -p:PackageVersion=0.9.4 -p:Configuration=Release -p:Platform=AnyCPU --include-symbols CenterCLR.RelaxVersioner.Tasks\CenterCLR.RelaxVersioner.Tasks.csproj
