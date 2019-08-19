@@ -80,6 +80,9 @@ namespace CenterCLR.RelaxVersioner
 
         private void LoadAdditionalAssemblies()
         {
+            // HACK: LibGit2Sharp is strongly signed and doesn't install any GAC storages.
+            //   May cause failure LibGit2Sharp assembly loading.
+            //   It's helping for manually loading.
             if (!loaded)
             {
                 lock (loadLock)

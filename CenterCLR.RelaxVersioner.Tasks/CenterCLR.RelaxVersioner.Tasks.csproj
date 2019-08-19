@@ -30,7 +30,7 @@
 
     <NoPackageAnalysis>true</NoPackageAnalysis>
     <IncludeBuildOutput>false</IncludeBuildOutput>
-    <TargetsForTfmSpecificContentInPackage>$(TargetsForTfmSpecificContentInPackage);CopyUnplacedNativeBinaries;GetPublishFilesForPack</TargetsForTfmSpecificContentInPackage>
+    <TargetsForTfmSpecificContentInPackage>$(TargetsForTfmSpecificContentInPackage);GetPublishFilesForPack</TargetsForTfmSpecificContentInPackage>
     
     <GenerateAssemblyVersionAttribute>false</GenerateAssemblyVersionAttribute>
     <GenerateAssemblyFileVersionAttribute>false</GenerateAssemblyFileVersionAttribute>
@@ -69,13 +69,15 @@
     <EmbeddedResource Include="DefaultRuleSet.rules" />
   </ItemGroup>
 
-  <!-- HACK: LibGit2Sharp.NativeBinaries copied native libs into net46, but didn't copy into netstandard2.0 (don't know why) -->
-  <Target Name="CopyUnplacedNativeBinaries" DependsOnTargets="Publish" Condition="'$(TargetFramework)' == 'netstandard2.0'">
-    <ItemGroup>
-      <UnplacedNativeBinaries Include="$(PublishDir)/../../net46/lib/**" />
-    </ItemGroup>
-    <Copy SourceFiles="@(UnplacedNativeBinaries)" DestinationFiles="@(UnplacedNativeBinaries->'$(PublishDir)/lib/%(RecursiveDir)%(Filename)%(Extension)')" SkipUnchangedFiles="true" />
-  </Target>
+  <!-- HACK: LibGit2Sharp.NativeBinaries copied native libs into net46, but didn't copy into netstandard2.0 because it has content directives only net46 (in 2.0.289)
+    https://github.com/libgit2/libgit2sharp.nativebinaries/blob/ca1db58a914ba8b24faef3ee2066a2b9b26542e8/nuget.package/build/net46/LibGit2Sharp.NativeBinaries.props#L8
+  -->
+  <ItemGroup Condition="'$(TargetFramework)' == 'netstandard2.0'">
+    <ContentWithTargetPath Include="$(libgit2_propsfile)\..\..\runtimes\win-x86\native\*" TargetPath="lib\win-x86\%(Filename)%(Extension)" CopyToOutputDirectory="PreserveNewest" />
+    <ContentWithTargetPath Include="$(libgit2_propsfile)\..\..\runtimes\win-x64\native\*" TargetPath="lib\win-x64\%(Filename)%(Extension)" CopyToOutputDirectory="PreserveNewest" />
+    <ContentWithTargetPath Include="$(libgit2_propsfile)\..\..\runtimes\**\*" Exclude="$(libgit2_propsfile)\..\..\runtimes\win-*\**\*" TargetPath="lib\%(RecursiveDir)..\%(Filename)%(Extension)" CopyToOutputDirectory="PreserveNewest" />
+    <ContentWithTargetPath Include="$(libgit2_propsfile)\..\..\libgit2\LibGit2Sharp.dll.config" TargetPath="LibGit2Sharp.dll.config" CopyToOutputDirectory="PreserveNewest" />
+  </ItemGroup>
 
   <Target Name="GetPublishFilesForPack" DependsOnTargets="Publish">
     <ItemGroup>
