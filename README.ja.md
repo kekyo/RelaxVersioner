@@ -150,7 +150,6 @@ using namespace System::Reflection;
 ## TODO:
 * 除外ルールのサポート
 * ネイティブC++プロジェクトに対応させる
-* NuGetを出力するプロジェクトに対応させる (nuproj?, nubuild? and/or other projects?)
 * テンプレート出力をサポートする
 * フォールバックルールを指定可能にする
 * Mono環境のサポート (そして *nix 環境でのCIのサポート / 詳しい方のPRウェルカム)
@@ -162,6 +161,9 @@ using namespace System::Reflection;
 * Under Apache v2
 
 ## 履歴
+* 0.9.13:
+  * dotnet cliからビルドした場合に、ライブラリのロードに失敗していたのを修正。
+  * NuGetのパッケージをビルドした場合 (dotnet pack) に、PackageVersionにバージョンを反映させるようにした。
 * 0.9.1:
   * 新しいMSBuildスクリプトの形式に対応しました (つまり、.NET Core 2/.NET Standardに使われる新しい形式のプロジェクトで使用できます)
   * LibGit2Sharpを0.26.1/2.0.289に更新しました。

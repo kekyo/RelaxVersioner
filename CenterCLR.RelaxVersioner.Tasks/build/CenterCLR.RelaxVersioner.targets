@@ -83,9 +83,9 @@
         <!-- Add output rule -->
 
         <PropertyGroup>
-          <!-- Apply NuGet versioning -->
-          <PackageVersion Condition="'$(PackageVersion)' == ''">$(RelaxVersionerDetectedShortIdentity)</PackageVersion>
-          <PackageReleaseNotes Condition="'$(PackageReleaseNotes)' == ''">$(RelaxVersionerDetectedMessage)</PackageReleaseNotes>
+            <!-- Apply NuGet versioning -->
+            <PackageVersion>$(RelaxVersionerDetectedShortIdentity)</PackageVersion>
+            <PackageReleaseNotes>$(RelaxVersionerDetectedMessage)</PackageReleaseNotes>
         </PropertyGroup>
 
         <!-- ======================== -->
@@ -111,7 +111,7 @@
 
   <!-- ============================================================================= -->
   <!-- Pre publish definition -->
-  <Target Name="RelaxVersionerBeforePack" BeforeTargets="SetNuSpecProperties">
+  <Target Name="RelaxVersionerBeforePack" BeforeTargets="GenerateNuspec">
 
     <!-- ======================== -->
     <!-- Execute RelaxVersioner -->
@@ -130,9 +130,9 @@
     <!-- Add output rule -->
 
     <PropertyGroup>
-      <!-- Apply NuGet versioning -->
-      <PackageVersion Condition="'$(PackageVersion)' == ''">$(RelaxVersionerDetectedShortIdentity)</PackageVersion>
-      <PackageReleaseNotes Condition="'$(PackageReleaseNotes)' == ''">$(RelaxVersionerDetectedMessage)</PackageReleaseNotes>
+        <!-- Apply NuGet versioning -->
+        <PackageVersion>$(RelaxVersionerDetectedShortIdentity)</PackageVersion>
+        <PackageReleaseNotes>$(RelaxVersionerDetectedMessage)</PackageReleaseNotes>
     </PropertyGroup>
   </Target>
 </Project>

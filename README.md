@@ -149,7 +149,6 @@ using namespace System::Reflection;
 ## TODO:
 * Support exclude rule set.
 * Support native C++ project.
-* Support NuGet output project. (nuproj?, nubuild? and/or other projects?)
 * Support templated output.
 * Support fallback rule set.
 * Support Mono environments (and CI environments on *nix, Please PR for complete :)
@@ -161,6 +160,9 @@ using namespace System::Reflection;
 * Under Apache v2
 
 ## History
+* 0.9.13:
+  * Fixed failure loading native library by dotnet cli.
+  * Added applying nuget package version feature. (dotnet pack)
 * 0.9.1:
   * Upgraded handlers on the new MSBuild scripts (Formally .NET Core 2/.NET Standard projects)
   * Upgraded LibGit2Sharp 0.26.1/2.0.289

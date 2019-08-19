@@ -85,7 +85,7 @@ namespace CenterCLR.RelaxVersioner
                 var libgit2Path = Utilities.LoadAdditionalAssemblies();
                 base.Log.LogMessage(
                     MessageImportance.Normal,
-                    $"RelaxVersioner: Resolve libgit2: {libgit2Path}");
+                    $"RelaxVersioner: Resolved libgit2: {libgit2Path}");
 
                 var writers = Utilities.GetWriters();
                 var writer = writers[this.Language];
@@ -142,9 +142,10 @@ namespace CenterCLR.RelaxVersioner
                     this.DetectedShortIdentity = result.ShortIdentity;
                     this.DetectedMessage = result.Message;
 
+                    var dryrun = this.IsDryRun ? " (dryrun)" : string.Empty;
                     base.Log.LogMessage(
                         MessageImportance.High,
-                        $"RelaxVersioner: Generated versions code: Language={this.Language}, Version={this.DetectedIdentity}");
+                        $"RelaxVersioner: Generated versions code{dryrun}: Language={this.Language}, Version={this.DetectedIdentity}, ShortVersion={this.DetectedShortIdentity}");
                 }
                 finally
                 {
