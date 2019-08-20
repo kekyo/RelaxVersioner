@@ -23,6 +23,7 @@ using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Reflection;
+using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 using System.Xml.Linq;
 
@@ -48,6 +49,7 @@ namespace CenterCLR.RelaxVersioner
         [DllImport("kernel32", EntryPoint = "LoadLibrary")]
         private static extern IntPtr LoadWindowsLibrary(string path);
 
+        [MethodImpl(MethodImplOptions.NoInlining)]
         public static string LoadAdditionalAssemblies()
         {
             if (nativeLibraryPath == null)
@@ -71,22 +73,28 @@ namespace CenterCLR.RelaxVersioner
                         var nativeDllName = nativeDllName_NameField.GetValue(null);
 
                         // Set LibGit2Sharp native library folder.
-                        var arch = Environment.Is64BitProcess ? "-x64" : "-x86";
+                        var arch = (IntPtr.Size == 8) ? "-x64" : "-x86";
+                        IntPtr result;
                         switch (Environment.OSVersion.Platform)
                         {
                             case PlatformID.Unix:
-                                nativeLibraryPath = Path.Combine(libraryBasePath, "runtimes", "linux" + arch, "native", $"{nativeDllName}.so");
-                                LoadUnixLibrary(nativeLibraryPath, 2);
+                                nativeLibraryPath = Path.Combine(libraryBasePath, "runtimes", "linux" + arch, "native", $"lib{nativeDllName}.so");
+                                result = LoadUnixLibrary(nativeLibraryPath, 2);
                                 break;
                             case PlatformID.MacOSX:
-                                nativeLibraryPath = Path.Combine(libraryBasePath, "runtimes", "osx" /* + arch */, "native", $"{nativeDllName}.dylib");
-                                LoadUnixLibrary(nativeLibraryPath, 2);
+                                nativeLibraryPath = Path.Combine(libraryBasePath, "runtimes", "osx" + arch, "native", $"lib{nativeDllName}.dylib");
+                                result = LoadUnixLibrary(nativeLibraryPath, 2);
                                 break;
                             default:
                                 nativeLibraryPath = Path.Combine(libraryBasePath, "runtimes", "win" + arch, "native", $"{nativeDllName}.dll");
-                                LoadWindowsLibrary(nativeLibraryPath);
+                                result = LoadWindowsLibrary(nativeLibraryPath);
                                 break;
                         };
+
+                        if (result == IntPtr.Zero)
+                        {
+                            throw new InvalidProgramException($"Cannot load libgit2: {nativeLibraryPath}");
+                        }
                     }
                 }
             }
