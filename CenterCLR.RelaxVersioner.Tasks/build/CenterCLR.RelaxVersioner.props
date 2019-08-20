@@ -15,7 +15,7 @@
     See the License for the specific language governing permissions and
     limitations under the License.
 -->
-<Project TreatAsLocalProperty="TaskFolder;TaskAssembly">
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003" TreatAsLocalProperty="TaskFolder;TaskAssembly">
   <PropertyGroup>
     <TaskFolder Condition="'$(MSBuildRuntimeType)' == 'Core'">netstandard2.0</TaskFolder>
     <TaskFolder Condition="'$(MSBuildRuntimeType)' != 'Core'">net46</TaskFolder>
