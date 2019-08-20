@@ -25,8 +25,10 @@ using System.Linq;
 using System.Reflection;
 using System.Runtime.InteropServices;
 using System.Xml.Linq;
-using CenterCLR.RelaxVersioner.Writers;
+
 using LibGit2Sharp;
+
+using CenterCLR.RelaxVersioner.Writers;
 
 namespace CenterCLR.RelaxVersioner
 {
@@ -73,11 +75,11 @@ namespace CenterCLR.RelaxVersioner
                         switch (Environment.OSVersion.Platform)
                         {
                             case PlatformID.Unix:
-                                nativeLibraryPath = Path.Combine(libraryBasePath, "runtimes", "linux" + arch, "native", $"lib{nativeDllName}.so");
+                                nativeLibraryPath = Path.Combine(libraryBasePath, "runtimes", "linux" + arch, "native", $"{nativeDllName}.so");
                                 LoadUnixLibrary(nativeLibraryPath, 2);
                                 break;
                             case PlatformID.MacOSX:
-                                nativeLibraryPath = Path.Combine(libraryBasePath, "runtimes", "osx" /* + arch */, "native", $"lib{nativeDllName}.dylib");
+                                nativeLibraryPath = Path.Combine(libraryBasePath, "runtimes", "osx" /* + arch */, "native", $"{nativeDllName}.dylib");
                                 LoadUnixLibrary(nativeLibraryPath, 2);
                                 break;
                             default:
