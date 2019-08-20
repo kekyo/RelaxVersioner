@@ -78,11 +78,11 @@ namespace CenterCLR.RelaxVersioner
                         switch (Environment.OSVersion.Platform)
                         {
                             case PlatformID.Unix:
-                                nativeLibraryPath = Path.Combine(libraryBasePath, "runtimes", "linux" + arch, "native", $"lib{nativeDllName}.so");
+                                nativeLibraryPath = Path.Combine(libraryBasePath, "runtimes", "linux" + arch, "native", $"{nativeDllName}.so");
                                 result = LoadUnixLibrary(nativeLibraryPath, 2);
                                 break;
                             case PlatformID.MacOSX:
-                                nativeLibraryPath = Path.Combine(libraryBasePath, "runtimes", "osx" + arch, "native", $"lib{nativeDllName}.dylib");
+                                nativeLibraryPath = Path.Combine(libraryBasePath, "runtimes", "osx" /* + arch */, "native", $"{nativeDllName}.dylib");
                                 result = LoadUnixLibrary(nativeLibraryPath, 2);
                                 break;
                             default:
