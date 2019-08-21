@@ -55,21 +55,6 @@
     <PackageReference Include="LibGit2Sharp.NativeBinaries" version="2.0.289" PrivateAssets="All" />
   </ItemGroup>
 
-  <ItemGroup Condition="'$(TargetFramework)' == 'net46'">
-    <ContentWithTargetPath Remove="$(libgit2_propsfile)\..\..\..\runtimes\**\*" />
-    <ContentWithTargetPath Include="$(libgit2_propsfile)\..\..\..\runtimes\win*\**\*" TargetPath="runtimes\%(RecursiveDir)$([System.String]::Copy('%(Filename)').Replace('libgit2','git2'))%(Extension)" CopyToOutputDirectory="PreserveNewest" />
-    <ContentWithTargetPath Include="$(libgit2_propsfile)\..\..\..\runtimes\linux*\**\*" TargetPath="runtimes\%(RecursiveDir)$([System.String]::Copy('%(Filename)').Replace('libgit2','git2'))%(Extension)" CopyToOutputDirectory="PreserveNewest" />
-    <ContentWithTargetPath Include="$(libgit2_propsfile)\..\..\..\runtimes\osx*\**\*" TargetPath="runtimes\%(RecursiveDir)$([System.String]::Copy('%(Filename)').Replace('libgit2','git2'))%(Extension)" CopyToOutputDirectory="PreserveNewest" />
-    <ContentWithTargetPath Include="$(libgit2_propsfile)\..\..\..\libgit2\LibGit2Sharp.dll.config" TargetPath="LibGit2Sharp.dll.config" CopyToOutputDirectory="PreserveNewest" />
-  </ItemGroup>
-
-  <ItemGroup Condition="'$(TargetFramework)' == 'netstandard2.0'">
-    <ContentWithTargetPath Include="$(libgit2_propsfile)\..\..\runtimes\win*\**\*" TargetPath="runtimes\%(RecursiveDir)$([System.String]::Copy('%(Filename)').Replace('libgit2','git2'))%(Extension)" CopyToOutputDirectory="PreserveNewest" />
-    <ContentWithTargetPath Include="$(libgit2_propsfile)\..\..\runtimes\linux*\**\*" TargetPath="runtimes\%(RecursiveDir)$([System.String]::Copy('%(Filename)').Replace('libgit2','git2'))%(Extension)" CopyToOutputDirectory="PreserveNewest" />
-    <ContentWithTargetPath Include="$(libgit2_propsfile)\..\..\runtimes\osx*\**\*" TargetPath="runtimes\%(RecursiveDir)$([System.String]::Copy('%(Filename)').Replace('libgit2','git2'))%(Extension)" CopyToOutputDirectory="PreserveNewest" />
-    <ContentWithTargetPath Include="$(libgit2_propsfile)\..\..\libgit2\LibGit2Sharp.dll.config" TargetPath="LibGit2Sharp.dll.config" CopyToOutputDirectory="PreserveNewest" />
-  </ItemGroup>
-
   <ItemGroup>
     <Content Include="build\CenterCLR.RelaxVersioner.props" PackagePath="build/" />
     <Content Include="build\CenterCLR.RelaxVersioner.targets" PackagePath="build/" />
@@ -80,7 +65,10 @@
 
   <Target Name="GetPublishFilesForPack" DependsOnTargets="Publish">
     <ItemGroup>
-      <TfmSpecificPackageFile Include="$(PublishDir)/**/*.*" PackagePath="tasks/$(TargetFramework)/%(RecursiveDir)%(Filename)%(Extension)" />
+      <TfmSpecificPackageFile Include="$(PublishDir)/**/*.*" PackagePath="build/$(TargetFramework)/%(RecursiveDir)%(Filename)%(Extension)" />
+      
+      <!-- netstandard2.0 -->
+      <TfmSpecificPackageFile Include="$(libgit2_propsfile)/../runtimes/**/*.*" PackagePath="build/runtimes/%(RecursiveDir)%(Filename)%(Extension)" />
     </ItemGroup>
   </Target>
 

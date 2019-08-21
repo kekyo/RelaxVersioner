@@ -19,7 +19,7 @@
   <PropertyGroup>
     <TaskFolder Condition="'$(MSBuildRuntimeType)' == 'Core'">netstandard2.0</TaskFolder>
     <TaskFolder Condition="'$(MSBuildRuntimeType)' != 'Core'">net46</TaskFolder>
-    <TaskAssembly>$(MSBuildThisFileDirectory)..\tasks\$(TaskFolder)\CenterCLR.RelaxVersioner.Tasks.dll</TaskAssembly>
+    <TaskAssembly>$(MSBuildThisFileDirectory)$(TaskFolder)\CenterCLR.RelaxVersioner.Tasks.dll</TaskAssembly>
     <GenerateAssemblyVersionAttribute>false</GenerateAssemblyVersionAttribute>
     <GenerateAssemblyFileVersionAttribute>false</GenerateAssemblyFileVersionAttribute>
     <GenerateAssemblyInformationalVersionAttribute>false</GenerateAssemblyInformationalVersionAttribute>
