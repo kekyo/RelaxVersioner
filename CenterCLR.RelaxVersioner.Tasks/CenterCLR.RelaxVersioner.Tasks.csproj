@@ -32,6 +32,7 @@
 
     <NoPackageAnalysis>true</NoPackageAnalysis>
     <IncludeBuildOutput>false</IncludeBuildOutput>
+    <AllowedOutputExtensionsInPackageBuildOutputFolder>.pdb</AllowedOutputExtensionsInPackageBuildOutputFolder>
     <TargetsForTfmSpecificContentInPackage>$(TargetsForTfmSpecificContentInPackage);GetPublishFilesForPack</TargetsForTfmSpecificContentInPackage>
     
     <GenerateAssemblyVersionAttribute>false</GenerateAssemblyVersionAttribute>
@@ -63,12 +64,14 @@
     <EmbeddedResource Include="DefaultRuleSet.rules" />
   </ItemGroup>
 
+  <ItemGroup>
+    <!-- Strictly applied only netstandard2.0 because the runtime folder path valid only it environment. -->
+    <Content Include="$(libgit2_propsfile)\..\..\runtimes\**\*" PackagePath="build/runtimes/" />
+  </ItemGroup>
+
   <Target Name="GetPublishFilesForPack" DependsOnTargets="Publish">
     <ItemGroup>
-      <TfmSpecificPackageFile Include="$(PublishDir)/**/*.*" PackagePath="build/$(TargetFramework)/%(RecursiveDir)%(Filename)%(Extension)" />
-      
-      <!-- netstandard2.0 -->
-      <TfmSpecificPackageFile Include="$(libgit2_propsfile)/../runtimes/**/*.*" PackagePath="build/runtimes/%(RecursiveDir)%(Filename)%(Extension)" />
+      <TfmSpecificPackageFile Include="$(PublishDir)\**\*.*" PackagePath="build\$(TargetFramework)\%(RecursiveDir)%(Filename)%(Extension)" />
     </ItemGroup>
   </Target>
 
