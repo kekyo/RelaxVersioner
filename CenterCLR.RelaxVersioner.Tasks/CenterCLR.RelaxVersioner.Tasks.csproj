@@ -52,7 +52,9 @@
   </Target>
   
   <ItemGroup>
-    <PackageReference Include="CenterCLR.RelaxVersioner" version="0.9.19" PrivateAssets="All" />
+    <!--
+    <PackageReference Include="CenterCLR.RelaxVersioner" version="0.9.14" PrivateAssets="All" />
+    -->
     <PackageReference Include="CenterCLR.NamingFormatter" version="2.0.0" PrivateAssets="All" Publish="true" />
   </ItemGroup>
 
