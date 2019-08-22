@@ -1,0 +1,28 @@
+jobs:
+  - job: Windows
+    pool:
+      vmImage: "windows-latest"
+#   variables:
+#     buildConfiguration: "Debug"
+    steps:
+      - script: |
+          build-nupkg.bat
+        displayName: "build-nupkg"
+      - task: MSBuild@1
+        displayName: "build TestProjects.VS2019"
+        inputs:
+          solution: "TestProjects/TestProjects.VS2019.sln"
+          configuration: "Release"
+          platform: "Any Cpu"
+  - job: Linux-NETCore2
+    pool:
+      vmImage: "ubuntu-latest"
+#   variables:
+#     buildConfiguration: "Debug"
+    steps:
+      - task: MSBuild@1
+        displayName: "build TestProjects.NETCore2"
+        inputs:
+          solution: "TestProjects/TestProjects.NETCore2.sln"
+          configuration: "Release"
+          platform: "Any Cpu"

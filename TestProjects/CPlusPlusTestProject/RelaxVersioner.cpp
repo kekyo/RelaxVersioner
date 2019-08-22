@@ -1,6 +1,6 @@
 // This is auto-generated version information attributes by CenterCLR.RelaxVersioner.0.9.25.0
 // Do not edit.
-// Generated date: Thu, 22 Aug 2019 05:43:56 GMT
+// Generated date: Thu, 22 Aug 2019 08:15:22 GMT
 
 #include "stdafx.h"
 
@@ -27,12 +27,12 @@ using namespace System::Reflection;
 using namespace System::Runtime::InteropServices;
 
 [assembly: AssemblyVersionAttribute("0.9.25")];
-[assembly: AssemblyFileVersionAttribute("2019.8.22.24969")];
-[assembly: AssemblyInformationalVersionAttribute("cba8f3d89af07ca06156836c934732d6bd9f9971")];
-[assembly: AssemblyVersionMetadataAttribute("Build","Thu, 22 Aug 2019 04:52:19 GMT")];
+[assembly: AssemblyFileVersionAttribute("2019.8.22.26855")];
+[assembly: AssemblyInformationalVersionAttribute("67c23b70f290f07dfb6d40bdba7af85903038c2f")];
+[assembly: AssemblyVersionMetadataAttribute("Build","Thu, 22 Aug 2019 05:55:11 GMT")];
 [assembly: AssemblyVersionMetadataAttribute("Branch","")];
-[assembly: AssemblyVersionMetadataAttribute("Tags","0.9.25")];
+[assembly: AssemblyVersionMetadataAttribute("Tags","")];
 [assembly: AssemblyVersionMetadataAttribute("Author","Kouji Matsui <k@kekyo.net>")];
 [assembly: AssemblyVersionMetadataAttribute("Committer","Kouji Matsui <k@kekyo.net>")];
-[assembly: AssemblyVersionMetadataAttribute("Message","Preparing self host for versioning.")];
+[assembly: AssemblyVersionMetadataAttribute("Message","Validated test projects on current version package.")];
 
