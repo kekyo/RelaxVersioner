@@ -19,6 +19,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using Microsoft.Build.Framework;
 using LibGit2Sharp;
@@ -32,7 +33,7 @@ namespace CenterCLR.RelaxVersioner
         }
 
         [Required]
-        public ITaskItem ProjectDirectory
+        public ITaskItem ProjectPath
         {
             get; set;
         }
@@ -76,6 +77,8 @@ namespace CenterCLR.RelaxVersioner
         {
             try
             {
+                var projectDirectory = Path.GetDirectoryName(this.ProjectPath.ItemSpec);
+
                 var libgit2Path = Utilities.LoadAdditionalAssemblies();
                 base.Log.LogMessage(
                     MessageImportance.Normal,
@@ -85,7 +88,7 @@ namespace CenterCLR.RelaxVersioner
                 var writer = writers[this.Language];
 
                 var elementSets = Utilities.GetElementSets(
-                    Utilities.LoadRuleSets(this.ProjectDirectory.ItemSpec).
+                    Utilities.LoadRuleSets(projectDirectory).
                         Concat(new[] { Utilities.GetDefaultRuleSet() }));
 
                 var elementSet = elementSets[this.Language];
@@ -93,11 +96,7 @@ namespace CenterCLR.RelaxVersioner
                 var ruleSet = Utilities.AggregateRules(elementSet);
 
                 // Traverse git repository between projectDirectory and the root.
-                // Why use projectDirectory instead solutionDirectory ?
-                //   Because solution file (*.sln) is only aggregate project's pointers.
-                //   Some use case, solution file placed exterior of git work folder,
-                //   but project folder always placed interior git work folder.
-                var repository = Utilities.OpenRepository(this.ProjectDirectory.ItemSpec);
+                var repository = Utilities.OpenRepository(projectDirectory);
 
                 try
                 {

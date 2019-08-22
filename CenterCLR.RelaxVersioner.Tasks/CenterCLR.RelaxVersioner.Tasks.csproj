@@ -74,8 +74,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <!-- Remove copying lib folder in net46 -->
-    <ContentWithTargetPath Remove="$(libgit2_propsfile)\..\..\..\runtimes\**\*" />
     <!-- Strictly applied only netstandard2.0 because the runtime folder path is valid in this environment. -->
     <Content Include="$(libgit2_propsfile)\..\..\runtimes\**\*" PackagePath="build/runtimes/" />
   </ItemGroup>

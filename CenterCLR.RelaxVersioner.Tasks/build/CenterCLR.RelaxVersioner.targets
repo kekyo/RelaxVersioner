@@ -70,7 +70,7 @@
         <!-- ======================== -->
         <!-- Execute RelaxVersioner -->
         <RelaxVersionerTask
-            ProjectDirectory="$(ProjectDir)"
+            ProjectPath="$(MSBuildProjectFullPath)"
             OutputPath="$(RelaxVersionerOutputPath)"
             Language="$(RelaxVersionerLanguage)">
             <Output TaskParameter="DetectedIdentity" PropertyName="RelaxVersionerDetectedIdentity" />
@@ -115,7 +115,7 @@
     <!-- ======================== -->
     <!-- Execute RelaxVersioner -->
     <RelaxVersionerTask
-        ProjectDirectory="$(ProjectDir)"
+        ProjectPath="$(MSBuildProjectFullPath)"
         OutputPath="$(RelaxVersionerOutputPath)"
         Language="$(RelaxVersionerLanguage)"
         IsDryRun="true">
