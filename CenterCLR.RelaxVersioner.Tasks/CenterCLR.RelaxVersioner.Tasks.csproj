@@ -53,7 +53,7 @@
   
   <ItemGroup>
     <!--
-    <PackageReference Include="CenterCLR.RelaxVersioner" version="0.9.14" PrivateAssets="All" />
+    <PackageReference Include="CenterCLR.RelaxVersioner" version="0.9.21" PrivateAssets="All" />
     -->
     <PackageReference Include="CenterCLR.NamingFormatter" version="2.0.0" PrivateAssets="All" Publish="true" />
   </ItemGroup>
@@ -74,7 +74,9 @@
   </ItemGroup>
 
   <ItemGroup>
-    <!-- Strictly applied only netstandard2.0 because the runtime folder path valid only it environment. -->
+    <!-- Remove copying lib folder in net46 -->
+    <ContentWithTargetPath Remove="$(libgit2_propsfile)\..\..\..\runtimes\**\*" />
+    <!-- Strictly applied only netstandard2.0 because the runtime folder path is valid in this environment. -->
     <Content Include="$(libgit2_propsfile)\..\..\runtimes\**\*" PackagePath="build/runtimes/" />
   </ItemGroup>
 
