@@ -19,6 +19,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using Microsoft.Build.Framework;
 using LibGit2Sharp;
@@ -32,13 +33,7 @@ namespace CenterCLR.RelaxVersioner
         }
 
         [Required]
-        public ITaskItem SolutionDirectory
-        {
-            get; set;
-        }
-
-        [Required]
-        public ITaskItem ProjectDirectory
+        public ITaskItem ProjectPath
         {
             get; set;
         }
@@ -49,13 +44,7 @@ namespace CenterCLR.RelaxVersioner
             get; set;
         }
 
-        [Required]
         public string Language
-        {
-            get; set;
-        }
-
-        public bool IsDryRun
         {
             get; set;
         }
@@ -82,29 +71,27 @@ namespace CenterCLR.RelaxVersioner
         {
             try
             {
+                var projectDirectory = Path.GetDirectoryName(this.ProjectPath.ItemSpec);
+                var language = this.Language ?? "C#";
+
                 var libgit2Path = Utilities.LoadAdditionalAssemblies();
                 base.Log.LogMessage(
                     MessageImportance.Normal,
                     $"RelaxVersioner: Resolved libgit2: {libgit2Path}");
 
                 var writers = Utilities.GetWriters();
-                var writer = writers[this.Language];
+                var writer = writers[language];
 
                 var elementSets = Utilities.GetElementSets(
-                    Utilities.LoadRuleSet(this.ProjectDirectory.ItemSpec),
-                    Utilities.LoadRuleSet(this.SolutionDirectory.ItemSpec),
-                    Utilities.GetDefaultRuleSet());
+                    Utilities.LoadRuleSets(projectDirectory).
+                        Concat(new[] { Utilities.GetDefaultRuleSet() }));
 
-                var elementSet = elementSets[this.Language];
+                var elementSet = elementSets[language];
                 var importSet = Utilities.AggregateImports(elementSet);
                 var ruleSet = Utilities.AggregateRules(elementSet);
 
                 // Traverse git repository between projectDirectory and the root.
-                // Why use projectDirectory instead solutionDirectory ?
-                //   Because solution file (*.sln) is only aggregate project's pointers.
-                //   Some use case, solution file placed exterior of git work folder,
-                //   but project folder always placed interior git work folder.
-                var repository = Utilities.OpenRepository(this.ProjectDirectory.ItemSpec);
+                var repository = Utilities.OpenRepository(projectDirectory);
 
                 try
                 {
@@ -136,16 +123,17 @@ namespace CenterCLR.RelaxVersioner
                         DateTimeOffset.Now,
                         ruleSet,
                         importSet,
-                        this.IsDryRun);
+                        this.Language == null);
 
                     this.DetectedIdentity = result.Identity;
                     this.DetectedShortIdentity = result.ShortIdentity;
                     this.DetectedMessage = result.Message;
 
-                    var dryrun = this.IsDryRun ? " (dryrun)" : string.Empty;
+                    var dryrunDisplay = (this.Language == null) ? " (dryrun)" : string.Empty;
+                    var languageDisplay = (this.Language == null) ? string.Empty : $"Language={language}, ";
                     base.Log.LogMessage(
                         MessageImportance.High,
-                        $"RelaxVersioner: Generated versions code{dryrun}: Language={this.Language}, Version={this.DetectedIdentity}, ShortVersion={this.DetectedShortIdentity}");
+                        $"RelaxVersioner: Generated versions code{dryrunDisplay}: {languageDisplay}Version={this.DetectedIdentity}, ShortVersion={this.DetectedShortIdentity}");
                 }
                 finally
                 {

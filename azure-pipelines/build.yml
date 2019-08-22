@@ -1,0 +1,44 @@
+jobs:
+  - job: Windows
+    pool:
+      vmImage: "windows-latest"
+    steps:
+      - script: |
+          build-nupkg.bat
+        displayName: "build-nupkg"
+      - task: NuGetCommand@2
+        displayName: "restore TestProjects.VS2019"
+        inputs:
+          command: "restore"
+          restoreSolution: "TestProjects/TestProjects.VS2019.sln"
+          configuration: "Release"
+          feedsToUse: "config"
+          nugetConfigPath: "TestProjects/NuGet.Config"
+      - task: MSBuild@1
+        displayName: "build TestProjects.VS2019"
+        inputs:
+          solution: "TestProjects/TestProjects.VS2019.sln"
+          configuration: "Release"
+          platform: "Any Cpu"
+  - job: Linux_NETCore2
+    pool:
+      vmImage: "ubuntu-latest"
+    steps:
+      - task: Bash@3
+        displayName: "build-nupkg"
+        inputs:
+          filePath: "build-nupkg.sh"
+      - task: NuGetCommand@2
+        displayName: "restore TestProjects.NETCore2"
+        inputs:
+          command: "restore"
+          restoreSolution: "TestProjects/TestProjects.NETCore2.sln"
+          configuration: "Release"
+          feedsToUse: "config"
+          nugetConfigPath: "TestProjects/NuGet.Config"
+      - task: MSBuild@1
+        displayName: "build TestProjects.NETCore2"
+        inputs:
+          solution: "TestProjects/TestProjects.NETCore2.sln"
+          configuration: "Release"
+          platform: "Any Cpu"

@@ -4,7 +4,7 @@
     <TargetFrameworks>net46;netstandard2.0</TargetFrameworks>
     <OutputType>Library</OutputType>
 
-    <LangVersion>8.0</LangVersion>
+    <LangVersion>7.3</LangVersion>
     <DebugType>portable</DebugType>
     <DebugSymbols>true</DebugSymbols>
     <Platforms>AnyCPU</Platforms>
@@ -22,7 +22,6 @@
     <Company>Kouji Matsui (@kozy_kekyo, @kekyo2)</Company>
     <Authors>Kouji Matsui (@kozy_kekyo, @kekyo2)</Authors>
     <RepositoryType>git</RepositoryType>
-    <PackageId>CenterCLR.RelaxVersioner</PackageId>
     <PackageLicenseExpression>Apache-2.0</PackageLicenseExpression>
     <PackageProjectUrl>https://github.com/kekyo/CenterCLR.RelaxVersioner.git</PackageProjectUrl>
     <PackageIconUrl>https://github.com/kekyo/CenterCLR.RelaxVersioner/raw/master/Images/CenterCLR.RelaxVersioner.100.png</PackageIconUrl>
@@ -32,6 +31,7 @@
 
     <NoPackageAnalysis>true</NoPackageAnalysis>
     <IncludeBuildOutput>false</IncludeBuildOutput>
+    <AllowedOutputExtensionsInPackageBuildOutputFolder>.pdb</AllowedOutputExtensionsInPackageBuildOutputFolder>
     <TargetsForTfmSpecificContentInPackage>$(TargetsForTfmSpecificContentInPackage);GetPublishFilesForPack</TargetsForTfmSpecificContentInPackage>
     
     <GenerateAssemblyVersionAttribute>false</GenerateAssemblyVersionAttribute>
@@ -39,12 +39,20 @@
     <GenerateAssemblyInformationalVersionAttribute>false</GenerateAssemblyInformationalVersionAttribute>
   </PropertyGroup>
 
-  <!-- HACK: The publish folder doesn't contain any required assemblies when invoke from dotnet cli.
-    https://github.com/dotnet/cli/issues/8340
-    Applied Publish attribute.
+  <!-- HACK: NU1108 error ("Cycle detected") when selfhosted by RelaxVersioner
+    https://github.com/NuGet/Home/issues/6754#issuecomment-388166770
   -->
-
+  <PropertyGroup>
+    <PackageId>*$(MSBuildProjectFullPath)*</PackageId>
+  </PropertyGroup>
+  <Target Name="_UpdatePackageId" BeforeTargets="$(PackDependsOn)">
+    <PropertyGroup>
+      <PackageId>CenterCLR.RelaxVersioner</PackageId>
+    </PropertyGroup>
+  </Target>
+  
   <ItemGroup>
+    <PackageReference Include="CenterCLR.RelaxVersioner" version="0.9.24" PrivateAssets="All" />
     <PackageReference Include="CenterCLR.NamingFormatter" version="2.0.0" PrivateAssets="All" Publish="true" />
   </ItemGroup>
 
@@ -55,16 +63,6 @@
     <PackageReference Include="LibGit2Sharp.NativeBinaries" version="2.0.289" PrivateAssets="All" />
   </ItemGroup>
 
-  <ItemGroup Condition="'$(TargetFramework)' == 'net46'">
-    <ContentWithTargetPath Include="$(libgit2_propsfile)\..\..\..\runtimes\**\*" TargetPath="runtimes\%(RecursiveDir)%(Filename)%(Extension)" CopyToOutputDirectory="PreserveNewest" />
-    <ContentWithTargetPath Include="$(libgit2_propsfile)\..\..\..\libgit2\LibGit2Sharp.dll.config" TargetPath="LibGit2Sharp.dll.config" CopyToOutputDirectory="PreserveNewest" />
-  </ItemGroup>
-
-  <ItemGroup Condition="'$(TargetFramework)' == 'netstandard2.0'">
-    <ContentWithTargetPath Include="$(libgit2_propsfile)\..\..\runtimes\**\*" TargetPath="runtimes\%(RecursiveDir)%(Filename)%(Extension)" CopyToOutputDirectory="PreserveNewest" />
-    <ContentWithTargetPath Include="$(libgit2_propsfile)\..\..\libgit2\LibGit2Sharp.dll.config" TargetPath="LibGit2Sharp.dll.config" CopyToOutputDirectory="PreserveNewest" />
-  </ItemGroup>
-
   <ItemGroup>
     <Content Include="build\CenterCLR.RelaxVersioner.props" PackagePath="build/" />
     <Content Include="build\CenterCLR.RelaxVersioner.targets" PackagePath="build/" />
@@ -73,9 +71,14 @@
     <EmbeddedResource Include="DefaultRuleSet.rules" />
   </ItemGroup>
 
+  <ItemGroup>
+    <!-- Strictly applied only netstandard2.0 because the runtime folder path is valid in this environment. -->
+    <Content Include="$(libgit2_propsfile)\..\..\runtimes\**\*" PackagePath="build/runtimes/" />
+  </ItemGroup>
+
   <Target Name="GetPublishFilesForPack" DependsOnTargets="Publish">
     <ItemGroup>
-      <TfmSpecificPackageFile Include="$(PublishDir)/**/*.*" PackagePath="tasks/$(TargetFramework)/%(RecursiveDir)%(Filename)%(Extension)" />
+      <TfmSpecificPackageFile Include="$(PublishDir)\**\*.*" PackagePath="build\$(TargetFramework)\%(RecursiveDir)%(Filename)%(Extension)" />
     </ItemGroup>
   </Target>
 

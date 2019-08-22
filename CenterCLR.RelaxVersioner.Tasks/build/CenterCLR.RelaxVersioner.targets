@@ -70,8 +70,7 @@
         <!-- ======================== -->
         <!-- Execute RelaxVersioner -->
         <RelaxVersionerTask
-            SolutionDirectory="$(SolutionDir)"
-            ProjectDirectory="$(ProjectDir)"
+            ProjectPath="$(MSBuildProjectFullPath)"
             OutputPath="$(RelaxVersionerOutputPath)"
             Language="$(RelaxVersionerLanguage)">
             <Output TaskParameter="DetectedIdentity" PropertyName="RelaxVersionerDetectedIdentity" />
@@ -114,13 +113,10 @@
   <Target Name="RelaxVersionerBeforePack" BeforeTargets="GenerateNuspec">
 
     <!-- ======================== -->
-    <!-- Execute RelaxVersioner -->
+    <!-- Execute RelaxVersioner in dryrun mode -->
     <RelaxVersionerTask
-        SolutionDirectory="$(SolutionDir)"
-        ProjectDirectory="$(ProjectDir)"
-        OutputPath="$(RelaxVersionerOutputPath)"
-        Language="$(RelaxVersionerLanguage)"
-        IsDryRun="true">
+        ProjectPath="$(MSBuildProjectFullPath)"
+        OutputPath="$(RelaxVersionerOutputPath)">
       <Output TaskParameter="DetectedIdentity" PropertyName="RelaxVersionerDetectedIdentity" />
       <Output TaskParameter="DetectedShortIdentity" PropertyName="RelaxVersionerDetectedShortIdentity" />
       <Output TaskParameter="DetectedMessage" PropertyName="RelaxVersionerDetectedMessage" />

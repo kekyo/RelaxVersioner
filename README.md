@@ -4,9 +4,10 @@
 [![Japanese language](https://raw.githubusercontent.com/kekyo/CenterCLR.RelaxVersioner/master/Images/Japanese.256.png)](https://github.com/kekyo/CenterCLR.RelaxVersioner/blob/master/README.ja.md)
 
 # Status
-* NuGet (stable): [![NuGet RelaxVersioner (stable)](https://img.shields.io/nuget/v/CenterCLR.RelaxVersioner.svg?style=flat)](https://www.nuget.org/packages/CenterCLR.RelaxVersioner)
-* MyGet (devel): [![MyGet RelaxVersioner (devel)](https://img.shields.io/myget/kekyo/v/CenterCLR.RelaxVersioner.svg?style=flat&label=myget)](https://www.myget.org/feed/kekyo/package/nuget/CenterCLR.RelaxVersioner)
-* Continuous integration: [![AppVeyor RelaxVersioner](https://img.shields.io/appveyor/ci/kekyo/centerclr-relaxversioner.svg?style=flat)](https://ci.appveyor.com/project/kekyo/centerclr-relaxversioner)
+
+| NuGet (master) | MyGet (devel) | Azure Pipelines (devel) |
+|:---|:---|:---|
+| [![NuGet RelaxVersioner (master)](https://img.shields.io/nuget/v/CenterCLR.RelaxVersioner.svg?style=flat)](https://www.nuget.org/packages/CenterCLR.RelaxVersioner) | [![MyGet RelaxVersioner (devel)](https://img.shields.io/myget/kekyo/v/CenterCLR.RelaxVersioner.svg?style=flat&label=myget)](https://www.myget.org/feed/kekyo/package/nuget/CenterCLR.RelaxVersioner) | [![Azure pipelines (devel)](https://kekyo.visualstudio.com/CenterCLR.RelaxVersioner/_apis/build/status/CenterCLR.RelaxVersioner-devel)](https://kekyo.visualstudio.com/CenterCLR.RelaxVersioner/_build?definitionId=9)
 
 ## What is this?
 * RelaxVersioner is Very easy-usage, Git-based, auto-generate version informations in .NET Core/.NET Framework source code. (Assembly attribute based)
