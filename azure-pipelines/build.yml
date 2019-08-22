@@ -26,7 +26,8 @@ jobs:
     steps:
       - task: Bash@3
         displayName: "build-nupkg"
-        inputs: "build-nupkg.sh"
+        inputs:
+          filePath: "build-nupkg.sh"
       - task: NuGetCommand@2
         displayName: "restore TestProjects.NETCore2"
         inputs:
