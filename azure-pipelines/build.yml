@@ -2,8 +2,6 @@ jobs:
   - job: Windows
     pool:
       vmImage: "windows-latest"
-#   variables:
-#     buildConfiguration: "Debug"
     steps:
       - script: |
           build-nupkg.bat
@@ -22,8 +20,6 @@ jobs:
   - job: Linux_NETCore2
     pool:
       vmImage: "ubuntu-latest"
-#   variables:
-#     buildConfiguration: "Debug"
     steps:
       - script: |
           build-nupkg.sh
