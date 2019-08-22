@@ -6,13 +6,18 @@ jobs:
       - script: |
           build-nupkg.bat
         displayName: "build-nupkg"
+      - task: NuGetCommand@2
+        displayName: "restore TestProjects.VS2019"
+        inputs:
+          command: "restore"
+          restoreSolution: "TestProjects/TestProjects.VS2019.sln"
+          configuration: "Release"
       - task: MSBuild@1
         displayName: "build TestProjects.VS2019"
         inputs:
           solution: "TestProjects/TestProjects.VS2019.sln"
           configuration: "Release"
           platform: "Any Cpu"
-          restoreNugetPackages: "true"
   - job: Linux_NETCore2
     pool:
       vmImage: "ubuntu-latest"
@@ -20,10 +25,15 @@ jobs:
       - script: |
           build-nupkg.sh
         displayName: "build-nupkg"
+      - task: NuGetCommand@2
+        displayName: "restore TestProjects.NETCore2"
+        inputs:
+          command: "restore"
+          restoreSolution: "TestProjects/TestProjects.NETCore2.sln"
+          configuration: "Release"
       - task: MSBuild@1
         displayName: "build TestProjects.NETCore2"
         inputs:
           solution: "TestProjects/TestProjects.NETCore2.sln"
           configuration: "Release"
           platform: "Any Cpu"
-          restoreNugetPackages: "true"
