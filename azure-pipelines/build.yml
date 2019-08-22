@@ -12,6 +12,8 @@ jobs:
           command: "restore"
           restoreSolution: "TestProjects/TestProjects.VS2019.sln"
           configuration: "Release"
+          feedsToUse: "config"
+          nugetConfigPath: "TestProjects/NuGet.Config"
       - task: MSBuild@1
         displayName: "build TestProjects.VS2019"
         inputs:
@@ -31,6 +33,8 @@ jobs:
           command: "restore"
           restoreSolution: "TestProjects/TestProjects.NETCore2.sln"
           configuration: "Release"
+          feedsToUse: "config"
+          nugetConfigPath: "TestProjects/NuGet.Config"
       - task: MSBuild@1
         displayName: "build TestProjects.NETCore2"
         inputs:
