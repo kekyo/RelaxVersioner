@@ -155,15 +155,18 @@ using namespace System::Reflection;
 * Support native C++ project.
 * Support templated output.
 * Support fallback rule set.
-* Support Mono environments (and CI environments on *nix, Please PR for complete :)
-  * For 0.9.1, I supported .NET Standard platform. So I think may already run on these environments. (But not verified)
-* Switch CI to Azure Pipelines. 
+* Support Mono and .NET Core on linux environments.
 
 ## License
 * Copyright (c) 2015-2019 Kouji Matsui (@kozy_kekyo, kekyo2)
 * Under Apache v2
 
 ## History
+* 0.9.25:
+  * Made self hosted versioning :)
+  * Splitted devel and master branches.
+  * Switched CI to Azure Pipelines and write configurations (WIP)
+  * Begin validation for linux environment (WIP)
 * 0.9.14:
   * Added developmentDependency attribute.
 * 0.9.13:
