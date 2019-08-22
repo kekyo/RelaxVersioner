@@ -44,13 +44,7 @@ namespace CenterCLR.RelaxVersioner
             get; set;
         }
 
-        [Required]
         public string Language
-        {
-            get; set;
-        }
-
-        public bool IsDryRun
         {
             get; set;
         }
@@ -78,6 +72,7 @@ namespace CenterCLR.RelaxVersioner
             try
             {
                 var projectDirectory = Path.GetDirectoryName(this.ProjectPath.ItemSpec);
+                var language = this.Language ?? "C#";
 
                 var libgit2Path = Utilities.LoadAdditionalAssemblies();
                 base.Log.LogMessage(
@@ -85,13 +80,13 @@ namespace CenterCLR.RelaxVersioner
                     $"RelaxVersioner: Resolved libgit2: {libgit2Path}");
 
                 var writers = Utilities.GetWriters();
-                var writer = writers[this.Language];
+                var writer = writers[language];
 
                 var elementSets = Utilities.GetElementSets(
                     Utilities.LoadRuleSets(projectDirectory).
                         Concat(new[] { Utilities.GetDefaultRuleSet() }));
 
-                var elementSet = elementSets[this.Language];
+                var elementSet = elementSets[language];
                 var importSet = Utilities.AggregateImports(elementSet);
                 var ruleSet = Utilities.AggregateRules(elementSet);
 
@@ -128,16 +123,17 @@ namespace CenterCLR.RelaxVersioner
                         DateTimeOffset.Now,
                         ruleSet,
                         importSet,
-                        this.IsDryRun);
+                        this.Language == null);
 
                     this.DetectedIdentity = result.Identity;
                     this.DetectedShortIdentity = result.ShortIdentity;
                     this.DetectedMessage = result.Message;
 
-                    var dryrun = this.IsDryRun ? " (dryrun)" : string.Empty;
+                    var dryrunDisplay = (this.Language == null) ? " (dryrun)" : string.Empty;
+                    var languageDisplay = (this.Language == null) ? string.Empty : $"Language={language}, ";
                     base.Log.LogMessage(
                         MessageImportance.High,
-                        $"RelaxVersioner: Generated versions code{dryrun}: Language={this.Language}, Version={this.DetectedIdentity}, ShortVersion={this.DetectedShortIdentity}");
+                        $"RelaxVersioner: Generated versions code{dryrunDisplay}: {languageDisplay}Version={this.DetectedIdentity}, ShortVersion={this.DetectedShortIdentity}");
                 }
                 finally
                 {
