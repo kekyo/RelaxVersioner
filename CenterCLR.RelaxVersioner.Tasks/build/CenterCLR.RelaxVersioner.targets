@@ -70,7 +70,6 @@
         <!-- ======================== -->
         <!-- Execute RelaxVersioner -->
         <RelaxVersionerTask
-            SolutionDirectory="$(SolutionDir)"
             ProjectDirectory="$(ProjectDir)"
             OutputPath="$(RelaxVersionerOutputPath)"
             Language="$(RelaxVersionerLanguage)">
@@ -116,7 +115,6 @@
     <!-- ======================== -->
     <!-- Execute RelaxVersioner -->
     <RelaxVersionerTask
-        SolutionDirectory="$(SolutionDir)"
         ProjectDirectory="$(ProjectDir)"
         OutputPath="$(RelaxVersionerOutputPath)"
         Language="$(RelaxVersionerLanguage)"

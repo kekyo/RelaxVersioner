@@ -22,7 +22,6 @@
     <Company>Kouji Matsui (@kozy_kekyo, @kekyo2)</Company>
     <Authors>Kouji Matsui (@kozy_kekyo, @kekyo2)</Authors>
     <RepositoryType>git</RepositoryType>
-    <PackageId>CenterCLR.RelaxVersioner</PackageId>
     <PackageLicenseExpression>Apache-2.0</PackageLicenseExpression>
     <PackageProjectUrl>https://github.com/kekyo/CenterCLR.RelaxVersioner.git</PackageProjectUrl>
     <PackageIconUrl>https://github.com/kekyo/CenterCLR.RelaxVersioner/raw/master/Images/CenterCLR.RelaxVersioner.100.png</PackageIconUrl>
@@ -40,12 +39,22 @@
     <GenerateAssemblyInformationalVersionAttribute>false</GenerateAssemblyInformationalVersionAttribute>
   </PropertyGroup>
 
-  <!-- HACK: The publish folder doesn't contain any required assemblies when invoke from dotnet cli.
-    https://github.com/dotnet/cli/issues/8340
-    Applied Publish attribute.
+  <!-- HACK: NU1108 error ("Cycle detected") when selfhosted by RelaxVersioner
+    https://github.com/NuGet/Home/issues/6754#issuecomment-388166770
   -->
-
+  <PropertyGroup>
+    <PackageId>*$(MSBuildProjectFullPath)*</PackageId>
+  </PropertyGroup>
+  <Target Name="_UpdatePackageId" BeforeTargets="$(PackDependsOn)" >
+    <PropertyGroup>
+      <PackageId>CenterCLR.RelaxVersioner</PackageId>
+    </PropertyGroup>
+  </Target>
+  
   <ItemGroup>
+    <!--
+    <PackageReference Include="CenterCLR.RelaxVersioner" version="0.9.14" PrivateAssets="All" />
+    -->
     <PackageReference Include="CenterCLR.NamingFormatter" version="2.0.0" PrivateAssets="All" Publish="true" />
   </ItemGroup>
 

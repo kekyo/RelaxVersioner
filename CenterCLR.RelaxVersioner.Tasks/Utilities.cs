@@ -78,11 +78,11 @@ namespace CenterCLR.RelaxVersioner
                         switch (Environment.OSVersion.Platform)
                         {
                             case PlatformID.Unix:
-                                nativeLibraryPath = Path.Combine(libraryBasePath, "runtimes", "linux" + arch, "native", $"{nativeDllName}.so");
+                                nativeLibraryPath = Path.Combine(libraryBasePath, "runtimes", "linux" + arch, "native", $"lib{nativeDllName}.so");
                                 result = LoadUnixLibrary(nativeLibraryPath, 2);
                                 break;
                             case PlatformID.MacOSX:
-                                nativeLibraryPath = Path.Combine(libraryBasePath, "runtimes", "osx" /* + arch */, "native", $"{nativeDllName}.dylib");
+                                nativeLibraryPath = Path.Combine(libraryBasePath, "runtimes", "osx" /* + arch */, "native", $"lib{nativeDllName}.dylib");
                                 result = LoadUnixLibrary(nativeLibraryPath, 2);
                                 break;
                             default:
@@ -111,29 +111,42 @@ namespace CenterCLR.RelaxVersioner
                 ToDictionary(writer => writer.Language, StringComparer.InvariantCultureIgnoreCase);
         }
 
-        public static Repository OpenRepository(string candidatePath)
+        private static T TraversePathToRoot<T>(string candidatePath, Func<string, T> action)
+            where T : class
         {
-            var currentPath = Path.GetFullPath(candidatePath).
-                Trim(Path.DirectorySeparatorChar, Path.AltDirectorySeparatorChar);
+            var path = Path.GetFullPath(candidatePath).
+                Trim(directorySeparatorChar_);
 
             while (true)
             {
+                var result = action(path);
+                if (result != null)
+                {
+                    return result;
+                }
+
+                var index = path.LastIndexOfAny(directorySeparatorChar_);
+                if (index == -1)
+                {
+                    return null;
+                }
+
+                path = path.Substring(0, index);
+            }
+        }
+
+        public static Repository OpenRepository(string candidatePath) =>
+            TraversePathToRoot(candidatePath, path =>
+            {
                 try
                 {
-                    return new Repository(currentPath + Path.DirectorySeparatorChar);
+                    return new Repository(path + Path.DirectorySeparatorChar);
                 }
                 catch (RepositoryNotFoundException)
                 {
-                    var index = currentPath.LastIndexOfAny(directorySeparatorChar_);
-                    if (index == -1)
-                    {
-                        return null;
-                    }
-
-                    currentPath = currentPath.Substring(0, index);
+                    return null;
                 }
-            }
-        }
+            });
 
         private static System.Version TryParseVersion(string versionString)
         {
@@ -181,27 +194,44 @@ namespace CenterCLR.RelaxVersioner
                 (int)(date.TimeOfDay.TotalSeconds / 2));
         }
 
-        public static XElement LoadRuleSet(string path)
+        public static IEnumerable<XElement> LoadRuleSets(string candidatePath)
         {
-            Debug.Assert(path != null);
+            Debug.Assert(candidatePath != null);
 
-            try
+            var path = Path.GetFullPath(candidatePath).
+                Trim(directorySeparatorChar_);
+
+            while (true)
             {
                 var rulePath = Path.Combine(path, "RelaxVersioner.rules");
-                if (File.Exists(rulePath) == false)
+                if (File.Exists(rulePath))
                 {
-                    return null;
+                    XElement element = null;
+                    try
+                    {
+                        element = XElement.Load(rulePath);
+                    }
+                    catch
+                    {
+                    }
+
+                    if (element != null)
+                    {
+                        yield return element;
+                    }
                 }
 
-                return XElement.Load(rulePath);
-            }
-            catch
-            {
-                return null;
+                var index = path.LastIndexOfAny(directorySeparatorChar_);
+                if (index == -1)
+                {
+                    break;
+                }
+
+                path = path.Substring(0, index);
             }
         }
 
-        public static Dictionary<string, XElement> GetElementSets(params XElement[] ruleSets)
+        public static Dictionary<string, XElement> GetElementSets(IEnumerable<XElement> ruleSets)
         {
             Debug.Assert(ruleSets != null);
 

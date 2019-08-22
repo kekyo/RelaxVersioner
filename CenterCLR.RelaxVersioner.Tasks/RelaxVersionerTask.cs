@@ -32,12 +32,6 @@ namespace CenterCLR.RelaxVersioner
         }
 
         [Required]
-        public ITaskItem SolutionDirectory
-        {
-            get; set;
-        }
-
-        [Required]
         public ITaskItem ProjectDirectory
         {
             get; set;
@@ -91,9 +85,8 @@ namespace CenterCLR.RelaxVersioner
                 var writer = writers[this.Language];
 
                 var elementSets = Utilities.GetElementSets(
-                    Utilities.LoadRuleSet(this.ProjectDirectory.ItemSpec),
-                    Utilities.LoadRuleSet(this.SolutionDirectory.ItemSpec),
-                    Utilities.GetDefaultRuleSet());
+                    Utilities.LoadRuleSets(this.ProjectDirectory.ItemSpec).
+                        Concat(new[] { Utilities.GetDefaultRuleSet() }));
 
                 var elementSet = elementSets[this.Language];
                 var importSet = Utilities.AggregateImports(elementSet);
