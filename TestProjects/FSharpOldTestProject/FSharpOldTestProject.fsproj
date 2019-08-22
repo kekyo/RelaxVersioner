@@ -5,6 +5,7 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <VisualStudioVersion>16.0</VisualStudioVersion>
     <SchemaVersion>2.0</SchemaVersion>
     <ProjectGuid>b18f5e8c-fdf7-40d6-80f8-b912d29ae273</ProjectGuid>
     <OutputType>Exe</OutputType>
