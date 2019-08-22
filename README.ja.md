@@ -155,15 +155,18 @@ using namespace System::Reflection;
 * ネイティブC++プロジェクトに対応させる
 * テンプレート出力をサポートする
 * フォールバックルールを指定可能にする
-* Mono環境のサポート (そして *nix 環境でのCIのサポート / 詳しい方のPRウェルカム)
-  * 0.9.1にて.NET Standardに対応したため、もしかするとすでに動作するようになっているかもしれません（まだ未検証です）
-* CIプロセスをAzure Pipelinesに変更する
+* Mono環境と.NET Core on Linuxのサポート
 
 ## License
 * Copyright (c) 2015-2019 Kouji Matsui (@kozy_kekyo, @kekyo2)
 * Under Apache v2
 
 ## 履歴
+* 0.9.25:
+  * セルフホストバージョニングを開始 :)
+  * develとmasterブランチに分割
+  * CIをAzure Pipelinesに変更 (作業中)
+  * Linux環境を検証 (作業中)
 * 0.9.14:
   * developmentDependency属性を追加し、RelaxVersionerパッケージへの依存を排除しました。
 * 0.9.13:
