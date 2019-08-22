@@ -24,9 +24,9 @@ jobs:
     pool:
       vmImage: "ubuntu-latest"
     steps:
-      - script: |
-          build-nupkg.sh
+      - task: Bash@3
         displayName: "build-nupkg"
+        inputs: "build-nupkg.sh"
       - task: NuGetCommand@2
         displayName: "restore TestProjects.NETCore2"
         inputs:
