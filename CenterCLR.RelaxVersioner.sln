@@ -8,6 +8,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 		.gitignore = .gitignore
 		appveyor.yml = appveyor.yml
 		build-nupkg.bat = build-nupkg.bat
+		build-nupkg.sh = build-nupkg.sh
 		Images\CenterCLR.RelaxVersioner.100.png = Images\CenterCLR.RelaxVersioner.100.png
 		Images\CenterCLR.RelaxVersioner.128.png = Images\CenterCLR.RelaxVersioner.128.png
 		Images\CenterCLR.RelaxVersioner.256.png = Images\CenterCLR.RelaxVersioner.256.png
@@ -25,6 +26,13 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Images", "Images", "{98ADE1
 	EndProjectSection
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CenterCLR.RelaxVersioner.Tasks", "CenterCLR.RelaxVersioner.Tasks\CenterCLR.RelaxVersioner.Tasks.csproj", "{49303547-1E7B-4794-9A35-0FE188670E56}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "azure-pipelines", "azure-pipelines", "{FAC14C72-0C08-497A-9460-49D10C3A362A}"
+	ProjectSection(SolutionItems) = preProject
+		azure-pipelines\build-devel.yml = azure-pipelines\build-devel.yml
+		azure-pipelines\build-master.yml = azure-pipelines\build-master.yml
+		azure-pipelines\build.yml = azure-pipelines\build.yml
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

@@ -8,6 +8,11 @@ jobs:
       - script: |
           build-nupkg.bat
         displayName: "build-nupkg"
+      - task: DotNetCoreCLI@1
+        displayName: "nuget restore TestProjects.VS2019.sln"
+        inputs:
+          command: "restore"
+          projects: "TestProjects/TestProjects.VS2019.sln"
       - task: MSBuild@1
         displayName: "build TestProjects.VS2019"
         inputs:
@@ -20,6 +25,14 @@ jobs:
 #   variables:
 #     buildConfiguration: "Debug"
     steps:
+      - script: |
+          build-nupkg.sh
+        displayName: "build-nupkg"
+      - task: DotNetCoreCLI@1
+        displayName: "nuget restore TestProjects.NETCore2.sln"
+        inputs:
+          command: "restore"
+          projects: "TestProjects/TestProjects.NETCore2.sln"
       - task: MSBuild@1
         displayName: "build TestProjects.NETCore2"
         inputs:
