@@ -14,7 +14,7 @@ jobs:
           solution: "TestProjects/TestProjects.VS2019.sln"
           configuration: "Release"
           platform: "Any Cpu"
-  - job: Linux-NETCore2
+  - job: Linux_NETCore2
     pool:
       vmImage: "ubuntu-latest"
 #   variables:
