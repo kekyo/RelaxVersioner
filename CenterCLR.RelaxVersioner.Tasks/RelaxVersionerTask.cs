@@ -76,10 +76,10 @@ namespace CenterCLR.RelaxVersioner
         {
             try
             {
-                var libgit2Path = Utilities.LoadAdditionalAssemblies();
-                base.Log.LogMessage(
-                    MessageImportance.Normal,
-                    $"RelaxVersioner: Resolved libgit2: {libgit2Path}");
+                //var libgit2Path = Utilities.LoadAdditionalAssemblies();
+                //base.Log.LogMessage(
+                //    MessageImportance.Normal,
+                //    $"RelaxVersioner: Resolved libgit2: {libgit2Path}");
 
                 var writers = Utilities.GetWriters();
                 var writer = writers[this.Language];
