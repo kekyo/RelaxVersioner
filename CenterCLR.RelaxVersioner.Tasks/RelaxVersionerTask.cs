@@ -78,13 +78,11 @@ namespace CenterCLR.RelaxVersioner
                     MessageImportance.Normal,
                     $"RelaxVersioner: assembly base path: Managed={AssemblyLoadHelper.BasePath}, Native={AssemblyLoadHelper.BaseNativePath}");
 
-                var versioner = AssemblyLoadContext.CreateInstance<Versioner>();
+                var result = (string[])AssemblyLoadContext.Invoke<Versioner>("Run", projectDirectory, outputPath, language, isDryRun);
 
-                var result = versioner.Run(projectDirectory, outputPath, language, isDryRun);
-
-                this.DetectedIdentity = result.Identity;
-                this.DetectedShortIdentity = result.ShortIdentity;
-                this.DetectedMessage = result.Message;
+                this.DetectedIdentity = result[0];
+                this.DetectedShortIdentity = result[1];
+                this.DetectedMessage = result[2];
 
                 var dryrunDisplay = isDryRun ? " (dryrun)" : string.Empty;
                 var languageDisplay = isDryRun ? string.Empty : $"Language={language}, ";

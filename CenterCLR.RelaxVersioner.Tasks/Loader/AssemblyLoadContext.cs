@@ -68,12 +68,12 @@ namespace CenterCLR.RelaxVersioner.Loader
 
         private static readonly AssemblyLoadContext instance = new AssemblyLoadContext();
     
-        public static T CreateInstance<T>()
-            where T : new()
+        public static object Invoke<T>(string methodName, params object[] args)
         {
-            var contextualAssembly = instance.LoadFromAssemblyPath(AssemblyLoadHelper.AssemblyPath);
-            return (T)contextualAssembly.CreateInstance(typeof(T).FullName);
-
+            var assembly = instance.LoadFromAssemblyPath(AssemblyLoadHelper.AssemblyPath);
+            var type = assembly.GetType(typeof(T).FullName);
+            var method = type.GetMethod(methodName);
+            return method.Invoke(null, args);
         }
     }
 
@@ -135,11 +135,12 @@ namespace CenterCLR.RelaxVersioner.Loader
             }
         }
 
-        public static T CreateInstance<T>()
-            where T : new()
+        public static object Invoke<T>(string methodName, params object[] args)
         {
             SetupEnvironmentsIfRequired();
-            return new T();
+
+            var method = typeof(T).GetMethod(methodName);
+            return method.Invoke(null, args);
         }
     }
 #endif

@@ -25,13 +25,12 @@ using CenterCLR.RelaxVersioner.Writers;
 
 namespace CenterCLR.RelaxVersioner
 {
-    public sealed class Versioner : MarshalByRefObject
+    public sealed class Versioner
     {
-        public Versioner()
-        {
-        }
+        private Versioner()
+        { }
 
-        public VersionResult Run(string projectDirectory, string outputPath, string language, bool isDryRun)
+        private static VersionResult InternalRun(string projectDirectory, string outputPath, string language, bool isDryRun)
         {
             var writers = Utilities.GetWriters();
             var writer = writers[language];
@@ -83,6 +82,12 @@ namespace CenterCLR.RelaxVersioner
             {
                 repository?.Dispose();
             }
+        }
+
+        public static string[] Run(string projectDirectory, string outputPath, string language, bool isDryRun)
+        {
+            var result = InternalRun(projectDirectory, outputPath, language, isDryRun);
+            return new[] { result.Identity, result.ShortIdentity, result.Message };
         }
     }
 }

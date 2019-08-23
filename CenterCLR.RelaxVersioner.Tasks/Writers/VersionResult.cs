@@ -19,7 +19,7 @@
 
 namespace CenterCLR.RelaxVersioner.Writers
 {
-    public struct VersionResult
+    internal struct VersionResult
     {
         public readonly string Identity;
         public readonly string ShortIdentity;
