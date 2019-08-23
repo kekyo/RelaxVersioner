@@ -113,8 +113,7 @@ namespace CenterCLR.RelaxVersioner
             Debug.Assert(dictionary != null);
             Debug.Assert(key != null);
 
-            TValue value;
-            if (dictionary.TryGetValue(key, out value) == false)
+            if (dictionary.TryGetValue(key, out TValue value) == false)
             {
                 value = defaultValue;
             }

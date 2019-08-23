@@ -19,11 +19,13 @@
 
 using System;
 using System.IO;
-using System.Reflection;
 
 namespace CenterCLR.RelaxVersioner.Loader
 {
 #if NETSTANDARD2_0
+    
+    using System.Reflection;
+
     internal sealed class AssemblyLoadContext : System.Runtime.Loader.AssemblyLoadContext
     {
         private static readonly string nativeDllName =
@@ -33,18 +35,8 @@ namespace CenterCLR.RelaxVersioner.Loader
                 GetField("Name", BindingFlags.Public | BindingFlags.Static).
                 GetValue(null);
 
-        private static readonly AssemblyLoadContext instance = new AssemblyLoadContext();
-
         private AssemblyLoadContext()
         {
-        }
-
-        public static T CreateInstance<T>()
-            where T : new()
-        {
-            var contextualAssembly = instance.LoadFromAssemblyPath(AssemblyLoadHelper.AssemblyPath);
-            return (T)contextualAssembly.CreateInstance(typeof(T).FullName);
-
         }
 
         protected override Assembly Load(AssemblyName assemblyName)
@@ -52,7 +44,7 @@ namespace CenterCLR.RelaxVersioner.Loader
             var path = Path.Combine(AssemblyLoadHelper.BasePath, assemblyName.Name + ".dll");
             return File.Exists(path) ?
                 this.LoadFromAssemblyPath(path) :
-                System.Runtime.Loader.AssemblyLoadContext.Default.LoadFromAssemblyName(assemblyName);
+                Default.LoadFromAssemblyName(assemblyName);
         }
 
         protected override IntPtr LoadUnmanagedDll(string unmanagedDllName)
@@ -72,6 +64,68 @@ namespace CenterCLR.RelaxVersioner.Loader
             return (handle != IntPtr.Zero) ?
                 handle :
                 base.LoadUnmanagedDll(unmanagedDllName);
+        }
+
+        private static readonly AssemblyLoadContext instance = new AssemblyLoadContext();
+    
+        public static T CreateInstance<T>()
+            where T : new()
+        {
+            var contextualAssembly = instance.LoadFromAssemblyPath(AssemblyLoadHelper.AssemblyPath);
+            return (T)contextualAssembly.CreateInstance(typeof(T).FullName);
+
+        }
+    }
+
+#else
+
+    using System.Linq;
+    using Microsoft.DotNet.PlatformAbstractions;
+
+    internal static class AssemblyLoadContext
+    {
+        private static bool initialized = false;
+        private static object initializeLocker = new object();
+
+        private static void PrependBasePaths(string targetEnvironmentName, params string[] basePaths)
+        {
+            var pathEnvironment = (Environment.GetEnvironmentVariable(targetEnvironmentName) ?? string.Empty).Trim();
+            var newPath = string.Join(Path.PathSeparator.ToString(), basePaths.Concat(new[] { pathEnvironment }));
+            Environment.SetEnvironmentVariable(targetEnvironmentName, newPath);
+        }
+
+        private static void SetupEnvironmentsIfRequired()
+        {
+            if (!initialized)
+            {
+                lock (initializeLocker)
+                {
+                    if (!initialized)
+                    {
+                        // HACK: I know it's bad practice, but I dodn't take very complex implementation for using AppDomain.
+                        switch (RuntimeEnvironment.OperatingSystemPlatform)
+                        {
+                            case Platform.Windows:
+                                PrependBasePaths("PATH", AssemblyLoadHelper.BasePath, AssemblyLoadHelper.BaseNativePath);
+                                break;
+                            default:
+                                // NOTE: In macos, ElCapitan disabled dylib lookuping feature, so will cause loading failure.
+                                PrependBasePaths("PATH", AssemblyLoadHelper.BasePath);
+                                PrependBasePaths("LD_LIBRARY_PATH", AssemblyLoadHelper.BaseNativePath);
+                                break;
+                        }
+
+                        initialized = true;
+                    }
+                }
+            }
+        }
+
+        public static T CreateInstance<T>()
+            where T : new()
+        {
+            SetupEnvironmentsIfRequired();
+            return new T();
         }
     }
 #endif
