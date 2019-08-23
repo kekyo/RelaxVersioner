@@ -4,9 +4,10 @@
 [English language is here](https://github.com/kekyo/CenterCLR.RelaxVersioner)
 
 # Status
-| NuGet (master) | MyGet (devel) | Azure Pipelines (devel) |
+| | master | devel |
 |:---|:---|:---|
-| [![NuGet RelaxVersioner (master)](https://img.shields.io/nuget/v/CenterCLR.RelaxVersioner.svg?style=flat)](https://www.nuget.org/packages/CenterCLR.RelaxVersioner) | [![MyGet RelaxVersioner (devel)](https://img.shields.io/myget/kekyo/v/CenterCLR.RelaxVersioner.svg?style=flat&label=myget)](https://www.myget.org/feed/kekyo/package/nuget/CenterCLR.RelaxVersioner) | [![Azure pipelines (devel)](https://kekyo.visualstudio.com/CenterCLR.RelaxVersioner/_apis/build/status/CenterCLR.RelaxVersioner-devel)](https://kekyo.visualstudio.com/CenterCLR.RelaxVersioner/_build?definitionId=9)
+| Packages | [![NuGet RelaxVersioner (master)](https://img.shields.io/nuget/v/CenterCLR.RelaxVersioner.svg?style=flat)](https://www.nuget.org/packages/CenterCLR.RelaxVersioner) | [![MyGet RelaxVersioner (devel)](https://img.shields.io/myget/kekyo/v/CenterCLR.RelaxVersioner.svg?style=flat&label=myget)](https://www.myget.org/feed/kekyo/package/nuget/CenterCLR.RelaxVersioner)
+| Continuous integration | [![Azure pipelines (master)](https://kekyo.visualstudio.com/CenterCLR.RelaxVersioner/_apis/build/status/CenterCLR.RelaxVersioner-master)](https://kekyo.visualstudio.com/CenterCLR.RelaxVersioner/_build?definitionId=10) | [![Azure pipelines (devel)](https://kekyo.visualstudio.com/CenterCLR.RelaxVersioner/_apis/build/status/CenterCLR.RelaxVersioner-devel)](https://kekyo.visualstudio.com/CenterCLR.RelaxVersioner/_build?definitionId=9)
 
 ## これは何？
 * RelaxVersionerは、軽量で非常に簡単に使用することが出来る、Gitベースの「自動バージョニング」ツールセットです。.NET Core/.NET Frameworkベースのソースコードを対象としていて、ビルド時にアセンブリ属性を自動的に適用します。
