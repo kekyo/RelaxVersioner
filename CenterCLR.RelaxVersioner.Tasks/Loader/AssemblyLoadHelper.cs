@@ -20,6 +20,7 @@
 using System;
 using System.IO;
 using System.Linq;
+using System.Reflection;
 using Microsoft.DotNet.PlatformAbstractions;
 
 namespace CenterCLR.RelaxVersioner.Loader
@@ -46,6 +47,18 @@ namespace CenterCLR.RelaxVersioner.Loader
             if (!Directory.Exists(BaseNativePath) && (RuntimeEnvironment.OperatingSystemPlatform == Platform.Linux))
             {
                 BaseNativePath = Path.Combine(baseNativePath, $"linux-{RuntimeEnvironment.RuntimeArchitecture}", "native");
+            }
+
+            // Preload assemblies same as the directory.
+            foreach (var path in Directory.EnumerateFiles(BasePath, "*.dll", SearchOption.TopDirectoryOnly))
+            {
+                try
+                {
+                    Assembly.LoadFrom(path);
+                }
+                catch
+                {
+                }
             }
         }
     }
