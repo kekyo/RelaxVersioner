@@ -85,7 +85,7 @@ namespace CenterCLR.RelaxVersioner.Loader
     internal static class AssemblyLoadContext
     {
         private static bool initialized = false;
-        private static object initializeLocker = new object();
+        private static readonly object initializeLocker = new object();
 
         private static void PrependBasePaths(string targetEnvironmentName, params string[] basePaths)
         {
