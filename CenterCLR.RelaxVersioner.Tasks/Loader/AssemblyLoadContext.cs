@@ -84,6 +84,9 @@ namespace CenterCLR.RelaxVersioner.Loader
 
     internal static class AssemblyLoadContext
     {
+        [System.Runtime.InteropServices.DllImport("kernel32.dll", SetLastError = true)]
+        private static extern bool AddDllDirectory(string path);
+
         private static bool initialized = false;
         private static readonly object initializeLocker = new object();
 
@@ -102,11 +105,13 @@ namespace CenterCLR.RelaxVersioner.Loader
                 {
                     if (!initialized)
                     {
-                        // HACK: I know it's bad practice, but I dodn't take very complex implementation for using AppDomain.
+                        // HACK: I know it's bad practice, but I don't take very complex implementation for using AppDomain.
                         switch (RuntimeEnvironment.OperatingSystemPlatform)
                         {
                             case Platform.Windows:
                                 PrependBasePaths("PATH", AssemblyLoadHelper.BasePath, AssemblyLoadHelper.BaseNativePath);
+                                AddDllDirectory(AssemblyLoadHelper.BasePath);
+                                AddDllDirectory(AssemblyLoadHelper.BaseNativePath);
                                 break;
                             default:
                                 // NOTE: In macos, ElCapitan disabled dylib lookuping feature, so will cause loading failure.
