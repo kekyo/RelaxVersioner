@@ -18,6 +18,7 @@
 /////////////////////////////////////////////////////////////////////////////////////////////////
 
 using System;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Reflection;
@@ -35,6 +36,8 @@ namespace CenterCLR.RelaxVersioner.Loader
 
         static AssemblyLoadHelper()
         {
+            AppDomain.CurrentDomain.AssemblyResolve += AssemblyResolve;
+
             var baseNativePath = Path.GetFullPath(Path.Combine(BasePath, "..", "runtimes"));
 
             var id = RuntimeEnvironment.GetRuntimeIdentifier().Replace("-aot", string.Empty);
@@ -48,17 +51,22 @@ namespace CenterCLR.RelaxVersioner.Loader
             {
                 BaseNativePath = Path.Combine(baseNativePath, $"linux-{RuntimeEnvironment.RuntimeArchitecture}", "native");
             }
+        }
 
-            // Preload assemblies same as the directory.
-            foreach (var path in Directory.EnumerateFiles(BasePath, "*.dll", SearchOption.TopDirectoryOnly))
+        private static Assembly AssemblyResolve(object sender, ResolveEventArgs e)
+        {
+            var an = new AssemblyName(e.Name);
+            var path = Path.Combine(BasePath, an.Name + ".dll");
+            if (File.Exists(path))
             {
-                try
-                {
-                    Assembly.LoadFrom(path);
-                }
-                catch
-                {
-                }
+                var assembly = Assembly.LoadFrom(path);
+                Trace.WriteLine($"RelaxVersioner: AssemblyResolve: Name={e.Name}, Path={path}, Loaded={assembly.FullName}");
+                return assembly;
+            }
+            else
+            {
+                Trace.WriteLine($"RelaxVersioner: AssemblyResolve: Name={e.Name}, Path={path}, Not found");
+                return null;
             }
         }
     }
