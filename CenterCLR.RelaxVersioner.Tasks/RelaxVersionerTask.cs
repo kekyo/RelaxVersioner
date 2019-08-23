@@ -17,12 +17,10 @@
 //
 /////////////////////////////////////////////////////////////////////////////////////////////////
 
-using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
+using CenterCLR.RelaxVersioner.Loader;
 using Microsoft.Build.Framework;
-using LibGit2Sharp;
+using System;
+using System.IO;
 
 namespace CenterCLR.RelaxVersioner
 {
@@ -73,72 +71,24 @@ namespace CenterCLR.RelaxVersioner
             {
                 var projectDirectory = Path.GetDirectoryName(this.ProjectPath.ItemSpec);
                 var language = this.Language ?? "C#";
+                var isDryRun = this.Language == null;
 
-                var libgit2Path = Utilities.LoadAdditionalAssemblies();
                 base.Log.LogMessage(
                     MessageImportance.Normal,
-                    $"RelaxVersioner: Resolved libgit2: {libgit2Path}");
+                    $"RelaxVersioner: assembly base path: Managed={AssemblyLoadHelper.BasePath}, Native={AssemblyLoadHelper.BaseNativePath}");
 
-                var writers = Utilities.GetWriters();
-                var writer = writers[language];
+                var versioner = new Versioner();
+                var result = versioner.Run(projectDirectory, this.OutputPath.ItemSpec, language, isDryRun);
 
-                var elementSets = Utilities.GetElementSets(
-                    Utilities.LoadRuleSets(projectDirectory).
-                        Concat(new[] { Utilities.GetDefaultRuleSet() }));
+                this.DetectedIdentity = result.Identity;
+                this.DetectedShortIdentity = result.ShortIdentity;
+                this.DetectedMessage = result.Message;
 
-                var elementSet = elementSets[language];
-                var importSet = Utilities.AggregateImports(elementSet);
-                var ruleSet = Utilities.AggregateRules(elementSet);
-
-                // Traverse git repository between projectDirectory and the root.
-                var repository = Utilities.OpenRepository(projectDirectory);
-
-                try
-                {
-                    var tags = repository?.Tags.
-                        Where(tag => tag.Target is Commit).
-                        GroupBy(tag => tag.Target.Sha).
-                        ToDictionary(
-                            g => g.Key,
-                            g => g.ToList().AsEnumerable(),
-                            StringComparer.InvariantCultureIgnoreCase) ??
-                        new Dictionary<string, IEnumerable<Tag>>();
-
-                    var branches = (repository != null) ?
-                        (from branch in repository.Branches
-                        where !branch.IsRemote
-                        from commit in branch.Commits
-                        group branch by commit.Sha).
-                        ToDictionary(
-                            g => g.Key,
-                            g => g.ToList().AsEnumerable(),
-                            StringComparer.InvariantCultureIgnoreCase) :
-                        new Dictionary<string, IEnumerable<Branch>>();
-
-                    var result = writer.Write(
-                        this.OutputPath.ItemSpec,
-                        repository?.Head,
-                        tags,
-                        branches,
-                        DateTimeOffset.Now,
-                        ruleSet,
-                        importSet,
-                        this.Language == null);
-
-                    this.DetectedIdentity = result.Identity;
-                    this.DetectedShortIdentity = result.ShortIdentity;
-                    this.DetectedMessage = result.Message;
-
-                    var dryrunDisplay = (this.Language == null) ? " (dryrun)" : string.Empty;
-                    var languageDisplay = (this.Language == null) ? string.Empty : $"Language={language}, ";
-                    base.Log.LogMessage(
-                        MessageImportance.High,
-                        $"RelaxVersioner: Generated versions code{dryrunDisplay}: {languageDisplay}Version={this.DetectedIdentity}, ShortVersion={this.DetectedShortIdentity}");
-                }
-                finally
-                {
-                    repository?.Dispose();
-                }
+                var dryrunDisplay = isDryRun ? " (dryrun)" : string.Empty;
+                var languageDisplay = isDryRun ? string.Empty : $"Language={language}, ";
+                base.Log.LogMessage(
+                    MessageImportance.High,
+                    $"RelaxVersioner: Generated versions code{dryrunDisplay}: {languageDisplay}Version={this.DetectedIdentity}, ShortVersion={this.DetectedShortIdentity}");
             }
             catch (Exception ex)
             {

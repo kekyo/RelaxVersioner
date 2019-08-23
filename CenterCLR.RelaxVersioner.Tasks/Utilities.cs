@@ -40,68 +40,6 @@ namespace CenterCLR.RelaxVersioner
         private static readonly char[] directorySeparatorChar_ =
             { Path.DirectorySeparatorChar, Path.AltDirectorySeparatorChar };
 
-        private static object loadLock = new object();
-        private static string nativeLibraryPath = null;
-
-        [DllImport("libdl", EntryPoint = "dlopen")]
-        private static extern IntPtr LoadUnixLibrary(string path, int flags);
-
-        [DllImport("kernel32", EntryPoint = "LoadLibrary")]
-        private static extern IntPtr LoadWindowsLibrary(string path);
-
-        [MethodImpl(MethodImplOptions.NoInlining)]
-        public static string LoadAdditionalAssemblies()
-        {
-            if (nativeLibraryPath == null)
-            {
-                lock (loadLock)
-                {
-                    if (nativeLibraryPath == null)
-                    {
-                        // HACK: LibGit2Sharp is strongly signed and doesn't install any GAC storages.
-                        //   May cause failure LibGit2Sharp assembly loading.
-                        //   It's helping for manually loading.
-                        var libraryBasePath = Path.GetDirectoryName(
-                            (new Uri(typeof(Utilities).Assembly.CodeBase, UriKind.RelativeOrAbsolute)).LocalPath);
-                        foreach (var path in Directory.EnumerateFiles(libraryBasePath, "*.dll", SearchOption.TopDirectoryOnly))
-                        {
-                            Assembly.LoadFrom(path);
-                        }
-
-                        var nativeDllNameType = typeof(Repository).Assembly.GetType("LibGit2Sharp.Core.NativeDllName");
-                        var nativeDllName_NameField = nativeDllNameType.GetField("Name", BindingFlags.Public | BindingFlags.Static);
-                        var nativeDllName = nativeDllName_NameField.GetValue(null);
-
-                        // Set LibGit2Sharp native library folder.
-                        var arch = (IntPtr.Size == 8) ? "-x64" : "-x86";
-                        IntPtr result;
-                        switch (Environment.OSVersion.Platform)
-                        {
-                            case PlatformID.Unix:
-                                nativeLibraryPath = Path.Combine(libraryBasePath, "..", "runtimes", "linux" + arch, "native", $"lib{nativeDllName}.so");
-                                result = LoadUnixLibrary(nativeLibraryPath, 2);
-                                break;
-                            case PlatformID.MacOSX:
-                                nativeLibraryPath = Path.Combine(libraryBasePath, "..", "runtimes", "osx" /* + arch */, "native", $"lib{nativeDllName}.dylib");
-                                result = LoadUnixLibrary(nativeLibraryPath, 2);
-                                break;
-                            default:
-                                nativeLibraryPath = Path.Combine(libraryBasePath, "..", "runtimes", "win" + arch, "native", $"{nativeDllName}.dll");
-                                result = LoadWindowsLibrary(nativeLibraryPath);
-                                break;
-                        };
-
-                        if (result == IntPtr.Zero)
-                        {
-                            throw new InvalidProgramException($"Cannot load libgit2: {nativeLibraryPath}");
-                        }
-                    }
-                }
-            }
-
-            return nativeLibraryPath;
-        }
-
         public static Dictionary<string, WriterBase> GetWriters()
         {
             return typeof (Utilities).Assembly.
