@@ -69,5 +69,8 @@ namespace CenterCLR.RelaxVersioner.Loader
                 return null;
             }
         }
+
+        public static void Initialize() =>
+            Trace.WriteLine($"RelaxVersioner: Initialize: Version={typeof(AssemblyLoadHelper).Assembly.GetName().Version}, BasePath={BasePath}, BaseNativePath={BaseNativePath}");
     }
 }

@@ -26,9 +26,8 @@ namespace CenterCLR.RelaxVersioner
 {
     public sealed class RelaxVersionerTask : Microsoft.Build.Utilities.Task
     {
-        public RelaxVersionerTask()
-        {
-        }
+        public RelaxVersionerTask() =>
+            AssemblyLoadHelper.Initialize();
 
         [Required]
         public ITaskItem ProjectPath
@@ -76,7 +75,7 @@ namespace CenterCLR.RelaxVersioner
 
                 base.Log.LogMessage(
                     MessageImportance.Normal,
-                    $"RelaxVersioner: assembly base path: Managed={AssemblyLoadHelper.BasePath}, Native={AssemblyLoadHelper.BaseNativePath}");
+                    $"RelaxVersioner: ProjectDirectory={projectDirectory}, OutputPath={outputPath}, Language={language}, IsDryRun={isDryRun}");
 
                 var result = (string[])AssemblyLoadContext.Invoke<Versioner>("Run", projectDirectory, outputPath, language, isDryRun);
 
