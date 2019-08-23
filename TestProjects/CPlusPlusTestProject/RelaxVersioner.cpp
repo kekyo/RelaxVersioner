@@ -1,6 +1,6 @@
-// This is auto-generated version information attributes by CenterCLR.RelaxVersioner.0.9.25.0
+// This is auto-generated version information attributes by CenterCLR.RelaxVersioner.0.9.34.0
 // Do not edit.
-// Generated date: Thu, 22 Aug 2019 08:15:22 GMT
+// Generated date: Fri, 23 Aug 2019 09:50:28 GMT
 
 #include "stdafx.h"
 
@@ -26,13 +26,13 @@ namespace System
 using namespace System::Reflection;
 using namespace System::Runtime::InteropServices;
 
-[assembly: AssemblyVersionAttribute("0.9.25")];
-[assembly: AssemblyFileVersionAttribute("2019.8.22.26855")];
-[assembly: AssemblyInformationalVersionAttribute("67c23b70f290f07dfb6d40bdba7af85903038c2f")];
-[assembly: AssemblyVersionMetadataAttribute("Build","Thu, 22 Aug 2019 05:55:11 GMT")];
+[assembly: AssemblyVersionAttribute("0.9.34")];
+[assembly: AssemblyFileVersionAttribute("2019.8.23.33377")];
+[assembly: AssemblyInformationalVersionAttribute("c8b8294f4485edf7b133e1955cc102e912df594c")];
+[assembly: AssemblyVersionMetadataAttribute("Build","Fri, 23 Aug 2019 09:32:35 GMT")];
 [assembly: AssemblyVersionMetadataAttribute("Branch","")];
-[assembly: AssemblyVersionMetadataAttribute("Tags","")];
+[assembly: AssemblyVersionMetadataAttribute("Tags","0.9.34")];
 [assembly: AssemblyVersionMetadataAttribute("Author","Kouji Matsui <k@kekyo.net>")];
 [assembly: AssemblyVersionMetadataAttribute("Committer","Kouji Matsui <k@kekyo.net>")];
-[assembly: AssemblyVersionMetadataAttribute("Message","Validated test projects on current version package.")];
+[assembly: AssemblyVersionMetadataAttribute("Message","Fixed AddDllDirectory charset.")];
 
