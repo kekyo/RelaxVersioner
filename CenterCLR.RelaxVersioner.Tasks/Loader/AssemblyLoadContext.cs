@@ -84,7 +84,7 @@ namespace CenterCLR.RelaxVersioner.Loader
 
     internal static class AssemblyLoadContext
     {
-        [System.Runtime.InteropServices.DllImport("kernel32.dll", SetLastError = true)]
+        [System.Runtime.InteropServices.DllImport("kernel32.dll", CharSet = System.Runtime.InteropServices.CharSet.Unicode, SetLastError = true)]
         private static extern bool AddDllDirectory(string path);
 
         private static bool initialized = false;
@@ -110,8 +110,17 @@ namespace CenterCLR.RelaxVersioner.Loader
                         {
                             case Platform.Windows:
                                 PrependBasePaths("PATH", AssemblyLoadHelper.BasePath, AssemblyLoadHelper.BaseNativePath);
-                                AddDllDirectory(AssemblyLoadHelper.BasePath);
-                                AddDllDirectory(AssemblyLoadHelper.BaseNativePath);
+                                if (int.TryParse(RuntimeEnvironment.OperatingSystemVersion.Split('.')[0], out var v) && (v >= 8))
+                                {
+                                    if (!AddDllDirectory(AssemblyLoadHelper.BasePath))
+                                    {
+                                        System.Runtime.InteropServices.Marshal.ThrowExceptionForHR(System.Runtime.InteropServices.Marshal.GetLastWin32Error());
+                                    }
+                                    if (!AddDllDirectory(AssemblyLoadHelper.BaseNativePath))
+                                    {
+                                        System.Runtime.InteropServices.Marshal.ThrowExceptionForHR(System.Runtime.InteropServices.Marshal.GetLastWin32Error());
+                                    }
+                                }
                                 break;
                             default:
                                 // NOTE: In macos, ElCapitan disabled dylib lookuping feature, so will cause loading failure.
