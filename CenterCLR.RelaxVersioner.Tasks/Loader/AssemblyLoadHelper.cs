@@ -26,8 +26,10 @@ namespace CenterCLR.RelaxVersioner.Loader
 {
     internal static class AssemblyLoadHelper
     {
+        public static readonly string AssemblyPath =
+            (new Uri(typeof(AssemblyLoadHelper).Assembly.CodeBase, UriKind.RelativeOrAbsolute)).LocalPath;
         public static readonly string BasePath =
-            Path.GetDirectoryName((new Uri(typeof(AssemblyLoadHelper).Assembly.CodeBase, UriKind.RelativeOrAbsolute)).LocalPath);
+            Path.GetDirectoryName(AssemblyPath);
         public static readonly string BaseNativePath;
 
         static AssemblyLoadHelper()
@@ -45,5 +47,30 @@ namespace CenterCLR.RelaxVersioner.Loader
                 BaseNativePath = Path.Combine(baseNativePath, $"linux-{RuntimeEnvironment.RuntimeArchitecture}", "native");
             }
         }
+
+        private static void PrependBasePaths(string targetEnvironmentName, params string[] basePaths)
+        {
+            var pathEnvironment = (Environment.GetEnvironmentVariable(targetEnvironmentName) ?? string.Empty).Trim();
+            var newPath = string.Join(Path.PathSeparator.ToString(), basePaths.Concat(new[] { pathEnvironment }));
+            Environment.SetEnvironmentVariable(targetEnvironmentName, newPath);
+        }
+
+#if NET46
+        public static void SetupEnvironmentsIfRequired()
+        {
+            // HACK: I know it's bad practice, but I dodn't take very complex implementation for using AppDomain.
+            switch (RuntimeEnvironment.OperatingSystemPlatform)
+            {
+                case Platform.Windows:
+                    PrependBasePaths("PATH", BasePath, BaseNativePath);
+                    break;
+                default:
+                    // NOTE: In macos, ElCapitan disabled dylib lookuping feature, so will cause loading failure.
+                    PrependBasePaths("PATH", BasePath);
+                    PrependBasePaths("LD_LIBRARY_PATH", BaseNativePath);
+                    break;
+            }
+        }
+#endif
     }
 }

@@ -33,10 +33,18 @@ namespace CenterCLR.RelaxVersioner.Loader
                 GetField("Name", BindingFlags.Public | BindingFlags.Static).
                 GetValue(null);
 
-        public static readonly AssemblyLoadContext Instance = new AssemblyLoadContext();
+        private static readonly AssemblyLoadContext instance = new AssemblyLoadContext();
 
         private AssemblyLoadContext()
         {
+        }
+
+        public static T CreateInstance<T>()
+            where T : new()
+        {
+            var contextualAssembly = instance.LoadFromAssemblyPath(AssemblyLoadHelper.AssemblyPath);
+            return (T)contextualAssembly.CreateInstance(typeof(T).FullName);
+
         }
 
         protected override Assembly Load(AssemblyName assemblyName)

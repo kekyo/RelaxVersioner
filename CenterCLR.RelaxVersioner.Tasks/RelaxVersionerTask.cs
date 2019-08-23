@@ -17,10 +17,10 @@
 //
 /////////////////////////////////////////////////////////////////////////////////////////////////
 
-using CenterCLR.RelaxVersioner.Loader;
-using Microsoft.Build.Framework;
 using System;
 using System.IO;
+using Microsoft.Build.Framework;
+using CenterCLR.RelaxVersioner.Loader;
 
 namespace CenterCLR.RelaxVersioner
 {
@@ -72,14 +72,20 @@ namespace CenterCLR.RelaxVersioner
                 var projectDirectory = Path.GetDirectoryName(this.ProjectPath.ItemSpec);
                 var language = this.Language ?? "C#";
                 var isDryRun = this.Language == null;
+                var outputPath = this.OutputPath.ItemSpec;
 
                 base.Log.LogMessage(
                     MessageImportance.Normal,
                     $"RelaxVersioner: assembly base path: Managed={AssemblyLoadHelper.BasePath}, Native={AssemblyLoadHelper.BaseNativePath}");
-
+#if NET46
+                AssemblyLoadHelper.SetupEnvironmentsIfRequired();
                 var versioner = new Versioner();
-                var result = versioner.Run(projectDirectory, this.OutputPath.ItemSpec, language, isDryRun);
-
+                var result = versioner.Run(projectDirectory, outputPath, language, isDryRun);
+#endif
+#if NETSTANDARD2_0
+                var versioner = AssemblyLoadContext.CreateInstance<Versioner>();
+                var result = versioner.Run(projectDirectory, outputPath, language, isDryRun);
+#endif
                 this.DetectedIdentity = result.Identity;
                 this.DetectedShortIdentity = result.ShortIdentity;
                 this.DetectedMessage = result.Message;

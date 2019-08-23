@@ -25,7 +25,7 @@ using CenterCLR.RelaxVersioner.Writers;
 
 namespace CenterCLR.RelaxVersioner
 {
-    public sealed class Versioner
+    public sealed class Versioner : MarshalByRefObject
     {
         public Versioner()
         {
