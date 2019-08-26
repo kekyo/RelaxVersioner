@@ -29,6 +29,8 @@ namespace CenterCLR.RelaxVersioner
 #if NET46
     internal static class AssemblyLoader
     {
+        // TODO: Run on separated AppDomain.
+
         [System.Runtime.InteropServices.DllImport("kernel32.dll", CharSet = System.Runtime.InteropServices.CharSet.Unicode, SetLastError = true)]
         private static extern bool AddDllDirectory(string path);
 
@@ -67,8 +69,12 @@ namespace CenterCLR.RelaxVersioner
                                     }
                                 }
                                 break;
-                            default:
+                            case Platform.Darwin:
                                 // NOTE: In macos, ElCapitan disabled dylib lookuping feature, so will cause loading failure.
+                                PrependBasePaths("PATH", AssemblyLoadHelper.BasePath);
+                                PrependBasePaths("DYLD_LIBRARY_PATH", AssemblyLoadHelper.BaseNativePath);
+                                break;
+                            default:
                                 PrependBasePaths("PATH", AssemblyLoadHelper.BasePath);
                                 PrependBasePaths("LD_LIBRARY_PATH", AssemblyLoadHelper.BaseNativePath);
                                 break;

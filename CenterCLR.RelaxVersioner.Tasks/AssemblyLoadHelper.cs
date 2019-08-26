@@ -21,21 +21,21 @@ using System;
 using System.IO;
 using System.Linq;
 using System.Reflection;
+
 using Microsoft.DotNet.PlatformAbstractions;
 
 namespace CenterCLR.RelaxVersioner
 {
     internal static class AssemblyLoadHelper
     {
-        public static readonly string AssemblyPath =
-            (new Uri(typeof(AssemblyLoadHelper).Assembly.CodeBase, UriKind.RelativeOrAbsolute)).LocalPath;
         public static readonly string BasePath;
         public static readonly string BaseNativePath;
         public static readonly string NativeExtension;
 
         static AssemblyLoadHelper()
         {
-            BasePath = Path.GetDirectoryName(AssemblyPath);
+            BasePath = Path.GetDirectoryName(
+                (new Uri(typeof(AssemblyLoadHelper).Assembly.CodeBase, UriKind.RelativeOrAbsolute)).LocalPath);
 
             var baseNativePath = Path.GetFullPath(Path.Combine(BasePath, "..", "runtimes"));
 

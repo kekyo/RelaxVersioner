@@ -29,7 +29,7 @@ namespace CenterCLR.RelaxVersioner
 #if NETSTANDARD2_0
     internal sealed class AssemblyLoader : System.Runtime.Loader.AssemblyLoadContext
     {
-        private static readonly MessageImportance logImportance = MessageImportance.High;
+        private static readonly MessageImportance logImportance = MessageImportance.Low;
 
         private readonly TaskLoggingHelper logger;
 

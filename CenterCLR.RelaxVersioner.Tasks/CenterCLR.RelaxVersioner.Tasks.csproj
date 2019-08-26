@@ -48,24 +48,23 @@
   </Target>
   
   <ItemGroup>
-    <ProjectReference Include="..\CenterCLR.RelaxVersioner.Core\CenterCLR.RelaxVersioner.Core.csproj" />
+    <PackageReference Include="CenterCLR.RelaxVersioner" version="0.9.41" PrivateAssets="All" />
   </ItemGroup>
 
   <ItemGroup>
     <PackageReference Include="Microsoft.Build.Framework" Version="15.6.82" PrivateAssets="All" />
     <PackageReference Include="Microsoft.Build.Utilities.Core" Version="15.6.82" PrivateAssets="All" />
-    <PackageReference Include="CenterCLR.RelaxVersioner" version="0.9.25" PrivateAssets="All" />
     <PackageReference Include="CenterCLR.NamingFormatter" version="2.0.0" PrivateAssets="All" Publish="true" />
   </ItemGroup>
 
   <ItemGroup>
     <PackageReference Include="LibGit2Sharp" version="0.26.1" PrivateAssets="All" Publish="true" />
     <PackageReference Include="LibGit2Sharp.NativeBinaries" version="2.0.289" PrivateAssets="All" />
-    <PackageReference Include="Microsoft.DotNet.PlatformAbstractions" Version="2.1.0" />
+    <PackageReference Include="Microsoft.DotNet.PlatformAbstractions" Version="2.1.0" PrivateAssets="All" Publish="true" />
   </ItemGroup>
 
   <ItemGroup Condition="'$(TargetFramework)' == 'netstandard2.0'">
-    <PackageReference Include="System.Runtime.Loader" Version="4.3.0" />
+    <PackageReference Include="System.Runtime.Loader" Version="4.3.0" PrivateAssets="All" Publish="true" />
   </ItemGroup>
 
   <ItemGroup>

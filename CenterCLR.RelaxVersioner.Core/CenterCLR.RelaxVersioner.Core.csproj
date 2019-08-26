@@ -18,19 +18,40 @@
     <Trademark>CenterCLR.RelaxVersioner</Trademark>
     <Copyright>Copyright (c) 2016-2019 Kouji Matsui</Copyright>
     <Description>Easy-usage, Git-based, auto-generate version informations toolset.</Description>
+
+    <Company>Kouji Matsui (@kozy_kekyo, @kekyo2)</Company>
+    <Authors>Kouji Matsui (@kozy_kekyo, @kekyo2)</Authors>
+    <RepositoryType>git</RepositoryType>
+    <PackageLicenseExpression>Apache-2.0</PackageLicenseExpression>
+    <PackageProjectUrl>https://github.com/kekyo/CenterCLR.RelaxVersioner.git</PackageProjectUrl>
+    <PackageIconUrl>https://github.com/kekyo/CenterCLR.RelaxVersioner/raw/master/Images/CenterCLR.RelaxVersioner.100.png</PackageIconUrl>
+    <RepositoryUrl>https://github.com/kekyo/CenterCLR.RelaxVersioner.git</RepositoryUrl>
+    <PackageTags>version;generator;git;auto;easy;generate;versioning;continuous;integration;delivery;tag;branch;assemblyinfo;msbuild;tool</PackageTags>
   </PropertyGroup>
 
+  <!-- HACK: NU1108 error ("Cycle detected") when selfhosted by RelaxVersioner
+    https://github.com/NuGet/Home/issues/6754#issuecomment-388166770
+  -->
+  <PropertyGroup>
+    <PackageId>*$(MSBuildProjectFullPath)*</PackageId>
+  </PropertyGroup>
+  <Target Name="_UpdatePackageId" BeforeTargets="$(PackDependsOn)">
+    <PropertyGroup>
+      <PackageId>CenterCLR.RelaxVersioner.Core</PackageId>
+    </PropertyGroup>
+  </Target>
+
   <ItemGroup>
-    <PackageReference Include="CenterCLR.RelaxVersioner" version="0.9.25" PrivateAssets="All" />
+    <PackageReference Include="CenterCLR.RelaxVersioner" version="0.9.41" PrivateAssets="All" />
+  </ItemGroup>
+
+  <ItemGroup>
     <PackageReference Include="CenterCLR.NamingFormatter" version="2.0.0" />
     <PackageReference Include="LibGit2Sharp" version="0.26.1" />
   </ItemGroup>
 
   <ItemGroup>
     <None Remove="DefaultRuleSet.rules" />
-  </ItemGroup>
-
-  <ItemGroup>
     <EmbeddedResource Include="DefaultRuleSet.rules" />
   </ItemGroup>
 
