@@ -1,0 +1,52 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<package xmlns="http://schemas.microsoft.com/packaging/2010/07/nuspec.xsd">
+    <metadata>
+        <id>CenterCLR.RelaxVersioner</id>
+        <version>$PackageVersion$</version>
+        <title>RelaxVersioner</title>
+        <authors>Kouji Matsui</authors>
+        <owners>Kouji Matsui</owners>
+        <description>Easy-usage, Git-based, auto-generate version informations toolset.</description>
+        <developmentDependency>true</developmentDependency>
+        <summary>Easy-usage, Git-based, auto-generate version informations toolset.</summary>
+        <copyright>Copyright (c) 2016-2018 Kouji Matsui</copyright>
+        <licenseUrl>http://www.apache.org/licenses/LICENSE-2.0</licenseUrl>
+        <projectUrl>https://github.com/kekyo/CenterCLR.RelaxVersioner</projectUrl>
+        <iconUrl>https://raw.githubusercontent.com/kekyo/CenterCLR.RelaxVersioner/master/Images/CenterCLR.RelaxVersioner.100.png</iconUrl>
+        <requireLicenseAcceptance>false</requireLicenseAcceptance>
+        <releaseNotes>$PackageReleaseNotes$</releaseNotes>
+        <tags>version;generator;git;auto;easy;generate;versioning;continuous;integration;delivery;tag;branch;assemblyinfo;msbuild;tool</tags>
+    </metadata>
+    <files>
+        <file src="build/CenterCLR.RelaxVersioner.props" target="build" />
+        <file src="build/CenterCLR.RelaxVersioner.targets" target="build" />
+        <file src="buildMultiTargeting/CenterCLR.RelaxVersioner.props" target="buildMultiTargeting" />
+        <file src="buildMultiTargeting/CenterCLR.RelaxVersioner.targets" target="buildMultiTargeting" />
+
+        <file src="bin/$Configuration$/net46/publish/System.Runtime.InteropServices.RuntimeInformation.dll" target="build/net46" />
+        <file src="bin/$Configuration$/net46/publish/Microsoft.DotNet.PlatformAbstractions.dll" target="build/net46" />
+        <file src="bin/$Configuration$/net46/publish/LibGit2Sharp.dll" target="build/net46" />
+        <file src="bin/$Configuration$/net46/publish/LibGit2Sharp.dll.config" target="build/net46" />
+        <file src="bin/$Configuration$/net46/publish/CenterCLR.NamingFormatter.dll" target="build/net46" />
+        <file src="bin/$Configuration$/net46/publish/CenterCLR.RelaxVersioner.Core.dll" target="build/net46" />
+        <file src="bin/$Configuration$/net46/publish/CenterCLR.RelaxVersioner.Core.pdb" target="build/net46" />
+        <file src="bin/$Configuration$/net46/publish/CenterCLR.RelaxVersioner.Tasks.dll" target="build/net46" />
+        <file src="bin/$Configuration$/net46/publish/CenterCLR.RelaxVersioner.Tasks.pdb" target="build/net46" />
+
+        <file src="bin/$Configuration$/netstandard2.0/publish/System.AppContext.dll" target="build/netstandard2.0" />
+        <file src="bin/$Configuration$/netstandard2.0/publish/System.IO.FileSystem.Primitives.dll" target="build/netstandard2.0" />
+        <file src="bin/$Configuration$/netstandard2.0/publish/System.Reflection.TypeExtensions.dll" target="build/netstandard2.0" />
+        <file src="bin/$Configuration$/netstandard2.0/publish/System.Runtime.Loader.dll" target="build/netstandard2.0" />
+        <file src="bin/$Configuration$/netstandard2.0/publish/System.Threading.dll" target="build/netstandard2.0" />
+        <file src="bin/$Configuration$/netstandard2.0/publish/Microsoft.DotNet.PlatformAbstractions.dll" target="build/netstandard2.0" />
+        <file src="bin/$Configuration$/netstandard2.0/publish/LibGit2Sharp.dll" target="build/netstandard2.0" />
+        <file src="bin/$Configuration$/netstandard2.0/publish/CenterCLR.NamingFormatter.dll" target="build/netstandard2.0" />
+        <file src="bin/$Configuration$/netstandard2.0/publish/CenterCLR.RelaxVersioner.Core.dll" target="build/netstandard2.0" />
+        <file src="bin/$Configuration$/netstandard2.0/publish/CenterCLR.RelaxVersioner.Core.pdb" target="build/netstandard2.0" />
+        <file src="bin/$Configuration$/netstandard2.0/publish/CenterCLR.RelaxVersioner.Tasks.dll" target="build/netstandard2.0" />
+        <file src="bin/$Configuration$/netstandard2.0/publish/CenterCLR.RelaxVersioner.Tasks.deps.json" target="build/netstandard2.0" />
+        <file src="bin/$Configuration$/netstandard2.0/publish/CenterCLR.RelaxVersioner.Tasks.pdb" target="build/netstandard2.0" />
+
+        <file src="$libgit2_propsfile$\..\..\runtimes\**\*" target="runtimes\" />
+   </files>
+</package>

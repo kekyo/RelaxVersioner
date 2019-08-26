@@ -37,7 +37,7 @@ namespace CenterCLR.RelaxVersioner
             BasePath = Path.GetDirectoryName(
                 (new Uri(typeof(AssemblyLoadHelper).Assembly.CodeBase, UriKind.RelativeOrAbsolute)).LocalPath);
 
-            var baseNativePath = Path.GetFullPath(Path.Combine(BasePath, "..", "runtimes"));
+            var baseNativePath = Path.GetFullPath(Path.Combine(BasePath, "..", "..", "runtimes"));
 
             var id = RuntimeEnvironment.GetRuntimeIdentifier().Replace("-aot", string.Empty);
             var ids = id.Split('-');
