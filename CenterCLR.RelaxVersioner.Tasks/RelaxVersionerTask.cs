@@ -19,15 +19,16 @@
 
 using System;
 using System.IO;
+
 using Microsoft.Build.Framework;
-using CenterCLR.RelaxVersioner.Loader;
 
 namespace CenterCLR.RelaxVersioner
 {
     public sealed class RelaxVersionerTask : Microsoft.Build.Utilities.Task
     {
-        public RelaxVersionerTask() =>
-            AssemblyLoadHelper.Initialize();
+        public RelaxVersionerTask()
+        {
+        }
 
         [Required]
         public ITaskItem ProjectPath
@@ -75,13 +76,14 @@ namespace CenterCLR.RelaxVersioner
 
                 base.Log.LogMessage(
                     MessageImportance.Normal,
-                    $"RelaxVersioner: ProjectDirectory={projectDirectory}, OutputPath={outputPath}, Language={language}, IsDryRun={isDryRun}");
+                    $"RelaxVersioner: assembly base path: Managed={AssemblyLoadHelper.BasePath}, Native={AssemblyLoadHelper.BaseNativePath}");
 
-                var result = (string[])AssemblyLoadContext.Invoke<Versioner>("Run", projectDirectory, outputPath, language, isDryRun);
+                var results = (string[])AssemblyLoader.Run<Processor>(
+                    base.Log, "RunForTask", projectDirectory, outputPath, language, isDryRun);
 
-                this.DetectedIdentity = result[0];
-                this.DetectedShortIdentity = result[1];
-                this.DetectedMessage = result[2];
+                this.DetectedIdentity = results[0];
+                this.DetectedShortIdentity = results[1];
+                this.DetectedMessage = results[2];
 
                 var dryrunDisplay = isDryRun ? " (dryrun)" : string.Empty;
                 var languageDisplay = isDryRun ? string.Empty : $"Language={language}, ";

@@ -20,17 +20,18 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+
 using LibGit2Sharp;
-using CenterCLR.RelaxVersioner.Writers;
 
 namespace CenterCLR.RelaxVersioner
 {
-    public sealed class Versioner
+    public sealed class Processor
     {
-        private Versioner()
-        { }
+        private Processor()
+        {
+        }
 
-        private static VersionResult InternalRun(string projectDirectory, string outputPath, string language, bool isDryRun)
+        public static VersionResult Run(string projectDirectory, string outputPath, string language, bool isDryRun)
         {
             var writers = Utilities.GetWriters();
             var writer = writers[language];
@@ -84,9 +85,9 @@ namespace CenterCLR.RelaxVersioner
             }
         }
 
-        public static string[] Run(string projectDirectory, string outputPath, string language, bool isDryRun)
+        public static string[] RunForTask(string projectDirectory, string outputPath, string language, bool isDryRun)
         {
-            var result = InternalRun(projectDirectory, outputPath, language, isDryRun);
+            var result = Run(projectDirectory, outputPath, language, isDryRun);
             return new[] { result.Identity, result.ShortIdentity, result.Message };
         }
     }

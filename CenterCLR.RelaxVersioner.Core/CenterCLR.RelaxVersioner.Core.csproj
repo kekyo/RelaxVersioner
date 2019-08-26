@@ -1,0 +1,37 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFrameworks>net46;netstandard2.0</TargetFrameworks>
+    <OutputType>Library</OutputType>
+
+    <LangVersion>7.3</LangVersion>
+    <DebugType>portable</DebugType>
+    <DebugSymbols>true</DebugSymbols>
+    <Platforms>AnyCPU</Platforms>
+
+    <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
+    <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
+
+    <RootNamespace>CenterCLR.RelaxVersioner</RootNamespace>
+    <AssemblyTitle>CenterCLR.RelaxVersioner.Core</AssemblyTitle>
+    <Product>CenterCLR.RelaxVersioner</Product>
+    <Trademark>CenterCLR.RelaxVersioner</Trademark>
+    <Copyright>Copyright (c) 2016-2019 Kouji Matsui</Copyright>
+    <Description>Easy-usage, Git-based, auto-generate version informations toolset.</Description>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="CenterCLR.RelaxVersioner" version="0.9.25" PrivateAssets="All" />
+    <PackageReference Include="CenterCLR.NamingFormatter" version="2.0.0" />
+    <PackageReference Include="LibGit2Sharp" version="0.26.1" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Remove="DefaultRuleSet.rules" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <EmbeddedResource Include="DefaultRuleSet.rules" />
+  </ItemGroup>
+
+</Project>

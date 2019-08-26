@@ -35,17 +35,17 @@ namespace CenterCLR.RelaxVersioner
 {
     internal static class Utilities
     {
-        private static readonly char[] versionSeparators_ = 
+        private static readonly char[] versionSeparators_ =
             {'/', '-', '_'};
         private static readonly char[] directorySeparatorChar_ =
             { Path.DirectorySeparatorChar, Path.AltDirectorySeparatorChar };
 
         public static Dictionary<string, WriterBase> GetWriters()
         {
-            return typeof (Utilities).Assembly.
+            return typeof(Utilities).Assembly.
                 GetTypes().
-                Where(type => type.IsSealed && type.IsClass && typeof (WriterBase).IsAssignableFrom(type)).
-                Select(type => (WriterBase) Activator.CreateInstance(type)).
+                Where(type => type.IsSealed && type.IsClass && typeof(WriterBase).IsAssignableFrom(type)).
+                Select(type => (WriterBase)Activator.CreateInstance(type)).
                 ToDictionary(writer => writer.Language, StringComparer.InvariantCultureIgnoreCase);
         }
 
@@ -178,7 +178,7 @@ namespace CenterCLR.RelaxVersioner
                  from rules in ruleSet.Elements("WriterRules")
                  from language in rules.Elements("Language")
                  where !string.IsNullOrWhiteSpace(language?.Value)
-                 select new {language, rules}).
+                 select new { language, rules }).
                 GroupBy(
                     entry => entry.language.Value.Trim(),
                     entry => entry.rules,
@@ -211,14 +211,14 @@ namespace CenterCLR.RelaxVersioner
 
             return
                 (from rule in ruleSet
-                 let symbolElements = rule.Name.Split(new[] {'.'}, StringSplitOptions.RemoveEmptyEntries)
+                 let symbolElements = rule.Name.Split(new[] { '.' }, StringSplitOptions.RemoveEmptyEntries)
                  select string.Join(".", symbolElements.Take(symbolElements.Length - 1))).
                 Distinct();
         }
 
         public static XElement GetDefaultRuleSet()
         {
-            var type = typeof (Utilities);
+            var type = typeof(Utilities);
             using (var stream = type.Assembly.GetManifestResourceStream(
                 type, "DefaultRuleSet.rules"))
             {

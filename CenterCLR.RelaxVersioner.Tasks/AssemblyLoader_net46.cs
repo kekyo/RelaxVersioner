@@ -19,70 +19,15 @@
 
 using System;
 using System.IO;
+using System.Linq;
 
-namespace CenterCLR.RelaxVersioner.Loader
+using Microsoft.Build.Utilities;
+using Microsoft.DotNet.PlatformAbstractions;
+
+namespace CenterCLR.RelaxVersioner
 {
-#if NETSTANDARD2_0
-    
-    using System.Reflection;
-
-    internal sealed class AssemblyLoadContext : System.Runtime.Loader.AssemblyLoadContext
-    {
-        private static readonly string nativeDllName =
-            (string)typeof(LibGit2Sharp.Repository).
-                Assembly.
-                GetType("LibGit2Sharp.Core.NativeDllName").
-                GetField("Name", BindingFlags.Public | BindingFlags.Static).
-                GetValue(null);
-
-        private AssemblyLoadContext()
-        {
-        }
-
-        protected override Assembly Load(AssemblyName assemblyName)
-        {
-            var path = Path.Combine(AssemblyLoadHelper.BasePath, assemblyName.Name + ".dll");
-            return File.Exists(path) ?
-                this.LoadFromAssemblyPath(path) :
-                Default.LoadFromAssemblyName(assemblyName);
-        }
-
-        protected override IntPtr LoadUnmanagedDll(string unmanagedDllName)
-        {
-            if (!Path.GetFileNameWithoutExtension(unmanagedDllName).EndsWith(nativeDllName))
-            {
-                return base.LoadUnmanagedDll(unmanagedDllName);
-            }
-
-            var path = Path.Combine(AssemblyLoadHelper.BaseNativePath, unmanagedDllName);
-            if (!File.Exists(path))
-            {
-                path = Path.Combine(AssemblyLoadHelper.BaseNativePath, "lib" + unmanagedDllName);
-            }
-
-            var handle = base.LoadUnmanagedDllFromPath(path);
-            return (handle != IntPtr.Zero) ?
-                handle :
-                base.LoadUnmanagedDll(unmanagedDllName);
-        }
-
-        private static readonly AssemblyLoadContext instance = new AssemblyLoadContext();
-    
-        public static object Invoke<T>(string methodName, params object[] args)
-        {
-            var assembly = instance.LoadFromAssemblyPath(AssemblyLoadHelper.AssemblyPath);
-            var type = assembly.GetType(typeof(T).FullName);
-            var method = type.GetMethod(methodName);
-            return method.Invoke(null, args);
-        }
-    }
-
-#else
-
-    using System.Linq;
-    using Microsoft.DotNet.PlatformAbstractions;
-
-    internal static class AssemblyLoadContext
+#if NET46
+    internal static class AssemblyLoader
     {
         [System.Runtime.InteropServices.DllImport("kernel32.dll", CharSet = System.Runtime.InteropServices.CharSet.Unicode, SetLastError = true)]
         private static extern bool AddDllDirectory(string path);
@@ -97,7 +42,7 @@ namespace CenterCLR.RelaxVersioner.Loader
             Environment.SetEnvironmentVariable(targetEnvironmentName, newPath);
         }
 
-        private static void SetupEnvironmentsIfRequired()
+        private static void SetupEnvironmentsIfRequired(TaskLoggingHelper logger)
         {
             if (!initialized)
             {
@@ -135,9 +80,9 @@ namespace CenterCLR.RelaxVersioner.Loader
             }
         }
 
-        public static object Invoke<T>(string methodName, params object[] args)
+        public static object Run<T>(TaskLoggingHelper logger, string methodName, params object[] args)
         {
-            SetupEnvironmentsIfRequired();
+            SetupEnvironmentsIfRequired(logger);
 
             var method = typeof(T).GetMethod(methodName);
             return method.Invoke(null, args);

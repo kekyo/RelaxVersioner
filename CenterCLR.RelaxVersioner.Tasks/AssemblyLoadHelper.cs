@@ -18,25 +18,23 @@
 /////////////////////////////////////////////////////////////////////////////////////////////////
 
 using System;
-using System.Diagnostics;
 using System.IO;
 using System.Linq;
-using System.Reflection;
+
 using Microsoft.DotNet.PlatformAbstractions;
 
-namespace CenterCLR.RelaxVersioner.Loader
+namespace CenterCLR.RelaxVersioner
 {
     internal static class AssemblyLoadHelper
     {
         public static readonly string AssemblyPath =
             (new Uri(typeof(AssemblyLoadHelper).Assembly.CodeBase, UriKind.RelativeOrAbsolute)).LocalPath;
-        public static readonly string BasePath =
-            Path.GetDirectoryName(AssemblyPath);
+        public static readonly string BasePath;
         public static readonly string BaseNativePath;
 
         static AssemblyLoadHelper()
         {
-            AppDomain.CurrentDomain.AssemblyResolve += AssemblyResolve;
+            BasePath = Path.GetDirectoryName(AssemblyPath);
 
             var baseNativePath = Path.GetFullPath(Path.Combine(BasePath, "..", "runtimes"));
 
@@ -52,25 +50,5 @@ namespace CenterCLR.RelaxVersioner.Loader
                 BaseNativePath = Path.Combine(baseNativePath, $"linux-{RuntimeEnvironment.RuntimeArchitecture}", "native");
             }
         }
-
-        private static Assembly AssemblyResolve(object sender, ResolveEventArgs e)
-        {
-            var an = new AssemblyName(e.Name);
-            var path = Path.Combine(BasePath, an.Name + ".dll");
-            if (File.Exists(path))
-            {
-                var assembly = Assembly.LoadFrom(path);
-                Trace.WriteLine($"RelaxVersioner: AssemblyResolve: Name={e.Name}, Path={path}, Loaded={assembly.FullName}");
-                return assembly;
-            }
-            else
-            {
-                Trace.WriteLine($"RelaxVersioner: AssemblyResolve: Name={e.Name}, Path={path}, Not found");
-                return null;
-            }
-        }
-
-        public static void Initialize() =>
-            Trace.WriteLine($"RelaxVersioner: Initialize: Version={typeof(AssemblyLoadHelper).Assembly.GetName().Version}, BasePath={BasePath}, BaseNativePath={BaseNativePath}");
     }
 }
