@@ -20,7 +20,7 @@
 using System;
 using System.IO;
 using System.Linq;
-
+using System.Reflection;
 using Microsoft.DotNet.PlatformAbstractions;
 
 namespace CenterCLR.RelaxVersioner
@@ -50,5 +50,8 @@ namespace CenterCLR.RelaxVersioner
                 BaseNativePath = Path.Combine(baseNativePath, $"linux-{RuntimeEnvironment.RuntimeArchitecture}", "native");
             }
         }
+
+        public static string GetAssemblyPathDerivedFromBasePath(Assembly assembly) =>
+            Path.Combine(BasePath, Path.GetFileName(new Uri(assembly.CodeBase, UriKind.RelativeOrAbsolute).LocalPath));
     }
 }

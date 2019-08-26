@@ -91,7 +91,7 @@ namespace CenterCLR.RelaxVersioner
         {
             var loader = new AssemblyLoader(logger);
 
-            var assembly = loader.LoadFromAssemblyPath(AssemblyLoadHelper.AssemblyPath);
+            var assembly = loader.LoadFromAssemblyPath(AssemblyLoadHelper.GetAssemblyPathDerivedFromBasePath(typeof(T).Assembly));
             var type = assembly.GetType(typeof(T).FullName);
             var method = type.GetMethod(methodName);
             return method.Invoke(null, args);
