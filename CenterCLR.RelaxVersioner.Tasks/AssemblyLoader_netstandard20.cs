@@ -63,27 +63,29 @@ namespace CenterCLR.RelaxVersioner
 
         protected override IntPtr LoadUnmanagedDll(string unmanagedDllName)
         {
-            var path = Path.Combine(AssemblyLoadHelper.BaseNativePath, unmanagedDllName);
-            if (File.Exists(path) && base.LoadUnmanagedDllFromPath(path) is IntPtr handle)
+            foreach (var prefixSuffix in new[] {
+                new[] { string.Empty, AssemblyLoadHelper.NativeExtension },
+                new[] { string.Empty, string.Empty },
+                new[] { "lib", AssemblyLoadHelper.NativeExtension },
+                new[] { "lib", string.Empty },
+            })
             {
-                logger.LogMessage(logImportance, "RelaxVersioner: Native library loaded: Name={0}, Path={1}",
-                    unmanagedDllName,
-                    path);
-                return handle;
+                var path = Path.Combine(AssemblyLoadHelper.BaseNativePath, prefixSuffix[0] + unmanagedDllName + prefixSuffix[1]);
+                if (File.Exists(path) && base.LoadUnmanagedDllFromPath(path) is IntPtr handle)
+                {
+                    logger.LogMessage(logImportance, "RelaxVersioner: Native library loaded: Name={0}, Path={1}",
+                        unmanagedDllName,
+                        path);
+                    return handle;
+                }
+                else
+                {
+                    logger.LogWarning("RelaxVersioner: Cannot load native library: Name={0}, Path={1}",
+                        unmanagedDllName,
+                        path);
+                }
             }
 
-            var path2 = Path.Combine(AssemblyLoadHelper.BaseNativePath, "lib" + unmanagedDllName);
-            if (File.Exists(path) && base.LoadUnmanagedDllFromPath(path2) is IntPtr handle2)
-            {
-                logger.LogMessage(logImportance, "RelaxVersioner: Native library loaded: Name={0}, Path={1}",
-                    unmanagedDllName,
-                    path2);
-                return handle2;
-            }
-
-            logger.LogWarning("RelaxVersioner: Cannot load native library: Name={0}, Path={1}",
-                unmanagedDllName,
-                path);
             return IntPtr.Zero;
         }
 

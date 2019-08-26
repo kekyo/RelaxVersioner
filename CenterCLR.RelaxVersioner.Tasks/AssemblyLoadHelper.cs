@@ -31,6 +31,7 @@ namespace CenterCLR.RelaxVersioner
             (new Uri(typeof(AssemblyLoadHelper).Assembly.CodeBase, UriKind.RelativeOrAbsolute)).LocalPath;
         public static readonly string BasePath;
         public static readonly string BaseNativePath;
+        public static readonly string NativeExtension;
 
         static AssemblyLoadHelper()
         {
@@ -44,10 +45,22 @@ namespace CenterCLR.RelaxVersioner
             var platform = string.Join("-", new[] { platform0 }.Concat(ids.Skip(1).Take(ids.Length - 2)));
             BaseNativePath = Path.Combine(baseNativePath, $"{platform}-{RuntimeEnvironment.RuntimeArchitecture}", "native");
 
-            // Will fallback not exist if platform is linux.
-            if (!Directory.Exists(BaseNativePath) && (RuntimeEnvironment.OperatingSystemPlatform == Platform.Linux))
+            switch (RuntimeEnvironment.OperatingSystemPlatform)
             {
-                BaseNativePath = Path.Combine(baseNativePath, $"linux-{RuntimeEnvironment.RuntimeArchitecture}", "native");
+                case Platform.Windows:
+                    NativeExtension = ".dll";
+                    break;
+                case Platform.Darwin:
+                    NativeExtension = ".dylib";
+                    break;
+                default:
+                    NativeExtension = ".so";
+                    // Will fallback not exist if platform is linux.
+                    if (!Directory.Exists(BaseNativePath))
+                    {
+                        BaseNativePath = Path.Combine(baseNativePath, $"linux-{RuntimeEnvironment.RuntimeArchitecture}", "native");
+                    }
+                    break;
             }
         }
 
