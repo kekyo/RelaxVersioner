@@ -1,6 +1,6 @@
-// This is auto-generated version information attributes by CenterCLR.RelaxVersioner.0.9.25.0
+// This is auto-generated version information attributes by CenterCLR.RelaxVersioner.0.9.43.0
 // Do not edit.
-// Generated date: Thu, 22 Aug 2019 08:15:22 GMT
+// Generated date: Tue, 27 Aug 2019 00:43:02 GMT
 
 #include "stdafx.h"
 
@@ -26,13 +26,13 @@ namespace System
 using namespace System::Reflection;
 using namespace System::Runtime::InteropServices;
 
-[assembly: AssemblyVersionAttribute("0.9.25")];
-[assembly: AssemblyFileVersionAttribute("2019.8.22.26855")];
-[assembly: AssemblyInformationalVersionAttribute("67c23b70f290f07dfb6d40bdba7af85903038c2f")];
-[assembly: AssemblyVersionMetadataAttribute("Build","Thu, 22 Aug 2019 05:55:11 GMT")];
+[assembly: AssemblyVersionAttribute("0.9.43")];
+[assembly: AssemblyFileVersionAttribute("2019.8.27.16853")];
+[assembly: AssemblyInformationalVersionAttribute("08a9f5f29ce715a50221c2e7cf0ec77d2796c011")];
+[assembly: AssemblyVersionMetadataAttribute("Build","Tue, 27 Aug 2019 00:21:46 GMT")];
 [assembly: AssemblyVersionMetadataAttribute("Branch","")];
-[assembly: AssemblyVersionMetadataAttribute("Tags","")];
+[assembly: AssemblyVersionMetadataAttribute("Tags","0.9.43")];
 [assembly: AssemblyVersionMetadataAttribute("Author","Kouji Matsui <k@kekyo.net>")];
 [assembly: AssemblyVersionMetadataAttribute("Committer","Kouji Matsui <k@kekyo.net>")];
-[assembly: AssemblyVersionMetadataAttribute("Message","Validated test projects on current version package.")];
+[assembly: AssemblyVersionMetadataAttribute("Message","Fixed nuspec path.")];
 

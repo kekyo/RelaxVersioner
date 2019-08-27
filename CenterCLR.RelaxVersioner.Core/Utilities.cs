@@ -35,79 +35,17 @@ namespace CenterCLR.RelaxVersioner
 {
     internal static class Utilities
     {
-        private static readonly char[] versionSeparators_ = 
+        private static readonly char[] versionSeparators_ =
             {'/', '-', '_'};
         private static readonly char[] directorySeparatorChar_ =
             { Path.DirectorySeparatorChar, Path.AltDirectorySeparatorChar };
 
-        private static object loadLock = new object();
-        private static string nativeLibraryPath = null;
-
-        [DllImport("libdl", EntryPoint = "dlopen")]
-        private static extern IntPtr LoadUnixLibrary(string path, int flags);
-
-        [DllImport("kernel32", EntryPoint = "LoadLibrary")]
-        private static extern IntPtr LoadWindowsLibrary(string path);
-
-        [MethodImpl(MethodImplOptions.NoInlining)]
-        public static string LoadAdditionalAssemblies()
-        {
-            if (nativeLibraryPath == null)
-            {
-                lock (loadLock)
-                {
-                    if (nativeLibraryPath == null)
-                    {
-                        // HACK: LibGit2Sharp is strongly signed and doesn't install any GAC storages.
-                        //   May cause failure LibGit2Sharp assembly loading.
-                        //   It's helping for manually loading.
-                        var libraryBasePath = Path.GetDirectoryName(
-                            (new Uri(typeof(Utilities).Assembly.CodeBase, UriKind.RelativeOrAbsolute)).LocalPath);
-                        foreach (var path in Directory.EnumerateFiles(libraryBasePath, "*.dll", SearchOption.TopDirectoryOnly))
-                        {
-                            Assembly.LoadFrom(path);
-                        }
-
-                        var nativeDllNameType = typeof(Repository).Assembly.GetType("LibGit2Sharp.Core.NativeDllName");
-                        var nativeDllName_NameField = nativeDllNameType.GetField("Name", BindingFlags.Public | BindingFlags.Static);
-                        var nativeDllName = nativeDllName_NameField.GetValue(null);
-
-                        // Set LibGit2Sharp native library folder.
-                        var arch = (IntPtr.Size == 8) ? "-x64" : "-x86";
-                        IntPtr result;
-                        switch (Environment.OSVersion.Platform)
-                        {
-                            case PlatformID.Unix:
-                                nativeLibraryPath = Path.Combine(libraryBasePath, "..", "runtimes", "linux" + arch, "native", $"lib{nativeDllName}.so");
-                                result = LoadUnixLibrary(nativeLibraryPath, 2);
-                                break;
-                            case PlatformID.MacOSX:
-                                nativeLibraryPath = Path.Combine(libraryBasePath, "..", "runtimes", "osx" /* + arch */, "native", $"lib{nativeDllName}.dylib");
-                                result = LoadUnixLibrary(nativeLibraryPath, 2);
-                                break;
-                            default:
-                                nativeLibraryPath = Path.Combine(libraryBasePath, "..", "runtimes", "win" + arch, "native", $"{nativeDllName}.dll");
-                                result = LoadWindowsLibrary(nativeLibraryPath);
-                                break;
-                        };
-
-                        if (result == IntPtr.Zero)
-                        {
-                            throw new InvalidProgramException($"Cannot load libgit2: {nativeLibraryPath}");
-                        }
-                    }
-                }
-            }
-
-            return nativeLibraryPath;
-        }
-
         public static Dictionary<string, WriterBase> GetWriters()
         {
-            return typeof (Utilities).Assembly.
+            return typeof(Utilities).Assembly.
                 GetTypes().
-                Where(type => type.IsSealed && type.IsClass && typeof (WriterBase).IsAssignableFrom(type)).
-                Select(type => (WriterBase) Activator.CreateInstance(type)).
+                Where(type => type.IsSealed && type.IsClass && typeof(WriterBase).IsAssignableFrom(type)).
+                Select(type => (WriterBase)Activator.CreateInstance(type)).
                 ToDictionary(writer => writer.Language, StringComparer.InvariantCultureIgnoreCase);
         }
 
@@ -175,8 +113,7 @@ namespace CenterCLR.RelaxVersioner
             Debug.Assert(dictionary != null);
             Debug.Assert(key != null);
 
-            TValue value;
-            if (dictionary.TryGetValue(key, out value) == false)
+            if (dictionary.TryGetValue(key, out TValue value) == false)
             {
                 value = defaultValue;
             }
@@ -241,7 +178,7 @@ namespace CenterCLR.RelaxVersioner
                  from rules in ruleSet.Elements("WriterRules")
                  from language in rules.Elements("Language")
                  where !string.IsNullOrWhiteSpace(language?.Value)
-                 select new {language, rules}).
+                 select new { language, rules }).
                 GroupBy(
                     entry => entry.language.Value.Trim(),
                     entry => entry.rules,
@@ -274,14 +211,14 @@ namespace CenterCLR.RelaxVersioner
 
             return
                 (from rule in ruleSet
-                 let symbolElements = rule.Name.Split(new[] {'.'}, StringSplitOptions.RemoveEmptyEntries)
+                 let symbolElements = rule.Name.Split(new[] { '.' }, StringSplitOptions.RemoveEmptyEntries)
                  select string.Join(".", symbolElements.Take(symbolElements.Length - 1))).
                 Distinct();
         }
 
         public static XElement GetDefaultRuleSet()
         {
-            var type = typeof (Utilities);
+            var type = typeof(Utilities);
             using (var stream = type.Assembly.GetManifestResourceStream(
                 type, "DefaultRuleSet.rules"))
             {

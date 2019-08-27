@@ -32,7 +32,7 @@ namespace CenterCLR.RelaxVersioner.Writers
 
         public abstract string Language { get; }
 
-        public virtual VersionResult Write(
+        public VersionResult Write(
             string targetPath,
             Branch branch,
             Dictionary<string, IEnumerable<Tag>> tags,
