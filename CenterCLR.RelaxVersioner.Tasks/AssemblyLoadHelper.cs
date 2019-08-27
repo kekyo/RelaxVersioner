@@ -106,6 +106,7 @@ namespace CenterCLR.RelaxVersioner
         {
             // SUPER DIRTY WORKAROUND: Will copy native library into assembly directory...
             var sourcePaths = baseNativePaths.
+                Where(path => Directory.Exists(path)).
                 SelectMany(path => Directory.EnumerateFiles(path, "*" + NativeExtension, SearchOption.TopDirectoryOnly)).
                 ToArray();
             foreach (var sourcePath in sourcePaths)
