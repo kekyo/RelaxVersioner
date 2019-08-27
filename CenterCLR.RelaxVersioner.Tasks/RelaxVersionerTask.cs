@@ -76,7 +76,7 @@ namespace CenterCLR.RelaxVersioner
 
                 base.Log.LogMessage(
                     MessageImportance.Normal,
-                    $"RelaxVersioner: assembly base path: Managed={AssemblyLoadHelper.BasePath}, Native={AssemblyLoadHelper.BaseNativePath}");
+                    $"RelaxVersioner[{AssemblyLoadHelper.EnvironmentIdentifier}]: ManagedPath={AssemblyLoadHelper.BasePath}, NativeRuntimeIdentifier={AssemblyLoadHelper.NativeRuntimeIdentifier}, NativePath ={AssemblyLoadHelper.BaseNativePath}");
 
                 var results = (string[])AssemblyLoader.Run<Processor>(
                     base.Log, "RunForTask", projectDirectory, outputPath, language, isDryRun);
@@ -89,7 +89,7 @@ namespace CenterCLR.RelaxVersioner
                 var languageDisplay = isDryRun ? string.Empty : $"Language={language}, ";
                 base.Log.LogMessage(
                     MessageImportance.High,
-                    $"RelaxVersioner: Generated versions code{dryrunDisplay}: {languageDisplay}Version={this.DetectedIdentity}, ShortVersion={this.DetectedShortIdentity}");
+                    $"RelaxVersioner[{AssemblyLoadHelper.EnvironmentIdentifier}]: Generated versions code{dryrunDisplay}: {languageDisplay}Version={this.DetectedIdentity}, ShortVersion={this.DetectedShortIdentity}");
             }
             catch (Exception ex)
             {

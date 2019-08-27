@@ -43,7 +43,8 @@ namespace CenterCLR.RelaxVersioner
             if (StringComparer.InvariantCultureIgnoreCase.Equals(assemblyName.Name, "libgit2sharp"))
             {
                 var a = typeof(LibGit2Sharp.Repository).Assembly;
-                logger.LogMessage(logImportance, "RelaxVersioner: Assembly libgit2sharp already loaded: Name={0}, Path={1}",
+                logger.LogMessage(logImportance, "RelaxVersioner[{0}]: Assembly libgit2sharp already loaded: Name={1}, Path={2}",
+                    AssemblyLoadHelper.EnvironmentIdentifier,
                     assemblyName,
                     new Uri(a.CodeBase, UriKind.RelativeOrAbsolute).LocalPath);
                 return a;
@@ -52,7 +53,8 @@ namespace CenterCLR.RelaxVersioner
             var path = Path.Combine(AssemblyLoadHelper.BasePath, assemblyName.Name + ".dll");
             if (File.Exists(path) && base.LoadFromAssemblyPath(path) is Assembly assembly)
             {
-                logger.LogMessage(logImportance, "RelaxVersioner: Assembly loaded: Name={0}, Path={1}",
+                logger.LogMessage(logImportance, "RelaxVersioner[{0}]: Assembly loaded: Name={1}, Path={2}",
+                    AssemblyLoadHelper.EnvironmentIdentifier,
                     assemblyName,
                     new Uri(assembly.CodeBase, UriKind.RelativeOrAbsolute).LocalPath);
                 return assembly;
@@ -60,13 +62,15 @@ namespace CenterCLR.RelaxVersioner
 
             if (Default.LoadFromAssemblyName(assemblyName) is Assembly assembly2)
             {
-                logger.LogMessage(logImportance, "RelaxVersioner: Assembly loaded from default context: Name={0}, Path={1}",
+                logger.LogMessage(logImportance, "RelaxVersioner[{0}]: Assembly loaded from default context: Name={1}, Path={2}",
+                    AssemblyLoadHelper.EnvironmentIdentifier,
                     assemblyName,
                     new Uri(assembly2.CodeBase, UriKind.RelativeOrAbsolute).LocalPath);
                 return assembly2;
             }
 
-            logger.LogWarning("RelaxVersioner: Cannot load assembly: Name={0}, Path={1}",
+            logger.LogWarning("RelaxVersioner[{0}]: Cannot load assembly: Name={1}, Path={2}",
+                AssemblyLoadHelper.EnvironmentIdentifier,
                 assemblyName,
                 path);
             return null;
@@ -84,14 +88,16 @@ namespace CenterCLR.RelaxVersioner
                 var path = Path.Combine(AssemblyLoadHelper.BaseNativePath, prefixSuffix[0] + unmanagedDllName + prefixSuffix[1]);
                 if (File.Exists(path) && base.LoadUnmanagedDllFromPath(path) is IntPtr handle)
                 {
-                    logger.LogMessage(logImportance, "RelaxVersioner: Native library loaded: Name={0}, Path={1}",
+                    logger.LogMessage(logImportance, "RelaxVersioner[{0}]: Native library loaded: Name={1}, Path={2}",
+                        AssemblyLoadHelper.EnvironmentIdentifier,
                         unmanagedDllName,
                         path);
                     return handle;
                 }
             }
 
-            logger.LogWarning("RelaxVersioner: Cannot load native library: Name={0}, BasePath={1}",
+            logger.LogWarning("RelaxVersioner[{0}]: Cannot load native library: Name={1}, BasePath={2}",
+                AssemblyLoadHelper.EnvironmentIdentifier,
                 unmanagedDllName,
                 AssemblyLoadHelper.BaseNativePath);
 

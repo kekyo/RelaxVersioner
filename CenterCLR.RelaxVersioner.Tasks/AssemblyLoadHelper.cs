@@ -28,6 +28,8 @@ namespace CenterCLR.RelaxVersioner
 {
     internal static class AssemblyLoadHelper
     {
+        public static readonly string EnvironmentIdentifier;
+        public static readonly string NativeRuntimeIdentifier;
         public static readonly string BasePath;
         public static readonly string BaseNativePath;
         public static readonly string NativeExtension;
@@ -37,13 +39,18 @@ namespace CenterCLR.RelaxVersioner
             BasePath = Path.GetDirectoryName(
                 (new Uri(typeof(AssemblyLoadHelper).Assembly.CodeBase, UriKind.RelativeOrAbsolute)).LocalPath);
 
+            var runtimeIdentifier = RuntimeEnvironment.GetRuntimeIdentifier();
+            EnvironmentIdentifier = $"{BasePath.Split(Path.DirectorySeparatorChar, Path.AltDirectorySeparatorChar).Last()}/{runtimeIdentifier}";
+
             var baseNativePath = Path.GetFullPath(Path.Combine(BasePath, "..", "..", "runtimes"));
 
-            var id = RuntimeEnvironment.GetRuntimeIdentifier().Replace("-aot", string.Empty);
+            var id = runtimeIdentifier.Replace("-aot", string.Empty);
             var ids = id.Split('-');
             var platform0 = ids[0].Split('.')[0].Trim('0', '1', '2', '3', '4', '5', '6', '7', '8', '9');
             var platform = string.Join("-", new[] { platform0 }.Concat(ids.Skip(1).Take(ids.Length - 2)));
-            BaseNativePath = Path.Combine(baseNativePath, $"{platform}-{RuntimeEnvironment.RuntimeArchitecture}", "native");
+
+            NativeRuntimeIdentifier = $"{platform}-{RuntimeEnvironment.RuntimeArchitecture}";
+            BaseNativePath = Path.Combine(baseNativePath, NativeRuntimeIdentifier, "native");
 
             switch (RuntimeEnvironment.OperatingSystemPlatform)
             {
