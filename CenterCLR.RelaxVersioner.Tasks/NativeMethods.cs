@@ -42,7 +42,7 @@ namespace CenterCLR.RelaxVersioner
         [DllImport("kernel32.dll", EntryPoint = "LoadLibrary", CharSet = CharSet.Ansi, SetLastError = true)]
         public static extern IntPtr Win32_LoadLibrary(string libFileName);
 
-        [DllImport("libld", EntryPoint = "dlopen")]
+        [DllImport("libld", EntryPoint = "dlopen", CharSet = CharSet.Ansi, SetLastError = true)]
         public static extern IntPtr Unix_LoadLibrary(string libFileName, int flags);
     }
 }

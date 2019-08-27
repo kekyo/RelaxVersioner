@@ -92,8 +92,11 @@ namespace CenterCLR.RelaxVersioner
             {
                 try
                 {
-                    if (loader(path) != IntPtr.Zero)
+                    if (loader(path) == IntPtr.Zero)
                     {
+                        System.Runtime.InteropServices.Marshal.ThrowExceptionForHR(
+                            System.Runtime.InteropServices.Marshal.GetHRForLastWin32Error());
+
                         logger.LogWarning("RelaxVersioner[{0}]: Cannot preload native library: Path={1}",
                             EnvironmentIdentifier,
                             path);
