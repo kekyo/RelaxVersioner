@@ -72,7 +72,14 @@ namespace CenterCLR.RelaxVersioner
                     // Will fallback not exist if platform is linux.
                     if (!Directory.Exists(BaseNativePath))
                     {
-                        BaseNativePath = Path.Combine(baseNativePath, $"linux-{RuntimeEnvironment.RuntimeArchitecture}", "native");
+                        BaseNativePath = Directory.EnumerateDirectories(
+                            baseNativePath, $"{shortPlatform}*-{RuntimeEnvironment.RuntimeArchitecture}", SearchOption.TopDirectoryOnly).
+                            SelectMany(p => Directory.EnumerateDirectories(p, "native", SearchOption.TopDirectoryOnly)).
+                            FirstOrDefault();
+                        if (BaseNativePath == null)
+                        {
+                            BaseNativePath = Path.Combine(baseNativePath, $"linux-{RuntimeEnvironment.RuntimeArchitecture}", "native");
+                        }
                     }
                     break;
             }
