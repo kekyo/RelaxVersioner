@@ -40,17 +40,23 @@ namespace CenterCLR.RelaxVersioner
             BasePath = Path.GetDirectoryName(
                 (new Uri(typeof(AssemblyLoadHelper).Assembly.CodeBase, UriKind.RelativeOrAbsolute)).LocalPath);
 
+            var relaxVersionerVersion = typeof(AssemblyLoadHelper).Assembly.GetName().Version;
+            var platformIdentifier = BasePath.Split(Path.DirectorySeparatorChar, Path.AltDirectorySeparatorChar).Last();
             var runtimeIdentifier = RuntimeEnvironment.GetRuntimeIdentifier();
-            EnvironmentIdentifier = $"{BasePath.Split(Path.DirectorySeparatorChar, Path.AltDirectorySeparatorChar).Last()}/{runtimeIdentifier}";
+
+            // "0.9.45/netstandard2.0/win10-x64"
+            EnvironmentIdentifier = $"{relaxVersionerVersion}/{platformIdentifier}/{runtimeIdentifier}";
 
             var baseNativePath = Path.GetFullPath(Path.Combine(BasePath, "..", "..", "runtimes"));
 
             var id = runtimeIdentifier.Replace("-aot", string.Empty);
             var ids = id.Split('-');
-            var platform0 = ids[0].Split('.')[0].Trim('0', '1', '2', '3', '4', '5', '6', '7', '8', '9');
-            var platform = string.Join("-", new[] { platform0 }.Concat(ids.Skip(1).Take(ids.Length - 2)));
+            var shortPlatform0 = ids[0].Split('.')[0].Trim('0', '1', '2', '3', '4', '5', '6', '7', '8', '9');
+            var shortPlatform = string.Join("-", new[] { shortPlatform0 }.Concat(ids.Skip(1).Take(ids.Length - 2)));
 
-            NativeRuntimeIdentifier = $"{platform}-{RuntimeEnvironment.RuntimeArchitecture}";
+            // "win-x64"
+            NativeRuntimeIdentifier = $"{shortPlatform}-{RuntimeEnvironment.RuntimeArchitecture}";
+
             BaseNativePath = Path.Combine(baseNativePath, NativeRuntimeIdentifier, "native");
 
             switch (RuntimeEnvironment.OperatingSystemPlatform)
