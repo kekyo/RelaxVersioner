@@ -106,7 +106,7 @@ namespace CenterCLR.RelaxVersioner
         {
             // SUPER DIRTY WORKAROUND: Will copy native library into assembly directory...
             var sourcePaths = baseNativePaths.
-                SelectMany(path => Directory.EnumerateDirectories(path, "*" + NativeExtension, SearchOption.TopDirectoryOnly)).
+                SelectMany(path => Directory.EnumerateFiles(path, "*" + NativeExtension, SearchOption.TopDirectoryOnly)).
                 ToArray();
             foreach (var sourcePath in sourcePaths)
             {
@@ -148,7 +148,7 @@ namespace CenterCLR.RelaxVersioner
                 }
             }
 
-            var sources = string.Join(",", baseNativePaths);
+            var sources = string.Join(",", sourcePaths);
             log.LogWarning(
                 $"RelaxVersioner[{EnvironmentIdentifier}]: Cannot preload native library: Sources=[{sources}]");
         }
@@ -156,7 +156,7 @@ namespace CenterCLR.RelaxVersioner
         private static void PreloadAssemblies(TaskLoggingHelper log)
         {
             // Preload assemblies
-            foreach (var sourcePath in Directory.EnumerateDirectories(BasePath, "*.dll", SearchOption.TopDirectoryOnly))
+            foreach (var sourcePath in Directory.EnumerateFiles(BasePath, "*.dll", SearchOption.TopDirectoryOnly))
             {
                 var assembly = Assembly.LoadFrom(sourcePath);
                 if (assembly != null)
