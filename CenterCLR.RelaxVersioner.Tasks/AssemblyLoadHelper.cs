@@ -22,6 +22,7 @@ using System.IO;
 using System.Linq;
 using System.Reflection;
 using System.Threading;
+
 using Microsoft.Build.Framework;
 using Microsoft.Build.Utilities;
 using Microsoft.DotNet.PlatformAbstractions;
@@ -30,6 +31,8 @@ namespace CenterCLR.RelaxVersioner
 {
     internal static class AssemblyLoadHelper
     {
+        private static readonly MessageImportance logImportance = MessageImportance.Low;
+
         public static string EnvironmentIdentifier { get; private set; }
         public static string NativeRuntimeIdentifier { get; private set; }
         public static string BasePath { get; private set; }
@@ -105,6 +108,11 @@ namespace CenterCLR.RelaxVersioner
         private static void PreloadNativeLibrary(TaskLoggingHelper log, string[] baseNativePaths, Func<string, IntPtr> loader)
         {
             // SUPER DIRTY WORKAROUND: Will copy native library into assembly directory...
+            //   Because this problem fixing is very difficult and shame .NET Core 2,
+            //   I think the copy procedure is safe at user-space file system on standard nuget local repository.
+            //   Related issues:
+            //     https://github.com/dotnet/coreclr/issues/19654
+            //     https://github.com/AArnott/Nerdbank.GitVersioning/issues/217
             var sourcePaths = baseNativePaths.
                 Where(path => Directory.Exists(path)).
                 SelectMany(path => Directory.EnumerateFiles(path, "*" + NativeExtension, SearchOption.TopDirectoryOnly)).
@@ -124,7 +132,7 @@ namespace CenterCLR.RelaxVersioner
                     {
                         NativeLibraryPath = destinationPath;
                         log.LogMessage(
-                            MessageImportance.High,
+                            logImportance,
                             $"RelaxVersioner[{EnvironmentIdentifier}]: Native library preloaded: Path={destinationPath}");
                         return;
                     }
@@ -141,7 +149,7 @@ namespace CenterCLR.RelaxVersioner
                         {
                             NativeLibraryPath = destinationPath;
                             log.LogMessage(
-                                MessageImportance.High,
+                                logImportance,
                                 $"RelaxVersioner[{EnvironmentIdentifier}]: Native library copied and preloaded: SourcePath={sourcePath}, DestinationPath={destinationPath}");
                             return;
                         }
@@ -169,7 +177,7 @@ namespace CenterCLR.RelaxVersioner
                     if (assembly != null)
                     {
                         log.LogMessage(
-                            MessageImportance.High,
+                            logImportance,
                             $"RelaxVersioner[{EnvironmentIdentifier}]: Assembly preloaded: Path={sourcePath}");
                     }
                 }

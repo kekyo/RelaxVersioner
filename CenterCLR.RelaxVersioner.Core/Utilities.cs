@@ -226,6 +226,10 @@ namespace CenterCLR.RelaxVersioner
             }
         }
 
+        public static string GetFriendlyName<TObject>(this ReferenceWrapper<TObject> refer)
+            where TObject : GitObject =>
+            string.IsNullOrWhiteSpace(refer.FriendlyName) ? refer.CanonicalName : refer.FriendlyName;
+
         public static System.Version GetLabelWithFallback(
             Branch targetBranch,
             Dictionary<string, IEnumerable<Tag>> tags,
@@ -245,12 +249,12 @@ namespace CenterCLR.RelaxVersioner
             var versions =
                 (from commit in targetBranch.Commits
                  from label in
-                    tags.GetValue(commit.Sha, Enumerable.Empty<Tag>()).Select(tag => GetVersionFromGitLabel(tag.FriendlyName))
+                    tags.GetValue(commit.Sha, Enumerable.Empty<Tag>()).Select(tag => GetVersionFromGitLabel(tag.GetFriendlyName()))
                  select label).
                 Concat(
                     from commit in targetBranch.Commits.Skip(1)
                     from label in
-                        branches.GetValue(commit.Sha, Enumerable.Empty<Branch>()).Select(branch => GetVersionFromGitLabel(branch.FriendlyName))
+                        branches.GetValue(commit.Sha, Enumerable.Empty<Branch>()).Select(branch => GetVersionFromGitLabel(branch.GetFriendlyName()))
                     select label);
 
             // Use first version, if no candidate then try current branch name.

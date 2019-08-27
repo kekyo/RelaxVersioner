@@ -24,21 +24,6 @@ namespace CenterCLR.RelaxVersioner
 {
     internal static class NativeMethods
     {
-        //[DllImport("kernel32.dll", EntryPoint = "AddDllDirectory", CharSet = CharSet.Unicode, SetLastError = true)]
-        //private static extern bool AddDllDirectory(string path);
-
-        //public static bool Win32_AddDllDirectory(string path)
-        //{
-        //    try
-        //    {
-        //        return AddDllDirectory(path);
-        //    }
-        //    catch
-        //    {
-        //        return false;
-        //    }
-        //}
-
         [DllImport("kernel32.dll", EntryPoint = "LoadLibrary", CharSet = CharSet.Ansi, SetLastError = true)]
         public static extern IntPtr Win32_LoadLibrary(string dllPath);
 
