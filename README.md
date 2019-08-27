@@ -162,6 +162,8 @@ using namespace System::Reflection;
 * Under Apache v2
 
 ## History
+* 0.9.62:
+  * Validated dotnet cli on .NET Core 2 environment (Both Windows and Linux)
 * 0.9.25:
   * Made self hosted versioning :)
   * Splitted devel and master branches.

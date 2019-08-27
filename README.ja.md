@@ -163,6 +163,8 @@ using namespace System::Reflection;
 * Under Apache v2
 
 ## 履歴
+* 0.9.62:
+  * .NET Core 2のdotnet cliからのビルドに対応 (WindowsとLinux環境)
 * 0.9.25:
   * セルフホストバージョニングを開始 :)
   * develとmasterブランチに分割
