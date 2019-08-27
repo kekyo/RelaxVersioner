@@ -94,27 +94,45 @@ namespace CenterCLR.RelaxVersioner
         private static void LoadNativeLibraries(
             TaskLoggingHelper logger, string basePath, string match, Func<string, IntPtr> loader)
         {
-            foreach (var path in Directory.EnumerateFiles(basePath, match, SearchOption.TopDirectoryOnly))
+            var files = Directory.GetFiles(basePath, match, SearchOption.TopDirectoryOnly);
+            if (files.Length >= 1)
             {
-                try
+                foreach (var path in files)
                 {
-                    if (loader(path) == IntPtr.Zero)
+                    try
                     {
-                        System.Runtime.InteropServices.Marshal.ThrowExceptionForHR(
-                            System.Runtime.InteropServices.Marshal.GetHRForLastWin32Error());
+                        if (loader(path) == IntPtr.Zero)
+                        {
+                            System.Runtime.InteropServices.Marshal.ThrowExceptionForHR(
+                                System.Runtime.InteropServices.Marshal.GetHRForLastWin32Error());
 
-                        logger.LogWarning("RelaxVersioner[{0}]: Cannot preload native library: Path={1}",
+                            logger.LogWarning("RelaxVersioner[{0}]: Cannot preload native library: Path={1}",
+                                EnvironmentIdentifier,
+                                path);
+                        }
+                        else
+                        {
+                            logger.LogMessage(Microsoft.Build.Framework.MessageImportance.High, "RelaxVersioner[{0}]: Native library preloaded: Path={1}",
+                                EnvironmentIdentifier,
+                                path);
+                        }
+                    }
+                    catch (Exception ex)
+                    {
+                        logger.LogWarning("RelaxVersioner[{0}]: Cannot preload native library: Path={1}, {2}",
                             EnvironmentIdentifier,
-                            path);
+                            path,
+                            ex.Message);
                     }
                 }
-                catch (Exception ex)
-                {
-                    logger.LogWarning("RelaxVersioner[{0}]: Cannot preload native library: Path={1}, {2}",
-                        EnvironmentIdentifier,
-                        path,
-                        ex.Message);
-                }
+            }
+            else
+            {
+                logger.LogMessage(Microsoft.Build.Framework.MessageImportance.High, "RelaxVersioner[{0}]: Couldn't find native libraries: Path={1}{2}{3}",
+                    EnvironmentIdentifier,
+                    basePath,
+                    Path.DirectorySeparatorChar,
+                    match);
             }
         }
 
