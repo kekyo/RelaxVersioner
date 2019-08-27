@@ -22,6 +22,7 @@ using System.IO;
 using System.Linq;
 using System.Reflection;
 
+using Microsoft.Build.Framework;
 using Microsoft.Build.Utilities;
 using Microsoft.DotNet.PlatformAbstractions;
 
@@ -29,13 +30,13 @@ namespace CenterCLR.RelaxVersioner
 {
     internal static class AssemblyLoadHelper
     {
-        public static readonly string EnvironmentIdentifier;
-        public static readonly string NativeRuntimeIdentifier;
-        public static readonly string BasePath;
-        public static readonly string BaseNativePath;
-        public static readonly string NativeExtension;
+        public static string EnvironmentIdentifier { get; private set; }
+        public static string NativeRuntimeIdentifier { get; private set; }
+        public static string BasePath { get; private set; }
+        public static string NativeExtension { get; private set; }
+        public static string NativeLibraryPath { get; private set; }
 
-        static AssemblyLoadHelper()
+        public static void Initialize(TaskLoggingHelper log)
         {
             BasePath = Path.GetDirectoryName(
                 (new Uri(typeof(AssemblyLoadHelper).Assembly.CodeBase, UriKind.RelativeOrAbsolute)).LocalPath);
@@ -47,7 +48,7 @@ namespace CenterCLR.RelaxVersioner
             // "0.9.45/netstandard2.0/win10-x64"
             EnvironmentIdentifier = $"{relaxVersionerVersion}/{platformIdentifier}/{runtimeIdentifier}";
 
-            var baseNativePath = Path.GetFullPath(Path.Combine(BasePath, "..", "..", "runtimes"));
+            var baseNativeBasePath = Path.GetFullPath(Path.Combine(BasePath, "..", "..", "runtimes"));
 
             var id = runtimeIdentifier.Replace("-aot", string.Empty);
             var ids = id.Split('-');
@@ -57,129 +58,98 @@ namespace CenterCLR.RelaxVersioner
             // "win-x64"
             NativeRuntimeIdentifier = $"{shortPlatform}-{RuntimeEnvironment.RuntimeArchitecture}";
 
-            BaseNativePath = Path.Combine(baseNativePath, NativeRuntimeIdentifier, "native");
+            var baseNativePath0 = Path.Combine(baseNativeBasePath, NativeRuntimeIdentifier, "native");
+            string[] baseNativePaths;
+            Func<string, IntPtr> loader;
 
             switch (RuntimeEnvironment.OperatingSystemPlatform)
             {
                 case Platform.Windows:
                     NativeExtension = ".dll";
+                    baseNativePaths = new[] { baseNativePath0 };
+                    loader = NativeMethods.Win32_LoadLibrary;
                     break;
                 case Platform.Darwin:
                     NativeExtension = ".dylib";
+                    baseNativePaths = new[] { baseNativePath0 };
+                    loader = NativeMethods.Unix_LoadLibrary;
                     break;
                 default:
                     NativeExtension = ".so";
+                    loader = NativeMethods.Unix_LoadLibrary;
                     // Will fallback not exist if platform is linux.
-                    if (!Directory.Exists(BaseNativePath))
-                    {
-                        BaseNativePath = Directory.EnumerateDirectories(
-                            baseNativePath, $"{shortPlatform}*-{RuntimeEnvironment.RuntimeArchitecture}", SearchOption.TopDirectoryOnly).
-                            SelectMany(p => Directory.EnumerateDirectories(p, "native", SearchOption.TopDirectoryOnly)).
-                            FirstOrDefault();
-                        if (BaseNativePath == null)
-                        {
-                            BaseNativePath = Path.Combine(baseNativePath, $"linux-{RuntimeEnvironment.RuntimeArchitecture}", "native");
-                        }
-                    }
+                    baseNativePaths = new[] { baseNativePath0 }.
+                        Concat(Directory.EnumerateDirectories(
+                            baseNativeBasePath, $"{shortPlatform}*-{RuntimeEnvironment.RuntimeArchitecture}", SearchOption.TopDirectoryOnly).
+                            SelectMany(path => Directory.EnumerateDirectories(path, "native", SearchOption.TopDirectoryOnly))).
+                        ToArray();
                     break;
             }
-        }
 
-        public static string GetAssemblyPathDerivedFromBasePath(Assembly assembly) =>
-            Path.Combine(BasePath, Path.GetFileName(new Uri(assembly.CodeBase, UriKind.RelativeOrAbsolute).LocalPath));
-
-        private static bool initialized = false;
-        private static readonly object initializeLocker = new object();
-
-        private static void PrependBasePaths(string targetEnvironmentName, params string[] basePaths)
-        {
-            var pathEnvironment = (Environment.GetEnvironmentVariable(targetEnvironmentName) ?? string.Empty).Trim();
-            var newPath = string.Join(Path.PathSeparator.ToString(), basePaths.Concat(new[] { pathEnvironment }));
-            Environment.SetEnvironmentVariable(targetEnvironmentName, newPath, EnvironmentVariableTarget.Process);
-        }
-
-        private static void LoadNativeLibraries(
-            TaskLoggingHelper logger, string basePath, string match, Func<string, IntPtr> loader)
-        {
-            var files = Directory.GetFiles(basePath, match, SearchOption.TopDirectoryOnly);
-            if (files.Length >= 1)
+            // Preload assemblies
+            foreach (var sourcePath in Directory.EnumerateDirectories(baseNativePath0, "*.dll", SearchOption.TopDirectoryOnly))
             {
-                foreach (var path in files)
+                var assembly = Assembly.LoadFrom(sourcePath);
+                if (assembly != null)
                 {
-                    try
-                    {
-                        if (loader(path) == IntPtr.Zero)
-                        {
-                            System.Runtime.InteropServices.Marshal.ThrowExceptionForHR(
-                                System.Runtime.InteropServices.Marshal.GetHRForLastWin32Error());
-
-                            logger.LogWarning("RelaxVersioner[{0}]: Cannot preload native library: Path={1}",
-                                EnvironmentIdentifier,
-                                path);
-                        }
-                        else
-                        {
-                            logger.LogMessage(Microsoft.Build.Framework.MessageImportance.High, "RelaxVersioner[{0}]: Native library preloaded: Path={1}",
-                                EnvironmentIdentifier,
-                                path);
-                        }
-                    }
-                    catch (Exception ex)
-                    {
-                        logger.LogWarning("RelaxVersioner[{0}]: Cannot preload native library: Path={1}, {2}",
-                            EnvironmentIdentifier,
-                            path,
-                            ex.Message);
-                    }
+                    log.LogMessage(
+                        MessageImportance.High,
+                        $"RelaxVersioner[{EnvironmentIdentifier}]: Assembly preloaded: Path={sourcePath}");
+                }
+                else
+                {
+                    log.LogWarning(
+                        $"RelaxVersioner[{EnvironmentIdentifier}]: Cannot preload assembly: Path={sourcePath}");
                 }
             }
-            else
-            {
-                logger.LogMessage(Microsoft.Build.Framework.MessageImportance.High, "RelaxVersioner[{0}]: Couldn't find native libraries: Path={1}{2}{3}",
-                    EnvironmentIdentifier,
-                    basePath,
-                    Path.DirectorySeparatorChar,
-                    match);
-            }
-        }
 
-        public static void SetupNativeLibraries(TaskLoggingHelper logger)
-        {
-            if (!initialized)
+            // SUPER DIRTY WORKAROUND: Will copy native library into assembly directory...
+            var sourcePaths = baseNativePaths.
+                SelectMany(path => Directory.EnumerateDirectories(path, "*" + NativeExtension, SearchOption.TopDirectoryOnly)).
+                ToArray();
+            foreach (var sourcePath in sourcePaths)
             {
-                lock (initializeLocker)
+                var fileName = Path.GetFileName(sourcePath);
+                var destinationPath = Path.Combine(BasePath, fileName);
+
+                // Try preloading already copied file
+                var result = loader(destinationPath);
+
+                // Success
+                if (result != IntPtr.Zero)
                 {
-                    if (!initialized)
-                    {
-                        // HACK: I know it's bad practice, but I don't take very complex implementation for using AppDomain.
-                        switch (RuntimeEnvironment.OperatingSystemPlatform)
-                        {
-                            case Platform.Windows:
-                                PrependBasePaths("PATH", BasePath, BaseNativePath);
-                                if (int.TryParse(RuntimeEnvironment.OperatingSystemVersion.Split('.')[0], out var v) && (v >= 8))
-                                {
-                                    NativeMethods.Win32_AddDllDirectory(BasePath);
-                                    NativeMethods.Win32_AddDllDirectory(BaseNativePath);
-                                }
-                                LoadNativeLibraries(logger, BaseNativePath, "*" + NativeExtension, NativeMethods.Win32_LoadLibrary);
-                                break;
-                            case Platform.Darwin:
-                                // NOTE: In macos, ElCapitan disabled dylib lookuping feature, so will cause loading failure.
-                                PrependBasePaths("PATH", BasePath);
-                                PrependBasePaths("DYLD_LIBRARY_PATH", BaseNativePath);
-                                LoadNativeLibraries(logger, BaseNativePath, "*" + NativeExtension, NativeMethods.Unix_LoadLibrary);
-                                break;
-                            default:
-                                PrependBasePaths("PATH", BasePath);
-                                PrependBasePaths("LD_LIBRARY_PATH", BaseNativePath);
-                                LoadNativeLibraries(logger, BaseNativePath, "*" + NativeExtension, NativeMethods.Unix_LoadLibrary);
-                                break;
-                        }
+                    NativeLibraryPath = destinationPath;
+                    log.LogMessage(
+                        MessageImportance.High,
+                        $"RelaxVersioner[{EnvironmentIdentifier}]: Native library preloaded: Path={destinationPath}");
+                    break;
+                }
 
-                        initialized = true;
+                try
+                {
+                    File.Copy(sourcePath, destinationPath, true);
+
+                    // Try preloading copied file
+                    result = loader(destinationPath);
+
+                    // Success
+                    if (result != IntPtr.Zero)
+                    {
+                        NativeLibraryPath = destinationPath;
+                        log.LogMessage(
+                            MessageImportance.High,
+                            $"RelaxVersioner[{EnvironmentIdentifier}]: Native library preloaded: SourcePath={sourcePath}, DestinationPath={destinationPath}");
+                        break;
                     }
                 }
+                catch
+                {
+                }
             }
+
+            var sources = string.Join(",", sourcePaths);
+            log.LogWarning(
+                $"RelaxVersioner[{EnvironmentIdentifier}]: Cannot preload native library: Sources=[{sources}]");
         }
     }
 }

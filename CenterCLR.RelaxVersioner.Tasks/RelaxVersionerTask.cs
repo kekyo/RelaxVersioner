@@ -67,6 +67,8 @@ namespace CenterCLR.RelaxVersioner
 
         public override bool Execute()
         {
+            AssemblyLoadHelper.Initialize(this.Log);
+
             try
             {
                 var projectDirectory = Path.GetDirectoryName(this.ProjectPath.ItemSpec);
@@ -76,14 +78,13 @@ namespace CenterCLR.RelaxVersioner
 
                 base.Log.LogMessage(
                     MessageImportance.Normal,
-                    $"RelaxVersioner[{AssemblyLoadHelper.EnvironmentIdentifier}]: ManagedPath={AssemblyLoadHelper.BasePath}, NativeRuntimeIdentifier={AssemblyLoadHelper.NativeRuntimeIdentifier}, NativePath ={AssemblyLoadHelper.BaseNativePath}");
+                    $"RelaxVersioner[{AssemblyLoadHelper.EnvironmentIdentifier}]: ManagedPath={AssemblyLoadHelper.BasePath}, NativeRuntimeIdentifier={AssemblyLoadHelper.NativeRuntimeIdentifier}, NativeLibraryPath ={AssemblyLoadHelper.NativeLibraryPath}");
 
-                var results = (string[])AssemblyLoader.Run<Processor>(
-                    base.Log, "RunForTask", projectDirectory, outputPath, language, isDryRun);
+                var result = Processor.Run(projectDirectory, outputPath, language, isDryRun);
 
-                this.DetectedIdentity = results[0];
-                this.DetectedShortIdentity = results[1];
-                this.DetectedMessage = results[2];
+                this.DetectedIdentity = result.Identity;
+                this.DetectedShortIdentity = result.ShortIdentity;
+                this.DetectedMessage = result.Message;
 
                 var dryrunDisplay = isDryRun ? " (dryrun)" : string.Empty;
                 var languageDisplay = isDryRun ? string.Empty : $"Language={language}, ";
