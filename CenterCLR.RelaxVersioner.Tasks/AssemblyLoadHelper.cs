@@ -148,7 +148,7 @@ namespace CenterCLR.RelaxVersioner
                 }
             }
 
-            var sources = string.Join(",", sourcePaths);
+            var sources = string.Join(",", baseNativePaths);
             log.LogWarning(
                 $"RelaxVersioner[{EnvironmentIdentifier}]: Cannot preload native library: Sources=[{sources}]");
         }
