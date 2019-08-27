@@ -91,11 +91,11 @@ namespace CenterCLR.RelaxVersioner.Writers
                 var altBranches = string.Join(
                     ",",
                     branches.GetValue(commitId, Enumerable.Empty<Branch>()).
-                        Select(b => b.FriendlyName));
+                        Select(b => b.GetFriendlyName()));
                 var altTags = string.Join(
                     ",",
                     tags.GetValue(commitId, Enumerable.Empty<Tag>()).
-                        Select(b => b.FriendlyName));
+                        Select(b => b.GetFriendlyName()));
 
                 var safeVersion = Utilities.GetSafeVersionFromDate(committer.When);
                 var gitLabel = Utilities.GetLabelWithFallback(altBranch, tags, branches) ?? baseVersion_;
