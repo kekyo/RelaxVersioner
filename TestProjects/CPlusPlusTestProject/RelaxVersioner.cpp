@@ -1,6 +1,6 @@
-// This is auto-generated version information attributes by CenterCLR.RelaxVersioner.0.9.44.0
+// This is auto-generated version information attributes by CenterCLR.RelaxVersioner.0.9.46.0
 // Do not edit.
-// Generated date: Tue, 27 Aug 2019 01:27:58 GMT
+// Generated date: Tue, 27 Aug 2019 02:30:06 GMT
 
 #include "stdafx.h"
 
@@ -26,13 +26,13 @@ namespace System
 using namespace System::Reflection;
 using namespace System::Runtime::InteropServices;
 
-[assembly: AssemblyVersionAttribute("0.9.44")];
-[assembly: AssemblyFileVersionAttribute("2019.8.27.18643")];
-[assembly: AssemblyInformationalVersionAttribute("38d85c058da47d659e9d37fd065bd5a1a00bfa6e")];
-[assembly: AssemblyVersionMetadataAttribute("Build","Tue, 27 Aug 2019 01:21:27 GMT")];
+[assembly: AssemblyVersionAttribute("0.9.46")];
+[assembly: AssemblyFileVersionAttribute("2019.8.27.20570")];
+[assembly: AssemblyInformationalVersionAttribute("9d374650ae431a3e9495a54ba7defb40e089a05b")];
+[assembly: AssemblyVersionMetadataAttribute("Build","Tue, 27 Aug 2019 02:25:40 GMT")];
 [assembly: AssemblyVersionMetadataAttribute("Branch","")];
-[assembly: AssemblyVersionMetadataAttribute("Tags","0.9.44")];
+[assembly: AssemblyVersionMetadataAttribute("Tags","0.9.46")];
 [assembly: AssemblyVersionMetadataAttribute("Author","Kouji Matsui <k@kekyo.net>")];
 [assembly: AssemblyVersionMetadataAttribute("Committer","Kouji Matsui <k@kekyo.net>")];
-[assembly: AssemblyVersionMetadataAttribute("Message","Fixed failing invalid cast at the marshaller on ligit2sharp.")];
+[assembly: AssemblyVersionMetadataAttribute("Message","wip")];
 

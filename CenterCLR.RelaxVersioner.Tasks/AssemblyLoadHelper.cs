@@ -22,6 +22,7 @@ using System.IO;
 using System.Linq;
 using System.Reflection;
 
+using Microsoft.Build.Utilities;
 using Microsoft.DotNet.PlatformAbstractions;
 
 namespace CenterCLR.RelaxVersioner
@@ -73,5 +74,78 @@ namespace CenterCLR.RelaxVersioner
 
         public static string GetAssemblyPathDerivedFromBasePath(Assembly assembly) =>
             Path.Combine(BasePath, Path.GetFileName(new Uri(assembly.CodeBase, UriKind.RelativeOrAbsolute).LocalPath));
+
+        private static bool initialized = false;
+        private static readonly object initializeLocker = new object();
+
+        private static void PrependBasePaths(string targetEnvironmentName, params string[] basePaths)
+        {
+            var pathEnvironment = (Environment.GetEnvironmentVariable(targetEnvironmentName) ?? string.Empty).Trim();
+            var newPath = string.Join(Path.PathSeparator.ToString(), basePaths.Concat(new[] { pathEnvironment }));
+            Environment.SetEnvironmentVariable(targetEnvironmentName, newPath);
+        }
+
+        private static void LoadNativeLibraries(
+            TaskLoggingHelper logger, string basePath, string match, Func<string, IntPtr> loader)
+        {
+            foreach (var path in Directory.EnumerateFiles(basePath, match, SearchOption.TopDirectoryOnly))
+            {
+                try
+                {
+                    if (loader(path) != IntPtr.Zero)
+                    {
+                        logger.LogWarning("RelaxVersioner[{0}]: Cannot preload native library: Path={1}",
+                            EnvironmentIdentifier,
+                            path);
+                    }
+                }
+                catch (Exception ex)
+                {
+                    logger.LogWarning("RelaxVersioner[{0}]: Cannot preload native library: Path={1}, {2}",
+                        EnvironmentIdentifier,
+                        path,
+                        ex.Message);
+                }
+            }
+        }
+
+        public static void SetupNativeLibraries(TaskLoggingHelper logger)
+        {
+            if (!initialized)
+            {
+                lock (initializeLocker)
+                {
+                    if (!initialized)
+                    {
+                        // HACK: I know it's bad practice, but I don't take very complex implementation for using AppDomain.
+                        switch (RuntimeEnvironment.OperatingSystemPlatform)
+                        {
+                            case Platform.Windows:
+                                PrependBasePaths("PATH", BasePath, BaseNativePath);
+                                if (int.TryParse(RuntimeEnvironment.OperatingSystemVersion.Split('.')[0], out var v) && (v >= 8))
+                                {
+                                    NativeMethods.Win32_TryAddDllDirectory(BasePath);
+                                    NativeMethods.Win32_TryAddDllDirectory(BaseNativePath);
+                                }
+                                LoadNativeLibraries(logger, BaseNativePath, "*" + NativeExtension, NativeMethods.Win32_LoadLibrary);
+                                break;
+                            case Platform.Darwin:
+                                // NOTE: In macos, ElCapitan disabled dylib lookuping feature, so will cause loading failure.
+                                PrependBasePaths("PATH", BasePath);
+                                PrependBasePaths("DYLD_LIBRARY_PATH", BaseNativePath);
+                                LoadNativeLibraries(logger, BaseNativePath, "*" + NativeExtension, path => NativeMethods.Unix_LoadLibrary(path, 2));
+                                break;
+                            default:
+                                PrependBasePaths("PATH", BasePath);
+                                PrependBasePaths("LD_LIBRARY_PATH", BaseNativePath);
+                                LoadNativeLibraries(logger, BaseNativePath, "*" + NativeExtension, path => NativeMethods.Unix_LoadLibrary(path, 2));
+                                break;
+                        }
+
+                        initialized = true;
+                    }
+                }
+            }
+        }
     }
 }

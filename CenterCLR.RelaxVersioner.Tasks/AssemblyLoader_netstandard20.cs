@@ -23,6 +23,7 @@ using System.Reflection;
 
 using Microsoft.Build.Framework;
 using Microsoft.Build.Utilities;
+using Microsoft.DotNet.PlatformAbstractions;
 
 namespace CenterCLR.RelaxVersioner
 {
@@ -38,18 +39,6 @@ namespace CenterCLR.RelaxVersioner
 
         protected override Assembly Load(AssemblyName assemblyName)
         {
-            // Workaround failing invalid cast at the marshaller on ligit2sharp:
-            // https://github.com/dotnet/coreclr/issues/19654
-            if (StringComparer.InvariantCultureIgnoreCase.Equals(assemblyName.Name, "libgit2sharp"))
-            {
-                var a = typeof(LibGit2Sharp.Repository).Assembly;
-                logger.LogMessage(logImportance, "RelaxVersioner[{0}]: Assembly libgit2sharp already loaded: Name={1}, Path={2}",
-                    AssemblyLoadHelper.EnvironmentIdentifier,
-                    assemblyName,
-                    new Uri(a.CodeBase, UriKind.RelativeOrAbsolute).LocalPath);
-                return a;
-            }
-
             var path = Path.Combine(AssemblyLoadHelper.BasePath, assemblyName.Name + ".dll");
             if (File.Exists(path) && base.LoadFromAssemblyPath(path) is Assembly assembly)
             {
@@ -106,6 +95,8 @@ namespace CenterCLR.RelaxVersioner
 
         public static object Run<T>(TaskLoggingHelper logger, string methodName, params object[] args)
         {
+            AssemblyLoadHelper.SetupNativeLibraries(logger);
+
             var loader = new AssemblyLoader(logger);
 
             var assembly = loader.LoadFromAssemblyPath(AssemblyLoadHelper.GetAssemblyPathDerivedFromBasePath(typeof(T).Assembly));

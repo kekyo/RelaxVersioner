@@ -17,22 +17,32 @@
 //
 /////////////////////////////////////////////////////////////////////////////////////////////////
 
-using Microsoft.Build.Utilities;
+using System;
+using System.Runtime.InteropServices;
 
 namespace CenterCLR.RelaxVersioner
 {
-#if NET46
-    internal static class AssemblyLoader
+    internal static class NativeMethods
     {
-        // TODO: Run on separated AppDomain.
+        [DllImport("kernel32.dll", EntryPoint = "AddDllDirectory", CharSet = CharSet.Unicode, SetLastError = true)]
+        private static extern bool Win32_AddDllDirectory(string path);
 
-        public static object Run<T>(TaskLoggingHelper logger, string methodName, params object[] args)
+        public static bool Win32_TryAddDllDirectory(string path)
         {
-            AssemblyLoadHelper.SetupNativeLibraries(logger);
-
-            var method = typeof(T).GetMethod(methodName);
-            return method.Invoke(null, args);
+            try
+            {
+                return Win32_AddDllDirectory(path);
+            }
+            catch
+            {
+                return false;
+            }
         }
+
+        [DllImport("kernel32.dll", EntryPoint = "LoadLibrary", CharSet = CharSet.Ansi, SetLastError = true)]
+        public static extern IntPtr Win32_LoadLibrary(string libFileName);
+
+        [DllImport("libld", EntryPoint = "dlopen")]
+        public static extern IntPtr Unix_LoadLibrary(string libFileName, int flags);
     }
-#endif
 }
