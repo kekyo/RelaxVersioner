@@ -38,6 +38,13 @@ namespace CenterCLR.RelaxVersioner
 
         protected override Assembly Load(AssemblyName assemblyName)
         {
+            // Workaround failing invalid cast at the marshaller on ligit2sharp:
+            // https://github.com/dotnet/coreclr/issues/19654
+            if (StringComparer.InvariantCultureIgnoreCase.Equals(assemblyName.Name, "libgit2sharp"))
+            {
+                return Default.LoadFromAssemblyName(assemblyName);
+            }
+
             var path = Path.Combine(AssemblyLoadHelper.BasePath, assemblyName.Name + ".dll");
             if (File.Exists(path) && base.LoadFromAssemblyPath(path) is Assembly assembly)
             {
@@ -78,13 +85,11 @@ namespace CenterCLR.RelaxVersioner
                         path);
                     return handle;
                 }
-                else
-                {
-                    logger.LogWarning("RelaxVersioner: Cannot load native library: Name={0}, Path={1}",
-                        unmanagedDllName,
-                        path);
-                }
             }
+
+            logger.LogWarning("RelaxVersioner: Cannot load native library: Name={0}, BasePath={1}",
+                unmanagedDllName,
+                AssemblyLoadHelper.BaseNativePath);
 
             return IntPtr.Zero;
         }
