@@ -30,7 +30,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="CenterCLR.RelaxVersioner" version="0.9.59" PrivateAssets="All" />
+    <PackageReference Include="CenterCLR.RelaxVersioner" version="0.9.60" PrivateAssets="All" />
   </ItemGroup>
 
   <ItemGroup>
