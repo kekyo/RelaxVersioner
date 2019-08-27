@@ -21,7 +21,7 @@ using System;
 using System.IO;
 using System.Linq;
 using System.Reflection;
-
+using System.Threading;
 using Microsoft.Build.Framework;
 using Microsoft.Build.Utilities;
 using Microsoft.DotNet.PlatformAbstractions;
@@ -113,25 +113,10 @@ namespace CenterCLR.RelaxVersioner
                 var fileName = Path.GetFileName(sourcePath);
                 var destinationPath = Path.Combine(BasePath, fileName);
 
-                // Try preloading already copied file
-                var result = loader(destinationPath);
-
-                // Success
-                if (result != IntPtr.Zero)
+                for (var i = 0; i < 3; i++)
                 {
-                    NativeLibraryPath = destinationPath;
-                    log.LogMessage(
-                        MessageImportance.High,
-                        $"RelaxVersioner[{EnvironmentIdentifier}]: Native library preloaded: Path={destinationPath}");
-                    return;
-                }
-
-                try
-                {
-                    File.Copy(sourcePath, destinationPath, true);
-
-                    // Try preloading copied file
-                    result = loader(destinationPath);
+                    // Try preloading already copied file
+                    var result = loader(destinationPath);
 
                     // Success
                     if (result != IntPtr.Zero)
@@ -139,12 +124,31 @@ namespace CenterCLR.RelaxVersioner
                         NativeLibraryPath = destinationPath;
                         log.LogMessage(
                             MessageImportance.High,
-                            $"RelaxVersioner[{EnvironmentIdentifier}]: Native library preloaded: SourcePath={sourcePath}, DestinationPath={destinationPath}");
+                            $"RelaxVersioner[{EnvironmentIdentifier}]: Native library preloaded: Path={destinationPath}");
                         return;
                     }
-                }
-                catch
-                {
+
+                    try
+                    {
+                        File.Copy(sourcePath, destinationPath, true);
+
+                        // Try preloading copied file
+                        result = loader(destinationPath);
+
+                        // Success
+                        if (result != IntPtr.Zero)
+                        {
+                            NativeLibraryPath = destinationPath;
+                            log.LogMessage(
+                                MessageImportance.High,
+                                $"RelaxVersioner[{EnvironmentIdentifier}]: Native library preloaded: SourcePath={sourcePath}, DestinationPath={destinationPath}");
+                            return;
+                        }
+                    }
+                    catch
+                    {
+                        Thread.Sleep(200);
+                    }
                 }
             }
 
@@ -158,14 +162,20 @@ namespace CenterCLR.RelaxVersioner
             // Preload assemblies
             foreach (var sourcePath in Directory.EnumerateFiles(BasePath, "*.dll", SearchOption.TopDirectoryOnly))
             {
-                var assembly = Assembly.LoadFrom(sourcePath);
-                if (assembly != null)
+                try
                 {
-                    log.LogMessage(
-                        MessageImportance.High,
-                        $"RelaxVersioner[{EnvironmentIdentifier}]: Assembly preloaded: Path={sourcePath}");
+                    var assembly = Assembly.LoadFrom(sourcePath);
+                    if (assembly != null)
+                    {
+                        log.LogMessage(
+                            MessageImportance.High,
+                            $"RelaxVersioner[{EnvironmentIdentifier}]: Assembly preloaded: Path={sourcePath}");
+                    }
                 }
-                else
+                catch (BadImageFormatException)
+                {
+                }
+                catch
                 {
                     log.LogWarning(
                         $"RelaxVersioner[{EnvironmentIdentifier}]: Cannot preload assembly: Path={sourcePath}");
