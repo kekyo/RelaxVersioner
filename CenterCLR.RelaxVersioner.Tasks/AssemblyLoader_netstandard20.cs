@@ -29,7 +29,7 @@ namespace CenterCLR.RelaxVersioner
 #if NETSTANDARD2_0
     internal sealed class AssemblyLoader : System.Runtime.Loader.AssemblyLoadContext
     {
-        private static readonly MessageImportance logImportance = MessageImportance.Low;
+        private static readonly MessageImportance logImportance = MessageImportance.High;
 
         private readonly TaskLoggingHelper logger;
 
@@ -42,7 +42,11 @@ namespace CenterCLR.RelaxVersioner
             // https://github.com/dotnet/coreclr/issues/19654
             if (StringComparer.InvariantCultureIgnoreCase.Equals(assemblyName.Name, "libgit2sharp"))
             {
-                return Default.LoadFromAssemblyName(assemblyName);
+                var a = typeof(LibGit2Sharp.Repository).Assembly;
+                logger.LogMessage(logImportance, "RelaxVersioner: Assembly libgit2sharp already loaded: Name={0}, Path={1}",
+                    assemblyName,
+                    new Uri(a.CodeBase, UriKind.RelativeOrAbsolute).LocalPath);
+                return a;
             }
 
             var path = Path.Combine(AssemblyLoadHelper.BasePath, assemblyName.Name + ".dll");
