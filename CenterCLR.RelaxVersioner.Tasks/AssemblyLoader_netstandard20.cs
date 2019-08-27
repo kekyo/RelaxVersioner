@@ -23,7 +23,6 @@ using System.Reflection;
 
 using Microsoft.Build.Framework;
 using Microsoft.Build.Utilities;
-using Microsoft.DotNet.PlatformAbstractions;
 
 namespace CenterCLR.RelaxVersioner
 {
@@ -32,10 +31,14 @@ namespace CenterCLR.RelaxVersioner
     {
         private static readonly MessageImportance logImportance = MessageImportance.High;
 
-        private readonly TaskLoggingHelper logger;
+        private static readonly object loaderLocker = new object();
+        private static AssemblyLoader loader;
 
-        private AssemblyLoader(TaskLoggingHelper logger) =>
-            this.logger = logger;
+        private TaskLoggingHelper logger;
+
+        private AssemblyLoader()
+        {
+        }
 
         protected override Assembly Load(AssemblyName assemblyName)
         {
@@ -110,7 +113,18 @@ namespace CenterCLR.RelaxVersioner
         {
             AssemblyLoadHelper.SetupNativeLibraries(logger);
 
-            var loader = new AssemblyLoader(logger);
+            if (loader == null)
+            {
+                lock (loaderLocker)
+                {
+                    if (loader == null)
+                    {
+                        loader = new AssemblyLoader();
+                    }
+                }
+            }
+
+            loader.logger = logger;
 
             var assembly = loader.LoadFromAssemblyPath(AssemblyLoadHelper.GetAssemblyPathDerivedFromBasePath(typeof(T).Assembly));
             var type = assembly.GetType(typeof(T).FullName);
