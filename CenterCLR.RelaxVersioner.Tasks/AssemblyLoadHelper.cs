@@ -92,7 +92,7 @@ namespace CenterCLR.RelaxVersioner
                             Where(path => path.EndsWith(RuntimeEnvironment.RuntimeArchitecture)).
                             SelectMany(path => Directory.EnumerateDirectories(path, "native", SearchOption.TopDirectoryOnly))).
                         Concat(Directory.EnumerateDirectories(
-                            $"linux-{RuntimeEnvironment.RuntimeArchitecture}", "native", SearchOption.TopDirectoryOnly)).
+                            Path.Combine(baseNativeBasePath, $"linux-{RuntimeEnvironment.RuntimeArchitecture}"), "native", SearchOption.TopDirectoryOnly)).
                         ToArray();
                     break;
             }
@@ -141,7 +141,7 @@ namespace CenterCLR.RelaxVersioner
                             NativeLibraryPath = destinationPath;
                             log.LogMessage(
                                 MessageImportance.High,
-                                $"RelaxVersioner[{EnvironmentIdentifier}]: Native library preloaded: SourcePath={sourcePath}, DestinationPath={destinationPath}");
+                                $"RelaxVersioner[{EnvironmentIdentifier}]: Native library copied and preloaded: SourcePath={sourcePath}, DestinationPath={destinationPath}");
                             return;
                         }
                     }
