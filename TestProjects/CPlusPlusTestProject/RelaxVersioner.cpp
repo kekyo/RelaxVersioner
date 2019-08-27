@@ -1,6 +1,6 @@
-// This is auto-generated version information attributes by CenterCLR.RelaxVersioner.0.9.58.0
+// This is auto-generated version information attributes by CenterCLR.RelaxVersioner.0.9.59.0
 // Do not edit.
-// Generated date: Tue, 27 Aug 2019 12:16:32 GMT
+// Generated date: Tue, 27 Aug 2019 12:25:09 GMT
 
 #include "stdafx.h"
 
@@ -26,12 +26,12 @@ namespace System
 using namespace System::Reflection;
 using namespace System::Runtime::InteropServices;
 
-[assembly: AssemblyVersionAttribute("0.9.58")];
-[assembly: AssemblyFileVersionAttribute("2019.8.27.38245")];
-[assembly: AssemblyInformationalVersionAttribute("75e6649e4614054830ea2d88d6a188d6f6369f70")];
-[assembly: AssemblyVersionMetadataAttribute("Build","Tue, 27 Aug 2019 12:14:50 GMT")];
+[assembly: AssemblyVersionAttribute("0.9.59")];
+[assembly: AssemblyFileVersionAttribute("2019.8.27.38476")];
+[assembly: AssemblyInformationalVersionAttribute("b2af3e1aaf57d0263cf6d20130ec443ecc60e990")];
+[assembly: AssemblyVersionMetadataAttribute("Build","Tue, 27 Aug 2019 12:22:33 GMT")];
 [assembly: AssemblyVersionMetadataAttribute("Branch","")];
-[assembly: AssemblyVersionMetadataAttribute("Tags","0.9.58")];
+[assembly: AssemblyVersionMetadataAttribute("Tags","0.9.59")];
 [assembly: AssemblyVersionMetadataAttribute("Author","Kouji Matsui <k@kekyo.net>")];
 [assembly: AssemblyVersionMetadataAttribute("Committer","Kouji Matsui <k@kekyo.net>")];
 [assembly: AssemblyVersionMetadataAttribute("Message","wip")];
