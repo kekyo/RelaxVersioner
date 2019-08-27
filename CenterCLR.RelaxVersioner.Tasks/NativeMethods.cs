@@ -25,13 +25,13 @@ namespace CenterCLR.RelaxVersioner
     internal static class NativeMethods
     {
         [DllImport("kernel32.dll", EntryPoint = "AddDllDirectory", CharSet = CharSet.Unicode, SetLastError = true)]
-        private static extern bool Win32_AddDllDirectory(string path);
+        private static extern bool AddDllDirectory(string path);
 
-        public static bool Win32_TryAddDllDirectory(string path)
+        public static bool Win32_AddDllDirectory(string path)
         {
             try
             {
-                return Win32_AddDllDirectory(path);
+                return AddDllDirectory(path);
             }
             catch
             {
@@ -40,9 +40,24 @@ namespace CenterCLR.RelaxVersioner
         }
 
         [DllImport("kernel32.dll", EntryPoint = "LoadLibrary", CharSet = CharSet.Ansi, SetLastError = true)]
-        public static extern IntPtr Win32_LoadLibrary(string libFileName);
+        public static extern IntPtr Win32_LoadLibrary(string dllPath);
+
+
+        [Flags]
+        private enum RTLD : int
+        {
+            LAZY = 0x00001,        /* Lazy function call binding.  */
+            NOW = 0x00002,         /* Immediate function call binding.  */
+            NOLOAD = 0x00004,      /* Do not load the object.  */
+            DEEPBIND = 0x00008,    /* Use deep binding.  */
+            GLOBAL = 0x00100,
+            LOCAL = 0x00000
+        };
 
         [DllImport("dl", EntryPoint = "dlopen", CharSet = CharSet.Ansi, SetLastError = true)]
-        public static extern IntPtr Unix_LoadLibrary(string libFileName, int flags);
+        private static extern IntPtr dlopen(string dllPath, RTLD flags);
+
+        public static IntPtr Unix_LoadLibrary(string dllPath) =>
+            (dlopen(dllPath, RTLD.NOW | RTLD.GLOBAL) is IntPtr result && (result != IntPtr.Zero)) ? result : dlopen(dllPath, RTLD.NOW);
     }
 }

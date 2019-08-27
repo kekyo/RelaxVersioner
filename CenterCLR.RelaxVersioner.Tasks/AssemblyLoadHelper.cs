@@ -88,7 +88,7 @@ namespace CenterCLR.RelaxVersioner
         {
             var pathEnvironment = (Environment.GetEnvironmentVariable(targetEnvironmentName) ?? string.Empty).Trim();
             var newPath = string.Join(Path.PathSeparator.ToString(), basePaths.Concat(new[] { pathEnvironment }));
-            Environment.SetEnvironmentVariable(targetEnvironmentName, newPath);
+            Environment.SetEnvironmentVariable(targetEnvironmentName, newPath, EnvironmentVariableTarget.Process);
         }
 
         private static void LoadNativeLibraries(
@@ -151,8 +151,8 @@ namespace CenterCLR.RelaxVersioner
                                 PrependBasePaths("PATH", BasePath, BaseNativePath);
                                 if (int.TryParse(RuntimeEnvironment.OperatingSystemVersion.Split('.')[0], out var v) && (v >= 8))
                                 {
-                                    NativeMethods.Win32_TryAddDllDirectory(BasePath);
-                                    NativeMethods.Win32_TryAddDllDirectory(BaseNativePath);
+                                    NativeMethods.Win32_AddDllDirectory(BasePath);
+                                    NativeMethods.Win32_AddDllDirectory(BaseNativePath);
                                 }
                                 LoadNativeLibraries(logger, BaseNativePath, "*" + NativeExtension, NativeMethods.Win32_LoadLibrary);
                                 break;
@@ -160,12 +160,12 @@ namespace CenterCLR.RelaxVersioner
                                 // NOTE: In macos, ElCapitan disabled dylib lookuping feature, so will cause loading failure.
                                 PrependBasePaths("PATH", BasePath);
                                 PrependBasePaths("DYLD_LIBRARY_PATH", BaseNativePath);
-                                LoadNativeLibraries(logger, BaseNativePath, "*" + NativeExtension, path => NativeMethods.Unix_LoadLibrary(path, 2));
+                                LoadNativeLibraries(logger, BaseNativePath, "*" + NativeExtension, NativeMethods.Unix_LoadLibrary);
                                 break;
                             default:
                                 PrependBasePaths("PATH", BasePath);
                                 PrependBasePaths("LD_LIBRARY_PATH", BaseNativePath);
-                                LoadNativeLibraries(logger, BaseNativePath, "*" + NativeExtension, path => NativeMethods.Unix_LoadLibrary(path, 2));
+                                LoadNativeLibraries(logger, BaseNativePath, "*" + NativeExtension, NativeMethods.Unix_LoadLibrary);
                                 break;
                         }
 
