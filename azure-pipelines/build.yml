@@ -54,6 +54,12 @@ jobs:
     pool:
       vmImage: "ubuntu-latest"
     steps:
+      - task: UseDotNet@2
+        displayName: Stick with .NET Core SDK version compatible to Mono toolchain
+        inputs:
+          packageType: sdk
+          version: 2.2.301  # See also: https://github.com/mono/mono/issues/13537
+          installationPath: $(Agent.ToolsDirectory)/dotnet
       - task: NuGetCommand@2
         displayName: "restore TestProjects.Mono"
         inputs:
