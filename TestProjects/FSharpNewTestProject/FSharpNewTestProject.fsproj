@@ -5,6 +5,7 @@
     <RootNamespace>FSharpTestProject</RootNamespace>
     <AssemblyName>FSharpNewTestProject</AssemblyName>
     <TargetFramework>netcoreapp2.0</TargetFramework>
+    <TargetLatestRuntimePatch>true</TargetLatestRuntimePatch>
     <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
   </PropertyGroup>
 
