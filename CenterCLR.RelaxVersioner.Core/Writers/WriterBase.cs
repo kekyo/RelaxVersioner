@@ -36,7 +36,7 @@ namespace CenterCLR.RelaxVersioner.Writers
         public Result Write(
             Logger logger,
             string outputFilePath,
-            Branch branch,
+            Branch branchHint,
             Dictionary<string, IEnumerable<Tag>> tags,
             Dictionary<string, IEnumerable<Branch>> branches,
             DateTimeOffset generated,
@@ -51,11 +51,11 @@ namespace CenterCLR.RelaxVersioner.Writers
 
             var unknownBranch = new UnknownBranch(generated);
 
-            var altBranch = branch ?? unknownBranch;
+            var altBranch = branchHint ?? unknownBranch;
             var commit = altBranch.Commits.FirstOrDefault() ?? unknownBranch.Commits.First();
 
             var targetFolder = Path.GetDirectoryName(outputFilePath);
-            if (!Directory.Exists(targetFolder) && !isDryRun)
+            if (!isDryRun && !string.IsNullOrWhiteSpace(targetFolder) && !Directory.Exists(targetFolder))
             {
                 try
                 {
