@@ -10,11 +10,15 @@ jobs:
     pool:
       vmImage: "windows-latest"
     steps:
-      # The NuGet@1 task has a bug for prepending config file current directory at restore directive,
-      # so it's workaround.
-      - script: |
-          cd TestProjects; ..\azure-pipelines\nuget.exe restore -ConfigFile ..\azure-pipelines\NuGet.Config TestProjects.VS2019.sln
+      - task: DotNetCoreCLI@1
         displayName: "restore TestProjects.VS2019"
+        inputs:
+          command: "restore"
+          projects: "TestProjects/TestProjects.VS2019.sln"
+          configuration: "Release"
+          arguments: -p:Platform="Any CPU"
+          feedsToUse: "config"
+          nugetConfigPath: "azure-pipelines/NuGet.Config"
       - task: MSBuild@1
         displayName: "build TestProjects.VS2019"
         inputs:
@@ -51,11 +55,15 @@ jobs:
     pool:
       vmImage: "ubuntu-latest"
     steps:
-      # The NuGet@1 task has a bug for prepending config file current directory at restore directive,
-      # so it's workaround.
-      - script: |
-          cd TestProjects; mono ../azure-pipelines/nuget.exe restore -ConfigFile ../azure-pipelines/NuGet.Config TestProjects.Mono.sln
+      - task: DotNetCoreCLI@1
         displayName: "restore TestProjects.Mono"
+        inputs:
+          command: "restore"
+          projects: "TestProjects/TestProjects.Mono.sln"
+          configuration: "Release"
+          arguments: -p:Platform="Any CPU"
+          feedsToUse: "config"
+          nugetConfigPath: "azure-pipelines/NuGet.Config"
       - task: MSBuild@1
         displayName: "build TestProjects.Mono"
         inputs:
