@@ -47,7 +47,7 @@ jobs:
           command: "build"
           projects: "TestProjects/TestProjects.NETCore2.sln"
           configuration: "Release"
-          arguments: -p:Platform="Any CPU"
+          arguments: -p:Platform="Any CPU" -v d
           feedsToUse: "config"
           nugetConfigPath: "azure-pipelines/NuGet.Config"
   - job: TestProjects_Mono_Linux
