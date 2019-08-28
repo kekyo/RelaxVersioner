@@ -22,8 +22,8 @@ jobs:
       - task: MSBuild@1
         displayName: "build TestProjects.VS2019"
         inputs:
-          solution: "TestProjects.VS2019.sln"
           workingDirectory: "TestProjects"
+          solution: "TestProjects.VS2019.sln"
           configuration: "Release"
           platform: "Any Cpu"
   - job: TestProjects_NETCore2_Windows
