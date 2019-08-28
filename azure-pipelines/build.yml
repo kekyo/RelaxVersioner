@@ -11,7 +11,8 @@ jobs:
       vmImage: "windows-latest"
     steps:
       - script: |
-          cd TestProjects; msbuild -t:restore -p:Platform="Any Cpu" -p:Configuration=Release -p:RestoreConfigFile=..\azure-pipelines\NuGet.Config TestProjects.VS2019.sln
+          msbuild -t:restore -p:Platform="Any Cpu" -p:Configuration=Release -p:RestoreConfigFile=..\azure-pipelines\NuGet.Config TestProjects.VS2019.sln
+        workingDirectory: TestProjects
       - task: MSBuild@1
         displayName: "build TestProjects.VS2019"
         inputs:
@@ -49,7 +50,8 @@ jobs:
       vmImage: "ubuntu-latest"
     steps:
       - script: |
-          cd TestProjects; msbuild -t:restore -p:Platform="Any Cpu" -p:Configuration=Release -p:RestoreConfigFile=../azure-pipelines/NuGet.Config TestProjects.Mono.sln
+          msbuild -t:restore -p:Platform="Any Cpu" -p:Configuration=Release -p:RestoreConfigFile=../azure-pipelines/NuGet.Config TestProjects.Mono.sln
+        workingDirectory: TestProjects
       - task: MSBuild@1
         displayName: "build TestProjects.Mono"
         inputs:
