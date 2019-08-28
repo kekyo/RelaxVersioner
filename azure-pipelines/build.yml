@@ -10,19 +10,13 @@ jobs:
     pool:
       vmImage: "windows-latest"
     steps:
-      - task: MSBuild@1
-        displayName: "restore TestProjects.VS2019"
-        inputs:
-          solution: "TestProjects/TestProjects.VS2019.sln"
-          configuration: "Release"
-          platform: "Any Cpu"
-          msbuildArguments: -t:restore
-      - task: MSBuild@1
+      - task: VSBuild@1
         displayName: "build TestProjects.VS2019"
         inputs:
           solution: "TestProjects/TestProjects.VS2019.sln"
           configuration: "Release"
           platform: "Any Cpu"
+          restoreNugetPackages: true
   - job: TestProjects_NETCore2_Windows
     pool:
       vmImage: "windows-latest"
