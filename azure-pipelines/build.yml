@@ -16,7 +16,7 @@ jobs:
           solution: "TestProjects/TestProjects.VS2019.sln"
           configuration: "Release"
           platform: "Any Cpu"
-          arguments: -t:restore -p:RestoreConfigFile=azure-pipelines/NuGet.Config
+          msbuildArguments: -t:restore -p:RestoreConfigFile=azure-pipelines/NuGet.Config
       - task: MSBuild@1
         displayName: "build TestProjects.VS2019"
         inputs:
@@ -59,7 +59,7 @@ jobs:
           solution: "TestProjects/TestProjects.Mono.sln"
           configuration: "Release"
           platform: "Any Cpu"
-          arguments: -t:restore -p:RestoreConfigFile=azure-pipelines/NuGet.Config
+          msbuildArguments: -t:restore -p:RestoreConfigFile=azure-pipelines/NuGet.Config
       - task: MSBuild@1
         displayName: "build TestProjects.Mono"
         inputs:
