@@ -14,16 +14,14 @@ jobs:
         displayName: "restore TestProjects.VS2019"
         inputs:
           command: "restore"
-          workingDirectory: "TestProjects"
-          restoreSolution: "TestProjects.VS2019.sln"
+          restoreSolution: "TestProjects/TestProjects.VS2019.sln"
           configuration: "Release"
           feedsToUse: "config"
-          nugetConfigPath: "NuGet.Config"
+          nugetConfigPath: "TestProjects/NuGet.Config"
       - task: MSBuild@1
         displayName: "build TestProjects.VS2019"
         inputs:
-          workingDirectory: "TestProjects"
-          solution: "TestProjects.VS2019.sln"
+          solution: "TestProjects/TestProjects.VS2019.sln"
           configuration: "Release"
           platform: "Any Cpu"
   - job: TestProjects_NETCore2_Windows
@@ -34,12 +32,11 @@ jobs:
         displayName: "build TestProjects.NETCore2"
         inputs:
           command: "build"
-          workingDirectory: "TestProjects"
-          projects: "TestProjects.NETCore2.sln"
+          projects: "TestProjects/TestProjects.NETCore2.sln"
           configuration: "Release"
           arguments: -p:Platform="Any CPU"
           feedsToUse: "config"
-          nugetConfigPath: "NuGet.Config"
+          nugetConfigPath: "TestProjects/NuGet.Config"
   - job: TestProjects_NETCore2_Linux
     pool:
       vmImage: "ubuntu-latest"
@@ -48,12 +45,11 @@ jobs:
         displayName: "build TestProjects.NETCore2"
         inputs:
           command: "build"
-          workingDirectory: "TestProjects"
-          projects: "TestProjects.NETCore2.sln"
+          projects: "TestProjects/TestProjects.NETCore2.sln"
           configuration: "Release"
           arguments: -p:Platform="Any CPU"
           feedsToUse: "config"
-          nugetConfigPath: "NuGet.Config"
+          nugetConfigPath: "TestProjects/NuGet.Config"
   - job: TestProjects_Mono_Linux
     pool:
       vmImage: "ubuntu-latest"
@@ -62,15 +58,13 @@ jobs:
         displayName: "restore TestProjects.Mono"
         inputs:
           command: "restore"
-          workingDirectory: "TestProjects"
-          restoreSolution: "TestProjects.Mono.sln"
+          restoreSolution: "TestProjects/TestProjects.Mono.sln"
           configuration: "Release"
           feedsToUse: "config"
-          nugetConfigPath: "NuGet.Config"
+          nugetConfigPath: "TestProjects/NuGet.Config"
       - task: MSBuild@1
         displayName: "build TestProjects.Mono"
         inputs:
-          workingDirectory: "TestProjects"
-          solution: "TestProjects.Mono.sln"
+          solution: "TestProjects/TestProjects.Mono.sln"
           configuration: "Release"
           platform: "Any Cpu"
