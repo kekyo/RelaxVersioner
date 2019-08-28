@@ -1,11 +1,15 @@
 jobs:
-  - job: Windows
+  - job: RelaxVersioner
     pool:
       vmImage: "windows-latest"
     steps:
       - script: |
           build-nupkg.bat
         displayName: "build-nupkg"
+  - job: TestProjects_VS2019_Windows
+    pool:
+      vmImage: "windows-latest"
+    steps:
       - task: NuGetCommand@2
         displayName: "restore TestProjects.VS2019"
         inputs:
@@ -20,14 +24,10 @@ jobs:
           solution: "TestProjects/TestProjects.VS2019.sln"
           configuration: "Release"
           platform: "Any Cpu"
-  - job: Linux_NETCore2
+  - job: TestProjects_NETCore2_Windows
     pool:
-      vmImage: "ubuntu-latest"
+      vmImage: "windows-latest"
     steps:
-      - task: Bash@3
-        displayName: "build-dotnetcore"
-        inputs:
-          filePath: "build-dotnetcore.sh"
       - task: DotNetCoreCLI@1
         displayName: "build TestProjects.NETCore2"
         inputs:
@@ -37,14 +37,23 @@ jobs:
           arguments: -p:Platform="Any CPU"
           feedsToUse: "config"
           nugetConfigPath: "TestProjects/NuGet.Config"
-  - job: Linux_Mono
+  - job: TestProjects_NETCore2_Linux
     pool:
       vmImage: "ubuntu-latest"
     steps:
-      - task: Bash@3
-        displayName: "build-mono"
+      - task: DotNetCoreCLI@1
+        displayName: "build TestProjects.NETCore2"
         inputs:
-          filePath: "build-mono.sh"
+          command: "build"
+          projects: "TestProjects/TestProjects.NETCore2.sln"
+          configuration: "Release"
+          arguments: -p:Platform="Any CPU"
+          feedsToUse: "config"
+          nugetConfigPath: "TestProjects/NuGet.Config"
+  - job: TestProjects_Mono_Linux
+    pool:
+      vmImage: "ubuntu-latest"
+    steps:
       - task: NuGetCommand@2
         displayName: "restore TestProjects.Mono"
         inputs:
