@@ -67,7 +67,20 @@ namespace CenterCLR.RelaxVersioner
 
         public override bool Execute()
         {
-            AssemblyLoadHelper.Initialize(this.Log);
+            var logger = new TaskLogger(this.Log);
+
+            logger.Message(
+                LogImportance.Normal,
+                "ManagedBasePath={0}",
+                AssemblyLoadHelper.BasePath);
+
+            AssemblyLoadHelper.Initialize(logger);
+
+            logger.Message(
+                LogImportance.Normal,
+                "NativeRuntimeIdentifier={0}, NativeLibraryPath={1}",
+                AssemblyLoadHelper.NativeRuntimeIdentifier,
+                AssemblyLoadHelper.NativeLibraryPath);
 
             try
             {
@@ -76,11 +89,8 @@ namespace CenterCLR.RelaxVersioner
                 var isDryRun = this.Language == null;
                 var outputPath = this.OutputPath.ItemSpec;
 
-                base.Log.LogMessage(
-                    MessageImportance.Normal,
-                    $"RelaxVersioner[{AssemblyLoadHelper.EnvironmentIdentifier}]: ManagedPath={AssemblyLoadHelper.BasePath}, NativeRuntimeIdentifier={AssemblyLoadHelper.NativeRuntimeIdentifier}, NativeLibraryPath ={AssemblyLoadHelper.NativeLibraryPath}");
-
-                var result = Processor.Run(projectDirectory, outputPath, language, isDryRun);
+                var processor = new Processor(logger);
+                var result = processor.Run(projectDirectory, outputPath, language, isDryRun);
 
                 this.DetectedIdentity = result.Identity;
                 this.DetectedShortIdentity = result.ShortIdentity;
@@ -88,13 +98,18 @@ namespace CenterCLR.RelaxVersioner
 
                 var dryrunDisplay = isDryRun ? " (dryrun)" : string.Empty;
                 var languageDisplay = isDryRun ? string.Empty : $"Language={language}, ";
-                base.Log.LogMessage(
-                    MessageImportance.High,
-                    $"RelaxVersioner[{AssemblyLoadHelper.EnvironmentIdentifier}]: Generated versions code{dryrunDisplay}: {languageDisplay}Version={this.DetectedIdentity}, ShortVersion={this.DetectedShortIdentity}");
+
+                logger.Message(
+                    LogImportance.High,
+                    "Generated versions code{0}: {1}Version={2}, ShortVersion={3}",
+                    dryrunDisplay,
+                    languageDisplay,
+                    this.DetectedIdentity,
+                    this.DetectedShortIdentity);
             }
             catch (Exception ex)
             {
-                base.Log.LogErrorFromException(ex, true, true, null);
+                logger.Error(ex, "Unknown exception occurred.");
                 return false;
             }
 

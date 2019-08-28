@@ -73,18 +73,30 @@ namespace CenterCLR.RelaxVersioner
             }
         }
 
-        public static Repository OpenRepository(string candidatePath) =>
-            TraversePathToRoot(candidatePath, path =>
+        public static Repository OpenRepository(Logger logger, string candidatePath)
+        {
+            var repository = TraversePathToRoot(candidatePath, path =>
             {
                 try
                 {
-                    return new Repository(path + Path.DirectorySeparatorChar);
+                    var r = new Repository(path + Path.DirectorySeparatorChar);
+                    logger.Message(LogImportance.Low, "Repository opened, Path={0}", path);
+                    return r;
                 }
-                catch (RepositoryNotFoundException)
+                catch (RepositoryNotFoundException ex)
                 {
+                    logger.Message(LogImportance.Low, ex, "Path={0}", path);
                     return null;
                 }
             });
+
+            if (repository == null)
+            {
+                logger.Warning("Repository not found, CandidatePath={0}", candidatePath);
+            }
+
+            return repository;
+        }
 
         private static System.Version TryParseVersion(string versionString)
         {

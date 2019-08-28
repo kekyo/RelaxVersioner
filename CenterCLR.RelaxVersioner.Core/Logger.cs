@@ -1,0 +1,94 @@
+﻿/////////////////////////////////////////////////////////////////////////////////////////////////
+//
+// CenterCLR.RelaxVersioner - Easy-usage, Git-based, auto-generate version informations toolset.
+// Copyright (c) 2016-2019 Kouji Matsui (@kozy_kekyo, @kekyo2)
+//
+// Licensed under the Apache License, Version 2.0 (the "License");
+// you may not use this file except in compliance with the License.
+// You may obtain a copy of the License at
+//
+//	http://www.apache.org/licenses/LICENSE-2.0
+//
+// Unless required by applicable law or agreed to in writing, software
+// distributed under the License is distributed on an "AS IS" BASIS,
+// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+// See the License for the specific language governing permissions and
+// limitations under the License.
+//
+/////////////////////////////////////////////////////////////////////////////////////////////////
+
+using System;
+using System.IO;
+
+namespace CenterCLR.RelaxVersioner
+{
+    public enum LogImportance
+    {
+        Low = 1,
+        Normal = 2,
+        High =3
+    }
+
+    public abstract class Logger
+    {
+        protected readonly string Header;
+
+        protected Logger(string header) =>
+            this.Header = header;
+
+        public abstract void Message(LogImportance importance, string message);
+
+        public virtual void Message(LogImportance importance, string format, params object[] args) =>
+            this.Message(importance, $"{this.Header}: {string.Format(format, args)}");
+        public virtual void Message(LogImportance importance, Exception ex, string format, params object[] args) =>
+            this.Message(importance, $"{this.Header}: {ex.GetType().Name}={ex.Message}, {string.Format(format, args)}");
+
+        public abstract void Warning(string message);
+
+        public virtual void Warning(string format, params object[] args) =>
+            this.Warning($"{this.Header}: {string.Format(format, args)}");
+        public virtual void Warning(Exception ex, string format, params object[] args) =>
+            this.Warning($"{this.Header}: {ex.GetType().Name}={ex.Message}, {string.Format(format, args)}");
+
+        public abstract void Error(string message);
+
+        public virtual void Error(string format, params object[] args) =>
+            this.Error($"{this.Header}: {string.Format(format, args)}");
+        public virtual void Error(Exception ex, string format, params object[] args) =>
+            this.Error($"{this.Header}: {ex.GetType().Name}={ex.Message}, {string.Format(format, args)}");
+
+        public static Logger Create(string header, LogImportance lowerImportance, TextWriter @out, TextWriter warning, TextWriter error) =>
+            new TextWriterLogger(header, lowerImportance, @out, warning, error);
+    }
+
+    internal sealed class TextWriterLogger : Logger
+    {
+        private readonly LogImportance lowerImportance;
+        private readonly TextWriter @out;
+        private readonly TextWriter warning;
+        private readonly TextWriter error;
+
+        public TextWriterLogger(string header, LogImportance lowerImportance, TextWriter @out, TextWriter warning, TextWriter error) :
+            base(header)
+        {
+            this.lowerImportance = lowerImportance;
+            this.@out = @out;
+            this.warning = warning;
+            this.error = error;
+        }
+
+        public override void Message(LogImportance importance, string message)
+        {
+            if (importance >= lowerImportance)
+            {
+                @out.WriteLine(message);
+            }
+        }
+
+        public override void Warning(string message) =>
+            warning.WriteLine(message);
+
+        public override void Error(string message) =>
+            error.WriteLine(message);
+    }
+}

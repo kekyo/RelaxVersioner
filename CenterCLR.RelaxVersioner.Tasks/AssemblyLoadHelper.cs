@@ -23,29 +23,21 @@ using System.Linq;
 using System.Reflection;
 using System.Threading;
 
-using Microsoft.Build.Framework;
-using Microsoft.Build.Utilities;
 using Microsoft.DotNet.PlatformAbstractions;
 
 namespace CenterCLR.RelaxVersioner
 {
     internal static class AssemblyLoadHelper
     {
-        private static readonly MessageImportance logImportance = MessageImportance.Low;
-
-        public static string EnvironmentIdentifier { get; private set; }
-        public static string NativeRuntimeIdentifier { get; private set; }
         public static string BasePath { get; private set; }
+        public static string EnvironmentIdentifier { get; private set; }
+
+        public static string NativeRuntimeIdentifier { get; private set; }
         public static string NativeExtension { get; private set; }
         public static string NativeLibraryPath { get; private set; }
 
-        public static void Initialize(TaskLoggingHelper log)
+        static AssemblyLoadHelper()
         {
-            if (BasePath != null)
-            {
-                return;
-            }
-
             BasePath = Path.GetDirectoryName(
                 (new Uri(typeof(AssemblyLoadHelper).Assembly.CodeBase, UriKind.RelativeOrAbsolute)).LocalPath);
 
@@ -55,9 +47,18 @@ namespace CenterCLR.RelaxVersioner
 
             // "0.9.45/netstandard2.0/win10-x64"
             EnvironmentIdentifier = $"{relaxVersionerVersion}/{platformIdentifier}/{runtimeIdentifier}";
+        }
+
+        public static void Initialize(Logger logger)
+        {
+            if (NativeRuntimeIdentifier != null)
+            {
+                return;
+            }
 
             var baseNativeBasePath = Path.GetFullPath(Path.Combine(BasePath, "..", "..", "runtimes"));
 
+            var runtimeIdentifier = RuntimeEnvironment.GetRuntimeIdentifier();
             var id = runtimeIdentifier.Replace("-aot", string.Empty);
             var ids = id.Split('-');
             var shortPlatform0 = ids[0].Split('.')[0].Trim('0', '1', '2', '3', '4', '5', '6', '7', '8', '9');
@@ -100,12 +101,11 @@ namespace CenterCLR.RelaxVersioner
                     break;
             }
 
-            PreloadNativeLibrary(log, baseNativePaths, loader);
-
-            PreloadAssemblies(log);
+            PreloadNativeLibrary(logger, baseNativePaths, loader);
+            PreloadAssemblies(logger);
         }
 
-        private static void PreloadNativeLibrary(TaskLoggingHelper log, string[] baseNativePaths, Func<string, IntPtr> loader)
+        private static void PreloadNativeLibrary(Logger logger, string[] baseNativePaths, Func<string, IntPtr> loader)
         {
             // SUPER DIRTY WORKAROUND: Will copy native library into assembly directory...
             //   Because this problem fixing is very difficult and shame .NET Core 2,
@@ -122,7 +122,7 @@ namespace CenterCLR.RelaxVersioner
                 var fileName = Path.GetFileName(sourcePath);
                 var destinationPath = Path.Combine(BasePath, fileName);
 
-                for (var i = 0; i < 3; i++)
+                for (var i = 0; i < 5; i++)
                 {
                     // Try preloading already copied file
                     var result = loader(destinationPath);
@@ -131,9 +131,10 @@ namespace CenterCLR.RelaxVersioner
                     if (result != IntPtr.Zero)
                     {
                         NativeLibraryPath = destinationPath;
-                        log.LogMessage(
-                            logImportance,
-                            $"RelaxVersioner[{EnvironmentIdentifier}]: Native library preloaded: Path={destinationPath}");
+                        logger.Message(
+                            LogImportance.Low,
+                            "Native library preloaded: Path={0}",
+                            destinationPath);
                         return;
                     }
 
@@ -147,10 +148,12 @@ namespace CenterCLR.RelaxVersioner
                         // Success
                         if (result != IntPtr.Zero)
                         {
-                            NativeLibraryPath = destinationPath;
-                            log.LogMessage(
-                                logImportance,
-                                $"RelaxVersioner[{EnvironmentIdentifier}]: Native library copied and preloaded: SourcePath={sourcePath}, DestinationPath={destinationPath}");
+                            NativeLibraryPath = sourcePath;
+                            logger.Message(
+                                LogImportance.Low,
+                                "Native library copied and preloaded: SourcePath={0}, DestinationPath={1}",
+                                sourcePath,
+                                destinationPath);
                             return;
                         }
                     }
@@ -161,12 +164,12 @@ namespace CenterCLR.RelaxVersioner
                 }
             }
 
-            var sources = string.Join(",", sourcePaths);
-            log.LogWarning(
-                $"RelaxVersioner[{EnvironmentIdentifier}]: Cannot preload native library: Sources=[{sources}]");
+            logger.Warning(
+                "Cannot preload native library: Sources=[{0}]",
+                string.Join(",", sourcePaths));
         }
 
-        private static void PreloadAssemblies(TaskLoggingHelper log)
+        private static void PreloadAssemblies(Logger logger)
         {
             // Preload assemblies
             foreach (var sourcePath in Directory.EnumerateFiles(BasePath, "*.dll", SearchOption.TopDirectoryOnly))
@@ -176,9 +179,10 @@ namespace CenterCLR.RelaxVersioner
                     var assembly = Assembly.LoadFrom(sourcePath);
                     if (assembly != null)
                     {
-                        log.LogMessage(
-                            logImportance,
-                            $"RelaxVersioner[{EnvironmentIdentifier}]: Assembly preloaded: Path={sourcePath}");
+                        logger.Message(
+                            LogImportance.Low,
+                            "Assembly preloaded: Path={0}",
+                            sourcePath);
                     }
                 }
                 catch (BadImageFormatException)
@@ -186,8 +190,9 @@ namespace CenterCLR.RelaxVersioner
                 }
                 catch
                 {
-                    log.LogWarning(
-                        $"RelaxVersioner[{EnvironmentIdentifier}]: Cannot preload assembly: Path={sourcePath}");
+                    logger.Warning(
+                        "Cannot preload assembly: Path={0}",
+                        sourcePath);
                 }
             }
         }

@@ -47,10 +47,6 @@
     <PackageReference Include="Microsoft.DotNet.PlatformAbstractions" Version="2.1.0" PrivateAssets="All" Publish="true" />
   </ItemGroup>
 
-  <ItemGroup Condition="'$(TargetFramework)' == 'netstandard2.0'">
-    <PackageReference Include="System.Runtime.Loader" Version="4.3.0" PrivateAssets="All" Publish="true" />
-  </ItemGroup>
-
   <ItemGroup>
     <Content Include="build\CenterCLR.RelaxVersioner.props" />
     <Content Include="build\CenterCLR.RelaxVersioner.targets" />
