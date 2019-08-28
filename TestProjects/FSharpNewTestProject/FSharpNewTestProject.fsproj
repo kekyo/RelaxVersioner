@@ -4,7 +4,7 @@
     <OutputType>Exe</OutputType>
     <RootNamespace>FSharpTestProject</RootNamespace>
     <AssemblyName>FSharpNewTestProject</AssemblyName>
-    <TargetFramework>net45</TargetFramework>
+    <TargetFramework>netcoreapp2.0</TargetFramework>
     <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
   </PropertyGroup>
 

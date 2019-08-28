@@ -28,17 +28,34 @@ jobs:
         displayName: "build"
         inputs:
           filePath: "build.sh"
+      - task: DotNetCoreCLI@1
+        displayName: "build TestProjects.NETCore2"
+        inputs:
+          command: "build"
+          projects: "TestProjects/TestProjects.NETCore2.sln"
+          configuration: "Release"
+          arguments: -p:Platform="Any CPU"
+          feedsToUse: "config"
+          nugetConfigPath: "TestProjects/NuGet.Config"
+  - job: Linux_Mono
+    pool:
+      vmImage: "ubuntu-latest"
+    steps:
+      - task: Bash@3
+        displayName: "build"
+        inputs:
+          filePath: "build.sh"
       - task: NuGetCommand@2
-        displayName: "restore TestProjects.NETCore2"
+        displayName: "restore TestProjects.Mono"
         inputs:
           command: "restore"
-          restoreSolution: "TestProjects/TestProjects.NETCore2.sln"
+          restoreSolution: "TestProjects/TestProjects.Mono.sln"
           configuration: "Release"
           feedsToUse: "config"
           nugetConfigPath: "TestProjects/NuGet.Config"
       - task: MSBuild@1
-        displayName: "build TestProjects.NETCore2"
+        displayName: "build TestProjects.Mono"
         inputs:
-          solution: "TestProjects/TestProjects.NETCore2.sln"
+          solution: "TestProjects/TestProjects.Mono.sln"
           configuration: "Release"
           platform: "Any Cpu"

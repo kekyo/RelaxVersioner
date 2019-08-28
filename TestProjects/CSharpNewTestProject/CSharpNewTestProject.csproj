@@ -4,7 +4,7 @@
     <OutputType>Exe</OutputType>
     <RootNamespace>CSharpTestProject</RootNamespace>
     <AssemblyName>CSharpNewTestProject</AssemblyName>
-    <TargetFramework>net40</TargetFramework>
+    <TargetFramework>netcoreapp2.0</TargetFramework>
     <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
 
     <Product>CenterCLR.RelaxVersioner</Product>
