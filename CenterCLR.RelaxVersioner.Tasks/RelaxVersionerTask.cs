@@ -37,7 +37,7 @@ namespace CenterCLR.RelaxVersioner
         }
 
         [Required]
-        public ITaskItem OutputPath
+        public ITaskItem OutputFilePath
         {
             get; set;
         }
@@ -87,10 +87,10 @@ namespace CenterCLR.RelaxVersioner
                 var projectDirectory = Path.GetDirectoryName(this.ProjectPath.ItemSpec);
                 var language = this.Language ?? "C#";
                 var isDryRun = this.Language == null;
-                var outputPath = this.OutputPath.ItemSpec;
+                var outputFilePath = this.OutputFilePath.ItemSpec;
 
                 var processor = new Processor(logger);
-                var result = processor.Run(projectDirectory, outputPath, language, isDryRun);
+                var result = processor.Run(projectDirectory, outputFilePath, language, isDryRun);
 
                 this.DetectedIdentity = result.Identity;
                 this.DetectedShortIdentity = result.ShortIdentity;

@@ -35,7 +35,7 @@ namespace CenterCLR.RelaxVersioner.Writers
 
         public Result Write(
             Logger logger,
-            string targetPath,
+            string outputFilePath,
             Branch branch,
             Dictionary<string, IEnumerable<Tag>> tags,
             Dictionary<string, IEnumerable<Branch>> branches,
@@ -44,7 +44,7 @@ namespace CenterCLR.RelaxVersioner.Writers
             IEnumerable<string> importSet,
             bool isDryRun)
         {
-            Debug.Assert(string.IsNullOrWhiteSpace(targetPath) == false);
+            Debug.Assert(string.IsNullOrWhiteSpace(outputFilePath) == false);
             Debug.Assert(tags != null);
             Debug.Assert(branches != null);
             Debug.Assert(ruleSet != null);
@@ -54,7 +54,7 @@ namespace CenterCLR.RelaxVersioner.Writers
             var altBranch = branch ?? unknownBranch;
             var commit = altBranch.Commits.FirstOrDefault() ?? unknownBranch.Commits.First();
 
-            var targetFolder = Path.GetDirectoryName(targetPath);
+            var targetFolder = Path.GetDirectoryName(outputFilePath);
             if (!Directory.Exists(targetFolder) && !isDryRun)
             {
                 try
@@ -68,7 +68,7 @@ namespace CenterCLR.RelaxVersioner.Writers
                 }
             }
 
-            using (var tw = isDryRun ? (TextWriter)new StringWriter() : File.CreateText(targetPath))
+            using (var tw = isDryRun ? (TextWriter)new StringWriter() : File.CreateText(outputFilePath))
             {
                 this.WriteComment(tw,
                     $"This is auto-generated version information attributes by CenterCLR.RelaxVersioner.{this.GetType().Assembly.GetName().Version}");

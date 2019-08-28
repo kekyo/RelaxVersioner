@@ -22,9 +22,6 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
-using System.Reflection;
-using System.Runtime.CompilerServices;
-using System.Runtime.InteropServices;
 using System.Xml.Linq;
 
 using LibGit2Sharp;
@@ -73,6 +70,12 @@ namespace CenterCLR.RelaxVersioner
             }
         }
 
+        public static string GetDirectoryNameWithoutTrailingSeparator(string path) =>
+            path.TrimEnd(directorySeparatorChar_);
+
+        public static string GetDirectoryNameWithTrailingSeparator(string path) =>
+            GetDirectoryNameWithoutTrailingSeparator(path) + Path.DirectorySeparatorChar;
+
         public static Repository OpenRepository(Logger logger, string candidatePath)
         {
             var repository = TraversePathToRoot(candidatePath, path =>
@@ -81,7 +84,7 @@ namespace CenterCLR.RelaxVersioner
                 {
                     try
                     {
-                        var r = new Repository(path + Path.DirectorySeparatorChar);
+                        var r = new Repository(GetDirectoryNameWithTrailingSeparator(path));
                         logger.Message(LogImportance.Low, "Repository opened, Path={0}", path);
                         return r;
                     }

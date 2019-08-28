@@ -32,9 +32,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Reference Include="CenterCLR.RelaxVersioner.Core">
-      <HintPath>..\CenterCLR.RelaxVersioner.Core\bin\Debug\net46\CenterCLR.RelaxVersioner.Core.dll</HintPath>
-    </Reference>
+    <ProjectReference Include="..\CenterCLR.RelaxVersioner.Core\CenterCLR.RelaxVersioner.Core.csproj" />
   </ItemGroup>
 
 </Project>

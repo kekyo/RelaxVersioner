@@ -1,0 +1,8 @@
+{
+  "profiles": {
+    "CenterCLR.RelaxVersioner": {
+      "commandName": "Project",
+      "commandLineArgs": "$(ProjectDir) output.cs"
+    }
+  }
+}

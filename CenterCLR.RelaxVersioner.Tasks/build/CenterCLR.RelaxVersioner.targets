@@ -24,7 +24,7 @@
     <!-- Common -->
     <PropertyGroup>
         <!-- This path identicate auto-generated source code by RelaxVersioner. -->
-        <RelaxVersionerOutputPath Condition="'$(RelaxVersionerOutputPath)' == ''">$([System.IO.Path]::Combine('$(MSBuildProjectDirectory)','$(IntermediateOutputPath)','RelaxVersioner$(DefaultLanguageSourceExtension)'))</RelaxVersionerOutputPath>
+        <RelaxVersionerOutputFilePath Condition="'$(RelaxVersionerOutputFilePath)' == ''">$([System.IO.Path]::Combine('$(MSBuildProjectDirectory)','$(IntermediateOutputPath)','RelaxVersioner$(DefaultLanguageSourceExtension)'))</RelaxVersionerOutputFilePath>
     </PropertyGroup>
 
     <!-- ======================== -->
@@ -65,13 +65,13 @@
 
     <!-- ============================================================================= -->
     <!-- Build definition -->
-    <Target Name="RelaxVersionerBuild" BeforeTargets="BeforeCompile" Outputs="$(RelaxVersionerOutputPath)">
+    <Target Name="RelaxVersionerBuild" BeforeTargets="BeforeCompile" Outputs="$(RelaxVersionerOutputFilePath)">
 
         <!-- ======================== -->
         <!-- Execute RelaxVersioner -->
         <RelaxVersionerTask
             ProjectPath="$(MSBuildProjectFullPath)"
-            OutputPath="$(RelaxVersionerOutputPath)"
+            OutputFilePath="$(RelaxVersionerOutputFilePath)"
             Language="$(RelaxVersionerLanguage)">
             <Output TaskParameter="DetectedIdentity" PropertyName="RelaxVersionerDetectedIdentity" />
             <Output TaskParameter="DetectedShortIdentity" PropertyName="RelaxVersionerDetectedShortIdentity" />
@@ -92,19 +92,19 @@
         <ItemGroup Condition="'$(Language)' == 'F#'">
             <!-- HACK: F#'s EntryPoint expression is ignoring namespace/module if source code is last compilation.
                  So, RelaxVersioner code insert before any source codes. -->
-            <CompileBefore Include="$(RelaxVersionerOutputPath)" />
+            <CompileBefore Include="$(RelaxVersionerOutputFilePath)" />
         </ItemGroup>
 
         <!-- ======================== -->
         <!-- For C++ (or C++/CLI) -->
         <ItemGroup Condition="'$(Language)' == 'C++'">
-            <ClCompile Include="$(RelaxVersionerOutputPath)" />
+            <ClCompile Include="$(RelaxVersionerOutputFilePath)" />
         </ItemGroup>
 
         <!-- ======================== -->
         <!-- For other languages -->
         <ItemGroup Condition="('$(Language)' != 'F#') and ('$(Language)' != 'C++')">
-            <Compile Include="$(RelaxVersionerOutputPath)" />
+            <Compile Include="$(RelaxVersionerOutputFilePath)" />
         </ItemGroup>
     </Target>
 
@@ -116,7 +116,7 @@
     <!-- Execute RelaxVersioner in dryrun mode -->
     <RelaxVersionerTask
         ProjectPath="$(MSBuildProjectFullPath)"
-        OutputPath="$(RelaxVersionerOutputPath)">
+        OutputFilePath="$(RelaxVersionerOutputFilePath)">
       <Output TaskParameter="DetectedIdentity" PropertyName="RelaxVersionerDetectedIdentity" />
       <Output TaskParameter="DetectedShortIdentity" PropertyName="RelaxVersionerDetectedShortIdentity" />
       <Output TaskParameter="DetectedMessage" PropertyName="RelaxVersionerDetectedMessage" />

@@ -19,6 +19,7 @@
 
 using System;
 using System.Runtime.InteropServices;
+
 using Mono.Options;
 
 namespace CenterCLR.RelaxVersioner
@@ -32,13 +33,16 @@ namespace CenterCLR.RelaxVersioner
 
             try
             {
-                var language =  "C#";
+                var processor = new Processor(logger);
+                var languages = string.Join("|", processor.Languages);
+
+                var language = "C#";
                 var isDryRun = false;
                 var isHelp = false;
 
                 var options = new OptionSet
                 {
-                    { "l=", "language (C#, F#, VB, C++/CLI)", v => language = v },
+                    { "l=", $"target language [{languages}]", v => language = v },
                     { "d", "dry run mode", v => isDryRun = v != null },
                     { "h", "help", v => isHelp = v != null },
                 };
@@ -46,16 +50,15 @@ namespace CenterCLR.RelaxVersioner
                 var trails = options.Parse(args);
                 if (isHelp || (trails.Count < 2))
                 {
-                    logger.Error("Usage: rv [options...] <projectDirectory> <outputPath>");
+                    logger.Error("Usage: rv [options...] <projectDirectory> <outputFilePath>");
                     options.WriteOptionDescriptions(Console.Error);
                     return 1;
                 }
 
-                string projectDirectory = trails[0];
-                string outputPath = trails[1];
+                var projectDirectory = trails[0];
+                var outputFilePath = trails[1];
 
-                var processor = new Processor(logger);
-                var result = processor.Run(projectDirectory, outputPath, language, isDryRun);
+                var result = processor.Run(projectDirectory, outputFilePath, language, isDryRun);
 
                 var dryrunDisplay = isDryRun ? " (dryrun)" : string.Empty;
                 var languageDisplay = isDryRun ? string.Empty : $"Language={language}, ";
