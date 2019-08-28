@@ -10,13 +10,20 @@ jobs:
     pool:
       vmImage: "windows-latest"
     steps:
-      - task: VSBuild@1
-        displayName: "build TestProjects.VS2019"
+      - task: NuGetCommand@2
+        displayName: "restore TestProjects"
         inputs:
-          solution: "TestProjects/TestProjects.VS2019.sln"
+          restoreSolution: "TestProjects/TestProjects.sln"
           configuration: "Release"
           platform: "Any Cpu"
-          restoreNugetPackages: true
+          feedsToUse: config
+          nugetConfigPath: "azure-pipelines/NuGet.Config"
+      - task: VSBuild@1
+        displayName: "build TestProjects"
+        inputs:
+          solution: "TestProjects/TestProjects.sln"
+          configuration: "Release"
+          platform: "Any Cpu"
   - job: TestProjects_NETCore2_Windows
     pool:
       vmImage: "windows-latest"
