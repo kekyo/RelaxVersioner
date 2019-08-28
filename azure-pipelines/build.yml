@@ -17,7 +17,7 @@ jobs:
           restoreSolution: "TestProjects/TestProjects.VS2019.sln"
           configuration: "Release"
           feedsToUse: "config"
-          nugetConfigPath: "TestProjects/NuGet.Config"
+          nugetConfigPath: "NuGet.Config"
       - task: MSBuild@1
         displayName: "build TestProjects.VS2019"
         inputs:
@@ -36,7 +36,7 @@ jobs:
           configuration: "Release"
           arguments: -p:Platform="Any CPU"
           feedsToUse: "config"
-          nugetConfigPath: "TestProjects/NuGet.Config"
+          nugetConfigPath: "NuGet.Config"
   - job: TestProjects_NETCore2_Linux
     pool:
       vmImage: "ubuntu-latest"
@@ -49,7 +49,7 @@ jobs:
           configuration: "Release"
           arguments: -p:Platform="Any CPU"
           feedsToUse: "config"
-          nugetConfigPath: "TestProjects/NuGet.Config"
+          nugetConfigPath: "NuGet.Config"
   - job: TestProjects_Mono_Linux
     pool:
       vmImage: "ubuntu-latest"
@@ -61,7 +61,7 @@ jobs:
           restoreSolution: "TestProjects/TestProjects.Mono.sln"
           configuration: "Release"
           feedsToUse: "config"
-          nugetConfigPath: "TestProjects/NuGet.Config"
+          nugetConfigPath: "NuGet.Config"
       - task: MSBuild@1
         displayName: "build TestProjects.Mono"
         inputs:
