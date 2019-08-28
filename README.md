@@ -165,6 +165,8 @@ using namespace System::Reflection;
 * Under Apache v2
 
 ## History
+* 0.9.67:
+  * Fixed failing extract branch name.
 * 0.9.66:
   * Fixed can't extract version informations from git repository at linux environment.
   * Improved logging architectures.
