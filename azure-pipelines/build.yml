@@ -10,14 +10,13 @@ jobs:
     pool:
       vmImage: "windows-latest"
     steps:
-      - task: NuGetCommand@2
+      - task: MSBuild@1
         displayName: "restore TestProjects.VS2019"
         inputs:
-          command: "restore"
-          restoreSolution: "TestProjects/TestProjects.VS2019.sln"
+          solution: "TestProjects/TestProjects.VS2019.sln"
           configuration: "Release"
-          feedsToUse: "config"
-          nugetConfigPath: "azure-pipelines/NuGet.Config"
+          platform: "Any Cpu"
+          arguments: -t:restore -p:RestoreConfigFile=azure-pipelines/NuGet.Config
       - task: MSBuild@1
         displayName: "build TestProjects.VS2019"
         inputs:
@@ -54,14 +53,13 @@ jobs:
     pool:
       vmImage: "ubuntu-latest"
     steps:
-      - task: NuGetCommand@2
+      - task: MSBuild@1
         displayName: "restore TestProjects.Mono"
         inputs:
-          command: "restore"
-          restoreSolution: "TestProjects/TestProjects.Mono.sln"
+          solution: "TestProjects/TestProjects.Mono.sln"
           configuration: "Release"
-          feedsToUse: "config"
-          nugetConfigPath: "azure-pipelines/NuGet.Config"
+          platform: "Any Cpu"
+          arguments: -t:restore -p:RestoreConfigFile=azure-pipelines/NuGet.Config
       - task: MSBuild@1
         displayName: "build TestProjects.Mono"
         inputs:
