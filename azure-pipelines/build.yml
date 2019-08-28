@@ -51,6 +51,7 @@ jobs:
           feedsToUse: "config"
           nugetConfigPath: "azure-pipelines/NuGet.Config"
   - job: TestProjects_Mono_Linux
+    condition: False  # Cause build error, can't fix: https://github.com/mono/mono/issues/13537
     pool:
       vmImage: "ubuntu-latest"
     steps:
