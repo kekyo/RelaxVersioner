@@ -20,6 +20,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using CenterCLR.RelaxVersioner.Writers;
 
 using LibGit2Sharp;
 
@@ -28,13 +29,21 @@ namespace CenterCLR.RelaxVersioner
     public sealed class Processor
     {
         private readonly Logger logger;
+        private readonly Dictionary<string, WriterBase> writers;
 
-        public Processor(Logger logger) =>
-            this.logger = logger;
-
-        public Result Run(string projectDirectory, string outputPath, string language, bool isDryRun)
+        public Processor(Logger logger)
         {
-            var writers = Utilities.GetWriters();
+            this.logger = logger;
+            this.writers = Utilities.GetWriters();
+            this.Languages = this.writers.Values.
+                Select(writer => writer.Language).
+                ToArray();
+        }
+
+        public string[] Languages { get; }
+
+        public Result Run(string projectDirectory, string outputFilePath, string language, bool isDryRun)
+        {
             var writer = writers[language];
 
             var elementSets = Utilities.GetElementSets(
@@ -72,7 +81,7 @@ namespace CenterCLR.RelaxVersioner
 
                 return writer.Write(
                     logger,
-                    outputPath,
+                    outputFilePath,
                     repository?.Head,
                     tags,
                     branches,
