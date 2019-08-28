@@ -54,13 +54,14 @@ jobs:
     pool:
       vmImage: "ubuntu-latest"
     steps:
-      - task: MSBuild@1
+      - task: NuGetCommand@2
         displayName: "restore TestProjects.Mono"
         inputs:
-          solution: "TestProjects/TestProjects.Mono.sln"
+          restoreSolution: "TestProjects/TestProjects.Mono.sln"
           configuration: "Release"
           platform: "Any Cpu"
-          msbuildArguments: -t:restore
+          feedsToUse: config
+          nugetConfigPath: "azure-pipelines/NuGet.Config"
       - task: MSBuild@1
         displayName: "build TestProjects.Mono"
         inputs:

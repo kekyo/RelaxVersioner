@@ -4,8 +4,7 @@
     <OutputType>Exe</OutputType>
     <RootNamespace>CSharpTestProject</RootNamespace>
     <AssemblyName>CSharpNewTestProject</AssemblyName>
-    <TargetFramework>netcoreapp2.0</TargetFramework>
-    <TargetLatestRuntimePatch>true</TargetLatestRuntimePatch>
+    <TargetFramework>netcoreapp2.1</TargetFramework>
     <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
 
     <Product>CenterCLR.RelaxVersioner</Product>
