@@ -25,9 +25,9 @@ jobs:
       vmImage: "ubuntu-latest"
     steps:
       - task: Bash@3
-        displayName: "build"
+        displayName: "build-dotnetcore"
         inputs:
-          filePath: "build.sh"
+          filePath: "build-dotnetcore.sh"
       - task: DotNetCoreCLI@1
         displayName: "build TestProjects.NETCore2"
         inputs:
@@ -42,9 +42,9 @@ jobs:
       vmImage: "ubuntu-latest"
     steps:
       - task: Bash@3
-        displayName: "build"
+        displayName: "build-mono"
         inputs:
-          filePath: "build.sh"
+          filePath: "build-mono.sh"
       - task: NuGetCommand@2
         displayName: "restore TestProjects.Mono"
         inputs:
