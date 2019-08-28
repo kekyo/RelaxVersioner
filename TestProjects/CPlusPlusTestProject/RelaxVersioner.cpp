@@ -1,6 +1,6 @@
-// This is auto-generated version information attributes by CenterCLR.RelaxVersioner.0.9.63.0
+// This is auto-generated version information attributes by CenterCLR.RelaxVersioner.0.9.64.0
 // Do not edit.
-// Generated date: Tue, 27 Aug 2019 22:44:50 GMT
+// Generated date: Wed, 28 Aug 2019 06:32:03 GMT
 
 #include "stdafx.h"
 
@@ -26,13 +26,13 @@ namespace System
 using namespace System::Reflection;
 using namespace System::Runtime::InteropServices;
 
-[assembly: AssemblyVersionAttribute("0.9.63")];
-[assembly: AssemblyFileVersionAttribute("2019.8.28.13820")];
-[assembly: AssemblyInformationalVersionAttribute("2b6a286c102e3190f342ef461db1010250f28c05")];
-[assembly: AssemblyVersionMetadataAttribute("Build","Tue, 27 Aug 2019 22:40:40 GMT")];
+[assembly: AssemblyVersionAttribute("0.9.64")];
+[assembly: AssemblyFileVersionAttribute("2019.8.28.27839")];
+[assembly: AssemblyInformationalVersionAttribute("d49c5e43f954811bbe07f4335fa6552f7131820a")];
+[assembly: AssemblyVersionMetadataAttribute("Build","Wed, 28 Aug 2019 06:27:58 GMT")];
 [assembly: AssemblyVersionMetadataAttribute("Branch","")];
-[assembly: AssemblyVersionMetadataAttribute("Tags","0.9.63")];
+[assembly: AssemblyVersionMetadataAttribute("Tags","0.9.64")];
 [assembly: AssemblyVersionMetadataAttribute("Author","Kouji Matsui <k@kekyo.net>")];
 [assembly: AssemblyVersionMetadataAttribute("Committer","Kouji Matsui <k@kekyo.net>")];
-[assembly: AssemblyVersionMetadataAttribute("Message","Fixed failure msbuild on linux environment because the mono loader interpreted dll.config file.")];
+[assembly: AssemblyVersionMetadataAttribute("Message","Improved logging.")];
 
