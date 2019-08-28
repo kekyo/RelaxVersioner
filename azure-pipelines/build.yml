@@ -11,7 +11,7 @@ jobs:
       vmImage: "windows-latest"
     steps:
       - script: |
-          cd TestProjects; nuget restore -ConfigFile ../azure-pipelines/NuGet.Config TestProjects/TestProjects.VS2019.sln
+          cd TestProjects; ../azure-pipelines/nuget.exe restore -ConfigFile ../azure-pipelines/NuGet.Config TestProjects/TestProjects.VS2019.sln
         displayName: "restore TestProjects.VS2019"
       - task: MSBuild@1
         displayName: "build TestProjects.VS2019"
@@ -50,7 +50,7 @@ jobs:
       vmImage: "ubuntu-latest"
     steps:
       - script: |
-          cd TestProjects; nuget restore -ConfigFile ../azure-pipelines/NuGet.Config TestProjects.Mono.sln
+          cd TestProjects; mono ../azure-pipelines/nuget.exe restore -ConfigFile ../azure-pipelines/NuGet.Config TestProjects/TestProjects.VS2019.sln
         displayName: "restore TestProjects.Mono"
       - task: MSBuild@1
         displayName: "build TestProjects.Mono"
