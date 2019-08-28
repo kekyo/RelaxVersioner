@@ -12,7 +12,10 @@
 ## What is this?
 * RelaxVersioner is Very easy-usage, Git-based, auto-generate version informations in .NET Core/.NET Framework source code. (Assembly attribute based)
 * If you use RelaxVersioner, version handling ONLY use for Git tags/branches/commit messages. Of course you don't need more tooling usage, and easy managing continuous-integration environments.
-* Target language/projects: C#, F#, VB.NET, C++/CLI and NuGet packaging (dotnet cli pack).
+* Target language/environments:
+  * C#, F#, VB.NET, C++/CLI and NuGet packaging (dotnet cli pack).
+  * Visual Studio 2017/2019, MSBuild on net46/netstandard2.0 (NOT your project platform)
+  * Linux(x64) and Windows(x86/x64).
 * Auto collect version information from local Git repository tags/branch name.
 * Independent AssemblyInfo.cs file, RelaxVersioner is output into temporary file. (No direct manipulate AssemblyInfo file).
 * Place source code location which isn't obstructive for Git. (ex: obj/Debug)
@@ -155,13 +158,17 @@ using namespace System::Reflection;
 * Support native C++ project.
 * Support templated output.
 * Support fallback rule set.
-* Support Mono and .NET Core on linux environments.
+* Support Mono on linux environments.
 
 ## License
 * Copyright (c) 2015-2019 Kouji Matsui (@kozy_kekyo, kekyo2)
 * Under Apache v2
 
 ## History
+* 0.9.66:
+  * Fixed can't extract version informations from git repository at linux environment.
+  * Improved logging architectures.
+  * Improved CI validating on .NET Core 2 environment.
 * 0.9.62:
   * Validated dotnet cli on .NET Core 2 environment (Both Windows and Linux)
 * 0.9.25:
