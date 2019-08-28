@@ -53,7 +53,7 @@ namespace CenterCLR.RelaxVersioner
             where T : class
         {
             var path = Path.GetFullPath(candidatePath).
-                Trim(directorySeparatorChar_);
+                TrimEnd(directorySeparatorChar_);
 
             while (true)
             {
@@ -73,18 +73,38 @@ namespace CenterCLR.RelaxVersioner
             }
         }
 
-        public static Repository OpenRepository(string candidatePath) =>
-            TraversePathToRoot(candidatePath, path =>
+        public static Repository OpenRepository(Logger logger, string candidatePath)
+        {
+            var repository = TraversePathToRoot(candidatePath, path =>
             {
-                try
+                if (Directory.Exists(Path.Combine(path, ".git")))
                 {
-                    return new Repository(path + Path.DirectorySeparatorChar);
+                    try
+                    {
+                        var r = new Repository(path + Path.DirectorySeparatorChar);
+                        logger.Message(LogImportance.Low, "Repository opened, Path={0}", path);
+                        return r;
+                    }
+                    catch (RepositoryNotFoundException ex)
+                    {
+                        logger.Message(LogImportance.Low, ex, "Cannot open repository, Path={0}", path);
+                    }
                 }
-                catch (RepositoryNotFoundException)
+                else
                 {
-                    return null;
+                    logger.Message(LogImportance.Low, "This directory doesn't contain repository, Path={0}", path);
                 }
+
+                return null;
             });
+
+            if (repository == null)
+            {
+                logger.Warning("Repository not found, CandidatePath={0}", candidatePath);
+            }
+
+            return repository;
+        }
 
         private static System.Version TryParseVersion(string versionString)
         {
@@ -136,7 +156,7 @@ namespace CenterCLR.RelaxVersioner
             Debug.Assert(candidatePath != null);
 
             var path = Path.GetFullPath(candidatePath).
-                Trim(directorySeparatorChar_);
+                TrimEnd(directorySeparatorChar_);
 
             while (true)
             {

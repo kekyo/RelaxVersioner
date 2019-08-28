@@ -27,11 +27,12 @@ namespace CenterCLR.RelaxVersioner
 {
     public sealed class Processor
     {
-        private Processor()
-        {
-        }
+        private readonly Logger logger;
 
-        public static VersionResult Run(string projectDirectory, string outputPath, string language, bool isDryRun)
+        public Processor(Logger logger) =>
+            this.logger = logger;
+
+        public Result Run(string projectDirectory, string outputPath, string language, bool isDryRun)
         {
             var writers = Utilities.GetWriters();
             var writer = writers[language];
@@ -45,7 +46,7 @@ namespace CenterCLR.RelaxVersioner
             var ruleSet = Utilities.AggregateRules(elementSet);
 
             // Traverse git repository between projectDirectory and the root.
-            var repository = Utilities.OpenRepository(projectDirectory);
+            var repository = Utilities.OpenRepository(logger, projectDirectory);
 
             try
             {
@@ -70,6 +71,7 @@ namespace CenterCLR.RelaxVersioner
                     new Dictionary<string, IEnumerable<Branch>>();
 
                 return writer.Write(
+                    logger,
                     outputPath,
                     repository?.Head,
                     tags,
@@ -83,12 +85,6 @@ namespace CenterCLR.RelaxVersioner
             {
                 repository?.Dispose();
             }
-        }
-
-        public static string[] RunForTask(string projectDirectory, string outputPath, string language, bool isDryRun)
-        {
-            var result = Run(projectDirectory, outputPath, language, isDryRun);
-            return new[] { result.Identity, result.ShortIdentity, result.Message };
         }
     }
 }

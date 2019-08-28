@@ -4,7 +4,8 @@
     <OutputType>Exe</OutputType>
     <RootNamespace>FSharpTestProject</RootNamespace>
     <AssemblyName>FSharpNewTestProject</AssemblyName>
-    <TargetFramework>net45</TargetFramework>
+    <TargetFramework>netcoreapp2.1</TargetFramework>
+    <RuntimeFrameworkVersion>2.1.0</RuntimeFrameworkVersion>
     <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
   </PropertyGroup>
 
@@ -14,7 +15,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="CenterCLR.RelaxVersioner" Version="0.9.62">
+    <PackageReference Include="CenterCLR.RelaxVersioner" Version="0.9.66">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>

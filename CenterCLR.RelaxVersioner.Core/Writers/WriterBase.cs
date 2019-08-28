@@ -22,6 +22,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
+
 using LibGit2Sharp;
 
 namespace CenterCLR.RelaxVersioner.Writers
@@ -32,7 +33,8 @@ namespace CenterCLR.RelaxVersioner.Writers
 
         public abstract string Language { get; }
 
-        public VersionResult Write(
+        public Result Write(
+            Logger logger,
             string targetPath,
             Branch branch,
             Dictionary<string, IEnumerable<Tag>> tags,
@@ -114,6 +116,11 @@ namespace CenterCLR.RelaxVersioner.Writers
                     {"safeVersion", safeVersion}
                 };
 
+                foreach (var entry in keyValues)
+                {
+                    logger.Message(LogImportance.Low, "Values: {0}={1}", entry.Key, entry.Value);
+                }
+
                 foreach (var rule in ruleSet)
                 {
                     var formattedValue = Named.Format(rule.Format, keyValues);
@@ -138,7 +145,7 @@ namespace CenterCLR.RelaxVersioner.Writers
                     $"{versioned.Major}.{versioned.Minor}.{versioned.Build}" :
                     identity;
 
-                return new VersionResult(identity, shortIdentity, commit.Message);
+                return new Result(identity, shortIdentity, commit.Message);
             }
         }
 

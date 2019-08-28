@@ -1,44 +1,77 @@
 jobs:
-  - job: Windows
+  - job: RelaxVersioner
     pool:
       vmImage: "windows-latest"
     steps:
       - script: |
           build-nupkg.bat
         displayName: "build-nupkg"
+  - job: TestProjects_VS2019_Windows
+    pool:
+      vmImage: "windows-latest"
+    steps:
       - task: NuGetCommand@2
-        displayName: "restore TestProjects.VS2019"
+        displayName: "restore TestProjects"
         inputs:
-          command: "restore"
-          restoreSolution: "TestProjects/TestProjects.VS2019.sln"
-          configuration: "Release"
-          feedsToUse: "config"
-          nugetConfigPath: "TestProjects/NuGet.Config"
-      - task: MSBuild@1
-        displayName: "build TestProjects.VS2019"
-        inputs:
-          solution: "TestProjects/TestProjects.VS2019.sln"
+          restoreSolution: "TestProjects/TestProjects.sln"
           configuration: "Release"
           platform: "Any Cpu"
-  - job: Linux_NETCore2
+          feedsToUse: config
+          nugetConfigPath: "azure-pipelines/NuGet.Config"
+      - task: VSBuild@1
+        displayName: "build TestProjects"
+        inputs:
+          solution: "TestProjects/TestProjects.sln"
+          configuration: "Release"
+          platform: "Any Cpu"
+  - job: TestProjects_NETCore2_Windows
+    pool:
+      vmImage: "windows-latest"
+    steps:
+      - task: DotNetCoreCLI@1
+        displayName: "build TestProjects.NETCore2"
+        inputs:
+          command: "build"
+          projects: "TestProjects/TestProjects.NETCore2.sln"
+          configuration: "Release"
+          arguments: -p:Platform="Any CPU"
+          feedsToUse: "config"
+          nugetConfigPath: "azure-pipelines/NuGet.Config"
+  - job: TestProjects_NETCore2_Linux
     pool:
       vmImage: "ubuntu-latest"
     steps:
-      - task: Bash@3
-        displayName: "build"
-        inputs:
-          filePath: "build.sh"
-      - task: NuGetCommand@2
-        displayName: "restore TestProjects.NETCore2"
-        inputs:
-          command: "restore"
-          restoreSolution: "TestProjects/TestProjects.NETCore2.sln"
-          configuration: "Release"
-          feedsToUse: "config"
-          nugetConfigPath: "TestProjects/NuGet.Config"
-      - task: MSBuild@1
+      - task: DotNetCoreCLI@1
         displayName: "build TestProjects.NETCore2"
         inputs:
-          solution: "TestProjects/TestProjects.NETCore2.sln"
+          command: "build"
+          projects: "TestProjects/TestProjects.NETCore2.sln"
+          configuration: "Release"
+          arguments: -p:Platform="Any CPU"
+          feedsToUse: "config"
+          nugetConfigPath: "azure-pipelines/NuGet.Config"
+  - job: TestProjects_Mono_Linux
+    condition: False  # Cause build error, can't fix: https://github.com/mono/mono/issues/13537
+    pool:
+      vmImage: "ubuntu-latest"
+    steps:
+      - task: UseDotNet@2
+        displayName: Stick with .NET Core SDK version compatible to Mono toolchain
+        inputs:
+          packageType: sdk
+          version: 2.2.301  # See also: https://github.com/mono/mono/issues/13537
+          installationPath: $(Agent.ToolsDirectory)/dotnet
+      - task: NuGetCommand@2
+        displayName: "restore TestProjects.Mono"
+        inputs:
+          restoreSolution: "TestProjects/TestProjects.Mono.sln"
+          configuration: "Release"
+          platform: "Any Cpu"
+          feedsToUse: config
+          nugetConfigPath: "azure-pipelines/NuGet.Config"
+      - task: MSBuild@1
+        displayName: "build TestProjects.Mono"
+        inputs:
+          solution: "TestProjects/TestProjects.Mono.sln"
           configuration: "Release"
           platform: "Any Cpu"
