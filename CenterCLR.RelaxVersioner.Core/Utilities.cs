@@ -53,7 +53,7 @@ namespace CenterCLR.RelaxVersioner
             where T : class
         {
             var path = Path.GetFullPath(candidatePath).
-                Trim(directorySeparatorChar_);
+                TrimEnd(directorySeparatorChar_);
 
             while (true)
             {
@@ -82,16 +82,6 @@ namespace CenterCLR.RelaxVersioner
                     try
                     {
                         var r = new Repository(path + Path.DirectorySeparatorChar);
-                        logger.Message(LogImportance.Low, "Repository opened, Path={0}", path);
-                        return r;
-                    }
-                    catch (RepositoryNotFoundException)
-                    {
-                    }
-
-                    try
-                    {
-                        var r = new Repository(path);
                         logger.Message(LogImportance.Low, "Repository opened, Path={0}", path);
                         return r;
                     }
@@ -166,7 +156,7 @@ namespace CenterCLR.RelaxVersioner
             Debug.Assert(candidatePath != null);
 
             var path = Path.GetFullPath(candidatePath).
-                Trim(directorySeparatorChar_);
+                TrimEnd(directorySeparatorChar_);
 
             while (true)
             {
