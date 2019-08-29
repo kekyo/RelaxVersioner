@@ -21,6 +21,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Images", "Images", "{98ADE1
 	ProjectSection(SolutionItems) = preProject
 		Images\CenterCLR.RelaxVersioner.256.png = Images\CenterCLR.RelaxVersioner.256.png
 		Images\CenterCLR.RelaxVersioner.design = Images\CenterCLR.RelaxVersioner.design
+		Images\Explorer.png = Images\Explorer.png
+		Images\ILSpy.png = Images\ILSpy.png
 		Images\Japanese.256.png = Images\Japanese.256.png
 	EndProjectSection
 EndProject

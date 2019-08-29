@@ -56,7 +56,7 @@ namespace CenterCLR.RelaxVersioner
                 return;
             }
 
-            var baseNativeBasePath = Path.GetFullPath(Path.Combine(BasePath, "..", "..", "runtimes"));
+            var baseNativeBasePath = Path.GetFullPath(Path.Combine(BasePath, "..", "runtimes"));
 
             var runtimeIdentifier = RuntimeEnvironment.GetRuntimeIdentifier();
             var id = runtimeIdentifier.Replace("-aot", string.Empty);
