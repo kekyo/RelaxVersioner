@@ -184,6 +184,8 @@ using namespace System::Reflection;
 * Under Apache v2
 
 ## 履歴
+* 0.9.69:
+  * ビルドした最終出力にruntimeディレクトリが含まれていた問題を修正しました。
 * 0.9.67:
   * ブランチ名を取得できていない問題を修正しました。
 * 0.9.66:

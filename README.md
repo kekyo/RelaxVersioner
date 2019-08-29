@@ -183,6 +183,8 @@ using namespace System::Reflection;
 * Under Apache v2
 
 ## History
+* 0.9.69:
+  * Fixed contains runtime directory when building final result.
 * 0.9.67:
   * Fixed failing extract branch name.
 * 0.9.66:
