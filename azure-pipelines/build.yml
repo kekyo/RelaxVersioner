@@ -24,6 +24,7 @@ jobs:
           solution: "TestProjects/TestProjects.sln"
           configuration: "Release"
           platform: "Any Cpu"
+          msbuildArgs: -p:BuildIdentifier="$(Build.BuildId)"
   - job: TestProjects_NETCore2_Windows
     pool:
       vmImage: "windows-latest"
@@ -34,7 +35,7 @@ jobs:
           command: "build"
           projects: "TestProjects/TestProjects.NETCore2.sln"
           configuration: "Release"
-          arguments: -p:Platform="Any CPU"
+          arguments: -p:Platform="Any CPU" -p:BuildIdentifier="$(Build.BuildId)"
           feedsToUse: "config"
           nugetConfigPath: "azure-pipelines/NuGet.Config"
   - job: TestProjects_NETCore2_Linux
@@ -47,7 +48,7 @@ jobs:
           command: "build"
           projects: "TestProjects/TestProjects.NETCore2.sln"
           configuration: "Release"
-          arguments: -p:Platform="Any CPU"
+          arguments: -p:Platform="Any CPU" -p:BuildIdentifier="$(Build.BuildId)"
           feedsToUse: "config"
           nugetConfigPath: "azure-pipelines/NuGet.Config"
   - job: TestProjects_Mono_Linux
@@ -75,3 +76,4 @@ jobs:
           solution: "TestProjects/TestProjects.Mono.sln"
           configuration: "Release"
           platform: "Any Cpu"
+          msbuildArguments: -p:BuildIdentifier="$(Build.BuildId)"

@@ -47,6 +47,11 @@ namespace CenterCLR.RelaxVersioner
             get; set;
         }
 
+        public string BuildIdentifier
+        {
+            get; set;
+        }
+
         [Output]
         public string DetectedIdentity
         {
@@ -86,11 +91,12 @@ namespace CenterCLR.RelaxVersioner
             {
                 var projectDirectory = Path.GetDirectoryName(this.ProjectPath.ItemSpec);
                 var language = this.Language ?? "C#";
+                var buildIdentifier = string.IsNullOrWhiteSpace(this.BuildIdentifier) ? string.Empty : this.BuildIdentifier;
                 var isDryRun = this.Language == null;
                 var outputFilePath = this.OutputFilePath.ItemSpec;
 
                 var processor = new Processor(logger);
-                var result = processor.Run(projectDirectory, outputFilePath, language, isDryRun);
+                var result = processor.Run(projectDirectory, outputFilePath, language, buildIdentifier, isDryRun);
 
                 this.DetectedIdentity = result.Identity;
                 this.DetectedShortIdentity = result.ShortIdentity;

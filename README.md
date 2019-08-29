@@ -42,17 +42,17 @@ using System.Reflection;
 
 ``` fsharp
 namespace global
-	open System.Reflection
-	[<assembly: AssemblyVersionAttribute("0.5.30.0")>]
-	[<assembly: AssemblyFileVersionAttribute("2016.1.15.41306")>]
-	[<assembly: AssemblyInformationalVersionAttribute("a05ab9fc87b22234596f4ddd43136e9e526ebb90")>]
-	[<assembly: AssemblyVersionMetadataAttribute("Build","Fri, 15 Jan 2016 13:56:53 GMT")>]
-	[<assembly: AssemblyVersionMetadataAttribute("Branch","master")>]
-	[<assembly: AssemblyVersionMetadataAttribute("Tags","0.5.30")>]
-	[<assembly: AssemblyVersionMetadataAttribute("Author","Kouji Matsui <k@kekyo.net>")>]
-	[<assembly: AssemblyVersionMetadataAttribute("Committer","Kouji Matsui <k@kekyo.net>")>]
-	[<assembly: AssemblyVersionMetadataAttribute("Message","Fixed tab")>]
-	do()
+    open System.Reflection
+    [<assembly: AssemblyVersionAttribute("0.5.30.0")>]
+    [<assembly: AssemblyFileVersionAttribute("2016.1.15.41306")>]
+    [<assembly: AssemblyInformationalVersionAttribute("a05ab9fc87b22234596f4ddd43136e9e526ebb90")>]
+    [<assembly: AssemblyVersionMetadataAttribute("Build","Fri, 15 Jan 2016 13:56:53 GMT")>]
+    [<assembly: AssemblyVersionMetadataAttribute("Branch","master")>]
+    [<assembly: AssemblyVersionMetadataAttribute("Tags","0.5.30")>]
+    [<assembly: AssemblyVersionMetadataAttribute("Author","Kouji Matsui <k@kekyo.net>")>]
+    [<assembly: AssemblyVersionMetadataAttribute("Committer","Kouji Matsui <k@kekyo.net>")>]
+    [<assembly: AssemblyVersionMetadataAttribute("Message","Fixed tab")>]
+    do()
 ```
 
 ### For VB.NET:
@@ -115,41 +115,51 @@ using namespace System::Reflection;
 ``` xml
 <?xml version="1.0" encoding="utf-8"?>
 <RelaxVersioner version="1.0">
-	<WriterRules>
-		<!-- Target languages -->
-		<Language>C#</Language>
-		<Language>F#</Language>
-		<Language>VB</Language>
-		<Language>C++/CLI</Language>
-		<Import>System.Reflection</Import>
-		<!--
-			"gitLabel" is extract numerical-notate version string [1.2.3.4] from git repository tags/branches traverse start HEAD.
-			If not found, fallback to "safeVersion".
-		-->
-		<Rule name="System.Reflection.AssemblyVersionAttribute">{gitLabel}</Rule>
-		<!--
-			"safeVersion" is extract committed date (with commmiter) from git repository HEAD.
-			"safeVersion" specialized from "committer.When".
-			(The format is safe-numerical-notate version string [2016.2.14.12345]. (Last number is 2sec prec.))
-		-->
-		<Rule name="System.Reflection.AssemblyFileVersionAttribute">{safeVersion}</Rule>
-		<!--
-			"commitId" is extract commit id from git repository HEAD.
-			"commitId" alias to "commit.Sha".
-		-->
-		<Rule name="System.Reflection.AssemblyInformationalVersionAttribute">{commitId}</Rule>
-		<!--
-			"key" is only used "AssemblyVersionMetadataAttribute".
-			"committer.When" or you can use another choice "author.When".
-			"author" and "committer" can use property "Name", "Email", and "When". (Derived from libgit2sharp)
-		-->
-		<Rule name="System.Reflection.AssemblyVersionMetadataAttribute" key="Build">{committer.When:R}</Rule>
-		<Rule name="System.Reflection.AssemblyVersionMetadataAttribute" key="Branch">{branch.Name}</Rule>
-		<Rule name="System.Reflection.AssemblyVersionMetadataAttribute" key="Tags">{tags}</Rule>
-		<Rule name="System.Reflection.AssemblyVersionMetadataAttribute" key="Author">{author}</Rule>
-		<Rule name="System.Reflection.AssemblyVersionMetadataAttribute" key="Committer">{committer}</Rule>
-		<Rule name="System.Reflection.AssemblyVersionMetadataAttribute" key="Message">{commit.MessageShort}</Rule>
-	</WriterRules>
+    <WriterRules>
+        <!-- Target languages -->
+        <Language>C#</Language>
+        <Language>F#</Language>
+        <Language>VB</Language>
+        <Language>C++/CLI</Language>
+
+        <Import>System.Reflection</Import>
+
+        <!--
+            "gitLabel" is extract numerical-notate version string [1.2.3.4] from git repository tags/branches traverse start HEAD.
+            If not found, use [0.0.1.0].
+        -->
+        <Rule name="AssemblyVersionAttribute">{gitLabel}</Rule>
+
+        <!--
+            "safeVersion" is extract committed date (with commmiter) from git repository HEAD.
+            "safeVersion" specialized from "committer.When".
+            (The format is safe-numerical-notate version string [2016.2.14.12345]. (Last number is 2sec prec.))
+        -->
+        <Rule name="AssemblyFileVersionAttribute">{safeVersion}</Rule>
+
+        <!--
+            "commitId" is extract commit id from git repository HEAD.
+            "commitId" alias to "commit.Sha".
+        -->
+        <Rule name="AssemblyInformationalVersionAttribute">{commitId}</Rule>
+
+        <!--
+            "key" attribute is only using for "AssemblyVersionMetadataAttribute".
+            "committer.When" or you can use another choice "author.When".
+            "branch" can use property "FriendlyName" and "CanonicalName". (Derived from libgit2sharp)
+            "author" and "committer" can use property "Name", "Email", and "When". (Derived from libgit2sharp)
+            "buildIdentifier" is passing from MSBuild property named "RelaxVersionerBuildIdentifier" or "BuildIdentifier". We can use in CI building.
+            "generated" is generated date by RelaxVersioner.
+        -->
+        <Rule name="AssemblyVersionMetadataAttribute" key="Date">{committer.When:R}</Rule>
+        <Rule name="AssemblyVersionMetadataAttribute" key="Branch">{branch.FriendlyName}</Rule>
+        <Rule name="AssemblyVersionMetadataAttribute" key="Tags">{tags}</Rule>
+        <Rule name="AssemblyVersionMetadataAttribute" key="Author">{author}</Rule>
+        <Rule name="AssemblyVersionMetadataAttribute" key="Committer">{committer}</Rule>
+        <Rule name="AssemblyVersionMetadataAttribute" key="Message">{commit.MessageShort}</Rule>
+        <Rule name="AssemblyVersionMetadataAttribute" key="Build">{buildIdentifier}</Rule>
+        <Rule name="AssemblyVersionMetadataAttribute" key="Generated">{generated:R}</Rule>
+    </WriterRules>
 </RelaxVersioner>
 ```
 

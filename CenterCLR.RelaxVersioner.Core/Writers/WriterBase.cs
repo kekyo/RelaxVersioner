@@ -23,39 +23,26 @@ using System.Diagnostics;
 using System.IO;
 using System.Linq;
 
-using LibGit2Sharp;
-
 namespace CenterCLR.RelaxVersioner.Writers
 {
     internal abstract class WriterBase
     {
-        private static readonly System.Version baseVersion_ = new System.Version(0, 0, 1, 0);
-
         public abstract string Language { get; }
 
-        public Result Write(
-            Logger logger,
+        public void Write(
             string outputFilePath,
-            Branch branchHint,
-            Dictionary<string, IEnumerable<Tag>> tags,
-            Dictionary<string, IEnumerable<Branch>> branches,
+            Dictionary<string, object> keyValues,
             DateTimeOffset generated,
             IEnumerable<Rule> ruleSet,
-            IEnumerable<string> importSet,
-            bool isDryRun)
+            IEnumerable<string> importSet)
         {
             Debug.Assert(string.IsNullOrWhiteSpace(outputFilePath) == false);
-            Debug.Assert(tags != null);
-            Debug.Assert(branches != null);
+            Debug.Assert(keyValues != null);
             Debug.Assert(ruleSet != null);
-
-            var unknownBranch = new UnknownBranch(generated);
-
-            var altBranch = branchHint ?? unknownBranch;
-            var commit = altBranch.Commits.FirstOrDefault() ?? unknownBranch.Commits.First();
+            Debug.Assert(importSet != null);
 
             var targetFolder = Path.GetDirectoryName(outputFilePath);
-            if (!isDryRun && !string.IsNullOrWhiteSpace(targetFolder) && !Directory.Exists(targetFolder))
+            if (!string.IsNullOrWhiteSpace(targetFolder) && !Directory.Exists(targetFolder))
             {
                 try
                 {
@@ -68,12 +55,10 @@ namespace CenterCLR.RelaxVersioner.Writers
                 }
             }
 
-            using (var tw = isDryRun ? (TextWriter)new StringWriter() : File.CreateText(outputFilePath))
+            using (var tw = File.CreateText(outputFilePath))
             {
                 this.WriteComment(tw,
-                    $"This is auto-generated version information attributes by CenterCLR.RelaxVersioner.{this.GetType().Assembly.GetName().Version}");
-                this.WriteComment(tw,
-                    "Do not edit.");
+                    $"This is auto-generated version information attributes by CenterCLR.RelaxVersioner.{this.GetType().Assembly.GetName().Version}, Do not edit.");
                 this.WriteComment(tw,
                     $"Generated date: {generated:R}");
                 tw.WriteLine();
@@ -85,41 +70,6 @@ namespace CenterCLR.RelaxVersioner.Writers
                     this.WriteImport(tw, namespaceName);
                 }
                 tw.WriteLine();
-
-                var commitId = commit.Sha;
-                var author = commit.Author;
-                var committer = commit.Committer;
-
-                var altBranches = string.Join(
-                    ",",
-                    branches.GetValue(commitId, Enumerable.Empty<Branch>()).
-                        Select(b => b.GetFriendlyName()));
-                var altTags = string.Join(
-                    ",",
-                    tags.GetValue(commitId, Enumerable.Empty<Tag>()).
-                        Select(b => b.GetFriendlyName()));
-
-                var safeVersion = Utilities.GetSafeVersionFromDate(committer.When);
-                var gitLabel = Utilities.GetLabelWithFallback(altBranch, tags, branches) ?? baseVersion_;
-
-                var keyValues = new Dictionary<string, object>(StringComparer.InvariantCultureIgnoreCase)
-                {
-                    {"generated", generated},
-                    {"branch", altBranch},
-                    {"branches", altBranches},
-                    {"tags", altTags},
-                    {"commit", commit},
-                    {"author", author},
-                    {"committer", committer},
-                    {"commitId", commitId},
-                    {"gitLabel", gitLabel},
-                    {"safeVersion", safeVersion}
-                };
-
-                foreach (var entry in keyValues)
-                {
-                    logger.Message(LogImportance.Low, "Values: {0}={1}", entry.Key, entry.Value);
-                }
 
                 foreach (var rule in ruleSet)
                 {
@@ -138,14 +88,6 @@ namespace CenterCLR.RelaxVersioner.Writers
                 this.WriteAfterBody(tw);
 
                 tw.Flush();
-
-                var identity = gitLabel.ToString();
-                var versioned = Utilities.GetVersionFromGitLabel(identity);
-                var shortIdentity = (versioned != null) ?
-                    $"{versioned.Major}.{versioned.Minor}.{versioned.Build}" :
-                    identity;
-
-                return new Result(identity, shortIdentity, commit.Message);
             }
         }
 
