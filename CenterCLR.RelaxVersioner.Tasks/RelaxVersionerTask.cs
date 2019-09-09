@@ -98,8 +98,8 @@ namespace CenterCLR.RelaxVersioner
                 var processor = new Processor(logger);
                 var result = processor.Run(projectDirectory, outputFilePath, language, buildIdentifier, isDryRun);
 
-                this.DetectedIdentity = result.Identity.ToString();
-                this.DetectedShortIdentity = result.Identity.ToString(3);
+                this.DetectedIdentity = result.Version.ToString();
+                this.DetectedShortIdentity = result.Version.ToString(3);
                 this.DetectedMessage = result.Message;
 
                 var dryrunDisplay = isDryRun ? " (dryrun)" : string.Empty;
@@ -107,11 +107,10 @@ namespace CenterCLR.RelaxVersioner
 
                 logger.Message(
                     LogImportance.High,
-                    "Generated versions code{0}: {1}Version={2}, ShortVersion={3}",
+                    "Generated versions code{0}: {1}Version={2}",
                     dryrunDisplay,
                     languageDisplay,
-                    this.DetectedIdentity,
-                    this.DetectedShortIdentity);
+                    result.Version);
             }
             catch (Exception ex)
             {

@@ -133,13 +133,13 @@ using namespace System::Reflection;
     <Import>System.Reflection</Import>
     
     <!--
-      "gitLabel" is extract numerical-notate version string [1.2.3.4] from git repository tags/branches traverse start HEAD.
-      If not found, use [0.0.1.0].
+      "versionLabel" is extract numerical-notate version string [1.2.3.4] or [v1.2.3.4] from git repository tags traverse start HEAD.
+      If not found, use [0.0.1].
     -->
-    <Rule name="AssemblyVersionAttribute">{gitLabel}</Rule>
+    <Rule name="AssemblyVersionAttribute">{versionLabel}</Rule>
     
     <!--
-      "safeVersion" is extract committed date (with commmiter) from git repository HEAD.
+      "safeVersion" is extract committed date (from commmiter) from git repository HEAD.
       "safeVersion" specialized from "committer.When".
       (The format is safe-numerical-notate version string [2016.2.14.12345]. (Last number is 2sec prec.))
     -->

@@ -73,8 +73,8 @@ namespace CenterCLR.RelaxVersioner
             WriterBase writer,
             string outputFilePath,
             Branch branchHint,
-            Dictionary<string, Tag[]> tags,
-            Dictionary<string, Branch[]> branches,
+            Dictionary<string, Tag[]> tagsDictionary,
+            Dictionary<string, Branch[]> branchesDictionary,
             string buildIdentifier,
             DateTimeOffset generated,
             IEnumerable<Rule> ruleSet,
@@ -82,38 +82,41 @@ namespace CenterCLR.RelaxVersioner
             bool isDryRun)
         {
             Debug.Assert(string.IsNullOrWhiteSpace(outputFilePath) == false);
-            Debug.Assert(tags != null);
-            Debug.Assert(branches != null);
+            Debug.Assert(tagsDictionary != null);
+            Debug.Assert(branchesDictionary != null);
             Debug.Assert(ruleSet != null);
             Debug.Assert(importSet != null);
 
             var unknownBranch = new UnknownBranch(generated);
 
-            var altBranch = branchHint ?? unknownBranch;
-            var commit = altBranch.Commits.FirstOrDefault() ?? unknownBranch.Commits.First();
+            var targetBranch = branchHint ?? unknownBranch;
+            var commit = targetBranch.Commits.FirstOrDefault() ?? unknownBranch.Commits.First();
 
             var commitId = commit.Sha;
             var author = commit.Author;
             var committer = commit.Committer;
 
-            var altBranches = string.Join(
-                ",",
-                branches.GetValue(commitId, emtyBranches).
-                    Select(b => b.GetFriendlyName()));
-            var altTags = string.Join(
-                ",",
-                tags.GetValue(commitId, emptyTags).
-                    Select(b => b.GetFriendlyName()));
+            var branches = branchesDictionary.
+                GetValue(commitId, emtyBranches).
+                Select(b => b.GetFriendlyName()).
+                ToArray();
+            var branchesString = string.Join(",", branches);
+
+            var tags = tagsDictionary.
+                GetValue(commitId, emptyTags).
+                Select(b => b.GetFriendlyName()).
+                ToArray();
+            var tagsString = string.Join(",", tags);
 
             var safeVersion = Utilities.GetSafeVersionFromDate(committer.When);
-            var versionLabel = LookupVersionLabel(altBranch, tags);
+            var versionLabel = LookupVersionLabel(targetBranch, tagsDictionary);
 
             var keyValues = new Dictionary<string, object>(StringComparer.InvariantCultureIgnoreCase)
                 {
                     {"generated", generated},
-                    {"branch", altBranch},
-                    {"branches", altBranches},
-                    {"tags", altTags},
+                    {"branch", targetBranch},
+                    {"branches", branchesString},
+                    {"tags", tagsString},
                     {"commit", commit},
                     {"author", author},
                     {"committer", committer},
@@ -133,7 +136,15 @@ namespace CenterCLR.RelaxVersioner
                 writer.Write(outputFilePath, keyValues, generated, ruleSet, importSet);
             }
 
-            return new Result(versionLabel, commit.Message);
+            return new Result(
+                versionLabel,
+                commitId,
+                targetBranch.GetFriendlyName(),
+                tags,
+                committer.When,
+                author.ToString(),
+                committer.ToString(),
+                commit.Message);
         }
 
         public Result Run(

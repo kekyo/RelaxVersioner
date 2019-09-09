@@ -206,18 +206,6 @@ namespace CenterCLR.RelaxVersioner
                     select new Rule(name.Value.Trim(), key?.Value.Trim(), rule.Value.Trim()));
         }
 
-        public static IEnumerable<string> AggregateNamespacesFromRuleSet(
-            IEnumerable<Rule> ruleSet)
-        {
-            Debug.Assert(ruleSet != null);
-
-            return
-                (from rule in ruleSet
-                 let symbolElements = rule.Name.Split(new[] { '.' }, StringSplitOptions.RemoveEmptyEntries)
-                 select string.Join(".", symbolElements.Take(symbolElements.Length - 1))).
-                Distinct();
-        }
-
         public static XElement GetDefaultRuleSet()
         {
             var type = typeof(Utilities);

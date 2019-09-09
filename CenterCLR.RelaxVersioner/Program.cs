@@ -71,7 +71,7 @@ namespace CenterCLR.RelaxVersioner
                     "Generated versions code{0}: {1}Version={2}",
                     dryrunDisplay,
                     languageDisplay,
-                    result.Identity);
+                    result.Version);
             }
             catch (Exception ex)
             {
