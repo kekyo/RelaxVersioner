@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFrameworks>net46;netcoreapp2.0</TargetFrameworks>
+    <TargetFramework>net46</TargetFramework>
     <OutputType>Exe</OutputType>
     <AssemblyName>rv</AssemblyName>
 
@@ -22,7 +22,8 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="CenterCLR.RelaxVersioner" version="0.9.67" PrivateAssets="All" />
+    <PackageReference Include="CenterCLR.RelaxVersioner" version="0.10.3" PrivateAssets="All" />
+    <PackageReference Include="ILRepack.Lib.MSBuild.Task" Version="2.0.17" />
   </ItemGroup>
 
   <ItemGroup>
@@ -34,5 +35,5 @@
   <ItemGroup>
     <ProjectReference Include="..\CenterCLR.RelaxVersioner.Core\CenterCLR.RelaxVersioner.Core.csproj" />
   </ItemGroup>
-
+  
 </Project>

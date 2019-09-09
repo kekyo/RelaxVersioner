@@ -37,12 +37,14 @@ namespace CenterCLR.RelaxVersioner
                 var languages = string.Join("|", processor.Languages);
 
                 var language = "C#";
+                string buildIdentifier = null;
                 var isDryRun = false;
                 var isHelp = false;
 
                 var options = new OptionSet
                 {
                     { "l=", $"target language [{languages}]", v => language = v },
+                    { "i=", $"build identifier", v => buildIdentifier = v },
                     { "d", "dry run mode", v => isDryRun = v != null },
                     { "h", "help", v => isHelp = v != null },
                 };
@@ -58,18 +60,18 @@ namespace CenterCLR.RelaxVersioner
                 var projectDirectory = trails[0];
                 var outputFilePath = trails[1];
 
-                var result = processor.Run(projectDirectory, outputFilePath, language, isDryRun);
+                var result = processor.Run(
+                    projectDirectory, outputFilePath, language, buildIdentifier, isDryRun);
 
                 var dryrunDisplay = isDryRun ? " (dryrun)" : string.Empty;
                 var languageDisplay = isDryRun ? string.Empty : $"Language={language}, ";
 
                 logger.Message(
                     LogImportance.High,
-                    "Generated versions code{0}: {1}Version={2}, ShortVersion={3}",
+                    "Generated versions code{0}: {1}Version={2}",
                     dryrunDisplay,
                     languageDisplay,
-                    result.Identity,
-                    result.ShortIdentity);
+                    result.Version);
             }
             catch (Exception ex)
             {

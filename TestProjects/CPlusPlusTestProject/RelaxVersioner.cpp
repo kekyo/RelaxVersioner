@@ -1,6 +1,5 @@
-// This is auto-generated version information attributes by CenterCLR.RelaxVersioner.0.9.67.0
-// Do not edit.
-// Generated date: Wed, 28 Aug 2019 11:38:28 GMT
+// This is auto-generated version information attributes by CenterCLR.RelaxVersioner.0.10.3.0, Do not edit.
+// Generated date: Mon, 09 Sep 2019 09:28:16 GMT
 
 #include "stdafx.h"
 
@@ -24,15 +23,16 @@ namespace System
 }
 
 using namespace System::Reflection;
-using namespace System::Runtime::InteropServices;
 
-[assembly: AssemblyVersionAttribute("0.9.67")];
-[assembly: AssemblyFileVersionAttribute("2019.8.28.37085")];
-[assembly: AssemblyInformationalVersionAttribute("15f58e69bf1cf320511616a6377a3d4b03690d57")];
-[assembly: AssemblyVersionMetadataAttribute("Build","Wed, 28 Aug 2019 11:36:10 GMT")];
-[assembly: AssemblyVersionMetadataAttribute("Branch","")];
-[assembly: AssemblyVersionMetadataAttribute("Tags","0.9.67")];
+[assembly: AssemblyVersionAttribute("0.10.3")];
+[assembly: AssemblyFileVersionAttribute("2019.9.9.33123")];
+[assembly: AssemblyInformationalVersionAttribute("bee7599a575a676ed0e158f3c80c22f055cbe610")];
+[assembly: AssemblyVersionMetadataAttribute("Date","Mon, 09 Sep 2019 09:24:06 GMT")];
+[assembly: AssemblyVersionMetadataAttribute("Branch","devel")];
+[assembly: AssemblyVersionMetadataAttribute("Tags","")];
 [assembly: AssemblyVersionMetadataAttribute("Author","Kouji Matsui <k@kekyo.net>")];
 [assembly: AssemblyVersionMetadataAttribute("Committer","Kouji Matsui <k@kekyo.net>")];
-[assembly: AssemblyVersionMetadataAttribute("Message","Fixed failing extract branch name.")];
+[assembly: AssemblyVersionMetadataAttribute("Message","Improved fork analysis.")];
+[assembly: AssemblyVersionMetadataAttribute("Build","")];
+[assembly: AssemblyVersionMetadataAttribute("Generated","Mon, 09 Sep 2019 09:28:16 GMT")];
 

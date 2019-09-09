@@ -17,18 +17,33 @@
 //
 /////////////////////////////////////////////////////////////////////////////////////////////////
 
+using System;
+
 namespace CenterCLR.RelaxVersioner
 {
     public struct Result
     {
-        public readonly string Identity;
-        public readonly string ShortIdentity;
+        public readonly Version Version;
+        public readonly string CommitId;
+        public readonly string[] Tags;
+        public readonly string Branch;
+        public readonly DateTimeOffset Date;
+        public readonly string Author;
+        public readonly string Committer;
         public readonly string Message;
 
-        public Result(string identity, string shortIdentity, string message)
+        public Result(Version version, string commitId,
+            string branch, string[] tags, DateTimeOffset date,
+            string author, string committer,
+            string message)
         {
-            this.Identity = identity;
-            this.ShortIdentity = shortIdentity;
+            this.Version = version;
+            this.CommitId = commitId;
+            this.Branch = branch;
+            this.Tags = tags;
+            this.Date = date;
+            this.Author = author;
+            this.Committer = committer;
             this.Message = message;
         }
     }

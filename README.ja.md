@@ -1,5 +1,5 @@
 # RelaxVersioner
-![RelaxVersioner](https://raw.githubusercontent.com/kekyo/CenterCLR.RelaxVersioner/master/Images/CenterCLR.RelaxVersioner.128.png)
+![RelaxVersioner](Images/CenterCLR.RelaxVersioner.128.png)
 
 [English language is here](https://github.com/kekyo/CenterCLR.RelaxVersioner)
 
@@ -14,12 +14,20 @@
 * RelaxVersionerを使うと、Gitのタグ・ブランチ・コミットメッセージだけを使って、バージョン管理が出来ます。つまり、追加のツール操作が不要なため、Gitを知ってさえいれば学習コストがほとんどなく、CI環境にも容易に対応できます。
 * サポートしている言語と環境は:
   * C#・F#・VB.NET・C++/CLI、そしてNuGetパッケージング (dotnet cli packコマンド)
-  * Visual Studio 2017/2019, net46/netstandard2.0の元で動作するMSBuild (注: MSBuildの動作プラットフォームの事です、あなたがターゲットにしたいプロジェクトの事ではありません)
-  * Linux(x64)及びWindows(x86/x64)
+  * Visual Studio 2017/2019, dotnet SDK cli, net46/netstandard2.0の元で動作するMSBuild (注: MSBuildの動作プラットフォームの事です、あなたがターゲットにしたいプロジェクトの事ではありません)、及びこれらを使用する任意のIDE。
+  * Linux(x64)及びWindows(x86/x64)  （検証している環境は先のとおりですが、[libgit2sharp](https://github.com/libgit2/libgit2sharp)の動作要件に準じて動作する可能性があります）
 * ローカルのGitリポジトリから、自動的にタグ・ブランチの名称を取得し、アセンブリ属性に適用することが出来ます。
 * AssemblyInfo.csファイルを直接変更しません。RelaxVersionerはテンポラリファイルに定義を出力し、それをコンパイルさせます。
 * Visual Studio/MSBuildの中間出力フォルダーを自動的に使用するため、Gitリポジトリ内を汚すことがありません。
 * カスタムルールセットを定義することで、出力する属性と内容をカスタマイズすることが出来ます。
+
+### バージョン情報が埋め込まれた、Explorerで見るアセンブリのプロパティ
+
+![Assembly property at the explorer](Images/Explorer.png)
+
+### バージョン情報が埋め込まれた、ILSpyで見るアセンブリの属性群
+
+![Assembly wide attributes at ILSpy](Images/ILSpy.png)
 
 ## 出力されるコードの例:
 
@@ -42,17 +50,17 @@ using System.Reflection;
 
 ``` fsharp
 namespace global
-	open System.Reflection
-	[<assembly: AssemblyVersionAttribute("0.5.30.0")>]
-	[<assembly: AssemblyFileVersionAttribute("2016.1.15.41306")>]
-	[<assembly: AssemblyInformationalVersionAttribute("a05ab9fc87b22234596f4ddd43136e9e526ebb90")>]
-	[<assembly: AssemblyVersionMetadataAttribute("Build","Fri, 15 Jan 2016 13:56:53 GMT")>]
-	[<assembly: AssemblyVersionMetadataAttribute("Branch","master")>]
-	[<assembly: AssemblyVersionMetadataAttribute("Tags","0.5.30")>]
-	[<assembly: AssemblyVersionMetadataAttribute("Author","Kouji Matsui <k@kekyo.net>")>]
-	[<assembly: AssemblyVersionMetadataAttribute("Committer","Kouji Matsui <k@kekyo.net>")>]
-	[<assembly: AssemblyVersionMetadataAttribute("Message","Fixed tab")>]
-	do()
+  open System.Reflection
+  [<assembly: AssemblyVersionAttribute("0.5.30.0")>]
+  [<assembly: AssemblyFileVersionAttribute("2016.1.15.41306")>]
+  [<assembly: AssemblyInformationalVersionAttribute("a05ab9fc87b22234596f4ddd43136e9e526ebb90")>]
+  [<assembly: AssemblyVersionMetadataAttribute("Build","Fri, 15 Jan 2016 13:56:53 GMT")>]
+  [<assembly: AssemblyVersionMetadataAttribute("Branch","master")>]
+  [<assembly: AssemblyVersionMetadataAttribute("Tags","0.5.30")>]
+  [<assembly: AssemblyVersionMetadataAttribute("Author","Kouji Matsui <k@kekyo.net>")>]
+  [<assembly: AssemblyVersionMetadataAttribute("Committer","Kouji Matsui <k@kekyo.net>")>]
+  [<assembly: AssemblyVersionMetadataAttribute("Message","Fixed tab")>]
+  do()
 ```
 
 ### For VB.NET:
@@ -95,7 +103,7 @@ using namespace System::Reflection;
 * (.NET Coreではない旧形式のMSBuildプロジェクトを使っている場合): あらかじめ、AssemblyInfo.cs等に定義されている、デフォルトの"AssemblyVersion"と"AssemblyFileVersion"属性をコメントアウトして下さい（ビルド時に重複定義エラーが発生します）。
   * これらはカスタムルールを用いて定義を除外するのであれば、引き続き使用する事もできます。
 * ビルドすると、自動的にアセンブリ属性が適用されます。[ILSpy](https://github.com/icsharpcode/ILSpy)等で確認するか、一部の属性はエクスプローラーのプロパティから確認することが出来ます。
-* プロジェクトフォルダ、又はソリューションフォルダに"RelaxVersioner.rules"ファイルを配置することで、カスタムルールを定義出来ます。まだドキュメントを用意できていないので、サンプルとして以下の定義例を参照してください。
+* プロジェクトフォルダ、又はソリューションフォルダに"RelaxVersioner.rules"ファイルを配置することで、カスタムルールを定義出来ます。カスタムルールファイルの定義例を参照してください。
 
 ### 開発運用の例
 1. C#・F#などでプロジェクトを新規に作ります。
@@ -111,46 +119,56 @@ using namespace System::Reflection;
 9. 以後、コードを変更してリリースの準備が出来たら、新たにタグをつければそれがAssemblyVersionに反映されるので、ビルドしてバイナリをリリースします。
   * dotnet cliを使用してNuGetのパッケージをビルドする場合にも、`PackageVersion`と`PackageReleaseNotes`は自動的に適用されます。完成してデプロイする場合は、`dotnet pack`コマンドを使えば、NuGetのバージョンを一元管理できます。
 
-## カスタムルールファイルの例:
+## カスタムルールファイル(RelaxVersioner.rules)の例:
 
 ``` xml
 <?xml version="1.0" encoding="utf-8"?>
 <RelaxVersioner version="1.0">
-	<WriterRules>
-		<!-- Target languages -->
-		<Language>C#</Language>
-		<Language>F#</Language>
-		<Language>VB</Language>
-		<Language>C++/CLI</Language>
-		<Import>System.Reflection</Import>
-		<!--
-			"gitLabel" is extract numerical-notate version string [1.2.3.4] from git repository tags/branches traverse start HEAD.
-			If not found, fallback to "safeVersion".
-		-->
-		<Rule name="System.Reflection.AssemblyVersionAttribute">{gitLabel}</Rule>
-		<!--
-			"safeVersion" is extract committed date (with commmiter) from git repository HEAD.
-			"safeVersion" specialized from "committer.When".
-			(The format is safe-numerical-notate version string [2016.2.14.12345]. (Last number is 2sec prec.))
-		-->
-		<Rule name="System.Reflection.AssemblyFileVersionAttribute">{safeVersion}</Rule>
-		<!--
-			"commitId" is extract commit id from git repository HEAD.
-			"commitId" alias to "commit.Sha".
-		-->
-		<Rule name="System.Reflection.AssemblyInformationalVersionAttribute">{commitId}</Rule>
-		<!--
-			"key" is only used "AssemblyVersionMetadataAttribute".
-			"committer.When" or you can use another choice "author.When".
-			"author" and "committer" can use property "Name", "Email", and "When". (Derived from libgit2sharp)
-		-->
-		<Rule name="System.Reflection.AssemblyVersionMetadataAttribute" key="Build">{committer.When:R}</Rule>
-		<Rule name="System.Reflection.AssemblyVersionMetadataAttribute" key="Branch">{branch.Name}</Rule>
-		<Rule name="System.Reflection.AssemblyVersionMetadataAttribute" key="Tags">{tags}</Rule>
-		<Rule name="System.Reflection.AssemblyVersionMetadataAttribute" key="Author">{author}</Rule>
-		<Rule name="System.Reflection.AssemblyVersionMetadataAttribute" key="Committer">{committer}</Rule>
-		<Rule name="System.Reflection.AssemblyVersionMetadataAttribute" key="Message">{commit.MessageShort}</Rule>
-	</WriterRules>
+  <WriterRules>
+    <!-- Target languages -->
+    <Language>C#</Language>
+    <Language>F#</Language>
+    <Language>VB</Language>
+    <Language>C++/CLI</Language>
+    
+    <Import>System.Reflection</Import>
+    
+    <!--
+      "versionLabel" is extract numerical-notate version string [1.2.3.4] or [v1.2.3.4] from git repository tags traverse start HEAD.
+      If not found, use [0.0.1].
+    -->
+    <Rule name="AssemblyVersionAttribute">{versionLabel}</Rule>
+    
+    <!--
+      "safeVersion" is extract committed date (from commmiter) from git repository HEAD.
+      "safeVersion" specialized from "committer.When".
+      (The format is safe-numerical-notate version string [2016.2.14.12345]. (Last number is 2sec prec.))
+    -->
+    <Rule name="AssemblyFileVersionAttribute">{safeVersion}</Rule>
+    
+    <!--
+      "commitId" is extract commit id from git repository HEAD.
+      "commitId" alias to "commit.Sha".
+    -->
+    <Rule name="AssemblyInformationalVersionAttribute">{commitId}</Rule>
+    
+    <!--
+      "key" attribute is only using for "AssemblyVersionMetadataAttribute".
+      "committer.When" or you can use another choice "author.When".
+      "branch" can use property "FriendlyName" and "CanonicalName". (Derived from libgit2sharp)
+      "author" and "committer" can use property "Name", "Email", and "When". (Derived from libgit2sharp)
+      "buildIdentifier" is passing from MSBuild property named "RelaxVersionerBuildIdentifier" or "BuildIdentifier". We can use in CI building.
+      "generated" is generated date by RelaxVersioner.
+    -->
+    <Rule name="AssemblyVersionMetadataAttribute" key="Date">{committer.When:R}</Rule>
+    <Rule name="AssemblyVersionMetadataAttribute" key="Branch">{branch.FriendlyName}</Rule>
+    <Rule name="AssemblyVersionMetadataAttribute" key="Tags">{tags}</Rule>
+    <Rule name="AssemblyVersionMetadataAttribute" key="Author">{author}</Rule>
+    <Rule name="AssemblyVersionMetadataAttribute" key="Committer">{committer}</Rule>
+    <Rule name="AssemblyVersionMetadataAttribute" key="Message">{commit.MessageShort}</Rule>
+    <Rule name="AssemblyVersionMetadataAttribute" key="Build">{buildIdentifier}</Rule>
+    <Rule name="AssemblyVersionMetadataAttribute" key="Generated">{generated:R}</Rule>
+  </WriterRules>
 </RelaxVersioner>
 ```
 
@@ -166,6 +184,12 @@ using namespace System::Reflection;
 * Under Apache v2
 
 ## 履歴
+* 0.10.3:
+  * バージョンのオートインクリメント機能を追加しました。
+  * ブランチ名からバージョン番号を推測する機能を削除しました。
+  * ルールフォーマットを若干変更しました（互換性に影響があります）
+* 0.9.69:
+  * ビルドした最終出力にruntimeディレクトリが含まれていた問題を修正しました。
 * 0.9.67:
   * ブランチ名を取得できていない問題を修正しました。
 * 0.9.66:
