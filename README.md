@@ -183,6 +183,10 @@ using namespace System::Reflection;
 * Under Apache v2
 
 ## History
+* 0.10.3:
+  * Added auto increment feature.
+  * Removed applying from branch name.
+  * Bit changed rule format (breaking change)
 * 0.9.69:
   * Fixed contains runtime directory when building final result.
 * 0.9.67:
