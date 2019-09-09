@@ -218,7 +218,9 @@ namespace CenterCLR.RelaxVersioner
 
         public static string GetFriendlyName<TObject>(this ReferenceWrapper<TObject> refer)
             where TObject : GitObject =>
-            string.IsNullOrWhiteSpace(refer.FriendlyName) ? refer.CanonicalName : refer.FriendlyName;
+            (refer.CanonicalName == "(no branch)") ?
+                "HEAD" :
+                string.IsNullOrWhiteSpace(refer.FriendlyName) ? refer.CanonicalName : refer.FriendlyName;
 
         public static Version IncrementLastVersionComponent(Version version, int value)
         {
