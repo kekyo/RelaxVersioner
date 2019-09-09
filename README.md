@@ -183,6 +183,8 @@ using namespace System::Reflection;
 * Under Apache v2
 
 ## History
+* 0.10.6:
+  * Fixed using uninitialized repository.
 * 0.10.3:
   * Added auto increment feature.
   * Removed applying from branch name.
