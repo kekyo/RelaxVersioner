@@ -68,11 +68,10 @@ namespace CenterCLR.RelaxVersioner
 
                 logger.Message(
                     LogImportance.High,
-                    "Generated versions code{0}: {1}Version={2}, ShortVersion={3}",
+                    "Generated versions code{0}: {1}Version={2}",
                     dryrunDisplay,
                     languageDisplay,
-                    result.Identity,
-                    result.ShortIdentity);
+                    result.Identity);
             }
             catch (Exception ex)
             {

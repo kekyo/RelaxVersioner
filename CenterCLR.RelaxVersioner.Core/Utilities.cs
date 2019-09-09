@@ -32,8 +32,6 @@ namespace CenterCLR.RelaxVersioner
 {
     internal static class Utilities
     {
-        private static readonly char[] versionSeparators_ =
-            {'/', '-', '_'};
         private static readonly char[] directorySeparatorChar_ =
             { Path.DirectorySeparatorChar, Path.AltDirectorySeparatorChar };
 
@@ -107,25 +105,6 @@ namespace CenterCLR.RelaxVersioner
             }
 
             return repository;
-        }
-
-        private static System.Version TryParseVersion(string versionString)
-        {
-            Debug.Assert(versionString != null);
-
-            System.Version.TryParse(versionString, out var version);
-            return version;
-        }
-
-        public static System.Version GetVersionFromGitLabel(string label)
-        {
-            Debug.Assert(label != null);
-
-            return label.
-                TrimStart('v').
-                Split(versionSeparators_, StringSplitOptions.RemoveEmptyEntries).
-                Select(TryParseVersion).
-                LastOrDefault(version => version != null); // Separate and search last valid version string
         }
 
         public static TValue GetValue<TKey, TValue>(
@@ -253,36 +232,34 @@ namespace CenterCLR.RelaxVersioner
             where TObject : GitObject =>
             string.IsNullOrWhiteSpace(refer.FriendlyName) ? refer.CanonicalName : refer.FriendlyName;
 
-        public static System.Version GetLabelWithFallback(
-            Branch targetBranch,
-            Dictionary<string, IEnumerable<Tag>> tags,
-            Dictionary<string, IEnumerable<Branch>> branches)
+        public static Version IncrementLastVersionComponent(Version version, int value)
         {
-            Debug.Assert(tags != null);
-            Debug.Assert(branches != null);
-
-            if (targetBranch == null)
+            if (version.Revision.HasValue)
             {
-                return null;
+                return new Version(
+                    version.Major,
+                    version.Minor.Value,
+                    version.Build.Value,
+                    version.Revision.Value + value);
             }
-
-            // First commit: Tags only
-            // Second...   : Branches only
-            //   If success label parse (GetVersionFromGitLabel), candidate it.
-            var versions =
-                (from commit in targetBranch.Commits
-                 from label in
-                    tags.GetValue(commit.Sha, Enumerable.Empty<Tag>()).Select(tag => GetVersionFromGitLabel(tag.GetFriendlyName()))
-                 select label).
-                Concat(
-                    from commit in targetBranch.Commits.Skip(1)
-                    from label in
-                        branches.GetValue(commit.Sha, Enumerable.Empty<Branch>()).Select(branch => GetVersionFromGitLabel(branch.GetFriendlyName()))
-                    select label);
-
-            // Use first version, if no candidate then try current branch name.
-            return versions.FirstOrDefault(label => label != null) ??
-                GetVersionFromGitLabel(targetBranch.FriendlyName);
+            else if (version.Build.HasValue)
+            {
+                return new Version(
+                    version.Major,
+                    version.Minor.Value,
+                    version.Build.Value + value);
+            }
+            else if(version.Minor.HasValue)
+            {
+                return new Version(
+                    version.Major,
+                    version.Minor.Value + value);
+            }
+            else
+            {
+                return new Version(
+                    version.Major + value);
+            }
         }
     }
 }

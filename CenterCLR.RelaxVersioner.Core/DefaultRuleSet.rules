@@ -33,10 +33,10 @@
         <Import>System.Reflection</Import>
 
         <!--
-            "gitLabel" is extract numerical-notate version string [1.2.3.4] from git repository tags/branches traverse start HEAD.
+            "versionLabel" is extract numerical-notate version string [1.2.3.4] from git repository tags traverse start HEAD.
             If not found, use [0.0.1.0].
         -->
-        <Rule name="AssemblyVersionAttribute">{gitLabel}</Rule>
+        <Rule name="AssemblyVersionAttribute">{versionLabel}</Rule>
 
         <!--
             "safeVersion" is extract committed date (with commmiter) from git repository HEAD.

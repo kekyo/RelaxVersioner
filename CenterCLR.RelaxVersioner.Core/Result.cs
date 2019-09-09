@@ -21,14 +21,12 @@ namespace CenterCLR.RelaxVersioner
 {
     public struct Result
     {
-        public readonly string Identity;
-        public readonly string ShortIdentity;
+        public readonly Version Identity;
         public readonly string Message;
 
-        public Result(string identity, string shortIdentity, string message)
+        public Result(Version identity, string message)
         {
             this.Identity = identity;
-            this.ShortIdentity = shortIdentity;
             this.Message = message;
         }
     }

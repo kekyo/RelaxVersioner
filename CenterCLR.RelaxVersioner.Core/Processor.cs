@@ -29,7 +29,8 @@ namespace CenterCLR.RelaxVersioner
 {
     public sealed class Processor
     {
-        private static readonly System.Version baseVersion_ = new System.Version(0, 0, 1, 0);
+        private static readonly Branch[] emtyBranches = new Branch[0];
+        private static readonly Tag[] emptyTags = new Tag[0];
 
         private readonly Logger logger;
         private readonly Dictionary<string, WriterBase> writers;
@@ -45,13 +46,35 @@ namespace CenterCLR.RelaxVersioner
 
         public string[] Languages { get; }
 
+        private static Version LookupVersionLabel(
+            Branch targetBranch,
+            Dictionary<string, Tag[]> tags)
+        {
+            Debug.Assert(tags != null);
+
+            if (targetBranch == null)
+            {
+                return Version.Default;
+            }
+
+            return targetBranch.Commits.
+                Select((commit, index) => new { commit, index, tags = tags.GetValue(commit.Sha, emptyTags) }).
+                Where(entry => entry.tags.Length >= 1).
+                SelectMany(entry => entry.tags.
+                    Select(tag => new { entry.index, version = Version.TryParse(tag.GetFriendlyName(), out var version) ? (Version?)version : null }).
+                    Where(tagEntry => tagEntry.version.HasValue).
+                    Select(tagEntry => Utilities.IncrementLastVersionComponent(tagEntry.version.Value, tagEntry.index))).
+                DefaultIfEmpty(Version.Default).
+                First();
+        }
+
         private static Result WriteVersionSourceFile(
             Logger logger,
             WriterBase writer,
             string outputFilePath,
             Branch branchHint,
-            Dictionary<string, IEnumerable<Tag>> tags,
-            Dictionary<string, IEnumerable<Branch>> branches,
+            Dictionary<string, Tag[]> tags,
+            Dictionary<string, Branch[]> branches,
             string buildIdentifier,
             DateTimeOffset generated,
             IEnumerable<Rule> ruleSet,
@@ -75,15 +98,15 @@ namespace CenterCLR.RelaxVersioner
 
             var altBranches = string.Join(
                 ",",
-                branches.GetValue(commitId, Enumerable.Empty<Branch>()).
+                branches.GetValue(commitId, emtyBranches).
                     Select(b => b.GetFriendlyName()));
             var altTags = string.Join(
                 ",",
-                tags.GetValue(commitId, Enumerable.Empty<Tag>()).
+                tags.GetValue(commitId, emptyTags).
                     Select(b => b.GetFriendlyName()));
 
             var safeVersion = Utilities.GetSafeVersionFromDate(committer.When);
-            var gitLabel = Utilities.GetLabelWithFallback(altBranch, tags, branches) ?? baseVersion_;
+            var versionLabel = LookupVersionLabel(altBranch, tags);
 
             var keyValues = new Dictionary<string, object>(StringComparer.InvariantCultureIgnoreCase)
                 {
@@ -95,7 +118,7 @@ namespace CenterCLR.RelaxVersioner
                     {"author", author},
                     {"committer", committer},
                     {"commitId", commitId},
-                    {"gitLabel", gitLabel},
+                    {"versionLabel", versionLabel},
                     {"safeVersion", safeVersion},
                     {"buildIdentifier", buildIdentifier}
                 };
@@ -110,13 +133,7 @@ namespace CenterCLR.RelaxVersioner
                 writer.Write(outputFilePath, keyValues, generated, ruleSet, importSet);
             }
 
-            var identity = gitLabel.ToString();
-            var versioned = Utilities.GetVersionFromGitLabel(identity);
-            var shortIdentity = (versioned != null) ?
-                $"{versioned.Major}.{versioned.Minor}.{versioned.Build}" :
-                identity;
-
-            return new Result(identity, shortIdentity, commit.Message);
+            return new Result(versionLabel, commit.Message);
         }
 
         public Result Run(
@@ -146,9 +163,9 @@ namespace CenterCLR.RelaxVersioner
                     GroupBy(tag => tag.Target.Sha).
                     ToDictionary(
                         g => g.Key,
-                        g => g.ToList().AsEnumerable(),
+                        g => g.ToArray(),
                         StringComparer.InvariantCultureIgnoreCase) ??
-                    new Dictionary<string, IEnumerable<Tag>>();
+                    new Dictionary<string, Tag[]>();
 
                 var branches = (repository != null) ?
                     (from branch in repository.Branches
@@ -157,9 +174,9 @@ namespace CenterCLR.RelaxVersioner
                      group branch by commit.Sha).
                     ToDictionary(
                         g => g.Key,
-                        g => g.ToList().AsEnumerable(),
+                        g => g.ToArray(),
                         StringComparer.InvariantCultureIgnoreCase) :
-                    new Dictionary<string, IEnumerable<Branch>>();
+                    new Dictionary<string, Branch[]>();
 
                 return WriteVersionSourceFile(
                     logger,

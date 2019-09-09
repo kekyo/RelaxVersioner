@@ -98,8 +98,8 @@ namespace CenterCLR.RelaxVersioner
                 var processor = new Processor(logger);
                 var result = processor.Run(projectDirectory, outputFilePath, language, buildIdentifier, isDryRun);
 
-                this.DetectedIdentity = result.Identity;
-                this.DetectedShortIdentity = result.ShortIdentity;
+                this.DetectedIdentity = result.Identity.ToString();
+                this.DetectedShortIdentity = result.Identity.ToString(3);
                 this.DetectedMessage = result.Message;
 
                 var dryrunDisplay = isDryRun ? " (dryrun)" : string.Empty;
