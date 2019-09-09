@@ -31,6 +31,7 @@ namespace CenterCLR.RelaxVersioner
     {
         private static readonly Branch[] emtyBranches = new Branch[0];
         private static readonly Tag[] emptyTags = new Tag[0];
+        private static readonly Commit[] emptyCommits = new Commit[0];
 
         private readonly Logger logger;
         private readonly Dictionary<string, WriterBase> writers;
@@ -92,7 +93,7 @@ namespace CenterCLR.RelaxVersioner
                     depth = new Depth();
                 }
 
-                var parents = commit.Parents.ToArray();
+                var parents = commit.Parents?.ToArray() ?? emptyCommits;
                 foreach (var parent in parents)
                 {
                     if (depthByForks.TryGetValue(parent.Sha, out var depth2))

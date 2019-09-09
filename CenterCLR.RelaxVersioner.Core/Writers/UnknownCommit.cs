@@ -34,29 +34,22 @@ namespace CenterCLR.RelaxVersioner.Writers
             committer_ = new Signature("(Unknown committer)", "unknown@example.com", when);
         }
 
-        public override string Sha
-        {
-            get { return "(Unknown commit id)"; }
-        }
+        public override string Sha =>
+            "(Unknown commit id)";
 
-        public override string Message
-        {
-            get { return "(Unknown commit message)"; }
-        }
+        public override string Message =>
+            "(Unknown commit message)";
 
-        public override string MessageShort
-        {
-            get { return "(Unknown commit message)"; }
-        }
+        public override string MessageShort =>
+            "(Unknown commit message)";
 
-        public override Signature Author
-        {
-            get { return author_; }
-        }
+        public override Signature Author =>
+            author_;
 
-        public override Signature Committer
-        {
-            get { return committer_; }
-        }
+        public override Signature Committer =>
+            committer_;
+
+        public override string ToString() =>
+            this.Sha;
     }
 }
