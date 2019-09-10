@@ -45,18 +45,22 @@
   </ItemGroup>
 
   <ItemGroup Condition="'$(TargetFramework)' == 'net45'">
-    <Reference Include="Microsoft.Build.Framework, Version=12.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a"
-      HintPath="C:\Program Files (x86)\Reference Assemblies\Microsoft\MSBuild\v12.0\Microsoft.Build.Framework.dll"
-      SpecificVersion="true" Private="false" />
-    <Reference Include="Microsoft.Build.Utilities.v12.0, Version=12.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a"
-      HintPath="C:\Program Files (x86)\Reference Assemblies\Microsoft\MSBuild\v12.0\Microsoft.Build.Utilities.v12.0.dll"
-      SpecificVersion="true" Private="false" />
+    <Reference Include="Microsoft.Build.Framework" Version="4.0.0.0" SpecificVersion="true" />
+    <Reference Include="Microsoft.Build.Utilities.v4.0" Version="4.0.0.0" SpecificVersion="true" />
     <PackageReference Include="LibGit2Sharp" version="0.24.1" PrivateAssets="All" Publish="true" />
     <PackageReference Include="LibGit2Sharp.NativeBinaries" version="1.0.205" PrivateAssets="All" />
     <ProjectReference Include="..\CenterCLR.DotNet.PlatformAbstractions\CenterCLR.DotNet.PlatformAbstractions.csproj" />
   </ItemGroup>
 
-  <ItemGroup Condition="'$(TargetFramework)' == 'net46' or '$(TargetFramework)' == 'netstandard2.0'">
+  <ItemGroup Condition="'$(TargetFramework)' == 'net46'">
+    <Reference Include="Microsoft.Build.Framework" Version="4.0.0.0" SpecificVersion="true" />
+    <Reference Include="Microsoft.Build.Utilities.v4.0" Version="4.0.0.0" SpecificVersion="true" />
+    <PackageReference Include="LibGit2Sharp" version="0.26.1" PrivateAssets="All" Publish="true" />
+    <PackageReference Include="LibGit2Sharp.NativeBinaries" version="2.0.289" PrivateAssets="All" />
+    <PackageReference Include="Microsoft.DotNet.PlatformAbstractions" Version="2.1.0" PrivateAssets="All" Publish="true" />
+  </ItemGroup>
+
+  <ItemGroup Condition="'$(TargetFramework)' == 'netstandard2.0'">
     <PackageReference Include="Microsoft.Build.Framework" Version="15.6.82" PrivateAssets="All" />
     <PackageReference Include="Microsoft.Build.Utilities.Core" Version="15.6.82" PrivateAssets="All" />
     <PackageReference Include="LibGit2Sharp" version="0.26.1" PrivateAssets="All" Publish="true" />
