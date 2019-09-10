@@ -183,6 +183,8 @@ using namespace System::Reflection;
 * Under Apache v2
 
 ## History
+* 0.10.19:
+  * Fixed using uninitialized repository.
 * 0.10.17:
   * Improved fork analysis.
 * 0.10.11:
