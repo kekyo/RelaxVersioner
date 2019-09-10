@@ -65,48 +65,16 @@ namespace CenterCLR.RelaxVersioner
                 $"Depth={this.Current}";
         }
 
-        private static Version? LookupVersionLabelRecursive(
-            Commit commit,
-            Dictionary<string, Tag[]> tagsDictionary,
-            int depth,
-            HashSet<string> traversed)
+        private struct Remain
         {
-            Debug.Assert(commit != null);
-            Debug.Assert(tagsDictionary != null);
+            public readonly int Depth;
+            public readonly Commit Commit;
 
-            if (!traversed.Add(commit.Sha))
+            public Remain(int depth, Commit commit)
             {
-                return null;
+                this.Depth = depth;
+                this.Commit = commit;
             }
-
-            if (tagsDictionary.TryGetValue(commit.Sha, out var tags))
-            {
-                var filteredTags = tags.
-                    Select(tag => Version.TryParse(tag.GetFriendlyName(), out var version) ? (Version?)version : null).
-                    Where(version => version.HasValue).
-                    Select(version => Utilities.IncrementLastVersionComponent(version.Value, depth)).
-                    ToArray();
-
-                // Found first valid tag.
-                if (filteredTags.Length >= 1)
-                {
-                    return filteredTags[0];
-                }
-            }
-
-            if (commit.Parents is IEnumerable<Commit> parents)
-            {
-                foreach (var parentCommit in parents)
-                {
-                    if (LookupVersionLabelRecursive(
-                        parentCommit, tagsDictionary, depth + 1, traversed) is Version version)
-                    {
-                        return version;
-                    }
-                }
-            }
-
-            return null;
         }
 
         private static Version LookupVersionLabel(
@@ -120,9 +88,57 @@ namespace CenterCLR.RelaxVersioner
                 return Version.Default;
             }
 
-            return LookupVersionLabelRecursive(
-                targetBranch.Commits.First(), tagsDictionary, 0, new HashSet<string>()) ??
-                Version.Default;
+            var traversed = new HashSet<string>();
+            var scheduleCommits = new Stack<Remain>();
+            scheduleCommits.Push(new Remain(0, targetBranch.Commits.First()));
+
+            while (scheduleCommits.Count >= 1)
+            {
+                var entry = scheduleCommits.Pop();
+                var commit = entry.Commit;
+                var depth = entry.Depth;
+
+                while (true)
+                {
+                    if (!traversed.Add(commit.Sha))
+                    {
+                        break;
+                    }
+
+                    if (tagsDictionary.TryGetValue(commit.Sha, out var tags))
+                    {
+                        var filteredTags = tags.
+                            Select(tag => Version.TryParse(tag.GetFriendlyName(), out var version) ? (Version?)version : null).
+                            Where(version => version.HasValue).
+                            Select(version => Utilities.IncrementLastVersionComponent(version.Value, depth)).
+                            ToArray();
+
+                        // Found first valid tag.
+                        if (filteredTags.Length >= 1)
+                        {
+                            return filteredTags[0];
+                        }
+                    }
+
+                    depth++;
+
+                    if ((commit.Parents?.ToArray() is Commit[] parents) && (parents.Length >= 1))
+                    {
+                        commit = parents[0];
+
+                        foreach (var parentCommit in parents.Skip(1))
+                        {
+                            scheduleCommits.Push(new Remain(depth, parentCommit));
+                        }
+                    }
+                    else
+                    {
+                        break;
+                    }
+                }
+            }
+
+            return Version.Default;
         }
 
         private static Result WriteVersionSourceFile(
