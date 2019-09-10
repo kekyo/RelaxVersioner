@@ -124,16 +124,17 @@ namespace CenterCLR.RelaxVersioner
                 GetField("Name", BindingFlags.Public | BindingFlags.Static).
                 GetValue(null);
 
+            var fileName = $"{NativePrefix}{gitDllName}{NativeExtension}";
             var sourcePaths = baseNativePaths.
-                Where(path => Directory.Exists(path)).
-                SelectMany(path => Directory.EnumerateFiles(path, $"{NativePrefix}{gitDllName}{NativeExtension}", SearchOption.TopDirectoryOnly)).
+                Select(path => Path.Combine(path, fileName)).
                 ToArray();
+            var r = new Random();
+
             foreach (var sourcePath in sourcePaths)
             {
-                var fileName = Path.GetFileName(sourcePath);
                 var destinationPath = Path.Combine(BasePath, fileName);
 
-                for (var i = 0; i < 5; i++)
+                for (var i = 0; i < 10; i++)
                 {
                     // Try preloading already copied file
                     var result = loader(destinationPath);
@@ -168,9 +169,14 @@ namespace CenterCLR.RelaxVersioner
                             return;
                         }
                     }
-                    catch
+                    catch (Exception ex)
                     {
-                        Thread.Sleep(200);
+                        logger.Warning(
+                            ex,
+                            "Failed copying native library: SourcePath={0}, DestinationPath={1}",
+                            sourcePath,
+                            destinationPath);
+                        Thread.Sleep(r.Next(500) + 250);
                     }
                 }
             }
