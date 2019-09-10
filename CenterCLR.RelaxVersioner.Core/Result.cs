@@ -24,6 +24,7 @@ namespace CenterCLR.RelaxVersioner
     public struct Result
     {
         public readonly Version Version;
+        public readonly Version SafeVersion;
         public readonly string CommitId;
         public readonly string[] Tags;
         public readonly string Branch;
@@ -32,12 +33,13 @@ namespace CenterCLR.RelaxVersioner
         public readonly string Committer;
         public readonly string Message;
 
-        public Result(Version version, string commitId,
+        public Result(Version version, Version safeVersion, string commitId,
             string branch, string[] tags, DateTimeOffset date,
             string author, string committer,
             string message)
         {
             this.Version = version;
+            this.SafeVersion = safeVersion;
             this.CommitId = commitId;
             this.Branch = branch;
             this.Tags = tags;

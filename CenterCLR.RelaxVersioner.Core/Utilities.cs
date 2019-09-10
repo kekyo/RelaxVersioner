@@ -123,10 +123,10 @@ namespace CenterCLR.RelaxVersioner
             return value;
         }
 
-        public static System.Version GetSafeVersionFromDate(DateTimeOffset date)
+        public static Version GetSafeVersionFromDate(DateTimeOffset date)
         {
             // Second range: 0..43200 (2sec prec.)
-            return new System.Version(
+            return new Version(
                 date.Year,
                 date.Month,
                 date.Day,
