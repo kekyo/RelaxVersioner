@@ -18,38 +18,43 @@
 /////////////////////////////////////////////////////////////////////////////////////////////////
 
 using Microsoft.Build.Framework;
-using Microsoft.Build.Utilities;
 
 namespace CenterCLR.RelaxVersioner
 {
     internal sealed class TaskLogger : Logger
     {
-        private readonly TaskLoggingHelper logger;
+        private readonly IBuildEngine engine;
 
-        public TaskLogger(TaskLoggingHelper logger) :
+        public TaskLogger(IBuildEngine engine) :
             base($"RelaxVersioner[{AssemblyLoadHelper.EnvironmentIdentifier}]") =>
-            this.logger = logger;
+            this.engine = engine;
 
         public override void Message(LogImportance importance, string message)
         {
             switch (importance)
             {
                 case LogImportance.Low:
-                    logger.LogMessage(MessageImportance.Low, message);
+                    engine.LogMessageEvent(new BuildMessageEventArgs(message, null, "RelaxVersionerTask", MessageImportance.Low));
                     break;
                 case LogImportance.Normal:
-                    logger.LogMessage(MessageImportance.Normal, message);
+                    engine.LogMessageEvent(new BuildMessageEventArgs(message, null, "RelaxVersionerTask", MessageImportance.Normal));
                     break;
                 default:
-                    logger.LogMessage(MessageImportance.High, message);
+                    engine.LogMessageEvent(new BuildMessageEventArgs(message, null, "RelaxVersionerTask", MessageImportance.High));
                     break;
             }
         }
 
         public override void Warning(string message) =>
-            logger.LogWarning(message);
+            engine.LogWarningEvent(new BuildWarningEventArgs(
+                null, null,
+                engine.ProjectFileOfTaskNode, engine.LineNumberOfTaskNode, engine.ColumnNumberOfTaskNode, 0, 0,
+                message, null, "RelaxVersionerTask"));
 
         public override void Error(string message) =>
-            logger.LogError(message);
+            engine.LogErrorEvent(new BuildErrorEventArgs(
+                null, null,
+                engine.ProjectFileOfTaskNode, engine.LineNumberOfTaskNode, engine.ColumnNumberOfTaskNode, 0, 0,
+                message, null, "RelaxVersionerTask"));
     }
 }

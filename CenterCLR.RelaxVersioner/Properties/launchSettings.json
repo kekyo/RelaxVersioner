@@ -2,7 +2,7 @@
   "profiles": {
     "CenterCLR.RelaxVersioner": {
       "commandName": "Project",
-      "commandLineArgs": "-i=abcde D:\\PROJECT\\ConsoleApp3\\ConsoleApp3 output.cs"
+      "commandLineArgs": "-i=abcde . output.cs"
     }
   }
 }

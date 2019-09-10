@@ -22,7 +22,7 @@ using System.IO;
 using System.Linq;
 using System.Reflection;
 using System.Threading;
-
+using LibGit2Sharp;
 using Microsoft.DotNet.PlatformAbstractions;
 
 namespace CenterCLR.RelaxVersioner
@@ -33,6 +33,7 @@ namespace CenterCLR.RelaxVersioner
         public static string EnvironmentIdentifier { get; private set; }
 
         public static string NativeRuntimeIdentifier { get; private set; }
+        public static string NativePrefix { get; private set; }
         public static string NativeExtension { get; private set; }
         public static string NativeLibraryPath { get; private set; }
 
@@ -77,16 +78,19 @@ namespace CenterCLR.RelaxVersioner
             switch (RuntimeEnvironment.OperatingSystemPlatform)
             {
                 case Platform.Windows:
+                    NativePrefix = string.Empty;
                     NativeExtension = ".dll";
                     baseNativePaths = new[] { baseNativePath0 };
                     loader = NativeMethods.Win32_LoadLibrary;
                     break;
                 case Platform.Darwin:
+                    NativePrefix = "lib";
                     NativeExtension = ".dylib";
                     baseNativePaths = new[] { baseNativePath0 };
                     loader = NativeMethods.Unix_LoadLibrary;
                     break;
                 default:
+                    NativePrefix = "lib";
                     NativeExtension = ".so";
                     loader = NativeMethods.Unix_LoadLibrary;
                     // Will fallback not exist if platform is linux.
@@ -113,9 +117,16 @@ namespace CenterCLR.RelaxVersioner
             //   Related issues:
             //     https://github.com/dotnet/coreclr/issues/19654
             //     https://github.com/AArnott/Nerdbank.GitVersioning/issues/217
+
+            // public const string Name = "git2-dd2d538";
+            var gitDllName = (string)typeof(Repository).Assembly.GetTypes().
+                First(type => type.FullName == "LibGit2Sharp.Core.NativeDllName").
+                GetField("Name", BindingFlags.Public | BindingFlags.Static).
+                GetValue(null);
+
             var sourcePaths = baseNativePaths.
                 Where(path => Directory.Exists(path)).
-                SelectMany(path => Directory.EnumerateFiles(path, "*" + NativeExtension, SearchOption.TopDirectoryOnly)).
+                SelectMany(path => Directory.EnumerateFiles(path, $"{NativePrefix}{gitDllName}{NativeExtension}", SearchOption.TopDirectoryOnly)).
                 ToArray();
             foreach (var sourcePath in sourcePaths)
             {

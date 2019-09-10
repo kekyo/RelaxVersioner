@@ -14,7 +14,7 @@
 * RelaxVersionerを使うと、Gitのタグ・ブランチ・コミットメッセージだけを使って、バージョン管理が出来ます。つまり、追加のツール操作が不要なため、Gitを知ってさえいれば学習コストがほとんどなく、CI環境にも容易に対応できます。
 * サポートしている言語と環境は:
   * C#・F#・VB.NET・C++/CLI、そしてNuGetパッケージング (dotnet cli packコマンド)
-  * Visual Studio 2017/2019, dotnet SDK cli, net46/netstandard2.0の元で動作するMSBuild (注: MSBuildの動作プラットフォームの事です、あなたがターゲットにしたいプロジェクトの事ではありません)、及びこれらを使用する任意のIDE。
+  * Visual Studio 2019/2017/2015, dotnet SDK cli, netstandard2.0/net46の元で動作するMSBuild (注: MSBuildの動作プラットフォームの事です、あなたがターゲットにしたいプロジェクトの事ではありません)、及びこれらを使用する任意のIDE。
   * Linux(x64)及びWindows(x86/x64)  （検証している環境は先のとおりですが、[libgit2sharp](https://github.com/libgit2/libgit2sharp)の動作要件に準じて動作する可能性があります）
 * ローカルのGitリポジトリから、自動的にタグ・ブランチの名称を取得し、アセンブリ属性に適用することが出来ます。
 * AssemblyInfo.csファイルを直接変更しません。RelaxVersionerはテンポラリファイルに定義を出力し、それをコンパイルさせます。
@@ -184,6 +184,11 @@ using namespace System::Reflection;
 * Under Apache v2
 
 ## 履歴
+* 0.10.17:
+  * 分岐の解析を強化しました。
+* 0.10.11:
+  * MSBuild net40/net45プラットフォームへの実験的なサポート (これは、VS2012-2013に対応しますが、未テストです)
+  * MSBuild utilityアセンブリへの依存を削除しました。
 * 0.10.6:
   * 未初期化のリポジトリに対して使用した場合にクラッシュする不具合を修正しました。
 * 0.10.3:

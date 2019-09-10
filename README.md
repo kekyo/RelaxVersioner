@@ -14,7 +14,7 @@
 * If you use RelaxVersioner, version handling ONLY use for Git tags/branches/commit messages. Of course you don't need more tooling usage, and easy managing continuous-integration environments.
 * Target language/environments:
   * C#, F#, VB.NET, C++/CLI and NuGet packaging (dotnet cli pack).
-  * Visual Studio 2017/2019, dotnet SDK cli, MSBuild on net46/netstandard2.0 (NOT your project platform) and related IDEs.
+  * Visual Studio 2019/2017/2015, dotnet SDK cli, MSBuild on netstandard2.0/net46 (NOT your project platform) and related IDEs.
   * Linux(x64) and Windows(x86/x64).  (The project validates only them, but maybe runs same as [libgit2sharp](https://github.com/libgit2/libgit2sharp) required environment)
 * Auto collect version information from local Git repository tags/branch name.
 * Independent AssemblyInfo.cs file, RelaxVersioner is output into temporary file. (No direct manipulate AssemblyInfo file).
@@ -183,6 +183,11 @@ using namespace System::Reflection;
 * Under Apache v2
 
 ## History
+* 0.10.17:
+  * Improved fork analysis.
+* 0.10.11:
+  * Experimental supported for net40/net45 MSBuild platforms. (In VS2012-2013, but not tested)
+  * Omitted referencing MSBuild utility assembly.
 * 0.10.6:
   * Fixed using uninitialized repository.
 * 0.10.3:

@@ -65,58 +65,76 @@ namespace CenterCLR.RelaxVersioner
                 $"Depth={this.Current}";
         }
 
+        private struct Remain
+        {
+            public readonly int Depth;
+            public readonly Commit Commit;
+
+            public Remain(int depth, Commit commit)
+            {
+                this.Depth = depth;
+                this.Commit = commit;
+            }
+        }
+
         private static Version LookupVersionLabel(
             Branch targetBranch,
-            Dictionary<string, Tag[]> tagsDictionary,
-            Dictionary<string, Branch[]> branchesDictionary)
+            Dictionary<string, Tag[]> tagsDictionary)
         {
             Debug.Assert(tagsDictionary != null);
-            Debug.Assert(branchesDictionary != null);
 
             if (targetBranch == null)
             {
                 return Version.Default;
             }
 
-            // Analyze commit depth from fork pathes.
+            var traversed = new HashSet<string>();
+            var scheduleCommits = new Stack<Remain>();
+            scheduleCommits.Push(new Remain(0, targetBranch.Commits.First()));
 
-            var depthByForks = new Dictionary<string, Depth>();
-
-            foreach (var commit in targetBranch.Commits)
+            while (scheduleCommits.Count >= 1)
             {
-                if (depthByForks.TryGetValue(commit.Sha, out var depth))
-                {
-                    depthByForks.Remove(commit.Sha);
-                }
-                else
-                {
-                    depth = new Depth();
-                }
+                var entry = scheduleCommits.Pop();
+                var commit = entry.Commit;
+                var depth = entry.Depth;
 
-                var parents = commit.Parents?.ToArray() ?? emptyCommits;
-                foreach (var parent in parents)
+                while (true)
                 {
-                    if (depthByForks.TryGetValue(parent.Sha, out var depth2))
+                    if (!traversed.Add(commit.Sha))
                     {
-                        // Combined depth both forks.
-                        depthByForks[parent.Sha] = depth.Forked(depth2);
+                        break;
+                    }
+
+                    if (tagsDictionary.TryGetValue(commit.Sha, out var tags))
+                    {
+                        var filteredTags = tags.
+                            Select(tag => Version.TryParse(tag.GetFriendlyName(), out var version) ? (Version?)version : null).
+                            Where(version => version.HasValue).
+                            Select(version => Utilities.IncrementLastVersionComponent(version.Value, depth)).
+                            ToArray();
+
+                        // Found first valid tag.
+                        if (filteredTags.Length >= 1)
+                        {
+                            return filteredTags[0];
+                        }
+                    }
+
+                    depth++;
+
+                    if ((commit.Parents?.ToArray() is Commit[] parents) && (parents.Length >= 1))
+                    {
+                        commit = parents[0];
+
+                        foreach (var parentCommit in parents.Skip(1))
+                        {
+                            scheduleCommits.Push(new Remain(depth, parentCommit));
+                        }
                     }
                     else
                     {
-                        depthByForks.Add(parent.Sha, depth.Sequential());
+                        break;
                     }
-                }
-
-                var tags = tagsDictionary.GetValue(commit.Sha, emptyTags).
-                    Select(tag => Version.TryParse(tag.GetFriendlyName(), out var version) ? (Version?)version : null).
-                    Where(version => version.HasValue).
-                    Select(version => Utilities.IncrementLastVersionComponent(version.Value, depth.Current)).
-                    ToArray();
-
-                // Found first valid tag.
-                if (tags.Length >= 1)
-                {
-                    return tags[0];
                 }
             }
 
@@ -164,7 +182,7 @@ namespace CenterCLR.RelaxVersioner
             var tagsString = string.Join(",", tags);
 
             var safeVersion = Utilities.GetSafeVersionFromDate(committer.When);
-            var versionLabel = LookupVersionLabel(targetBranch, tagsDictionary, branchesDictionary);
+            var versionLabel = LookupVersionLabel(targetBranch, tagsDictionary);
 
             var keyValues = new Dictionary<string, object>(StringComparer.InvariantCultureIgnoreCase)
                 {

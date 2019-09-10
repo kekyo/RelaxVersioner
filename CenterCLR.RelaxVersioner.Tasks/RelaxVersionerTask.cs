@@ -24,7 +24,7 @@ using Microsoft.Build.Framework;
 
 namespace CenterCLR.RelaxVersioner
 {
-    public sealed class RelaxVersionerTask : Microsoft.Build.Utilities.Task
+    public sealed class RelaxVersionerTask : ITask
     {
         public RelaxVersionerTask()
         {
@@ -70,9 +70,19 @@ namespace CenterCLR.RelaxVersioner
             get; set;
         }
 
-        public override bool Execute()
+        public IBuildEngine BuildEngine
         {
-            var logger = new TaskLogger(this.Log);
+            get; set;
+        }
+
+        public ITaskHost HostObject
+        {
+            get; set;
+        }
+
+        public bool Execute()
+        {
+            var logger = new TaskLogger(this.BuildEngine);
 
             logger.Message(
                 LogImportance.Normal,
