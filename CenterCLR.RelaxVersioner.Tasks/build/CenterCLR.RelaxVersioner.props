@@ -18,7 +18,9 @@
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003" TreatAsLocalProperty="TaskFolder;TaskAssembly">
   <PropertyGroup>
     <TaskFolder Condition="'$(MSBuildRuntimeType)' == 'Core'">netstandard2.0</TaskFolder>
-    <TaskFolder Condition="'$(MSBuildRuntimeType)' != 'Core'">net46</TaskFolder>
+    <TaskFolder Condition="'$(MicrosoftNETBuildTasksTFM)' != ''">$(MicrosoftNETBuildTasksTFM)</TaskFolder>
+    <TaskFolder Condition="'$(TaskFolder)' == '' and '$(MSBuildRuntimeType)' != 'Core'">net46</TaskFolder>
+    <TaskFolder Condition="'$(TaskFolder)' == ''">net40</TaskFolder>
     <TaskAssembly>$(MSBuildThisFileDirectory)$(TaskFolder)\CenterCLR.RelaxVersioner.Tasks.dll</TaskAssembly>
     <GenerateAssemblyVersionAttribute>false</GenerateAssemblyVersionAttribute>
     <GenerateAssemblyFileVersionAttribute>false</GenerateAssemblyFileVersionAttribute>
