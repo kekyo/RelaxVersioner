@@ -1,5 +1,5 @@
-// This is auto-generated version information attributes by CenterCLR.RelaxVersioner.0.10.19.0, Do not edit.
-// Generated date: Tue, 10 Sep 2019 13:22:45 GMT
+// This is auto-generated version information attributes by CenterCLR.RelaxVersioner.0.10.20.0, Do not edit.
+// Generated date: Tue, 10 Sep 2019 14:00:15 GMT
 
 #include "stdafx.h"
 
@@ -24,15 +24,15 @@ namespace System
 
 using namespace System::Reflection;
 
-[assembly: AssemblyVersionAttribute("0.10.19")];
-[assembly: AssemblyFileVersionAttribute("2019.9.10.40187")];
-[assembly: AssemblyInformationalVersionAttribute("b26b6c8ffa35f88b29375465c24c0d3558663acf")];
-[assembly: AssemblyVersionMetadataAttribute("Date","Tue, 10 Sep 2019 13:19:34 GMT")];
+[assembly: AssemblyVersionAttribute("0.10.20")];
+[assembly: AssemblyFileVersionAttribute("2019.9.10.40366")];
+[assembly: AssemblyInformationalVersionAttribute("c111ff1efab5e2b77fce15bd306161b6eca7f7bd")];
+[assembly: AssemblyVersionMetadataAttribute("Date","Tue, 10 Sep 2019 13:25:32 GMT")];
 [assembly: AssemblyVersionMetadataAttribute("Branch","devel")];
 [assembly: AssemblyVersionMetadataAttribute("Tags","")];
 [assembly: AssemblyVersionMetadataAttribute("Author","Kouji Matsui <k@kekyo.net>")];
 [assembly: AssemblyVersionMetadataAttribute("Committer","Kouji Matsui <k@kekyo.net>")];
-[assembly: AssemblyVersionMetadataAttribute("Message","Fixed using uninitialized repository.")];
+[assembly: AssemblyVersionMetadataAttribute("Message","Updated self host and test projects version.")];
 [assembly: AssemblyVersionMetadataAttribute("Build","")];
-[assembly: AssemblyVersionMetadataAttribute("Generated","Tue, 10 Sep 2019 13:22:45 GMT")];
+[assembly: AssemblyVersionMetadataAttribute("Generated","Tue, 10 Sep 2019 14:00:15 GMT")];
 
