@@ -22,7 +22,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="CenterCLR.RelaxVersioner" version="0.10.11" PrivateAssets="All" />
+    <PackageReference Include="CenterCLR.RelaxVersioner" version="0.10.13" PrivateAssets="All" />
     <PackageReference Include="ILRepack.Lib.MSBuild.Task" Version="2.0.17" />
   </ItemGroup>
 
