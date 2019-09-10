@@ -65,62 +65,64 @@ namespace CenterCLR.RelaxVersioner
                 $"Depth={this.Current}";
         }
 
+        private static Version? LookupVersionLabelRecursive(
+            Commit commit,
+            Dictionary<string, Tag[]> tagsDictionary,
+            int depth,
+            HashSet<string> traversed)
+        {
+            Debug.Assert(commit != null);
+            Debug.Assert(tagsDictionary != null);
+
+            if (!traversed.Add(commit.Sha))
+            {
+                return null;
+            }
+
+            if (tagsDictionary.TryGetValue(commit.Sha, out var tags))
+            {
+                var filteredTags = tags.
+                    Select(tag => Version.TryParse(tag.GetFriendlyName(), out var version) ? (Version?)version : null).
+                    Where(version => version.HasValue).
+                    Select(version => Utilities.IncrementLastVersionComponent(version.Value, depth)).
+                    ToArray();
+
+                // Found first valid tag.
+                if (filteredTags.Length >= 1)
+                {
+                    return filteredTags[0];
+                }
+            }
+
+            if (commit.Parents is IEnumerable<Commit> parents)
+            {
+                foreach (var parentCommit in parents)
+                {
+                    if (LookupVersionLabelRecursive(
+                        parentCommit, tagsDictionary, depth + 1, traversed) is Version version)
+                    {
+                        return version;
+                    }
+                }
+            }
+
+            return null;
+        }
+
         private static Version LookupVersionLabel(
             Branch targetBranch,
-            Dictionary<string, Tag[]> tagsDictionary,
-            Dictionary<string, Branch[]> branchesDictionary)
+            Dictionary<string, Tag[]> tagsDictionary)
         {
             Debug.Assert(tagsDictionary != null);
-            Debug.Assert(branchesDictionary != null);
 
             if (targetBranch == null)
             {
                 return Version.Default;
             }
 
-            // Analyze commit depth from fork pathes.
-
-            var depthByForks = new Dictionary<string, Depth>();
-
-            foreach (var commit in targetBranch.Commits)
-            {
-                if (depthByForks.TryGetValue(commit.Sha, out var depth))
-                {
-                    depthByForks.Remove(commit.Sha);
-                }
-                else
-                {
-                    depth = new Depth();
-                }
-
-                var parents = commit.Parents?.ToArray() ?? emptyCommits;
-                foreach (var parent in parents)
-                {
-                    if (depthByForks.TryGetValue(parent.Sha, out var depth2))
-                    {
-                        // Combined depth both forks.
-                        depthByForks[parent.Sha] = depth.Forked(depth2);
-                    }
-                    else
-                    {
-                        depthByForks.Add(parent.Sha, depth.Sequential());
-                    }
-                }
-
-                var tags = tagsDictionary.GetValue(commit.Sha, emptyTags).
-                    Select(tag => Version.TryParse(tag.GetFriendlyName(), out var version) ? (Version?)version : null).
-                    Where(version => version.HasValue).
-                    Select(version => Utilities.IncrementLastVersionComponent(version.Value, depth.Current)).
-                    ToArray();
-
-                // Found first valid tag.
-                if (tags.Length >= 1)
-                {
-                    return tags[0];
-                }
-            }
-
-            return Version.Default;
+            return LookupVersionLabelRecursive(
+                targetBranch.Commits.First(), tagsDictionary, 0, new HashSet<string>()) ??
+                Version.Default;
         }
 
         private static Result WriteVersionSourceFile(
@@ -164,7 +166,7 @@ namespace CenterCLR.RelaxVersioner
             var tagsString = string.Join(",", tags);
 
             var safeVersion = Utilities.GetSafeVersionFromDate(committer.When);
-            var versionLabel = LookupVersionLabel(targetBranch, tagsDictionary, branchesDictionary);
+            var versionLabel = LookupVersionLabel(targetBranch, tagsDictionary);
 
             var keyValues = new Dictionary<string, object>(StringComparer.InvariantCultureIgnoreCase)
                 {
