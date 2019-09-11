@@ -183,6 +183,8 @@ using namespace System::Reflection;
 * Under Apache v2
 
 ## History
+* 0.10.24:
+  * Omitted net40/net45 platform because there caused conflicting version for MSBuild.Framework assemblies.
 * 0.10.19:
   * Fixed using uninitialized repository.
 * 0.10.17:

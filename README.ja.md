@@ -184,6 +184,8 @@ using namespace System::Reflection;
 * Under Apache v2
 
 ## 履歴
+* 0.10.24:
+  * MSBuild net40/net45プラットフォームのサポートを削除しました (MSBuild.Frameworkアセンブリのバージョン競合に対して安全な回避方法が見いだせなかったため)。
 * 0.10.19:
   * 未初期化のリポジトリに対して使用した場合にクラッシュする不具合を修正しました。
 * 0.10.17:
