@@ -25,7 +25,6 @@ namespace CenterCLR.RelaxVersioner
 {
     public struct Version
     {
-        private static readonly string separator = ".";
         private static readonly char[] separators = new[] { '.', ',', '/', '-', '_' };
 
         public static readonly Version Default = new Version(0, 0, 1);
@@ -84,15 +83,18 @@ namespace CenterCLR.RelaxVersioner
             }
         }
 
-        public string ToString(int maxComponents) =>
-            string.Join(separator,
+        public string ToString(int maxComponents, char separator = '.') =>
+            string.Join(separator.ToString(),
                 this.GetComponents().
                 Select((component, index) => new { component, index }).
                 TakeWhile(entry => entry.index < maxComponents).
                 Select(entry => entry.component));
 
+        public string ToString(char separator) =>
+            string.Join(separator.ToString(), this.GetComponents());
+
         public override string ToString() =>
-            string.Join(separator, this.GetComponents());
+            this.ToString('.');
 
         public static bool TryParse(string versionString, out Version version)
         {

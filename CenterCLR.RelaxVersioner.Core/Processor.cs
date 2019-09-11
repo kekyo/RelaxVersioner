@@ -47,24 +47,6 @@ namespace CenterCLR.RelaxVersioner
 
         public string[] Languages { get; }
 
-        private struct Depth
-        {
-            public readonly int Current;
-
-            private Depth(int depth) =>
-                this.Current = depth;
-
-            public Depth Sequential() =>
-                new Depth(this.Current + 1);
-            public Depth Forked(Depth other) =>
-                (this.Current > other.Current) ?
-                    new Depth(this.Current + 1) :
-                    new Depth(other.Current + 1);
-
-            public override string ToString() =>
-                $"Depth={this.Current}";
-        }
-
         private struct Remain
         {
             public readonly int Depth;
@@ -83,24 +65,25 @@ namespace CenterCLR.RelaxVersioner
         {
             Debug.Assert(tagsDictionary != null);
 
-            if (targetBranch == null)
+            var topCommit = targetBranch?.Commits?.FirstOrDefault();
+            if (topCommit == null)
             {
                 return Version.Default;
             }
 
-            var traversed = new HashSet<string>();
-            var scheduleCommits = new Stack<Remain>();
-            scheduleCommits.Push(new Remain(0, targetBranch.Commits.First()));
+            var reached = new HashSet<string>();
+            var scheduled = new Stack<Remain>();
+            scheduled.Push(new Remain(0, topCommit));
 
-            while (scheduleCommits.Count >= 1)
+            while (scheduled.Count >= 1)
             {
-                var entry = scheduleCommits.Pop();
+                var entry = scheduled.Pop();
                 var commit = entry.Commit;
                 var depth = entry.Depth;
 
                 while (true)
                 {
-                    if (!traversed.Add(commit.Sha))
+                    if (!reached.Add(commit.Sha))
                     {
                         break;
                     }
@@ -128,7 +111,7 @@ namespace CenterCLR.RelaxVersioner
 
                         foreach (var parentCommit in parents.Skip(1))
                         {
-                            scheduleCommits.Push(new Remain(depth, parentCommit));
+                            scheduled.Push(new Remain(depth, parentCommit));
                         }
                     }
                     else
@@ -211,6 +194,7 @@ namespace CenterCLR.RelaxVersioner
 
             return new Result(
                 versionLabel,
+                safeVersion,
                 commitId,
                 targetBranch.GetFriendlyName(),
                 tags,

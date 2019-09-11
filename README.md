@@ -113,7 +113,9 @@ using namespace System::Reflection;
   * Applied AssemblyVersionMetadata from local Git repository (Author, Branch, Tags）. But this example git repository not created , so there declarations containing "Unknown".
 5. Create Git local repository (command: git init). And commit with message.
 6. Build retry. Output binary applied Author, Branch, Tags now.
-7. You are tagging current commit. For example "0.5.4". Build retry, contains AssemblyVersion is "0.5.4" now.
+7. You are tagging current commit. For example "0.5.4" or "v0.5.4". Rebuild, then contains AssemblyVersion is "0.5.4" now.
+  * The auto increment feature: If your current commit doesn't apply any tags, RelaxVersioner will traverse committing history and auto increment commit depth for tail of version component. For example, tagged "0.5.4' at 2 older commit. The auto incrementer will calculate version "0.5.6".
+  * RelaxVersioner will traverse first priority for primary parent and then next others. Therefore, if you're using branch strategy, you can apply auto increment  with different version each branch when tagged different version each branch at bottom commit. For example: The tick-tock model for the master branch tagged "1.0.0" and devel branch tagged "1.1.0".
 8. All rights codes, tags. Push to remote repository, all done.
 9. Development cycles: next codes change and ready to release, you are tagging new version and then build, output binary auto tagged in AssemblyVersion and store informations.
   * We can apply with automated version number when "dotnet cli" for generate NuGet package (`PackageVersion` and `PackageReleaseNotes` attributes). You can use only `dotnet pack` command.
@@ -171,6 +173,9 @@ using namespace System::Reflection;
 </RelaxVersioner>
 ```
 
+## Another topics
+* RelaxVersioner supported on Visual Studio 2012/2013 only installed .NET Framework 4.6 or upper. Because it requires uses compatibility for net46 MSBuild.Framework assembly.
+
 ## TODO:
 * Support exclude rule set.
 * Support native C++ project.
@@ -183,6 +188,10 @@ using namespace System::Reflection;
 * Under Apache v2
 
 ## History
+* 0.10.24:
+  * Omitted net40/net45 platform because there caused conflicting version for MSBuild.Framework assemblies.
+* 0.10.19:
+  * Fixed using uninitialized repository.
 * 0.10.17:
   * Improved fork analysis.
 * 0.10.11:
