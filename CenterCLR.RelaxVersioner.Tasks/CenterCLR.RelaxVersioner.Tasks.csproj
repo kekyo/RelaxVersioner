@@ -27,15 +27,32 @@
     <AllowedOutputExtensionsInPackageBuildOutputFolder>.pdb</AllowedOutputExtensionsInPackageBuildOutputFolder>
   </PropertyGroup>
 
+  <PropertyGroup>
+    <libgit2OutputFilePath Condition="'$(libgit2OutputFilePath)' == ''">$([System.IO.Path]::Combine('$(MSBuildProjectDirectory)','obj','$(Configuration)','$(TargetFramework)','libgit2_filename.cs'))</libgit2OutputFilePath>
+    <CoreBuildDependsOn>
+      libgit2Build;
+      $(CoreBuildDependsOn);
+    </CoreBuildDependsOn>
+  </PropertyGroup>
+
+  <Target Name="libgit2Build" BeforeTargets="BeforeCompile" Outputs="$(libgit2OutputFilePath)">
+    <PropertyGroup>
+      <libgit2Lines>namespace CenterCLR.RelaxVersioner { internal static class libgit2 { public static readonly string filename = "$(libgit2_filename)"%3B } }</libgit2Lines>
+    </PropertyGroup>
+    <WriteLinesToFile File="$(libgit2OutputFilePath)" Overwrite="true" Lines="$(libgit2Lines)" />
+    <ItemGroup>
+      <Compile Include="$(libgit2OutputFilePath)" />
+    </ItemGroup>
+  </Target>
+
   <ItemGroup>
     <ProjectReference Include="..\CenterCLR.RelaxVersioner.Core\CenterCLR.RelaxVersioner.Core.csproj" />
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="CenterCLR.RelaxVersioner" Version="0.10.24">
-      <PrivateAssets>all</PrivateAssets>
-      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
-    </PackageReference>
+    <!--
+    <PackageReference Include="CenterCLR.RelaxVersioner" Version="0.10.24" PrivateAssets="All" />
+    -->
     <PackageReference Include="Microsoft.Build.Framework" Version="15.6.82" PrivateAssets="All" />
     <PackageReference Include="LibGit2Sharp" version="0.26.1" PrivateAssets="All" Publish="true" />
     <PackageReference Include="LibGit2Sharp.NativeBinaries" version="2.0.289" PrivateAssets="All" />

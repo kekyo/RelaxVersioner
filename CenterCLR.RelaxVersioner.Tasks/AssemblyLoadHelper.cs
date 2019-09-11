@@ -22,7 +22,6 @@ using System.IO;
 using System.Linq;
 using System.Reflection;
 using System.Threading;
-using LibGit2Sharp;
 using Microsoft.DotNet.PlatformAbstractions;
 
 namespace CenterCLR.RelaxVersioner
@@ -118,13 +117,8 @@ namespace CenterCLR.RelaxVersioner
             //     https://github.com/dotnet/coreclr/issues/19654
             //     https://github.com/AArnott/Nerdbank.GitVersioning/issues/217
 
-            // public const string Name = "git2-dd2d538";
-            var gitDllName = (string)typeof(Repository).Assembly.GetTypes().
-                First(type => type.FullName == "LibGit2Sharp.Core.NativeDllName").
-                GetField("Name", BindingFlags.Public | BindingFlags.Static).
-                GetValue(null);
-
-            var fileName = $"{NativePrefix}{gitDllName}{NativeExtension}";
+            // NOTE: libgit2.filename is auto generated source code by inside csproj script.
+            var fileName = $"{NativePrefix}{libgit2.filename}{NativeExtension}";
             var sourcePaths = baseNativePaths.
                 Select(path => Path.Combine(path, fileName)).
                 ToArray();
