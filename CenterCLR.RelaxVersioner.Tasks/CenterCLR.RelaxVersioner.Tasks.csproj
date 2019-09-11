@@ -53,6 +53,10 @@
     <!--
     <PackageReference Include="CenterCLR.RelaxVersioner" Version="0.10.24" PrivateAssets="All" />
     -->
+    <PackageReference Include="CenterCLR.RelaxVersioner" Version="0.10.19">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
     <PackageReference Include="Microsoft.Build.Framework" Version="15.6.82" PrivateAssets="All" />
     <PackageReference Include="LibGit2Sharp" version="0.26.1" PrivateAssets="All" Publish="true" />
     <PackageReference Include="LibGit2Sharp.NativeBinaries" version="2.0.289" PrivateAssets="All" />
