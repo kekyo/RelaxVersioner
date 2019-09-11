@@ -98,7 +98,7 @@ using namespace System::Reflection;
 ### スタートガイド
 [Refer start guides. (英語)](./STARTGUIDE.md)
 
-### 使い方
+### 簡単な使い方
 * NuGetで["RelaxVersioner"](https://www.nuget.org/packages/CenterCLR.RelaxVersioner/)を検索して、導入してください。
 * (.NET Coreではない旧形式のMSBuildプロジェクトを使っている場合): あらかじめ、AssemblyInfo.cs等に定義されている、デフォルトの"AssemblyVersion"と"AssemblyFileVersion"属性をコメントアウトして下さい（ビルド時に重複定義エラーが発生します）。
   * これらはカスタムルールを用いて定義を除外するのであれば、引き続き使用する事もできます。
@@ -114,7 +114,9 @@ using namespace System::Reflection;
   * また、AssemblyVersionMetadataに、ローカルGitリポジトリから得られる情報が埋め込まれます（Author・ブランチ・タグなど）。しかし、この例ではまだgit initしてないので"Unknown"として埋め込まれます。
 5. ソリューションフォルダでgit initして適当にコミットしてください。
 6. この状態でビルドすると、Author・ブランチやコミットメッセージが埋め込まれます。
-7. 現在のコミットにタグをつけてください。例えば"0.5.4"のようなバージョン表記です。これでビルドすれば、このバージョン番号が自動的にAssemblyVersionに反映されるようになります。
+7. 現在のコミットにタグをつけてください。例えば"0.5.4"や"v0.5.4"のようなバージョン表記です。これでビルドすれば、このバージョン番号が自動的にAssemblyVersionに反映されるようになります。
+  * 自動バージョンインクリメント機能: 現在のコミットにタグが無い場合は、過去のコミットに辿っていって、最初に見つかった有効なタグからのコミット数に応じて、バージョンの末尾が自動的にインクリメントされます。例えば、2つ祖先のコミットに"0.5.4"というタグが付いていた場合、自動的に計算されるバージョンは"0.5.6"になります。
+  * コミットの分岐がマージされている場合は、プライマリ分岐を優先して探索します。つまり、ブランチ運用をしている場合は、ブランチを切った際に、それぞれにタグをつけておくことで、異なるブランチで異なる自動バージョンインクリメントの法則を適用できます。例えば、masterブランチに"1.0.0"、develブランチに"1.1.0"と、タグを適用することで、チックタックモデルを実現できます。
 8. 全て良ければ、リモートリポジトリにpushして完了です。
 9. 以後、コードを変更してリリースの準備が出来たら、新たにタグをつければそれがAssemblyVersionに反映されるので、ビルドしてバイナリをリリースします。
   * dotnet cliを使用してNuGetのパッケージをビルドする場合にも、`PackageVersion`と`PackageReleaseNotes`は自動的に適用されます。完成してデプロイする場合は、`dotnet pack`コマンドを使えば、NuGetのバージョンを一元管理できます。
@@ -171,6 +173,9 @@ using namespace System::Reflection;
   </WriterRules>
 </RelaxVersioner>
 ```
+
+## その他
+* RelaxVersionerをVisual Studio 2012/2013で使うには、システムに.NET Framework 4.6以上がインストールされている必要があります。RelaxVersionerは、MSBuild.Frameworkアセンブリのnet46以上のバージョンを必要とするためです。
 
 ## TODO:
 * 除外ルールのサポート
