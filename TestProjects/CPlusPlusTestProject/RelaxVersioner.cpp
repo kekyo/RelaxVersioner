@@ -1,5 +1,5 @@
-// This is auto-generated version information attributes by CenterCLR.RelaxVersioner.0.10.22.0, Do not edit.
-// Generated date: Tue, 10 Sep 2019 14:23:29 GMT
+// This is auto-generated version information attributes by CenterCLR.RelaxVersioner.0.10.24.0, Do not edit.
+// Generated date: Wed, 11 Sep 2019 01:03:24 GMT
 
 #include "stdafx.h"
 
@@ -24,15 +24,15 @@ namespace System
 
 using namespace System::Reflection;
 
-[assembly: AssemblyVersionAttribute("0.10.22")];
-[assembly: AssemblyFileVersionAttribute("2019.9.10.42053")];
-[assembly: AssemblyInformationalVersionAttribute("d2b6319074b72fc3e53b710bb037e6d13421f752")];
-[assembly: AssemblyVersionMetadataAttribute("Date","Tue, 10 Sep 2019 14:21:46 GMT")];
+[assembly: AssemblyVersionAttribute("0.10.24")];
+[assembly: AssemblyFileVersionAttribute("2019.9.11.17931")];
+[assembly: AssemblyInformationalVersionAttribute("fe45961c123be052c273aa22428ad684f33dab5e")];
+[assembly: AssemblyVersionMetadataAttribute("Date","Wed, 11 Sep 2019 00:57:42 GMT")];
 [assembly: AssemblyVersionMetadataAttribute("Branch","devel")];
 [assembly: AssemblyVersionMetadataAttribute("Tags","")];
 [assembly: AssemblyVersionMetadataAttribute("Author","Kouji Matsui <k@kekyo.net>")];
 [assembly: AssemblyVersionMetadataAttribute("Committer","Kouji Matsui <k@kekyo.net>")];
-[assembly: AssemblyVersionMetadataAttribute("Message","Improved native library loader.")];
+[assembly: AssemblyVersionMetadataAttribute("Message","Omitted net40/net45 platform because there caused conflicting version for MSBuild.Framework assemblies.")];
 [assembly: AssemblyVersionMetadataAttribute("Build","")];
-[assembly: AssemblyVersionMetadataAttribute("Generated","Tue, 10 Sep 2019 14:23:29 GMT")];
+[assembly: AssemblyVersionMetadataAttribute("Generated","Wed, 11 Sep 2019 01:03:24 GMT")];
 
