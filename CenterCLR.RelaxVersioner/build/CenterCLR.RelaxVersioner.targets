@@ -66,34 +66,34 @@
   <Target Name="RelaxVersionerBuild" BeforeTargets="BeforeCompile" Outputs="$(RelaxVersionerOutputPath)">
 
     <PropertyGroup>
-      <RelaxVersionerResultPath>$([System.IO.Path]::Combine('$([System.IO.Path]::GetTempPath())','$([System.Guid]::NewGuid().ToString())'))</RelaxVersionerResultPath>
+      <_RV_ResultPath>$([System.IO.Path]::Combine('$([System.IO.Path]::GetTempPath())','$([System.Guid]::NewGuid().ToString())'))</_RV_ResultPath>
     </PropertyGroup>
     
     <!-- ======================== -->
     <!-- Execute RelaxVersioner -->
     
     <Exec WorkingDirectory="$(RelaxVersionerToolingDir)"
-          Command="$(RelaxVersionerToolingRuntimeName)&quot;$(RelaxVersionerToolingPath)&quot; --language=&quot;$(RelaxVersionerLanguage)&quot; --buildIdentifier=&quot;$(RelaxVersionerBuildIdentifier)&quot; --outputPath=&quot;$(RelaxVersionerOutputPath)&quot; --resultPath=&quot;$(RelaxVersionerResultPath)&quot; &quot;$(MSBuildProjectFullPath)&quot;" />
+          Command="$(RelaxVersionerToolingRuntimeName)&quot;$(RelaxVersionerToolingPath)&quot; --language=&quot;$(RelaxVersionerLanguage)&quot; --buildIdentifier=&quot;$(RelaxVersionerBuildIdentifier)&quot; --outputPath=&quot;$(RelaxVersionerOutputPath)&quot; --resultPath=&quot;$(_RV_ResultPath)&quot; &quot;$(MSBuildProjectFullPath)&quot;" />
 
-    <XmlPeek XmlInputPath="$(RelaxVersionerResultPath)" Query="/Result/Version/text()">
-      <Output TaskParameter="Result" PropertyName="RelaxVersionerDetectedIdentity" />
+    <XmlPeek XmlInputPath="$(_RV_ResultPath)" Query="/Result/Version/text()">
+      <Output TaskParameter="Result" PropertyName="_RV_DetectedVersion" />
     </XmlPeek>
-    <XmlPeek XmlInputPath="$(RelaxVersionerResultPath)" Query="/Result/ShortVersion/text()">
-      <Output TaskParameter="Result" PropertyName="RelaxVersionerDetectedShortIdentity" />
+    <XmlPeek XmlInputPath="$(_RV_ResultPath)" Query="/Result/ShortVersion/text()">
+      <Output TaskParameter="Result" PropertyName="_RV_DetectedShortVersion" />
     </XmlPeek>
-    <XmlPeek XmlInputPath="$(RelaxVersionerResultPath)" Query="/Result/Message/text()">
-      <Output TaskParameter="Result" PropertyName="RelaxVersionerDetectedMessage" />
+    <XmlPeek XmlInputPath="$(_RV_ResultPath)" Query="/Result/Message/text()">
+      <Output TaskParameter="Result" PropertyName="_RV_DetectedMessage" />
     </XmlPeek>
 
-    <Delete Files="$(RelaxVersionerResultPath)" />
+    <Delete Files="$(_RV_ResultPath)" />
 
     <!-- ============================================================================= -->
     <!-- Add output rule -->
 
     <PropertyGroup>
       <!-- Apply NuGet versioning -->
-      <PackageVersion>$(RelaxVersionerDetectedShortIdentity)</PackageVersion>
-      <PackageReleaseNotes>$(RelaxVersionerDetectedMessage)</PackageReleaseNotes>
+      <PackageVersion>$(_RV_DetectedShortVersion)</PackageVersion>
+      <PackageReleaseNotes>$(_RV_DetectedMessage)</PackageReleaseNotes>
     </PropertyGroup>
 
     <!-- ======================== -->
@@ -122,31 +122,31 @@
   <Target Name="RelaxVersionerBeforePack" BeforeTargets="SetNuSpecProperties">
 
     <PropertyGroup>
-      <RelaxVersionerPackageResultPath>$([System.IO.Path]::Combine('$([System.IO.Path]::GetTempPath())','$([System.Guid]::NewGuid().ToString())'))</RelaxVersionerPackageResultPath>
+      <_RV_PackageResultPath>$([System.IO.Path]::Combine('$([System.IO.Path]::GetTempPath())','$([System.Guid]::NewGuid().ToString())'))</_RV_PackageResultPath>
     </PropertyGroup>
 
     <!-- ======================== -->
     <!-- Execute RelaxVersioner in dryrun mode -->
 
     <Exec WorkingDirectory="$(RelaxVersionerToolingDir)"
-          Command="$(RelaxVersionerToolingRuntimeName)&quot;$(RelaxVersionerToolingPath)&quot; --buildIdentifier=&quot;$(RelaxVersionerBuildIdentifier)&quot; --resultPath=&quot;$(RelaxVersionerPackageResultPath)&quot; &quot;$(MSBuildProjectFullPath)&quot;" />
+          Command="$(RelaxVersionerToolingRuntimeName)&quot;$(RelaxVersionerToolingPath)&quot; --buildIdentifier=&quot;$(RelaxVersionerBuildIdentifier)&quot; --resultPath=&quot;$(_RV_PackageResultPath)&quot; &quot;$(MSBuildProjectFullPath)&quot;" />
 
-    <XmlPeek XmlInputPath="$(RelaxVersionerPackageResultPath)" Query="/Result/ShortVersion/text()">
-      <Output TaskParameter="Result" PropertyName="RelaxVersionerDetectedPackageIdentity" />
+    <XmlPeek XmlInputPath="$(_RV_PackageResultPath)" Query="/Result/ShortVersion/text()">
+      <Output TaskParameter="Result" PropertyName="_RV_DetectedPackageVersion" />
     </XmlPeek>
-    <XmlPeek XmlInputPath="$(RelaxVersionerPackageResultPath)" Query="/Result/Message/text()">
-      <Output TaskParameter="Result" PropertyName="RelaxVersionerDetectedPackageMessage" />
+    <XmlPeek XmlInputPath="$(_RV_PackageResultPath)" Query="/Result/Message/text()">
+      <Output TaskParameter="Result" PropertyName="_RV_DetectedPackageMessage" />
     </XmlPeek>
 
-    <Delete Files="$(RelaxVersionerPackageResultPath)" />
+    <Delete Files="$(_RV_PackageResultPath)" />
 
     <!-- ============================================================================= -->
     <!-- Add output rule -->
 
     <PropertyGroup>
       <!-- Apply NuGet versioning -->
-      <PackageVersion>$(RelaxVersionerDetectedPackageIdentity)</PackageVersion>
-      <PackageReleaseNotes>$(RelaxVersionerDetectedPackageMessage)</PackageReleaseNotes>
+      <PackageVersion>$(_RV_DetectedPackageVersion)</PackageVersion>
+      <PackageReleaseNotes>$(_RV_DetectedPackageMessage)</PackageReleaseNotes>
     </PropertyGroup>
   </Target>
 </Project>

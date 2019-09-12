@@ -15,27 +15,27 @@
     See the License for the specific language governing permissions and
     limitations under the License.
 -->
-<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003" TreatAsLocalProperty="PlatformName;RuntimeName;ExecutableName;ToolingDir">
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003" TreatAsLocalProperty="_RV_PlatformName;_RV_RuntimeName;_RV_ExecutableName;_RV_ToolingDir">
   <PropertyGroup Condition="'$(MSBuildRuntimeType)' == 'Core'">
-    <PlatformName>netcoreapp2.0</PlatformName>
-    <RuntimeName>dotnet </RuntimeName>
-    <ExecutableName>rv.dll</ExecutableName>
+    <_RV_PlatformName>netcoreapp2.0</_RV_PlatformName>
+    <_RV_RuntimeName>dotnet </_RV_RuntimeName>
+    <_RV_ExecutableName>rv.dll</_RV_ExecutableName>
   </PropertyGroup>
   <PropertyGroup Condition="'$(MSBuildRuntimeType)' == 'Full'">
-    <PlatformName>net46</PlatformName>
-    <RuntimeName></RuntimeName>
-    <ExecutableName>rv.exe</ExecutableName>
+    <_RV_PlatformName>net46</_RV_PlatformName>
+    <_RV_RuntimeName></_RV_RuntimeName>
+    <_RV_ExecutableName>rv.exe</_RV_ExecutableName>
   </PropertyGroup>
   <PropertyGroup Condition="'$(MSBuildRuntimeType)' == 'Mono'">
-    <PlatformName>net46</PlatformName>
-    <RuntimeName>mono </RuntimeName>
-    <ExecutableName>rv.exe</ExecutableName>
+    <_RV_PlatformName>net46</_RV_PlatformName>
+    <_RV_RuntimeName>mono </_RV_RuntimeName>
+    <_RV_ExecutableName>rv.exe</_RV_ExecutableName>
   </PropertyGroup>
   <PropertyGroup>
-    <RelaxVersionerToolingRuntimeName>$(RuntimeName)</RelaxVersionerToolingRuntimeName>
-    <ToolingDir>$([System.IO.Path]::Combine('$(MSBuildThisFileDirectory)','..','tools','$(PlatformName)'))</ToolingDir>
-    <RelaxVersionerToolingDir>$([System.IO.Path]::GetFullPath('$(ToolingDir)'))</RelaxVersionerToolingDir>
-    <RelaxVersionerToolingPath>$([System.IO.Path]::Combine('$(RelaxVersionerToolingDir)','$(ExecutableName)'))</RelaxVersionerToolingPath>
+    <RelaxVersionerToolingRuntimeName>$(_RV_RuntimeName)</RelaxVersionerToolingRuntimeName>
+    <_RV_ToolingDir>$([System.IO.Path]::Combine('$(MSBuildThisFileDirectory)','..','tools','$(_RV_PlatformName)'))</_RV_ToolingDir>
+    <RelaxVersionerToolingDir>$([System.IO.Path]::GetFullPath('$(_RV_ToolingDir)'))</RelaxVersionerToolingDir>
+    <RelaxVersionerToolingPath>$([System.IO.Path]::Combine('$(RelaxVersionerToolingDir)','$(_RV_ExecutableName)'))</RelaxVersionerToolingPath>
     <GenerateAssemblyVersionAttribute>false</GenerateAssemblyVersionAttribute>
     <GenerateAssemblyFileVersionAttribute>false</GenerateAssemblyFileVersionAttribute>
     <GenerateAssemblyInformationalVersionAttribute>false</GenerateAssemblyInformationalVersionAttribute>
