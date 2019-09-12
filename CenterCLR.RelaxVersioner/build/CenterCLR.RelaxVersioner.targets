@@ -76,7 +76,8 @@
     <!-- ======================== -->
     <!-- Execute RelaxVersioner -->
     
-    <Exec Command="$(RelaxVersionerToolingRuntimeName)$(RelaxVersionerToolingPath) --language=$(RelaxVersionerLanguage) --buildIdentifier=$(RelaxVersionerBuildIdentifier) --outputPath=$(RelaxVersionerOutputPath) --resultPath=$(ResultPath) $(MSBuildProjectFullPath)" />
+    <Exec WorkingDirectory="$(RelaxVersionerToolingDir)"
+          Command="$(RelaxVersionerToolingRuntimeName)$(RelaxVersionerToolingPath) --language=$(RelaxVersionerLanguage) --buildIdentifier=$(RelaxVersionerBuildIdentifier) --outputPath=$(RelaxVersionerOutputPath) --resultPath=$(ResultPath) $(MSBuildProjectFullPath)" />
 
     <XmlPeek XmlInputPath="$(ResultPath)" Query="/Result/Version/text()">
       <Output TaskParameter="Result" PropertyName="RelaxVersionerDetectedIdentity" />
@@ -131,7 +132,8 @@
     <!-- ======================== -->
     <!-- Execute RelaxVersioner in dryrun mode -->
 
-    <Exec Command="$(RelaxVersionerToolingRuntimeName)$(RelaxVersionerToolingPath) --language=$(RelaxVersionerLanguage) --buildIdentifier=$(RelaxVersionerBuildIdentifier) --resultPath=$(ResultPath) $(MSBuildProjectFullPath)" />
+    <Exec WorkingDirectory="$(RelaxVersionerToolingDir)"
+          Command="$(RelaxVersionerToolingRuntimeName)$(RelaxVersionerToolingPath) --language=$(RelaxVersionerLanguage) --buildIdentifier=$(RelaxVersionerBuildIdentifier) --resultPath=$(ResultPath) $(MSBuildProjectFullPath)" />
 
     <XmlPeek XmlInputPath="$(ResultPath)" Query="/Result/Version/text()">
       <Output TaskParameter="Result" PropertyName="RelaxVersionerDetectedIdentity" />

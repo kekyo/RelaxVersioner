@@ -23,7 +23,7 @@
   </PropertyGroup>
   <PropertyGroup Condition="'$(MSBuildRuntimeType)' != 'Core'">
     <PlatformName>net46</PlatformName>
-    <RuntimeName Condition="'$([System.Type]::GetType('Mono.Runtime'))' != ''">mono </RuntimeName>
+    <RuntimeName Condition="'$([System.Type]::GetType(`Mono.Runtime`))' != ''">mono </RuntimeName>
     <RuntimeName Condition="'$(RuntimeName)' == ''"></RuntimeName>
     <ExecutableName>rv.exe</ExecutableName>
   </PropertyGroup>
