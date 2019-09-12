@@ -29,7 +29,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="CenterCLR.RelaxVersioner" version="0.10.19" PrivateAssets="All" />
+    <PackageReference Include="CenterCLR.RelaxVersioner" version="0.10.49" PrivateAssets="All" />
     <PackageReference Include="CenterCLR.NamingFormatter" version="2.0.0" />
     <PackageReference Include="LibGit2Sharp" version="0.26.1" />
   </ItemGroup>
