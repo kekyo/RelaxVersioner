@@ -188,6 +188,9 @@ using namespace System::Reflection;
 * Under Apache v2
 
 ## History
+* 1.0.0:
+  * Reached 1.0 🎉
+  * Totally omitted MSBuild Task assemblies (because it makes many troubles :( RelaxVersioner is driven by independent commandline worker!
 * 0.10.24:
   * Omitted net40/net45 platform because there caused conflicting version for MSBuild.Framework assemblies.
 * 0.10.19:

@@ -189,6 +189,9 @@ using namespace System::Reflection;
 * Under Apache v2
 
 ## 履歴
+* 1.0.0:
+  * 正式版1.0公開 🎉
+  * MSBuild Taskアセンブリによる実装を完全に削除し、独立したコマンドライン実行ファイルを使用するように変更 (MSBuild Taskアセンブリは非常に多くの問題を抱えているため)。
 * 0.10.24:
   * MSBuild net40/net45プラットフォームのサポートを削除しました (MSBuild.Frameworkアセンブリのバージョン競合に対して安全な回避方法が見いだせなかったため)。
 * 0.10.19:
