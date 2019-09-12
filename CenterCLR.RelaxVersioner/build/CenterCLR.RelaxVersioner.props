@@ -15,7 +15,7 @@
     See the License for the specific language governing permissions and
     limitations under the License.
 -->
-<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003" TreatAsLocalProperty="PlatformName;RuntimeName;ExecutableName">
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003" TreatAsLocalProperty="PlatformName;RuntimeName;ExecutableName;ToolingDir">
   <PropertyGroup Condition="'$(MSBuildRuntimeType)' == 'Core'">
     <PlatformName>netstandard2.0</PlatformName>
     <RuntimeName>dotnet </RuntimeName>
@@ -33,7 +33,8 @@
   </PropertyGroup>
   <PropertyGroup>
     <RelaxVersionerToolingRuntimeName>$(RuntimeName)</RelaxVersionerToolingRuntimeName>
-    <RelaxVersionerToolingDir>$([System.IO.Path]::GetFullPath([System.IO.Path]::Combine('$(MSBuildThisFileDirectory)','..','tools','$(PlatformName)')))</RelaxVersionerToolingDir>
+    <ToolingDir>$([System.IO.Path]::Combine('$(MSBuildThisFileDirectory)','..','tools','$(PlatformName)'))</ToolingDir>
+    <RelaxVersionerToolingDir>$([System.IO.Path]::GetFullPath('$(ToolingDir)'))</RelaxVersionerToolingDir>
     <RelaxVersionerToolingPath>$([System.IO.Path]::Combine('$(RelaxVersionerToolingDir)','$(ExecutableName)'))</RelaxVersionerToolingPath>
     <GenerateAssemblyVersionAttribute>false</GenerateAssemblyVersionAttribute>
     <GenerateAssemblyFileVersionAttribute>false</GenerateAssemblyFileVersionAttribute>
