@@ -21,10 +21,14 @@
     <RuntimeName>dotnet </RuntimeName>
     <ExecutableName>rv.dll</ExecutableName>
   </PropertyGroup>
-  <PropertyGroup Condition="'$(MSBuildRuntimeType)' != 'Core'">
+  <PropertyGroup Condition="'$(MSBuildRuntimeType)' == 'Full'">
     <PlatformName>net46</PlatformName>
-    <RuntimeName Condition="'$([System.Type]::GetType(`Mono.Runtime`))' != ''">mono </RuntimeName>
-    <RuntimeName Condition="'$(RuntimeName)' == ''"></RuntimeName>
+    <RuntimeName></RuntimeName>
+    <ExecutableName>rv.exe</ExecutableName>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(MSBuildRuntimeType)' == 'Mono'">
+    <PlatformName>net46</PlatformName>
+    <RuntimeName>mono </RuntimeName>
     <ExecutableName>rv.exe</ExecutableName>
   </PropertyGroup>
   <PropertyGroup>
