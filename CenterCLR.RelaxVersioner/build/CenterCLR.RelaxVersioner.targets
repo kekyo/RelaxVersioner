@@ -24,7 +24,7 @@
   <!-- Common -->
   <PropertyGroup>
     <!-- This path identicate auto-generated source code by RelaxVersioner. -->
-    <RelaxVersionerOutputFilePath Condition="'$(RelaxVersionerOutputFilePath)' == ''">$([System.IO.Path]::Combine('$(MSBuildProjectDirectory)','$(IntermediateOutputPath)','RelaxVersioner$(DefaultLanguageSourceExtension)'))</RelaxVersionerOutputFilePath>
+    <RelaxVersionerOutputPath Condition="'$(RelaxVersionerOutputPath)' == ''">$([System.IO.Path]::Combine('$(MSBuildProjectDirectory)','$(IntermediateOutputPath)','RelaxVersioner$(DefaultLanguageSourceExtension)'))</RelaxVersionerOutputPath>
     <BuildIdentifier Condition="'$(BuildIdentifier)' == ''"></BuildIdentifier>
     <RelaxVersionerBuildIdentifier Condition="'$(RelaxVersionerBuildIdentifier)' == ''">$(BuildIdentifier)</RelaxVersionerBuildIdentifier>
   </PropertyGroup>
@@ -67,19 +67,28 @@
 
   <!-- ============================================================================= -->
   <!-- Build definition -->
-  <Target Name="RelaxVersionerBuild" BeforeTargets="BeforeCompile" Outputs="$(RelaxVersionerOutputFilePath)">
+  <Target Name="RelaxVersionerBuild" BeforeTargets="BeforeCompile" Outputs="$(RelaxVersionerOutputPath)" TreatAsLocalProperty="ResultPath">
 
+    <PropertyGroup>
+      <ResultPath>$([System.IO.Path]::Combine('$([System.IO.Path]::GetTempPath())','$([System.Guid]::NewGuid().ToString())')</ResultPath>
+    </PropertyGroup>
+    
     <!-- ======================== -->
     <!-- Execute RelaxVersioner -->
-    <RelaxVersionerTask
-        ProjectPath="$(MSBuildProjectFullPath)"
-        OutputFilePath="$(RelaxVersionerOutputFilePath)"
-        Language="$(RelaxVersionerLanguage)"
-        BuildIdentifier="$(RelaxVersionerBuildIdentifier)">
-      <Output TaskParameter="DetectedIdentity" PropertyName="RelaxVersionerDetectedIdentity" />
-      <Output TaskParameter="DetectedShortIdentity" PropertyName="RelaxVersionerDetectedShortIdentity" />
-      <Output TaskParameter="DetectedMessage" PropertyName="RelaxVersionerDetectedMessage" />
-    </RelaxVersionerTask>
+    
+    <Exec Command="$(RelaxVersionerToolingRuntimeName)$(RelaxVersionerToolingPath) --language=$(RelaxVersionerLanguage) --buildIdentifier=$(RelaxVersionerBuildIdentifier) --outputPath=$(RelaxVersionerOutputPath) --resultPath=$(ResultPath) $(MSBuildProjectFullPath)" />
+
+    <XmlPeek XmlInputPath="$(ResultPath)" Query="/Result/Version/text()">
+      <Output TaskParameter="Result" PropertyName="RelaxVersionerDetectedIdentity" />
+    </XmlPeek>
+    <XmlPeek XmlInputPath="$(ResultPath)" Query="/Result/ShortVersion/text()">
+      <Output TaskParameter="Result" PropertyName="RelaxVersionerDetectedShortIdentity" />
+    </XmlPeek>
+    <XmlPeek XmlInputPath="$(ResultPath)" Query="/Result/Message/text()">
+      <Output TaskParameter="Result" PropertyName="RelaxVersionerDetectedMessage" />
+    </XmlPeek>
+
+    <Delete Files="$(ResultPath)" />
 
     <!-- ============================================================================= -->
     <!-- Add output rule -->
@@ -95,36 +104,46 @@
     <ItemGroup Condition="'$(Language)' == 'F#'">
       <!-- HACK: F#'s EntryPoint expression is ignoring namespace/module if source code is last compilation.
             So, RelaxVersioner code insert before any source codes. -->
-      <CompileBefore Include="$(RelaxVersionerOutputFilePath)" />
+      <CompileBefore Include="$(RelaxVersionerOutputPath)" />
     </ItemGroup>
 
     <!-- ======================== -->
     <!-- For C++ (or C++/CLI) -->
     <ItemGroup Condition="'$(Language)' == 'C++'">
-      <ClCompile Include="$(RelaxVersionerOutputFilePath)" />
+      <ClCompile Include="$(RelaxVersionerOutputPath)" />
     </ItemGroup>
 
     <!-- ======================== -->
     <!-- For other languages -->
     <ItemGroup Condition="('$(Language)' != 'F#') and ('$(Language)' != 'C++')">
-      <Compile Include="$(RelaxVersionerOutputFilePath)" />
+      <Compile Include="$(RelaxVersionerOutputPath)" />
     </ItemGroup>
   </Target>
 
   <!-- ============================================================================= -->
   <!-- Pre publish definition -->
-  <Target Name="RelaxVersionerBeforePack" BeforeTargets="GenerateNuspec">
+  <Target Name="RelaxVersionerBeforePack" BeforeTargets="GenerateNuspec" TreatAsLocalProperty="ResultPath">
+
+    <PropertyGroup>
+      <ResultPath>$([System.IO.Path]::Combine('$([System.IO.Path]::GetTempPath())','$([System.Guid]::NewGuid().ToString())')</ResultPath>
+    </PropertyGroup>
 
     <!-- ======================== -->
     <!-- Execute RelaxVersioner in dryrun mode -->
-    <RelaxVersionerTask
-        ProjectPath="$(MSBuildProjectFullPath)"
-        OutputFilePath="$(RelaxVersionerOutputFilePath)"
-        BuildIdentifier="$(RelaxVersionerBuildIdentifier)">
-      <Output TaskParameter="DetectedIdentity" PropertyName="RelaxVersionerDetectedIdentity" />
-      <Output TaskParameter="DetectedShortIdentity" PropertyName="RelaxVersionerDetectedShortIdentity" />
-      <Output TaskParameter="DetectedMessage" PropertyName="RelaxVersionerDetectedMessage" />
-    </RelaxVersionerTask>
+
+    <Exec Command="$(RelaxVersionerToolingRuntimeName)$(RelaxVersionerToolingPath) --language=$(RelaxVersionerLanguage) --buildIdentifier=$(RelaxVersionerBuildIdentifier) --resultPath=$(ResultPath) $(MSBuildProjectFullPath)" />
+
+    <XmlPeek XmlInputPath="$(ResultPath)" Query="/Result/Version/text()">
+      <Output TaskParameter="Result" PropertyName="RelaxVersionerDetectedIdentity" />
+    </XmlPeek>
+    <XmlPeek XmlInputPath="$(ResultPath)" Query="/Result/ShortVersion/text()">
+      <Output TaskParameter="Result" PropertyName="RelaxVersionerDetectedShortIdentity" />
+    </XmlPeek>
+    <XmlPeek XmlInputPath="$(ResultPath)" Query="/Result/Message/text()">
+      <Output TaskParameter="Result" PropertyName="RelaxVersionerDetectedMessage" />
+    </XmlPeek>
+
+    <Delete Files="$(ResultPath)" />
 
     <!-- ============================================================================= -->
     <!-- Add output rule -->

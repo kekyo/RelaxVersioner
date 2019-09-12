@@ -15,14 +15,24 @@
     See the License for the specific language governing permissions and
     limitations under the License.
 -->
-<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003" TreatAsLocalProperty="TaskFolder;TaskAssembly">
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003" TreatAsLocalProperty="PlatformName,RuntimeName,ExecutableName">
+  <PropertyGroup Condition="'$(MSBuildRuntimeType)' == 'Core'">
+    <PlatformName>netstandard2.0</PlatformName>
+    <RuntimeName>dotnet </RuntimeName>
+    <ExecutableName>rv.dll</ExecutableName>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(MSBuildRuntimeType)' != 'Core'">
+    <PlatformName>net46</PlatformName>
+    <RuntimeName Condition="'$([System.Type]::GetType('Mono.Runtime'))' != ''">mono </RuntimeName>
+    <RuntimeName Condition="'$(RuntimeName)' == ''"></RuntimeName>
+    <ExecutableName>rv.exe</ExecutableName>
+  </PropertyGroup>
   <PropertyGroup>
-    <TaskFolder Condition="'$(MSBuildRuntimeType)' == 'Core'">netstandard2.0</TaskFolder>
-    <TaskFolder Condition="'$(MSBuildRuntimeType)' != 'Core'">net46</TaskFolder>
-    <TaskAssembly>$(MSBuildThisFileDirectory)$(TaskFolder)\CenterCLR.RelaxVersioner.Tasks.dll</TaskAssembly>
+    <RelaxVersionerToolingRuntimeName>$(RuntimeName)</RelaxVersionerToolingRuntimeName>
+    <RelaxVersionerToolingDir>$([System.IO.Path]::GetFullPath([System.IO.Path]::Combine('$(MSBuildThisFileDirectory)','..','tools','$(PlatformName)')))</RelaxVersionerToolingDir>
+    <RelaxVersionerToolingPath>$([System.IO.Path]::Combine('$(RelaxVersionerToolingDir)','$(ExecutableName)'))</RelaxVersionerToolingPath>
     <GenerateAssemblyVersionAttribute>false</GenerateAssemblyVersionAttribute>
     <GenerateAssemblyFileVersionAttribute>false</GenerateAssemblyFileVersionAttribute>
     <GenerateAssemblyInformationalVersionAttribute>false</GenerateAssemblyInformationalVersionAttribute>
   </PropertyGroup>
-  <UsingTask TaskName="RelaxVersionerTask" AssemblyFile="$(TaskAssembly)" />
 </Project>

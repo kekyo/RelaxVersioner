@@ -44,8 +44,6 @@
   <ItemGroup>
     <Content Include="build\CenterCLR.RelaxVersioner.props" />
     <Content Include="build\CenterCLR.RelaxVersioner.targets" />
-    <Content Include="buildMultiTargeting\CenterCLR.RelaxVersioner.props" />
-    <Content Include="buildMultiTargeting\CenterCLR.RelaxVersioner.targets" />
   </ItemGroup>
 
   <Target Name="SetNuSpecProperties" BeforeTargets="GenerateNuspec">
