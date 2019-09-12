@@ -27,10 +27,10 @@
     <RelaxVersionerOutputPath Condition="'$(RelaxVersionerOutputPath)' == ''">$([System.IO.Path]::Combine('$(MSBuildProjectDirectory)','$(IntermediateOutputPath)','RelaxVersioner$(DefaultLanguageSourceExtension)'))</RelaxVersionerOutputPath>
     <BuildIdentifier Condition="'$(BuildIdentifier)' == ''"></BuildIdentifier>
     <RelaxVersionerBuildIdentifier Condition="'$(RelaxVersionerBuildIdentifier)' == ''">$(BuildIdentifier)</RelaxVersionerBuildIdentifier>
-    <PackDependsOn>
+    <GenerateNuspecDependsOn>
       RelaxVersionerBeforePack;
-      $(PackDependsOn);
-    </PackDependsOn>
+      $(GenerateNuspecDependsOn)
+    </GenerateNuspecDependsOn>
   </PropertyGroup>
 
   <!-- ======================== -->
@@ -47,7 +47,7 @@
     <RelaxVersionerLanguage Condition="'$(RelaxVersionerLanguage)' == ''">C++</RelaxVersionerLanguage>
     <BuildCompileTargets>
       RelaxVersionerBuild;
-      $(BuildCompileTargets);
+      $(BuildCompileTargets)
     </BuildCompileTargets>
   </PropertyGroup>
 
@@ -57,7 +57,7 @@
     <RelaxVersionerLanguage Condition="'$(RelaxVersionerLanguage)' == ''">$(Language)</RelaxVersionerLanguage>
     <CoreBuildDependsOn>
       RelaxVersionerBuild;
-      $(CoreBuildDependsOn);
+      $(CoreBuildDependsOn)
     </CoreBuildDependsOn>
   </PropertyGroup>
 
@@ -119,7 +119,7 @@
 
   <!-- ============================================================================= -->
   <!-- Pre publish definition -->
-  <Target Name="RelaxVersionerBeforePack" BeforeTargets="GenerateNuspec">
+  <Target Name="RelaxVersionerBeforePack" BeforeTargets="SetNuSpecProperties">
 
     <PropertyGroup>
       <RelaxVersionerPackageResultPath>$([System.IO.Path]::Combine('$([System.IO.Path]::GetTempPath())','$([System.Guid]::NewGuid().ToString())'))</RelaxVersionerPackageResultPath>
