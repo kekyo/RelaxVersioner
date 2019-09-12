@@ -133,7 +133,7 @@
     <!-- Execute RelaxVersioner in dryrun mode -->
 
     <Exec WorkingDirectory="$(RelaxVersionerToolingDir)"
-          Command="$(RelaxVersionerToolingRuntimeName)$(RelaxVersionerToolingPath) --language=$(RelaxVersionerLanguage) --buildIdentifier=$(RelaxVersionerBuildIdentifier) --resultPath=$(RelaxVersionerResultPath) $(MSBuildProjectFullPath)" />
+          Command="$(RelaxVersionerToolingRuntimeName)$(RelaxVersionerToolingPath) --buildIdentifier=$(RelaxVersionerBuildIdentifier) --resultPath=$(RelaxVersionerResultPath) $(MSBuildProjectFullPath)" />
 
     <XmlPeek XmlInputPath="$(RelaxVersionerResultPath)" Query="/Result/Version/text()">
       <Output TaskParameter="Result" PropertyName="RelaxVersionerDetectedIdentity" />
