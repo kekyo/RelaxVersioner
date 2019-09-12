@@ -67,29 +67,29 @@
 
   <!-- ============================================================================= -->
   <!-- Build definition -->
-  <Target Name="RelaxVersionerBuild" BeforeTargets="BeforeCompile" Outputs="$(RelaxVersionerOutputPath)" TreatAsLocalProperty="ResultPath">
+  <Target Name="RelaxVersionerBuild" BeforeTargets="BeforeCompile" Outputs="$(RelaxVersionerOutputPath)">
 
     <PropertyGroup>
-      <ResultPath>$([System.IO.Path]::Combine('$([System.IO.Path]::GetTempPath())','$([System.Guid]::NewGuid().ToString())')</ResultPath>
+      <RelaxVersionerResultPath>$([System.IO.Path]::Combine('$([System.IO.Path]::GetTempPath())','$([System.Guid]::NewGuid().ToString())')</RelaxVersionerResultPath>
     </PropertyGroup>
     
     <!-- ======================== -->
     <!-- Execute RelaxVersioner -->
     
     <Exec WorkingDirectory="$(RelaxVersionerToolingDir)"
-          Command="$(RelaxVersionerToolingRuntimeName)$(RelaxVersionerToolingPath) --language=$(RelaxVersionerLanguage) --buildIdentifier=$(RelaxVersionerBuildIdentifier) --outputPath=$(RelaxVersionerOutputPath) --resultPath=$(ResultPath) $(MSBuildProjectFullPath)" />
+          Command="$(RelaxVersionerToolingRuntimeName)$(RelaxVersionerToolingPath) --language=$(RelaxVersionerLanguage) --buildIdentifier=$(RelaxVersionerBuildIdentifier) --outputPath=$(RelaxVersionerOutputPath) --resultPath=$(RelaxVersionerResultPath) $(MSBuildProjectFullPath)" />
 
-    <XmlPeek XmlInputPath="$(ResultPath)" Query="/Result/Version/text()">
+    <XmlPeek XmlInputPath="$(RelaxVersionerResultPath)" Query="/Result/Version/text()">
       <Output TaskParameter="Result" PropertyName="RelaxVersionerDetectedIdentity" />
     </XmlPeek>
-    <XmlPeek XmlInputPath="$(ResultPath)" Query="/Result/ShortVersion/text()">
+    <XmlPeek XmlInputPath="$(RelaxVersionerResultPath)" Query="/Result/ShortVersion/text()">
       <Output TaskParameter="Result" PropertyName="RelaxVersionerDetectedShortIdentity" />
     </XmlPeek>
-    <XmlPeek XmlInputPath="$(ResultPath)" Query="/Result/Message/text()">
+    <XmlPeek XmlInputPath="$(RelaxVersionerResultPath)" Query="/Result/Message/text()">
       <Output TaskParameter="Result" PropertyName="RelaxVersionerDetectedMessage" />
     </XmlPeek>
 
-    <Delete Files="$(ResultPath)" />
+    <Delete Files="$(RelaxVersionerResultPath)" />
 
     <!-- ============================================================================= -->
     <!-- Add output rule -->
@@ -126,26 +126,26 @@
   <Target Name="RelaxVersionerBeforePack" BeforeTargets="GenerateNuspec" TreatAsLocalProperty="ResultPath">
 
     <PropertyGroup>
-      <ResultPath>$([System.IO.Path]::Combine('$([System.IO.Path]::GetTempPath())','$([System.Guid]::NewGuid().ToString())')</ResultPath>
+      <RelaxVersionerResultPath>$([System.IO.Path]::Combine('$([System.IO.Path]::GetTempPath())','$([System.Guid]::NewGuid().ToString())')</RelaxVersionerResultPath>
     </PropertyGroup>
 
     <!-- ======================== -->
     <!-- Execute RelaxVersioner in dryrun mode -->
 
     <Exec WorkingDirectory="$(RelaxVersionerToolingDir)"
-          Command="$(RelaxVersionerToolingRuntimeName)$(RelaxVersionerToolingPath) --language=$(RelaxVersionerLanguage) --buildIdentifier=$(RelaxVersionerBuildIdentifier) --resultPath=$(ResultPath) $(MSBuildProjectFullPath)" />
+          Command="$(RelaxVersionerToolingRuntimeName)$(RelaxVersionerToolingPath) --language=$(RelaxVersionerLanguage) --buildIdentifier=$(RelaxVersionerBuildIdentifier) --resultPath=$(RelaxVersionerResultPath) $(MSBuildProjectFullPath)" />
 
-    <XmlPeek XmlInputPath="$(ResultPath)" Query="/Result/Version/text()">
+    <XmlPeek XmlInputPath="$(RelaxVersionerResultPath)" Query="/Result/Version/text()">
       <Output TaskParameter="Result" PropertyName="RelaxVersionerDetectedIdentity" />
     </XmlPeek>
-    <XmlPeek XmlInputPath="$(ResultPath)" Query="/Result/ShortVersion/text()">
+    <XmlPeek XmlInputPath="$(RelaxVersionerResultPath)" Query="/Result/ShortVersion/text()">
       <Output TaskParameter="Result" PropertyName="RelaxVersionerDetectedShortIdentity" />
     </XmlPeek>
-    <XmlPeek XmlInputPath="$(ResultPath)" Query="/Result/Message/text()">
+    <XmlPeek XmlInputPath="$(RelaxVersionerResultPath)" Query="/Result/Message/text()">
       <Output TaskParameter="Result" PropertyName="RelaxVersionerDetectedMessage" />
     </XmlPeek>
 
-    <Delete Files="$(ResultPath)" />
+    <Delete Files="$(RelaxVersionerResultPath)" />
 
     <!-- ============================================================================= -->
     <!-- Add output rule -->
