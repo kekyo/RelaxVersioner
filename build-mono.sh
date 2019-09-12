@@ -20,6 +20,6 @@ echo "==========================================================="
 echo "Build (mono) CenterCLR.RelaxVersioner"
 echo ""
 
-msbuild /t:restore /p:Configuration=Release /p:Platform=AnyCpu CenterCLR.RelaxVersioner.Tasks/CenterCLR.RelaxVersioner.Tasks.csproj
+msbuild /t:restore /p:Configuration=Release /p:Platform=AnyCpu CenterCLR.RelaxVersioner/CenterCLR.RelaxVersioner.csproj
 
-msbuild /p:Configuration=Release /p:Platform=AnyCpu CenterCLR.RelaxVersioner.Tasks/CenterCLR.RelaxVersioner.Tasks.csproj
+msbuild /p:Configuration=Release /p:Platform=AnyCpu CenterCLR.RelaxVersioner/CenterCLR.RelaxVersioner.csproj
