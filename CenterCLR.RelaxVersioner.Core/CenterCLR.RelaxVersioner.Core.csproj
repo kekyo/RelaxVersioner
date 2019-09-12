@@ -2,7 +2,6 @@
 
   <PropertyGroup>
     <TargetFrameworks>net46;netstandard2.0</TargetFrameworks>
-    <OutputType>Library</OutputType>
 
     <LangVersion>7.3</LangVersion>
     <DebugType>portable</DebugType>
@@ -30,7 +29,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="CenterCLR.RelaxVersioner" version="0.10.24" PrivateAssets="All" />
+    <PackageReference Include="CenterCLR.RelaxVersioner" version="0.10.52" PrivateAssets="All" />
     <PackageReference Include="CenterCLR.NamingFormatter" version="2.0.0" />
     <PackageReference Include="LibGit2Sharp" version="0.26.1" />
   </ItemGroup>

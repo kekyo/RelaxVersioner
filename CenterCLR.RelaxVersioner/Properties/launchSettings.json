@@ -1,8 +1,8 @@
 {
   "profiles": {
     "CenterCLR.RelaxVersioner": {
-      "commandName": "Project",
-      "commandLineArgs": "-i=abcde . output.cs"
+        "commandName": "Project",
+        "commandLineArgs": "-buildIdentifier=abcde . output.cs"
     }
   }
 }

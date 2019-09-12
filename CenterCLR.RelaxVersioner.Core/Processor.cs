@@ -127,17 +127,15 @@ namespace CenterCLR.RelaxVersioner
         private static Result WriteVersionSourceFile(
             Logger logger,
             WriterBase writer,
-            string outputFilePath,
+            string outputPath,
             Branch branchHint,
             Dictionary<string, Tag[]> tagsDictionary,
             Dictionary<string, Branch[]> branchesDictionary,
             string buildIdentifier,
             DateTimeOffset generated,
             IEnumerable<Rule> ruleSet,
-            IEnumerable<string> importSet,
-            bool isDryRun)
+            IEnumerable<string> importSet)
         {
-            Debug.Assert(string.IsNullOrWhiteSpace(outputFilePath) == false);
             Debug.Assert(tagsDictionary != null);
             Debug.Assert(branchesDictionary != null);
             Debug.Assert(ruleSet != null);
@@ -187,9 +185,9 @@ namespace CenterCLR.RelaxVersioner
                 logger.Message(LogImportance.Low, "Values: {0}={1}", entry.Key, entry.Value);
             }
 
-            if (!isDryRun)
+            if (!string.IsNullOrWhiteSpace(outputPath))
             {
-                writer.Write(outputFilePath, keyValues, generated, ruleSet, importSet);
+                writer.Write(outputPath, keyValues, generated, ruleSet, importSet);
             }
 
             return new Result(
@@ -206,10 +204,9 @@ namespace CenterCLR.RelaxVersioner
 
         public Result Run(
             string projectDirectory,
-            string outputFilePath,
+            string outputPath,
             string language,
-            string buildIdentifier,
-            bool isDryRun)
+            string buildIdentifier)
         {
             var writer = writers[language];
 
@@ -249,15 +246,14 @@ namespace CenterCLR.RelaxVersioner
                 return WriteVersionSourceFile(
                     logger,
                     writer,
-                    outputFilePath,
+                    outputPath,
                     repository?.Head,
                     tags,
                     branches,
                     buildIdentifier,
                     DateTimeOffset.Now,
                     ruleSet,
-                    importSet,
-                    isDryRun);
+                    importSet);
             }
             finally
             {

@@ -22,11 +22,7 @@
     <file src="build/CenterCLR.RelaxVersioner.targets" target="build" />
     <file src="buildMultiTargeting/CenterCLR.RelaxVersioner.props" target="buildMultiTargeting" />
     <file src="buildMultiTargeting/CenterCLR.RelaxVersioner.targets" target="buildMultiTargeting" />
-
-    <file src="bin\$Configuration$\net46\publish\*.*" exclude="bin\$Configuration$\net46\publish\*.config" target="build/net46" />
-    <file src="bin\$Configuration$\netstandard2.0\publish\*.*" exclude="bin\$Configuration$\net46\publish\*.config" target="build/netstandard2.0" />
-
-    <!-- The runtimes place into build directory, because native libraries expose if runtime directory placed root directory. -->
-    <file src="$libgit2_propsfile$\..\..\runtimes\**\*" target="build/runtimes" />
+    <file src="bin\$Configuration$\net46\publish\**\*.*" target="tools/net46" />
+    <file src="bin\$Configuration$\netcoreapp2.0\publish\**\*.*" target="tools/netcoreapp2.0" />
   </files>
 </package>

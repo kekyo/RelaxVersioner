@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFramework>net46</TargetFramework>
+    <TargetFrameworks>net46;netcoreapp2.0</TargetFrameworks>
     <OutputType>Exe</OutputType>
     <AssemblyName>rv</AssemblyName>
 
@@ -19,21 +19,44 @@
     <Trademark>CenterCLR.RelaxVersioner</Trademark>
     <Copyright>Copyright (c) 2016-2019 Kouji Matsui</Copyright>
     <Description>Easy-usage, Git-based, auto-generate version informations toolset.</Description>
+
+    <NuspecFile>CenterCLR.RelaxVersioner.nuspec</NuspecFile>
+
+    <DevelopmentDependency>true</DevelopmentDependency>
+    <NoPackageAnalysis>true</NoPackageAnalysis>
+    <IncludeBuildOutput>false</IncludeBuildOutput>
+    <AllowedOutputExtensionsInPackageBuildOutputFolder>.pdb</AllowedOutputExtensionsInPackageBuildOutputFolder>
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="CenterCLR.RelaxVersioner" version="0.10.24" PrivateAssets="All" />
-    <PackageReference Include="ILRepack.Lib.MSBuild.Task" Version="2.0.17" />
+    <PackageReference Include="CenterCLR.RelaxVersioner" version="0.10.52" PrivateAssets="All" />
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="CenterCLR.NamingFormatter" version="2.0.0" />
-    <PackageReference Include="LibGit2Sharp.NativeBinaries" version="2.0.289" />
     <PackageReference Include="Mono.Options" Version="5.3.0.1" />
+    <PackageReference Include="LibGit2Sharp.NativeBinaries" version="2.0.289" />
   </ItemGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\CenterCLR.RelaxVersioner.Core\CenterCLR.RelaxVersioner.Core.csproj" />
   </ItemGroup>
   
+  <ItemGroup>
+    <Content Include="build\CenterCLR.RelaxVersioner.props" />
+    <Content Include="build\CenterCLR.RelaxVersioner.targets" />
+  </ItemGroup>
+
+  <Target Name="SetNuSpecProperties" BeforeTargets="GenerateNuspec">
+    <PropertyGroup>
+      <NuspecProperties>$(NuspecProperties);Configuration=$(Configuration);PackageVersion=$(PackageVersion);PackageReleaseNotes=$(PackageReleaseNotes);libgit2_propsfile=$(libgit2_propsfile)</NuspecProperties>
+    </PropertyGroup>
+  </Target>
+
+  <Target Name="PublishAll" BeforeTargets="SetNuSpecProperties">
+    <ItemGroup>
+      <_TargetFramework Include="$(TargetFrameworks)" />
+    </ItemGroup>
+    <MSBuild Projects="$(MSBuildProjectFullPath)" Targets="Publish" Properties="TargetFramework=%(_TargetFramework.Identity)" />
+  </Target>
+
 </Project>

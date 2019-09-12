@@ -18,8 +18,8 @@
 /////////////////////////////////////////////////////////////////////////////////////////////////
 
 using System;
+using System.IO;
 using System.Runtime.InteropServices;
-
 using Mono.Options;
 
 namespace CenterCLR.RelaxVersioner
@@ -38,33 +38,39 @@ namespace CenterCLR.RelaxVersioner
 
                 var language = "C#";
                 string buildIdentifier = null;
-                var isDryRun = false;
-                var isHelp = false;
+                string outputPath = null;
+                string resultPath = null;
+                var help = false;
 
                 var options = new OptionSet
                 {
-                    { "l=", $"target language [{languages}]", v => language = v },
-                    { "i=", $"build identifier", v => buildIdentifier = v },
-                    { "d", "dry run mode", v => isDryRun = v != null },
-                    { "h", "help", v => isHelp = v != null },
+                    { "language=", $"target language [{languages}]", v => language = v },
+                    { "buildIdentifier=", $"build identifier", v => buildIdentifier = v },
+                    { "outputPath=", $"output source file", v => outputPath = v },
+                    { "resultPath=", $"output result via xml file", v => resultPath = v },
+                    { "help", "help", v => help = v != null },
                 };
 
                 var trails = options.Parse(args);
-                if (isHelp || (trails.Count < 2))
+                if (help || (trails.Count < 1))
                 {
-                    logger.Error("Usage: rv [options...] <projectDirectory> <outputFilePath>");
+                    logger.Error("Usage: rv [options...] <projectDirectory>");
                     options.WriteOptionDescriptions(Console.Error);
                     return 1;
                 }
 
                 var projectDirectory = trails[0];
-                var outputFilePath = trails[1];
 
                 var result = processor.Run(
-                    projectDirectory, outputFilePath, language, buildIdentifier, isDryRun);
+                    projectDirectory, outputPath, language, buildIdentifier);
 
-                var dryrunDisplay = isDryRun ? " (dryrun)" : string.Empty;
-                var languageDisplay = isDryRun ? string.Empty : $"Language={language}, ";
+                var dryrunDisplay = string.IsNullOrWhiteSpace(outputPath) ? " (dryrun)" : string.Empty;
+                var languageDisplay = string.IsNullOrWhiteSpace(outputPath) ? string.Empty : $"Language={language}, ";
+
+                if (!string.IsNullOrWhiteSpace(resultPath))
+                {
+                    ResultWriter.Write(resultPath, result);
+                }
 
                 logger.Message(
                     LogImportance.High,
@@ -75,7 +81,7 @@ namespace CenterCLR.RelaxVersioner
             }
             catch (Exception ex)
             {
-                logger.Error(ex, "Unknown exception occurred.");
+                logger.Error(ex, "Unknown exception occurred, {0}", ex.StackTrace);
                 return Marshal.GetHRForException(ex);
             }
 
