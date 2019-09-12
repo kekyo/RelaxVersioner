@@ -119,7 +119,7 @@
 
   <!-- ============================================================================= -->
   <!-- Pre publish definition -->
-  <Target Name="RelaxVersionerBeforePack" BeforeTargets="GenerateNuspec">
+  <Target Name="RelaxVersionerBeforePack" BeforeTargets="SetNuSpecProperties">
 
     <PropertyGroup>
       <RelaxVersionerPackageResultPath>$([System.IO.Path]::Combine('$([System.IO.Path]::GetTempPath())','$([System.Guid]::NewGuid().ToString())'))</RelaxVersionerPackageResultPath>
