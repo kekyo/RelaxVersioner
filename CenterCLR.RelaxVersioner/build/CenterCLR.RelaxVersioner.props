@@ -15,7 +15,7 @@
     See the License for the specific language governing permissions and
     limitations under the License.
 -->
-<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003" TreatAsLocalProperty="PlatformName,RuntimeName,ExecutableName">
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003" TreatAsLocalProperty="PlatformName;RuntimeName;ExecutableName">
   <PropertyGroup Condition="'$(MSBuildRuntimeType)' == 'Core'">
     <PlatformName>netstandard2.0</PlatformName>
     <RuntimeName>dotnet </RuntimeName>
