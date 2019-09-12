@@ -1,5 +1,5 @@
-// This is auto-generated version information attributes by CenterCLR.RelaxVersioner.0.10.24.0, Do not edit.
-// Generated date: Wed, 11 Sep 2019 01:03:24 GMT
+// This is auto-generated version information attributes by CenterCLR.RelaxVersioner.0.10.39.0, Do not edit.
+// Generated date: Thu, 12 Sep 2019 08:01:05 GMT
 
 #include "stdafx.h"
 
@@ -24,15 +24,15 @@ namespace System
 
 using namespace System::Reflection;
 
-[assembly: AssemblyVersionAttribute("0.10.24")];
-[assembly: AssemblyFileVersionAttribute("2019.9.11.17931")];
-[assembly: AssemblyInformationalVersionAttribute("fe45961c123be052c273aa22428ad684f33dab5e")];
-[assembly: AssemblyVersionMetadataAttribute("Date","Wed, 11 Sep 2019 00:57:42 GMT")];
+[assembly: AssemblyVersionAttribute("0.10.39")];
+[assembly: AssemblyFileVersionAttribute("2019.9.12.30534")];
+[assembly: AssemblyInformationalVersionAttribute("954ec7a84d1ea91e84f18eb26345ea84d9ae7b62")];
+[assembly: AssemblyVersionMetadataAttribute("Date","Thu, 12 Sep 2019 07:57:48 GMT")];
 [assembly: AssemblyVersionMetadataAttribute("Branch","devel")];
 [assembly: AssemblyVersionMetadataAttribute("Tags","")];
 [assembly: AssemblyVersionMetadataAttribute("Author","Kouji Matsui <k@kekyo.net>")];
 [assembly: AssemblyVersionMetadataAttribute("Committer","Kouji Matsui <k@kekyo.net>")];
-[assembly: AssemblyVersionMetadataAttribute("Message","Omitted net40/net45 platform because there caused conflicting version for MSBuild.Framework assemblies.")];
+[assembly: AssemblyVersionMetadataAttribute("Message","Fixed rv platform monitor.")];
 [assembly: AssemblyVersionMetadataAttribute("Build","")];
-[assembly: AssemblyVersionMetadataAttribute("Generated","Wed, 11 Sep 2019 01:03:24 GMT")];
+[assembly: AssemblyVersionMetadataAttribute("Generated","Thu, 12 Sep 2019 08:01:05 GMT")];
 
