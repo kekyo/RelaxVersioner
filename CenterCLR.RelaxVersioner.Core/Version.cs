@@ -27,7 +27,7 @@ namespace CenterCLR.RelaxVersioner
     {
         private static readonly char[] separators = new[] { '.', ',', '/', '-', '_' };
 
-        public static readonly Version Default = new Version(0, 0, 1);
+        public static readonly Version Empty = new Version(0, 0, 0);
 
         public readonly int Major;
         public readonly int? Minor;

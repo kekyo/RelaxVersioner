@@ -68,18 +68,20 @@ namespace CenterCLR.RelaxVersioner
             var topCommit = targetBranch?.Commits?.FirstOrDefault();
             if (topCommit == null)
             {
-                return Version.Default;
+                return Version.Empty;
             }
 
             var reached = new HashSet<string>();
             var scheduled = new Stack<Remain>();
             scheduled.Push(new Remain(0, topCommit));
 
+            var depth = 0;
+
             while (scheduled.Count >= 1)
             {
                 var entry = scheduled.Pop();
                 var commit = entry.Commit;
-                var depth = entry.Depth;
+                depth = entry.Depth;
 
                 while (true)
                 {
@@ -121,7 +123,7 @@ namespace CenterCLR.RelaxVersioner
                 }
             }
 
-            return Version.Default;
+            return Utilities.IncrementLastVersionComponent(Version.Empty, depth);
         }
 
         private static Result WriteVersionSourceFile(
