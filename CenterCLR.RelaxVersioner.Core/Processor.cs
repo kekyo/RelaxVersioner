@@ -75,11 +75,13 @@ namespace CenterCLR.RelaxVersioner
             var scheduled = new Stack<Remain>();
             scheduled.Push(new Remain(0, topCommit));
 
+            var depth = 0;
+
             while (scheduled.Count >= 1)
             {
                 var entry = scheduled.Pop();
                 var commit = entry.Commit;
-                var depth = entry.Depth;
+                depth = entry.Depth;
 
                 while (true)
                 {
@@ -121,7 +123,7 @@ namespace CenterCLR.RelaxVersioner
                 }
             }
 
-            return Version.Default;
+            return Utilities.IncrementLastVersionComponent(Version.Default, depth);
         }
 
         private static Result WriteVersionSourceFile(
