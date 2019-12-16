@@ -1,5 +1,5 @@
-// This is auto-generated version information attributes by CenterCLR.RelaxVersioner.1.0.0.0, Do not edit.
-// Generated date: Thu, 12 Sep 2019 13:54:47 GMT
+// This is auto-generated version information attributes by CenterCLR.RelaxVersioner.1.0.5.0, Do not edit.
+// Generated date: Mon, 16 Dec 2019 14:32:24 GMT
 
 #include "stdafx.h"
 
@@ -24,15 +24,15 @@ namespace System
 
 using namespace System::Reflection;
 
-[assembly: AssemblyVersionAttribute("1.0.0")];
-[assembly: AssemblyFileVersionAttribute("2019.9.12.40881")];
-[assembly: AssemblyInformationalVersionAttribute("967c229a68a251fade829e789284cbc5848b1398")];
-[assembly: AssemblyVersionMetadataAttribute("Date","Thu, 12 Sep 2019 13:42:42 GMT")];
+[assembly: AssemblyVersionAttribute("1.0.5")];
+[assembly: AssemblyFileVersionAttribute("2019.12.16.42088")];
+[assembly: AssemblyInformationalVersionAttribute("9f8576565136b647cd94438e267f07b93e886ed7")];
+[assembly: AssemblyVersionMetadataAttribute("Date","Mon, 16 Dec 2019 14:22:56 GMT")];
 [assembly: AssemblyVersionMetadataAttribute("Branch","master")];
-[assembly: AssemblyVersionMetadataAttribute("Tags","1.0.0")];
+[assembly: AssemblyVersionMetadataAttribute("Tags","1.0.5")];
 [assembly: AssemblyVersionMetadataAttribute("Author","Kouji Matsui <k@kekyo.net>")];
 [assembly: AssemblyVersionMetadataAttribute("Committer","Kouji Matsui <k@kekyo.net>")];
 [assembly: AssemblyVersionMetadataAttribute("Message","Merge branch 'devel'")];
 [assembly: AssemblyVersionMetadataAttribute("Build","")];
-[assembly: AssemblyVersionMetadataAttribute("Generated","Thu, 12 Sep 2019 13:54:47 GMT")];
+[assembly: AssemblyVersionMetadataAttribute("Generated","Mon, 16 Dec 2019 14:32:24 GMT")];
 

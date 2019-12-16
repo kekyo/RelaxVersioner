@@ -20,7 +20,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="CenterCLR.RelaxVersioner" Version="1.0.0">
+    <PackageReference Include="CenterCLR.RelaxVersioner" Version="1.0.5">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
