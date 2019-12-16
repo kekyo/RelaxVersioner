@@ -68,7 +68,7 @@ namespace CenterCLR.RelaxVersioner
             var topCommit = targetBranch?.Commits?.FirstOrDefault();
             if (topCommit == null)
             {
-                return Version.Default;
+                return Version.Empty;
             }
 
             var reached = new HashSet<string>();
@@ -123,7 +123,7 @@ namespace CenterCLR.RelaxVersioner
                 }
             }
 
-            return Utilities.IncrementLastVersionComponent(Version.Default, depth);
+            return Utilities.IncrementLastVersionComponent(Version.Empty, depth);
         }
 
         private static Result WriteVersionSourceFile(
