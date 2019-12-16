@@ -1,5 +1,5 @@
 // This is auto-generated version information attributes by CenterCLR.RelaxVersioner.1.0.5.0, Do not edit.
-// Generated date: Mon, 16 Dec 2019 14:32:24 GMT
+// Generated date: Mon, 16 Dec 2019 14:40:04 GMT
 
 #include "stdafx.h"
 
@@ -24,15 +24,15 @@ namespace System
 
 using namespace System::Reflection;
 
-[assembly: AssemblyVersionAttribute("1.0.5")];
-[assembly: AssemblyFileVersionAttribute("2019.12.16.42088")];
-[assembly: AssemblyInformationalVersionAttribute("9f8576565136b647cd94438e267f07b93e886ed7")];
-[assembly: AssemblyVersionMetadataAttribute("Date","Mon, 16 Dec 2019 14:22:56 GMT")];
+[assembly: AssemblyVersionAttribute("1.0.6")];
+[assembly: AssemblyFileVersionAttribute("2019.12.16.42386")];
+[assembly: AssemblyInformationalVersionAttribute("1ed15289bd4f04942b254f96663d7a6a7704fd99")];
+[assembly: AssemblyVersionMetadataAttribute("Date","Mon, 16 Dec 2019 14:32:53 GMT")];
 [assembly: AssemblyVersionMetadataAttribute("Branch","master")];
-[assembly: AssemblyVersionMetadataAttribute("Tags","1.0.5")];
+[assembly: AssemblyVersionMetadataAttribute("Tags","")];
 [assembly: AssemblyVersionMetadataAttribute("Author","Kouji Matsui <k@kekyo.net>")];
 [assembly: AssemblyVersionMetadataAttribute("Committer","Kouji Matsui <k@kekyo.net>")];
-[assembly: AssemblyVersionMetadataAttribute("Message","Merge branch 'devel'")];
+[assembly: AssemblyVersionMetadataAttribute("Message","Fixed test projects.")];
 [assembly: AssemblyVersionMetadataAttribute("Build","")];
-[assembly: AssemblyVersionMetadataAttribute("Generated","Mon, 16 Dec 2019 14:32:24 GMT")];
+[assembly: AssemblyVersionMetadataAttribute("Generated","Mon, 16 Dec 2019 14:40:04 GMT")];
 
