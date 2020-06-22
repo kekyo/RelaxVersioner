@@ -27,10 +27,10 @@
     <RelaxVersionerOutputPath Condition="'$(RelaxVersionerOutputPath)' == ''">$([System.IO.Path]::Combine('$(MSBuildProjectDirectory)','$(IntermediateOutputPath)','RelaxVersioner$(DefaultLanguageSourceExtension)'))</RelaxVersionerOutputPath>
     <BuildIdentifier Condition="'$(BuildIdentifier)' == ''"></BuildIdentifier>
     <RelaxVersionerBuildIdentifier Condition="'$(RelaxVersionerBuildIdentifier)' == ''">$(BuildIdentifier)</RelaxVersionerBuildIdentifier>
-    <GenerateNuspecDependsOn>
+    <GetPackageVersionDependsOn>
       RelaxVersionerBeforePack;
-      $(GenerateNuspecDependsOn)
-    </GenerateNuspecDependsOn>
+      $(GetPackageVersionDependsOn)
+    </GetPackageVersionDependsOn>
   </PropertyGroup>
 
   <!-- ======================== -->
@@ -119,7 +119,7 @@
 
   <!-- ============================================================================= -->
   <!-- Pre publish definition -->
-  <Target Name="RelaxVersionerBeforePack" BeforeTargets="SetNuSpecProperties">
+  <Target Name="RelaxVersionerBeforePack" BeforeTargets="_GetProjectReferenceVersions">
 
     <PropertyGroup>
       <_RV_PackageResultPath>$([System.IO.Path]::Combine('$([System.IO.Path]::GetTempPath())','$([System.Guid]::NewGuid().ToString())'))</_RV_PackageResultPath>
