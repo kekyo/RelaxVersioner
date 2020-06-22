@@ -188,6 +188,8 @@ using namespace System::Reflection;
 * Under Apache v2
 
 ## History
+* 1.0.10:
+  * Fixed failure aggregating referenced package versions (related changing nuget impls).
 * 1.0.5:
   * Fixed always version 0.0.1 when doesn't apply first tag.
 * 1.0.0:
