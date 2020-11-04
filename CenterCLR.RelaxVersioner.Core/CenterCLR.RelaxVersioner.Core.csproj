@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFrameworks>net46;netstandard2.0</TargetFrameworks>
+    <TargetFrameworks>net46;netstandard2.0;netstandard2.1</TargetFrameworks>
 
     <LangVersion>7.3</LangVersion>
     <DebugType>portable</DebugType>
@@ -15,7 +15,7 @@
     <AssemblyTitle>CenterCLR.RelaxVersioner.Core</AssemblyTitle>
     <Product>CenterCLR.RelaxVersioner</Product>
     <Trademark>CenterCLR.RelaxVersioner</Trademark>
-    <Copyright>Copyright (c) 2016-2019 Kouji Matsui</Copyright>
+    <Copyright>Copyright (c) 2016-2020 Kouji Matsui</Copyright>
     <Description>Easy-usage, Git-based, auto-generate version informations toolset.</Description>
 
     <Company>Kouji Matsui (@kozy_kekyo, @kekyo2)</Company>
@@ -29,9 +29,9 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="CenterCLR.RelaxVersioner" version="1.0.0" PrivateAssets="All" />
-    <PackageReference Include="CenterCLR.NamingFormatter" version="2.0.0" />
-    <PackageReference Include="LibGit2Sharp" version="0.26.1" />
+    <PackageReference Include="CenterCLR.RelaxVersioner" Version="1.0.10" PrivateAssets="All" />
+    <PackageReference Include="CenterCLR.NamingFormatter" Version="2.0.0" />
+    <PackageReference Include="LibGit2Sharp" Version="0.26.1" />
   </ItemGroup>
 
   <ItemGroup>
