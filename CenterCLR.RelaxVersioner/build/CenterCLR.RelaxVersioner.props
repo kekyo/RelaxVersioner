@@ -15,10 +15,10 @@
     See the License for the specific language governing permissions and
     limitations under the License.
 -->
-<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003" TreatAsLocalProperty="_RV_FrameworkVersion;_RV_PlatformName;_RV_RuntimeName;_RV_ExecutableName;_RV_ToolingDir">
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003" TreatAsLocalProperty="_RV_PlatformName;_RV_RuntimeName;_RV_ExecutableName;_RV_ToolingDir">
   <PropertyGroup Condition="'$(MSBuildRuntimeType)' == 'Core'">
-    <_RV_FrameworkVersion>$(DOTNET_SDK_VERSION.Split('.'))</_RV_FrameworkVersion>
-    <_RV_PlatformName>netcoreapp$([System.String]::Join('.',_RV_FrameworkVersion)</_RV_PlatformName>
+    <_RV_PlatformName Condition="'$(MicrosoftNETBuildTasksTFM)' != ''">$(MicrosoftNETBuildTasksTFM)</_RV_PlatformName>
+    <_RV_PlatformName Condition="'$(MicrosoftNETBuildTasksTFM)' == ''">netcoreapp3.1</_RV_PlatformName>
     <_RV_RuntimeName>dotnet </_RV_RuntimeName>
     <_RV_ExecutableName>rv.dll</_RV_ExecutableName>
   </PropertyGroup>
