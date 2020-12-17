@@ -27,5 +27,6 @@
     <file src="bin\$Configuration$\netcoreapp2.1\publish\**\*.*" target="tools/netcoreapp2.1" />
     <file src="bin\$Configuration$\netcoreapp3.0\publish\**\*.*" target="tools/netcoreapp3.0" />
     <file src="bin\$Configuration$\netcoreapp3.1\publish\**\*.*" target="tools/netcoreapp3.1" />
+    <file src="bin\$Configuration$\net5.0\publish\**\*.*" target="tools/net5.0" />
   </files>
 </package>
