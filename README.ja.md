@@ -177,6 +177,30 @@ using namespace System::Reflection;
 </RelaxVersioner>
 ```
 
+## TIPS
+
+もしCIプロセスで使ったときに、以下のようなエラーが発生した場合:
+
+```
+RelaxVersioner[1.0.13.0]: NotFoundException=object not found -
+   no match for id (a2b834535c00e7b1a604fccc28cfebe78ea0ec31),
+   Unknown exception occurred, ...
+```
+
+これは、CIプロセスのワークスペースにリポジトリをcloneした際に、
+最も新しいコミットだけをcloneしてきたために(検索するコミットが見つからないため)発生します。
+常に全てのコミットをcloneする必要があります。
+
+例えば、GitHub Actionsの `checkout@v2` タスクは、デフォルトで常に最新のコミットだけをcloneします。
+何故なら、それが最も高速に処理できるからです。
+
+RelaxVersioner (や、その他の自動バージョニングツール) は、
+正しいバージョン番号を計算するために、全てのコミットを必要とします。
+
+そのため、build.yml (GitHub Actionsのスクリプト) に、
+`fetch-depth: 0` を追加して下さい。
+[このリポジトリで実際に使用している例を参照できます。](https://github.com/kekyo/CenterCLR.RelaxVersioner/blob/master/.github/workflows/build.yml#L13)
+
 ## その他
 * RelaxVersionerをVisual Studio 2012/2013で使うには、システムに.NET Framework 4.6以上がインストールされている必要があります。RelaxVersionerは、MSBuild.Frameworkアセンブリのnet46以上のバージョンを必要とするためです。
 

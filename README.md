@@ -176,6 +176,27 @@ using namespace System::Reflection;
 </RelaxVersioner>
 ```
 
+## TIPS
+
+If your CI process causes error with this description like:
+
+```
+RelaxVersioner[1.0.13.0]: NotFoundException=object not found -
+   no match for id (a2b834535c00e7b1a604fccc28cfebe78ea0ec31),
+   Unknown exception occurred, ...
+```
+
+It means your clone repository contains only 1 depth commit or some.
+(And couldn't find these commit id.)
+You must clone all commits into CI workspace.
+
+For example, GitHub Actions `checkout@v2` task will clone only 1 depth for defaulted.
+Because it makes better fast cloning.
+
+RelaxVersioner (and other automated versioning tool) requires all commits for calculating version depth.
+Apply `fetch-depth: 0` predication into your build.yml script.
+[You can understand with this real script.](https://github.com/kekyo/CenterCLR.RelaxVersioner/blob/master/.github/workflows/build.yml#L13)
+
 ## Another topics
 * RelaxVersioner supported on Visual Studio 2012/2013 only installed .NET Framework 4.6 or upper. Because it requires uses compatibility for net46 MSBuild.Framework assembly.
 
