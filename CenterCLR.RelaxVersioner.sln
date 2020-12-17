@@ -27,13 +27,6 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Images", "Images", "{98ADE1
 		Images\Japanese.256.png = Images\Japanese.256.png
 	EndProjectSection
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "azure-pipelines", "azure-pipelines", "{FAC14C72-0C08-497A-9460-49D10C3A362A}"
-	ProjectSection(SolutionItems) = preProject
-		azure-pipelines\build-devel.yml = azure-pipelines\build-devel.yml
-		azure-pipelines\build-master.yml = azure-pipelines\build-master.yml
-		azure-pipelines\build.yml = azure-pipelines\build.yml
-	EndProjectSection
-EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CenterCLR.RelaxVersioner.Core", "CenterCLR.RelaxVersioner.Core\CenterCLR.RelaxVersioner.Core.csproj", "{AD40D6E7-1B5F-4734-919A-3C55F5A40CB9}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CenterCLR.RelaxVersioner", "CenterCLR.RelaxVersioner\CenterCLR.RelaxVersioner.csproj", "{F8E532DE-24B0-49BA-A667-6447CA4BAA89}"
