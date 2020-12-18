@@ -1,6 +1,6 @@
 {
   "profiles": {
-    "CenterCLR.RelaxVersioner": {
+    "RelaxVersioner": {
         "commandName": "Project",
         "commandLineArgs": "-buildIdentifier=abcde . output.cs"
     }

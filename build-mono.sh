@@ -1,7 +1,7 @@
 #!/bin/sh
 
 # CenterCLR.RelaxVersioner - Easy-usage, Git-based, auto-generate version informations toolset.
-# Copyright (c) 2016-2018 Kouji Matsui (@kozy_kekyo, @kekyo2)
+# Copyright (c) 2016-2020 Kouji Matsui (@kozy_kekyo, @kekyo2)
 # 
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -21,5 +21,5 @@ echo "Build (mono) CenterCLR.RelaxVersioner"
 echo ""
 
 msbuild /t:restore /p:Configuration=Release /p:Platform=AnyCpu CenterCLR.RelaxVersioner/CenterCLR.RelaxVersioner.csproj
-
+dotnet restore
 msbuild /p:Configuration=Release /p:Platform=AnyCpu CenterCLR.RelaxVersioner/CenterCLR.RelaxVersioner.csproj

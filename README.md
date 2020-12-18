@@ -9,8 +9,8 @@
 
 | | master | devel |
 |:---|:---|:---|
-| Packages | [![NuGet RelaxVersioner (master)](https://img.shields.io/nuget/v/CenterCLR.RelaxVersioner.svg?style=flat)](https://www.nuget.org/packages/CenterCLR.RelaxVersioner) | [![MyGet RelaxVersioner (devel)](https://img.shields.io/myget/kekyo/v/CenterCLR.RelaxVersioner.svg?style=flat&label=myget)](https://www.myget.org/feed/kekyo/package/nuget/CenterCLR.RelaxVersioner)
-| Continuous integration | [![RelaxVersioner CI build (master)](https://github.com/kekyo/CenterCLR.NamingFormatter/workflows/.NET/badge.svg?branch=master)](https://github.com/kekyo/CenterCLR.RelaxVersioner/actions) | [![RelaxVersioner CI build (devel)](https://github.com/kekyo/CenterCLR.NamingFormatter/workflows/.NET/badge.svg?branch=master)](https://github.com/kekyo/CenterCLR.RelaxVersioner/actions)
+| Packages | [![NuGet RelaxVersioner (master)](https://img.shields.io/nuget/v/RelaxVersioner.svg?style=flat)](https://www.nuget.org/packages/RelaxVersioner) | [![MyGet RelaxVersioner (devel)](https://img.shields.io/myget/kekyo/v/RelaxVersioner.svg?style=flat&label=myget)](https://www.myget.org/feed/kekyo/package/nuget/RelaxVersioner)
+| Continuous integration | [![RelaxVersioner CI build (master)](https://github.com/kekyo/CenterCLR.RelaxVersioner/workflows/.NET/badge.svg?branch=master)](https://github.com/kekyo/CenterCLR.RelaxVersioner/actions) | [![RelaxVersioner CI build (devel)](https://github.com/kekyo/CenterCLR.RelaxVersioner/workflows/.NET/badge.svg?branch=master)](https://github.com/kekyo/CenterCLR.RelaxVersioner/actions)
 
 ## What is this?
 * RelaxVersioner is Very easy-usage, Git-based, auto-generate version informations in .NET Core/.NET Framework source code. (Assembly attribute based)
@@ -102,7 +102,7 @@ using namespace System::Reflection;
 [Refer start guides.](./STARTGUIDE.md)
 
 ### How to use
-* Search NuGet repository: ["RelaxVersioner"](https://www.nuget.org/packages/CenterCLR.RelaxVersioner/), and install.
+* Search NuGet repository: ["RelaxVersioner"](https://www.nuget.org/packages/RelaxVersioner/), and install.
 * (Optional if you're using old MSBuild project): Before build, comment out "AssemblyVersion" and "AssemblyFileVersion" attribute in AssemblyInfo.cs default definitions (will cause build error by duplicate definition). If you use custom rule set, continue use this definitions.
 * After installed, build project. Auto-apply version informations into assembly attributes. Some attributes are looking for [ILSpy](https://github.com/icsharpcode/ILSpy) or Windows Explorer property page.
 * You can use custom rule set file naming "RelaxVersioner.rules" into project folder "$(ProjectDir)" or solution folder "$(SolutionDir)". Current no documentation custom rule set file, see also below.
@@ -208,7 +208,7 @@ Apply `fetch-depth: 0` predication into your build.yml script.
 * Support Mono on linux environments.
 
 ## License
-* Copyright (c) 2015-2019 Kouji Matsui (@kozy_kekyo, kekyo2)
+* Copyright (c) 2015-2020 Kouji Matsui (@kozy_kekyo, @kekyo2)
 * Under Apache v2
 
 ## History

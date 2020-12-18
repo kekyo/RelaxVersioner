@@ -1,6 +1,6 @@
 ﻿/////////////////////////////////////////////////////////////////////////////////////////////////
 //
-// CenterCLR.RelaxVersioner - Easy-usage, Git-based, auto-generate version informations toolset.
+// RelaxVersioner - Easy-usage, Git-based, auto-generate version informations toolset.
 // Copyright (c) 2016-2020 Kouji Matsui (@kozy_kekyo, @kekyo2)
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
@@ -17,13 +17,14 @@
 //
 /////////////////////////////////////////////////////////////////////////////////////////////////
 
+using NamingFormatter;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
 
-namespace CenterCLR.RelaxVersioner.Writers
+namespace RelaxVersioner.Writers
 {
     internal abstract class WriterBase
     {
@@ -58,7 +59,7 @@ namespace CenterCLR.RelaxVersioner.Writers
             using (var tw = File.CreateText(outputFilePath))
             {
                 this.WriteComment(tw,
-                    $"This is auto-generated version information attributes by CenterCLR.RelaxVersioner.{this.GetType().Assembly.GetName().Version}, Do not edit.");
+                    $"This is auto-generated version information attributes by RelaxVersioner.{this.GetType().Assembly.GetName().Version}, Do not edit.");
                 this.WriteComment(tw,
                     $"Generated date: {generated:R}");
                 tw.WriteLine();

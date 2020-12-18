@@ -9,8 +9,8 @@
 
 | | master | devel |
 |:---|:---|:---|
-| Packages | [![NuGet RelaxVersioner (master)](https://img.shields.io/nuget/v/CenterCLR.RelaxVersioner.svg?style=flat)](https://www.nuget.org/packages/CenterCLR.RelaxVersioner) | [![MyGet RelaxVersioner (devel)](https://img.shields.io/myget/kekyo/v/CenterCLR.RelaxVersioner.svg?style=flat&label=myget)](https://www.myget.org/feed/kekyo/package/nuget/CenterCLR.RelaxVersioner)
-| Continuous integration | [![RelaxVersioner CI build (master)](https://github.com/kekyo/CenterCLR.NamingFormatter/workflows/.NET/badge.svg?branch=master)](https://github.com/kekyo/CenterCLR.RelaxVersioner/actions) | [![RelaxVersioner CI build (devel)](https://github.com/kekyo/CenterCLR.NamingFormatter/workflows/.NET/badge.svg?branch=master)](https://github.com/kekyo/CenterCLR.RelaxVersioner/actions)
+| Packages | [![NuGet RelaxVersioner (master)](https://img.shields.io/nuget/v/RelaxVersioner.svg?style=flat)](https://www.nuget.org/packages/RelaxVersioner) | [![MyGet RelaxVersioner (devel)](https://img.shields.io/myget/kekyo/v/RelaxVersioner.svg?style=flat&label=myget)](https://www.myget.org/feed/kekyo/package/nuget/RelaxVersioner)
+| Continuous integration | [![RelaxVersioner CI build (master)](https://github.com/kekyo/CenterCLR.RelaxVersioner/workflows/.NET/badge.svg?branch=master)](https://github.com/kekyo/CenterCLR.RelaxVersioner/actions) | [![RelaxVersioner CI build (devel)](https://github.com/kekyo/CenterCLR.RelaxVersioner/workflows/.NET/badge.svg?branch=master)](https://github.com/kekyo/CenterCLR.RelaxVersioner/actions)
 
 ## これは何？
 * RelaxVersionerは、軽量で非常に簡単に使用することが出来る、Gitベースの「自動バージョニング」ツールセットです。.NET Core/.NET Frameworkベースのソースコードを対象としていて、ビルド時にアセンブリ属性を自動的に適用します。
@@ -102,7 +102,7 @@ using namespace System::Reflection;
 [Refer start guides. (英語)](./STARTGUIDE.md)
 
 ### 簡単な使い方
-* NuGetで["RelaxVersioner"](https://www.nuget.org/packages/CenterCLR.RelaxVersioner/)を検索して、導入してください。
+* NuGetで["RelaxVersioner"](https://www.nuget.org/packages/RelaxVersioner/)を検索して、導入してください。
 * (.NET Coreではない旧形式のMSBuildプロジェクトを使っている場合): あらかじめ、AssemblyInfo.cs等に定義されている、デフォルトの"AssemblyVersion"と"AssemblyFileVersion"属性をコメントアウトして下さい（ビルド時に重複定義エラーが発生します）。
   * これらはカスタムルールを用いて定義を除外するのであれば、引き続き使用する事もできます。
 * ビルドすると、自動的にアセンブリ属性が適用されます。[ILSpy](https://github.com/icsharpcode/ILSpy)等で確認するか、一部の属性はエクスプローラーのプロパティから確認することが出来ます。
@@ -199,7 +199,7 @@ RelaxVersioner (や、その他の自動バージョニングツール) は、
 
 そのため、build.yml (GitHub Actionsのスクリプト) に、
 `fetch-depth: 0` を追加して下さい。
-[このリポジトリで実際に使用している例を参照できます。](https://github.com/kekyo/CenterCLR.RelaxVersioner/blob/master/.github/workflows/build.yml#L13)
+[このリポジトリで実際に使用している例を参照できます。](https://github.com/kekyo/RelaxVersioner/blob/master/.github/workflows/build.yml#L13)
 
 ## その他
 * RelaxVersionerをVisual Studio 2012/2013で使うには、システムに.NET Framework 4.6以上がインストールされている必要があります。RelaxVersionerは、MSBuild.Frameworkアセンブリのnet46以上のバージョンを必要とするためです。

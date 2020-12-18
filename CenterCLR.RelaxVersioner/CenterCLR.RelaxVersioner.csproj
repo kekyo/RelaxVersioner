@@ -13,20 +13,34 @@
     <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
     <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
 
-    <RootNamespace>CenterCLR.RelaxVersioner</RootNamespace>
-    <AssemblyTitle>CenterCLR.RelaxVersioner</AssemblyTitle>
-    <Product>CenterCLR.RelaxVersioner</Product>
-    <Trademark>CenterCLR.RelaxVersioner</Trademark>
+    <RootNamespace>RelaxVersioner</RootNamespace>
+    <AssemblyTitle>RelaxVersioner</AssemblyTitle>
+    <Product>RelaxVersioner</Product>
+    <Trademark>RelaxVersioner</Trademark>
     <Copyright>Copyright (c) 2016-2020 Kouji Matsui</Copyright>
     <Description>Easy-usage, Git-based, auto-generate version informations toolset.</Description>
 
-    <NuspecFile>CenterCLR.RelaxVersioner.nuspec</NuspecFile>
+    <NuspecFile>RelaxVersioner.nuspec</NuspecFile>
 
     <DevelopmentDependency>true</DevelopmentDependency>
     <NoPackageAnalysis>true</NoPackageAnalysis>
     <IncludeBuildOutput>false</IncludeBuildOutput>
     <AllowedOutputExtensionsInPackageBuildOutputFolder>.pdb</AllowedOutputExtensionsInPackageBuildOutputFolder>
   </PropertyGroup>
+
+  <ItemGroup>
+    <None Remove="buildMultiTargeting\RelaxVersioner.props" />
+    <None Remove="buildMultiTargeting\RelaxVersioner.targets" />
+    <None Remove="build\RelaxVersioner.props" />
+    <None Remove="build\RelaxVersioner.targets" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Content Include="buildMultiTargeting\RelaxVersioner.props" />
+    <Content Include="buildMultiTargeting\RelaxVersioner.targets" />
+    <Content Include="build\RelaxVersioner.props" />
+    <Content Include="build\RelaxVersioner.targets" />
+  </ItemGroup>
 
   <ItemGroup>
     <PackageReference Include="CenterCLR.RelaxVersioner" Version="1.0.13" PrivateAssets="All" />
@@ -37,11 +51,6 @@
 
   <ItemGroup>
     <ProjectReference Include="..\CenterCLR.RelaxVersioner.Core\CenterCLR.RelaxVersioner.Core.csproj" />
-  </ItemGroup>
-  
-  <ItemGroup>
-    <Content Include="build\CenterCLR.RelaxVersioner.props" />
-    <Content Include="build\CenterCLR.RelaxVersioner.targets" />
   </ItemGroup>
 
   <Target Name="SetNuSpecProperties" BeforeTargets="GenerateNuspec">

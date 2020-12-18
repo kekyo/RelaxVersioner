@@ -1,6 +1,6 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <!--
-    CenterCLR.RelaxVersioner - Easy-usage, Git-based, auto-generate version informations toolset.
+    RelaxVersioner - Easy-usage, Git-based, auto-generate version informations toolset.
     Copyright (c) 2016-2020 Kouji Matsui (@kozy_kekyo, @kekyo2)
     Licensed under the Apache License, Version 2.0 (the "License");
     you may not use this file except in compliance with the License.
@@ -13,5 +13,5 @@
     limitations under the License.
 -->
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
-  <Import Project="..\build\CenterCLR.RelaxVersioner.props" />
+  <Import Project="..\build\RelaxVersioner.props" />
 </Project>

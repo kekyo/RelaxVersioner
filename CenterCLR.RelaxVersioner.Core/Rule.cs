@@ -1,6 +1,6 @@
 ﻿/////////////////////////////////////////////////////////////////////////////////////////////////
 //
-// CenterCLR.RelaxVersioner - Easy-usage, Git-based, auto-generate version informations toolset.
+// RelaxVersioner - Easy-usage, Git-based, auto-generate version informations toolset.
 // Copyright (c) 2016-2020 Kouji Matsui (@kozy_kekyo, @kekyo2)
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
@@ -17,7 +17,7 @@
 //
 /////////////////////////////////////////////////////////////////////////////////////////////////
 
-namespace CenterCLR.RelaxVersioner
+namespace RelaxVersioner
 {
     internal sealed class Rule
     {
