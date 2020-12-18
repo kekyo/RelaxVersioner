@@ -85,6 +85,39 @@ namespace RelaxVersioner.Writers
                     }
                 }
                 tw.WriteLine();
+                
+                this.WriteBeforeLiteralBody(tw);
+                
+                foreach (var g in ruleSet.GroupBy(rule => rule.Name + "@#@" + (rule.Key ?? "")))
+                {
+                    var rules = g.ToArray();
+
+                    if (rules.Length >= 2)
+                    {
+                        this.WriteBeforeNestedLiteralBody(tw, rules[0].Name);
+                    }
+
+                    foreach (var rule in rules)
+                    {
+                        var formattedValue = Named.Format(rule.Format, keyValues);
+                        if (!string.IsNullOrWhiteSpace(rule.Key))
+                        {
+                            this.WriteLiteralWithArgument(tw, rule.Key, formattedValue);
+                        }
+                        else
+                        {
+                            this.WriteLiteralWithArgument(tw, rule.Name, formattedValue);
+                        }
+                    }
+
+                    if (rules.Length >= 2)
+                    {
+                        this.WriteAfterNestedLiteralBody(tw);
+                    }
+                }
+
+                this.WriteAfterLiteralBody(tw);
+                tw.WriteLine();
 
                 this.WriteAfterBody(tw);
 
@@ -92,29 +125,35 @@ namespace RelaxVersioner.Writers
             }
         }
 
-        protected virtual void WriteComment(TextWriter tw, string format, params object[] args)
-        {
+        protected virtual void WriteComment(TextWriter tw, string format, params object[] args) =>
             tw.WriteLine("// " + format, args);
-        }
 
         protected virtual void WriteBeforeBody(TextWriter tw)
         {
         }
 
         protected abstract void WriteAttribute(TextWriter tw, string name, string args);
+        protected abstract void WriteLiteral(TextWriter tw, string name, string value);
 
-        protected virtual string GetArgumentString(string argumentValue)
-        {
-            return string.Format("\"{0}\"", argumentValue.Replace("\"", "\"\""));
-        }
+        protected virtual string GetArgumentString(string argumentValue) =>
+            string.Format("\"{0}\"", argumentValue.Replace("\"", "\"\""));
 
-        private void WriteAttributeWithArguments(TextWriter tw, string name, params object[] args)
-        {
+        protected abstract void WriteBeforeLiteralBody(TextWriter tw);
+        protected abstract void WriteBeforeNestedLiteralBody(TextWriter tw, string name);
+        protected abstract void WriteAfterNestedLiteralBody(TextWriter tw);
+        protected abstract void WriteAfterLiteralBody(TextWriter tw);
+
+        private void WriteAttributeWithArguments(TextWriter tw, string name, params object[] args) =>
             this.WriteAttribute(
                 tw,
                 name,
                 string.Join(",", args.Select(arg => this.GetArgumentString((arg != null) ? arg.ToString() : string.Empty))));
-        }
+
+        private void WriteLiteralWithArgument(TextWriter tw, string name, object arg) =>
+            this.WriteLiteral(
+                tw,
+                name,
+                this.GetArgumentString((arg != null) ? arg.ToString() : string.Empty));
 
         protected virtual void WriteImport(TextWriter tw, string namespaceName)
         {

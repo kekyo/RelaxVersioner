@@ -26,19 +26,39 @@ namespace RelaxVersioner.Writers
     {
         public override string Language => "C#";
 
-        protected override void WriteImport(TextWriter tw, string namespaceName)
-        {
+        protected override void WriteImport(TextWriter tw, string namespaceName) =>
             tw.WriteLine("using {0};", namespaceName);
-        }
         
-        protected override string GetArgumentString(string argumentValue)
+        protected override string GetArgumentString(string argumentValue) =>
+            string.Format("@\"{0}\"", argumentValue.Replace("\"", "\"\""));
+
+        protected override void WriteAttribute(TextWriter tw, string name, string args) =>
+            tw.WriteLine("[assembly: {0}({1})]", name, args);
+
+        protected override void WriteLiteral(TextWriter tw, string name, string value) =>
+            tw.WriteLine("    public const string {0} = {1};", name, value);
+
+        protected override void WriteBeforeLiteralBody(TextWriter tw)
         {
-            return string.Format("@\"{0}\"", argumentValue.Replace("\"", "\"\""));
+            tw.WriteLine("namespace global");
+            tw.WriteLine("{");
+            tw.WriteLine("    internal static class ThisAssembly");
+            tw.WriteLine("    {");
         }
 
-        protected override void WriteAttribute(TextWriter tw, string name, string args)
+        protected override void WriteBeforeNestedLiteralBody(TextWriter tw, string name)
         {
-            tw.WriteLine("[assembly: {0}({1})]", name, args);
+            tw.WriteLine("        public static class {0}", name);
+            tw.WriteLine("        {");
+        }
+
+        protected override void WriteAfterNestedLiteralBody(TextWriter tw) =>
+            tw.WriteLine("        }");
+
+        protected override void WriteAfterLiteralBody(TextWriter tw)
+        {
+            tw.WriteLine("    }");
+            tw.WriteLine("}");
         }
 
         protected override void WriteAfterBody(TextWriter tw)

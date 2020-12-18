@@ -43,26 +43,39 @@ namespace RelaxVersioner.Writers
             tw.WriteLine("namespace global");
         }
 
-        protected override void WriteImport(TextWriter tw, string namespaceName)
-        {
+        protected override void WriteImport(TextWriter tw, string namespaceName) =>
             tw.WriteLine("    open {0}", namespaceName);
-        }
         
-        protected override string GetArgumentString(string argumentValue)
+        protected override string GetArgumentString(string argumentValue) =>
+            string.Format("@\"{0}\"", argumentValue.Replace("\"", "\"\""));
+
+        protected override void WriteAttribute(TextWriter tw, string name, string args) =>
+            tw.WriteLine("    [<assembly: {0}({1})>]", name, args);
+
+        protected override void WriteLiteral(TextWriter tw, string name, string value)
         {
-            return string.Format("@\"{0}\"", argumentValue.Replace("\"", "\"\""));
+            tw.WriteLine("        [<Literal>]");
+            tw.WriteLine("        let {0} = @\"{1}\";", name, value);
         }
 
-        protected override void WriteAttribute(TextWriter tw, string name, string args)
+        protected override void WriteBeforeLiteralBody(TextWriter tw) =>
+            tw.WriteLine("    module internal ThisAssembly =");
+
+        protected override void WriteBeforeNestedLiteralBody(TextWriter tw, string name) =>
+            tw.WriteLine("        module {0} =", name);
+
+        protected override void WriteAfterNestedLiteralBody(TextWriter tw)
         {
-            tw.WriteLine("    [<assembly: {0}({1})>]", name, args);
+        }
+
+        protected override void WriteAfterLiteralBody(TextWriter tw)
+        {
         }
 
         protected override void WriteAfterBody(TextWriter tw)
         {
             tw.WriteLine("    do()");
             tw.WriteLine();
-
         }
     }
 }
