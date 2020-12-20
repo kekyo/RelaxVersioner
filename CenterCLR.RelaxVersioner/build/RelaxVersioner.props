@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-    CenterCLR.RelaxVersioner - Easy-usage, Git-based, auto-generate version informations toolset.
+    RelaxVersioner - Easy-usage, Git-based, auto-generate version informations toolset.
     Copyright (c) 2016-2020 Kouji Matsui (@kozy_kekyo, @kekyo2)
 
     Licensed under the Apache License, Version 2.0 (the "License");
@@ -18,17 +18,17 @@
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003" TreatAsLocalProperty="_RV_PlatformName;_RV_RuntimeName;_RV_ExecutableName;_RV_ToolingDir">
   <PropertyGroup Condition="'$(MSBuildRuntimeType)' == 'Core'">
     <_RV_PlatformName Condition="'$(MicrosoftNETBuildTasksTFM)' != ''">$(MicrosoftNETBuildTasksTFM)</_RV_PlatformName>
-    <_RV_PlatformName Condition="'$(MicrosoftNETBuildTasksTFM)' == ''">netcoreapp3.1</_RV_PlatformName>
+    <_RV_PlatformName Condition="'$(MicrosoftNETBuildTasksTFM)' == ''">netcoreapp2.1</_RV_PlatformName>
     <_RV_RuntimeName>dotnet </_RV_RuntimeName>
     <_RV_ExecutableName>rv.dll</_RV_ExecutableName>
   </PropertyGroup>
   <PropertyGroup Condition="'$(MSBuildRuntimeType)' == 'Full'">
-    <_RV_PlatformName>net46</_RV_PlatformName>
+    <_RV_PlatformName>net461</_RV_PlatformName>
     <_RV_RuntimeName></_RV_RuntimeName>
     <_RV_ExecutableName>rv.exe</_RV_ExecutableName>
   </PropertyGroup>
   <PropertyGroup Condition="'$(MSBuildRuntimeType)' == 'Mono'">
-    <_RV_PlatformName>net46</_RV_PlatformName>
+    <_RV_PlatformName>net461</_RV_PlatformName>
     <_RV_RuntimeName>mono </_RV_RuntimeName>
     <_RV_ExecutableName>rv.exe</_RV_ExecutableName>
   </PropertyGroup>

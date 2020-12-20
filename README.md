@@ -9,18 +9,18 @@
 
 | | master | devel |
 |:---|:---|:---|
-| Packages | [![NuGet RelaxVersioner (master)](https://img.shields.io/nuget/v/CenterCLR.RelaxVersioner.svg?style=flat)](https://www.nuget.org/packages/CenterCLR.RelaxVersioner) | [![MyGet RelaxVersioner (devel)](https://img.shields.io/myget/kekyo/v/CenterCLR.RelaxVersioner.svg?style=flat&label=myget)](https://www.myget.org/feed/kekyo/package/nuget/CenterCLR.RelaxVersioner)
-| Continuous integration | [![RelaxVersioner CI build (master)](https://github.com/kekyo/CenterCLR.NamingFormatter/workflows/.NET/badge.svg?branch=master)](https://github.com/kekyo/CenterCLR.RelaxVersioner/actions) | [![RelaxVersioner CI build (devel)](https://github.com/kekyo/CenterCLR.NamingFormatter/workflows/.NET/badge.svg?branch=master)](https://github.com/kekyo/CenterCLR.RelaxVersioner/actions)
+| Packages | [![NuGet RelaxVersioner (master)](https://img.shields.io/nuget/v/RelaxVersioner.svg?style=flat)](https://www.nuget.org/packages/RelaxVersioner) | [![MyGet RelaxVersioner (devel)](https://img.shields.io/myget/kekyo/v/RelaxVersioner.svg?style=flat&label=myget)](https://www.myget.org/feed/kekyo/package/nuget/RelaxVersioner)
+| Continuous integration | [![RelaxVersioner CI build (master)](https://github.com/kekyo/CenterCLR.RelaxVersioner/workflows/.NET/badge.svg?branch=master)](https://github.com/kekyo/CenterCLR.RelaxVersioner/actions) | [![RelaxVersioner CI build (devel)](https://github.com/kekyo/CenterCLR.RelaxVersioner/workflows/.NET/badge.svg?branch=master)](https://github.com/kekyo/CenterCLR.RelaxVersioner/actions)
 
 ## What is this?
-* RelaxVersioner is Very easy-usage, Git-based, auto-generate version informations in .NET Core/.NET Framework source code. (Assembly attribute based)
-* If you use RelaxVersioner, version handling ONLY use for Git tags/branches/commit messages. Of course you don't need more tooling usage, and easy managing continuous-integration environments.
+* RelaxVersioner is a easy, full-automatic, git based version inserter for .NET 5/.NET Core/.NET Framework.
+* If you use RelaxVersioner, version handling ONLY use with Git tags/branches/commit messages. Of course you don't need more tooling usage, and easy integrates continuous-integration environments.
 * Target language/environments:
-  * C#, F#, VB.NET, C++/CLI and NuGet packaging (dotnet cli pack).
-  * Visual Studio 2019/2017/2015, dotnet SDK cli, MSBuild on netstandard2.0/net46 (NOT your project platform) and related IDEs.
-  * Linux(x64) and Windows(x86/x64).  (The project validates only them, but maybe runs same as [libgit2sharp](https://github.com/libgit2/libgit2sharp) required environment)
+  * C#, F#, VB.NET, C++/CLI and NuGet packaging (dotnet cli packer).
+  * Visual Studio 2019/2017/2015, dotnet SDK cli, MSBuild on netcoreapp2.1/net461 environment (NOT your project platform) and related IDEs.
+  * Linux(x64) and Windows(x86/x64).  (The project validates only them, but maybe can run at same as [libgit2sharp](https://github.com/libgit2/libgit2sharp) required environment)
 * Auto collect version information from local Git repository tags/branch name.
-* Independent AssemblyInfo.cs file, RelaxVersioner is output into temporary file. (No direct manipulate AssemblyInfo file).
+* Independent AssemblyInfo.cs file, generated code will output into a temporary file. (Not manipulate directly AssemblyInfo.cs file).
 * Place source code location which isn't obstructive for Git. (ex: obj/Debug)
 * You can customize output attribute/values with custom rule set file.
 
@@ -38,15 +38,28 @@
 
 ``` csharp
 using System.Reflection;
-[assembly: AssemblyVersionAttribute("0.5.30.0")]
-[assembly: AssemblyFileVersionAttribute("2016.1.15.41306")]
-[assembly: AssemblyInformationalVersionAttribute("a05ab9fc87b22234596f4ddd43136e9e526ebb90")]
-[assembly: AssemblyVersionMetadataAttribute("Build","Fri, 15 Jan 2016 13:56:53 GMT")]
-[assembly: AssemblyVersionMetadataAttribute("Branch","master")]
-[assembly: AssemblyVersionMetadataAttribute("Tags","0.5.30")]
-[assembly: AssemblyVersionMetadataAttribute("Author","Kouji Matsui <k@kekyo.net>")]
-[assembly: AssemblyVersionMetadataAttribute("Committer","Kouji Matsui <k@kekyo.net>")]
-[assembly: AssemblyVersionMetadataAttribute("Message","Fixed tab")]
+[assembly: AssemblyVersion("0.5.30.0")]
+[assembly: AssemblyFileVersion("2016.1.15.41306")]
+[assembly: AssemblyInformationalVersion("a05ab9fc87b22234596f4ddd43136e9e526ebb90")]
+[assembly: AssemblyMetadata("Build","Fri, 15 Jan 2016 13:56:53 GMT")]
+[assembly: AssemblyMetadata("Branch","master")]
+[assembly: AssemblyMetadata("Tags","0.5.30")]
+[assembly: AssemblyMetadata("Author","Kouji Matsui <k@kekyo.net>")]
+[assembly: AssemblyMetadata("Committer","Kouji Matsui <k@kekyo.net>")]
+[assembly: AssemblyMetadata("Message","Fixed tab")]
+[assembly: AssemblyMetadata("Message","Fixed tab")]
+[assembly: AssemblyMetadata("TargetFramework", "net461")]
+
+namespace YourApp
+{
+  internal static class ThisAssembly
+  {
+    public const string AssemblyVersion = "0.5.30.0";
+    public const string AssemblyFileVersion = "2016.1.15.41306";
+    public const string AssemblyInformationalVersion = "a05ab9fc87b22234596f4ddd43136e9e526ebb90";
+// TODO:
+  }
+}
 ```
 
 ### For F#:
@@ -54,15 +67,29 @@ using System.Reflection;
 ``` fsharp
 namespace global
   open System.Reflection
-  [<assembly: AssemblyVersionAttribute("0.5.30.0")>]
-  [<assembly: AssemblyFileVersionAttribute("2016.1.15.41306")>]
-  [<assembly: AssemblyInformationalVersionAttribute("a05ab9fc87b22234596f4ddd43136e9e526ebb90")>]
-  [<assembly: AssemblyVersionMetadataAttribute("Build","Fri, 15 Jan 2016 13:56:53 GMT")>]
-  [<assembly: AssemblyVersionMetadataAttribute("Branch","master")>]
-  [<assembly: AssemblyVersionMetadataAttribute("Tags","0.5.30")>]
-  [<assembly: AssemblyVersionMetadataAttribute("Author","Kouji Matsui <k@kekyo.net>")>]
-  [<assembly: AssemblyVersionMetadataAttribute("Committer","Kouji Matsui <k@kekyo.net>")>]
-  [<assembly: AssemblyVersionMetadataAttribute("Message","Fixed tab")>]
+  [<assembly: AssemblyVersion("0.5.30.0")>]
+  [<assembly: AssemblyFileVersion("2016.1.15.41306")>]
+  [<assembly: AssemblyInformationalVersion("a05ab9fc87b22234596f4ddd43136e9e526ebb90")>]
+  [<assembly: AssemblyMetadata("Build","Fri, 15 Jan 2016 13:56:53 GMT")>]
+  [<assembly: AssemblyMetadata("Branch","master")>]
+  [<assembly: AssemblyMetadata("Tags","0.5.30")>]
+  [<assembly: AssemblyMetadata("Author","Kouji Matsui <k@kekyo.net>")>]
+  [<assembly: AssemblyMetadata("Committer","Kouji Matsui <k@kekyo.net>")>]
+  [<assembly: AssemblyMetadata("Message","Fixed tab")>]
+  do()
+
+namespace global
+  module internal ThisAssembly =
+  [<Literal>]
+  let AssemblyVersion = @"0.0.1";
+  [<Literal>]
+  let AssemblyFileVersion = @"2020.12.20.31761";
+  [<Literal>]
+  let AssemblyInformationalVersion = @"(Unknown commit id)";
+  module AssemblyMetadata =
+    [<Literal>]
+    let Date = @"Sun, 20 Dec 2020 08:38:43 GMT";
+// TODO:
   do()
 ```
 
@@ -70,30 +97,32 @@ namespace global
 
 ``` visualbasic
 Imports System.Reflection
-<Assembly: AssemblyVersionAttribute("0.5.30.0")>
-<Assembly: AssemblyFileVersionAttribute("2016.1.15.41306")>
-<Assembly: AssemblyInformationalVersionAttribute("a05ab9fc87b22234596f4ddd43136e9e526ebb90")>
-<Assembly: AssemblyVersionMetadataAttribute("Build","Fri, 15 Jan 2016 13:56:53 GMT")>
-<Assembly: AssemblyVersionMetadataAttribute("Branch","master")>
-<Assembly: AssemblyVersionMetadataAttribute("Tags","0.5.30")>
-<Assembly: AssemblyVersionMetadataAttribute("Author","Kouji Matsui <k@kekyo.net>")>
-<Assembly: AssemblyVersionMetadataAttribute("Committer","Kouji Matsui <k@kekyo.net>")>
-<Assembly: AssemblyVersionMetadataAttribute("Message","Fixed tab")>
+<Assembly: AssemblyVersion("0.5.30.0")>
+<Assembly: AssemblyFileVersion("2016.1.15.41306")>
+<Assembly: AssemblyInformationalVersion("a05ab9fc87b22234596f4ddd43136e9e526ebb90")>
+<Assembly: AssemblyMetadata("Build","Fri, 15 Jan 2016 13:56:53 GMT")>
+<Assembly: AssemblyMetadata("Branch","master")>
+<Assembly: AssemblyMetadata("Tags","0.5.30")>
+<Assembly: AssemblyMetadata("Author","Kouji Matsui <k@kekyo.net>")>
+<Assembly: AssemblyMetadata("Committer","Kouji Matsui <k@kekyo.net>")>
+<Assembly: AssemblyMetadata("Message","Fixed tab")>
+' TODO:
 ```
 
 ### For C++/CLI:
 
 ``` cpp
 using namespace System::Reflection;
-[assembly: AssemblyVersionAttribute("0.5.30.0")];
-[assembly: AssemblyFileVersionAttribute("2016.1.15.41306")];
-[assembly: AssemblyInformationalVersionAttribute("a05ab9fc87b22234596f4ddd43136e9e526ebb90")];
-[assembly: AssemblyVersionMetadataAttribute("Build","Fri, 15 Jan 2016 13:56:53 GMT")];
-[assembly: AssemblyVersionMetadataAttribute("Branch","master")];
-[assembly: AssemblyVersionMetadataAttribute("Tags","0.5.30")];
-[assembly: AssemblyVersionMetadataAttribute("Author","Kouji Matsui <k@kekyo.net>")];
-[assembly: AssemblyVersionMetadataAttribute("Committer","Kouji Matsui <k@kekyo.net>")];
-[assembly: AssemblyVersionMetadataAttribute("Message","Fixed tab")];
+[assembly: AssemblyVersion("0.5.30.0")];
+[assembly: AssemblyFileVersion("2016.1.15.41306")];
+[assembly: AssemblyInformationalVersion("a05ab9fc87b22234596f4ddd43136e9e526ebb90")];
+[assembly: AssemblyMetadata("Build","Fri, 15 Jan 2016 13:56:53 GMT")];
+[assembly: AssemblyMetadata("Branch","master")];
+[assembly: AssemblyMetadata("Tags","0.5.30")];
+[assembly: AssemblyMetadata("Author","Kouji Matsui <k@kekyo.net>")];
+[assembly: AssemblyMetadata("Committer","Kouji Matsui <k@kekyo.net>")];
+[assembly: AssemblyMetadata("Message","Fixed tab")];
+// TODO:
 ```
 
 ## Getting started
@@ -102,7 +131,7 @@ using namespace System::Reflection;
 [Refer start guides.](./STARTGUIDE.md)
 
 ### How to use
-* Search NuGet repository: ["RelaxVersioner"](https://www.nuget.org/packages/CenterCLR.RelaxVersioner/), and install.
+* Search NuGet repository: ["RelaxVersioner"](https://www.nuget.org/packages/RelaxVersioner/), and install.
 * (Optional if you're using old MSBuild project): Before build, comment out "AssemblyVersion" and "AssemblyFileVersion" attribute in AssemblyInfo.cs default definitions (will cause build error by duplicate definition). If you use custom rule set, continue use this definitions.
 * After installed, build project. Auto-apply version informations into assembly attributes. Some attributes are looking for [ILSpy](https://github.com/icsharpcode/ILSpy) or Windows Explorer property page.
 * You can use custom rule set file naming "RelaxVersioner.rules" into project folder "$(ProjectDir)" or solution folder "$(SolutionDir)". Current no documentation custom rule set file, see also below.
@@ -141,37 +170,37 @@ using namespace System::Reflection;
       "versionLabel" is extract numerical-notate version string [1.2.3.4] or [v1.2.3.4] from git repository tags traverse start HEAD.
       If not found, use [0.0.1].
     -->
-    <Rule name="AssemblyVersionAttribute">{versionLabel}</Rule>
+    <Rule name="AssemblyVersion">{versionLabel}</Rule>
     
     <!--
       "safeVersion" is extract committed date (from commmiter) from git repository HEAD.
       "safeVersion" specialized from "committer.When".
       (The format is safe-numerical-notate version string [2016.2.14.12345]. (Last number is 2sec prec.))
     -->
-    <Rule name="AssemblyFileVersionAttribute">{safeVersion}</Rule>
+    <Rule name="AssemblyFileVersion">{safeVersion}</Rule>
     
     <!--
       "commitId" is extract commit id from git repository HEAD.
       "commitId" alias to "commit.Sha".
     -->
-    <Rule name="AssemblyInformationalVersionAttribute">{commitId}</Rule>
+    <Rule name="AssemblyInformationalVersion">{commitId}</Rule>
     
     <!--
-      "key" attribute is only using for "AssemblyVersionMetadataAttribute".
+      "key" attribute can only use with "AssemblyMetadataAttribute".
       "committer.When" or you can use another choice "author.When".
       "branch" can use property "FriendlyName" and "CanonicalName". (Derived from libgit2sharp)
       "author" and "committer" can use property "Name", "Email", and "When". (Derived from libgit2sharp)
       "buildIdentifier" is passing from MSBuild property named "RelaxVersionerBuildIdentifier" or "BuildIdentifier". We can use in CI building.
       "generated" is generated date by RelaxVersioner.
     -->
-    <Rule name="AssemblyVersionMetadataAttribute" key="Date">{committer.When:R}</Rule>
-    <Rule name="AssemblyVersionMetadataAttribute" key="Branch">{branch.FriendlyName}</Rule>
-    <Rule name="AssemblyVersionMetadataAttribute" key="Tags">{tags}</Rule>
-    <Rule name="AssemblyVersionMetadataAttribute" key="Author">{author}</Rule>
-    <Rule name="AssemblyVersionMetadataAttribute" key="Committer">{committer}</Rule>
-    <Rule name="AssemblyVersionMetadataAttribute" key="Message">{commit.MessageShort}</Rule>
-    <Rule name="AssemblyVersionMetadataAttribute" key="Build">{buildIdentifier}</Rule>
-    <Rule name="AssemblyVersionMetadataAttribute" key="Generated">{generated:R}</Rule>
+    <Rule name="AssemblyMetadata" key="Date">{committer.When:R}</Rule>
+    <Rule name="AssemblyMetadata" key="Branch">{branch.FriendlyName}</Rule>
+    <Rule name="AssemblyMetadata" key="Tags">{tags}</Rule>
+    <Rule name="AssemblyMetadata" key="Author">{author}</Rule>
+    <Rule name="AssemblyMetadata" key="Committer">{committer}</Rule>
+    <Rule name="AssemblyMetadata" key="Message">{commit.MessageShort}</Rule>
+    <Rule name="AssemblyMetadata" key="Build">{buildIdentifier}</Rule>
+    <Rule name="AssemblyMetadata" key="Generated">{generated:R}</Rule>
   </WriterRules>
 </RelaxVersioner>
 ```
@@ -198,7 +227,7 @@ Apply `fetch-depth: 0` predication into your build.yml script.
 [You can understand with this real script.](https://github.com/kekyo/CenterCLR.RelaxVersioner/blob/master/.github/workflows/build.yml#L13)
 
 ## Another topics
-* RelaxVersioner supported on Visual Studio 2012/2013 only installed .NET Framework 4.6 or upper. Because it requires uses compatibility for net46 MSBuild.Framework assembly.
+* RelaxVersioner supported on Visual Studio 2012/2013 only installed .NET Framework 4.6 or upper. Because it requires uses compatibility for net461 MSBuild.Framework assembly.
 
 ## TODO:
 * Support exclude rule set.
@@ -208,7 +237,7 @@ Apply `fetch-depth: 0` predication into your build.yml script.
 * Support Mono on linux environments.
 
 ## License
-* Copyright (c) 2015-2019 Kouji Matsui (@kozy_kekyo, kekyo2)
+* Copyright (c) 2015-2020 Kouji Matsui (@kozy_kekyo, @kekyo2)
 * Under Apache v2
 
 ## History

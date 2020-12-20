@@ -1,6 +1,6 @@
 ﻿/////////////////////////////////////////////////////////////////////////////////////////////////
 //
-// CenterCLR.RelaxVersioner - Easy-usage, Git-based, auto-generate version informations toolset.
+// RelaxVersioner - Easy-usage, Git-based, auto-generate version informations toolset.
 // Copyright (c) 2016-2020 Kouji Matsui (@kozy_kekyo, @kekyo2)
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
@@ -22,7 +22,7 @@ using System.IO;
 using System.Linq;
 using System.Xml.Linq;
 
-namespace CenterCLR.RelaxVersioner
+namespace RelaxVersioner
 {
     internal static class ResultWriter
     {

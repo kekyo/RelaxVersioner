@@ -1,6 +1,6 @@
 ﻿/////////////////////////////////////////////////////////////////////////////////////////////////
 //
-// CenterCLR.RelaxVersioner - Easy-usage, Git-based, auto-generate version informations toolset.
+// RelaxVersioner - Easy-usage, Git-based, auto-generate version informations toolset.
 // Copyright (c) 2016-2020 Kouji Matsui (@kozy_kekyo, @kekyo2)
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
@@ -17,31 +17,32 @@
 //
 /////////////////////////////////////////////////////////////////////////////////////////////////
 
+using NamingFormatter;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
 
-namespace CenterCLR.RelaxVersioner.Writers
+namespace RelaxVersioner.Writers
 {
     internal abstract class WriterBase
     {
         public abstract string Language { get; }
 
         public void Write(
-            string outputFilePath,
+            ProcessorContext context,
             Dictionary<string, object> keyValues,
             DateTimeOffset generated,
             IEnumerable<Rule> ruleSet,
             IEnumerable<string> importSet)
         {
-            Debug.Assert(string.IsNullOrWhiteSpace(outputFilePath) == false);
+            Debug.Assert(string.IsNullOrWhiteSpace(context.OutputPath) == false);
             Debug.Assert(keyValues != null);
             Debug.Assert(ruleSet != null);
             Debug.Assert(importSet != null);
 
-            var targetFolder = Path.GetDirectoryName(outputFilePath);
+            var targetFolder = Path.GetDirectoryName(context.OutputPath);
             if (!string.IsNullOrWhiteSpace(targetFolder) && !Directory.Exists(targetFolder))
             {
                 try
@@ -55,19 +56,21 @@ namespace CenterCLR.RelaxVersioner.Writers
                 }
             }
 
-            using (var tw = File.CreateText(outputFilePath))
+            using (var ftw = File.CreateText(context.OutputPath))
             {
+                var tw = new SourceCodeWriter(ftw, context);
+
                 this.WriteComment(tw,
-                    $"This is auto-generated version information attributes by CenterCLR.RelaxVersioner.{this.GetType().Assembly.GetName().Version}, Do not edit.");
+                    $"This is auto-generated version information attributes by RelaxVersioner.{this.GetType().Assembly.GetName().Version}, Do not edit.");
                 this.WriteComment(tw,
                     $"Generated date: {generated:R}");
                 tw.WriteLine();
 
                 this.WriteBeforeBody(tw);
 
-                foreach (var namespaceName in importSet)
+                foreach (var importNamespace in importSet)
                 {
-                    this.WriteImport(tw, namespaceName);
+                    this.WriteImport(tw, importNamespace);
                 }
                 tw.WriteLine();
 
@@ -84,6 +87,42 @@ namespace CenterCLR.RelaxVersioner.Writers
                     }
                 }
                 tw.WriteLine();
+                
+                if (context.GenerateStatic)
+                {
+                    this.WriteBeforeLiteralBody(tw);
+
+                    foreach (var g in ruleSet.GroupBy(rule => rule.Name))
+                    {
+                        var rules = g.ToArray();
+
+                        if (rules.Length >= 2)
+                        {
+                            this.WriteBeforeNestedLiteralBody(tw, rules[0].Name);
+                        }
+
+                        foreach (var rule in rules)
+                        {
+                            var formattedValue = Named.Format(rule.Format, keyValues);
+                            if (!string.IsNullOrWhiteSpace(rule.Key))
+                            {
+                                this.WriteLiteralWithArgument(tw, rule.Key, formattedValue);
+                            }
+                            else
+                            {
+                                this.WriteLiteralWithArgument(tw, rule.Name, formattedValue);
+                            }
+                        }
+
+                        if (rules.Length >= 2)
+                        {
+                            this.WriteAfterNestedLiteralBody(tw);
+                        }
+                    }
+
+                    this.WriteAfterLiteralBody(tw);
+                    tw.WriteLine();
+                }
 
                 this.WriteAfterBody(tw);
 
@@ -91,35 +130,49 @@ namespace CenterCLR.RelaxVersioner.Writers
             }
         }
 
-        protected virtual void WriteComment(TextWriter tw, string format, params object[] args)
-        {
+        protected static bool IsRequiredSelfHostingMetadataAttribute(ProcessorContext context) =>
+            (context.TargetFrameworkIdentity == ".NETFramework") &&
+            context.TargetFrameworkVersion is { } tfv &&
+            tfv.StartsWith("v") &&
+            tfv.Substring(1) is { } vs &&
+            Version.TryParse(vs, out var version) &&
+            (version.Major< 4 || (version.Major == 4 && version.Minor< 5));
+
+        protected virtual void WriteComment(SourceCodeWriter tw, string format, params object[] args) =>
             tw.WriteLine("// " + format, args);
-        }
 
-        protected virtual void WriteBeforeBody(TextWriter tw)
+        protected virtual void WriteBeforeBody(SourceCodeWriter tw)
         {
         }
 
-        protected abstract void WriteAttribute(TextWriter tw, string name, string args);
+        protected abstract void WriteAttribute(SourceCodeWriter tw, string name, string args);
+        protected abstract void WriteLiteral(SourceCodeWriter tw, string name, string value);
 
-        protected virtual string GetArgumentString(string argumentValue)
-        {
-            return string.Format("\"{0}\"", argumentValue.Replace("\"", "\"\""));
-        }
+        protected virtual string GetArgumentString(string argumentValue) =>
+            string.Format("\"{0}\"", argumentValue.Replace("\"", "\"\""));
 
-        private void WriteAttributeWithArguments(TextWriter tw, string name, params object[] args)
-        {
+        protected abstract void WriteBeforeLiteralBody(SourceCodeWriter tw);
+        protected abstract void WriteBeforeNestedLiteralBody(SourceCodeWriter tw, string name);
+        protected abstract void WriteAfterNestedLiteralBody(SourceCodeWriter tw);
+        protected abstract void WriteAfterLiteralBody(SourceCodeWriter tw);
+
+        private void WriteAttributeWithArguments(SourceCodeWriter tw, string name, params object[] args) =>
             this.WriteAttribute(
                 tw,
                 name,
                 string.Join(",", args.Select(arg => this.GetArgumentString((arg != null) ? arg.ToString() : string.Empty))));
-        }
 
-        protected virtual void WriteImport(TextWriter tw, string namespaceName)
+        private void WriteLiteralWithArgument(SourceCodeWriter tw, string name, object arg) =>
+            this.WriteLiteral(
+                tw,
+                name,
+                this.GetArgumentString((arg != null) ? arg.ToString() : string.Empty));
+
+        protected virtual void WriteImport(SourceCodeWriter tw, string namespaceName)
         {
         }
 
-        protected virtual void WriteAfterBody(TextWriter tw)
+        protected virtual void WriteAfterBody(SourceCodeWriter tw)
         {
         }
     }

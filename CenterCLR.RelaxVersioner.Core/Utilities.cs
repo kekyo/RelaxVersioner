@@ -1,6 +1,6 @@
 ﻿/////////////////////////////////////////////////////////////////////////////////////////////////
 //
-// CenterCLR.RelaxVersioner - Easy-usage, Git-based, auto-generate version informations toolset.
+// RelaxVersioner - Easy-usage, Git-based, auto-generate version informations toolset.
 // Copyright (c) 2016-2020 Kouji Matsui (@kozy_kekyo, @kekyo2)
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
@@ -26,9 +26,9 @@ using System.Xml.Linq;
 
 using LibGit2Sharp;
 
-using CenterCLR.RelaxVersioner.Writers;
+using RelaxVersioner.Writers;
 
-namespace CenterCLR.RelaxVersioner
+namespace RelaxVersioner
 {
     internal static class Utilities
     {
@@ -82,6 +82,8 @@ namespace CenterCLR.RelaxVersioner
                 {
                     try
                     {
+                        logger.Message(LogImportance.Low, "libgit2sharp.NativeLibraryPath, Path={0}", GlobalSettings.NativeLibraryPath ?? "(null)");
+
                         var r = new Repository(GetDirectoryNameWithTrailingSeparator(path));
                         logger.Message(LogImportance.Low, "Repository opened, Path={0}", path);
                         return r;

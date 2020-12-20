@@ -1,6 +1,6 @@
 ﻿/////////////////////////////////////////////////////////////////////////////////////////////////
 //
-// CenterCLR.RelaxVersioner - Easy-usage, Git-based, auto-generate version informations toolset.
+// RelaxVersioner - Easy-usage, Git-based, auto-generate version informations toolset.
 // Copyright (c) 2016-2020 Kouji Matsui (@kozy_kekyo, @kekyo2)
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
@@ -17,46 +17,96 @@
 //
 /////////////////////////////////////////////////////////////////////////////////////////////////
 
-using System.IO;
-using System.Xml.Linq;
-
-namespace CenterCLR.RelaxVersioner.Writers
+namespace RelaxVersioner.Writers
 {
     internal sealed class CSharpWriter : WriterBase
     {
         public override string Language => "C#";
 
-        protected override void WriteImport(TextWriter tw, string namespaceName)
-        {
+        protected override void WriteImport(SourceCodeWriter tw, string namespaceName) =>
             tw.WriteLine("using {0};", namespaceName);
-        }
         
-        protected override string GetArgumentString(string argumentValue)
-        {
-            return string.Format("@\"{0}\"", argumentValue.Replace("\"", "\"\""));
-        }
+        protected override string GetArgumentString(string argumentValue) =>
+            string.Format("@\"{0}\"", argumentValue.Replace("\"", "\"\""));
 
-        protected override void WriteAttribute(TextWriter tw, string name, string args)
-        {
+        protected override void WriteAttribute(SourceCodeWriter tw, string name, string args) =>
             tw.WriteLine("[assembly: {0}({1})]", name, args);
+
+        protected override void WriteBeforeLiteralBody(SourceCodeWriter tw)
+        {
+            if (!string.IsNullOrWhiteSpace(tw.Context.Namespace))
+            {
+                tw.WriteLine("namespace {0}", tw.Context.Namespace);
+                tw.WriteLine("{");
+                tw.Shift();
+            }
+
+            tw.WriteLine("internal static class ThisAssembly");
+            tw.WriteLine("{");
+            tw.Shift();
         }
 
-        protected override void WriteAfterBody(TextWriter tw)
+        protected override void WriteBeforeNestedLiteralBody(SourceCodeWriter tw, string name)
         {
+            tw.WriteLine("public static class {0}", name);
+            tw.WriteLine("{");
+            tw.Shift();
+        }
+
+        protected override void WriteLiteral(SourceCodeWriter tw, string name, string value) =>
+            tw.WriteLine("public const string @{0} = {1};", name, value);
+
+        protected override void WriteAfterNestedLiteralBody(SourceCodeWriter tw)
+        {
+            tw.UnShift();
+            tw.WriteLine("}");
+        }
+
+        protected override void WriteAfterLiteralBody(SourceCodeWriter tw)
+        {
+            if (!string.IsNullOrWhiteSpace(tw.Context.Namespace))
+            {
+                tw.UnShift();
+                tw.WriteLine("}");
+            }
+            tw.UnShift();
+            tw.WriteLine("}");
+        }
+
+        protected override void WriteAfterBody(SourceCodeWriter tw)
+        {
+            var required = IsRequiredSelfHostingMetadataAttribute(tw.Context);
+            if (!required)
+            {
+                tw.WriteLine("#if NET10 || NET11 || NET20 || NET30 || NET35 || NET40");
+            }
+
             tw.WriteLine("namespace System.Reflection");
             tw.WriteLine("{");
-            tw.WriteLine("	[AttributeUsage(AttributeTargets.Assembly, AllowMultiple = true, Inherited = false)]");
-            tw.WriteLine("	internal sealed class AssemblyVersionMetadataAttribute : Attribute");
-            tw.WriteLine("	{");
-            tw.WriteLine("		public AssemblyVersionMetadataAttribute(string key, string value)");
-            tw.WriteLine("		{");
-            tw.WriteLine("			this.Key = key;");
-            tw.WriteLine("			this.Value = value;");
-            tw.WriteLine("		}");
-            tw.WriteLine("		public string Key { get; private set; }");
-            tw.WriteLine("		public string Value { get; private set; }");
-            tw.WriteLine("	}");
+            tw.Shift();
+            tw.WriteLine("[AttributeUsage(AttributeTargets.Assembly, AllowMultiple = true, Inherited = false)]");
+            tw.WriteLine("internal sealed class AssemblyMetadataAttribute : Attribute");
+            tw.WriteLine("{");
+            tw.Shift();
+            tw.WriteLine("public AssemblyMetadataAttribute(string key, string value)");
+            tw.WriteLine("{");
+            tw.Shift();
+            tw.WriteLine("this.Key = key;");
+            tw.WriteLine("this.Value = value;");
+            tw.UnShift();
             tw.WriteLine("}");
+            tw.WriteLine("public string Key { get; private set; }");
+            tw.WriteLine("public string Value { get; private set; }");
+            tw.UnShift();
+            tw.WriteLine("}");
+            tw.UnShift();
+            tw.WriteLine("}");
+
+            if (!required)
+            {
+                tw.WriteLine("#endif");
+            }
+
             tw.WriteLine();
         }
     }

@@ -1,6 +1,6 @@
 ﻿/////////////////////////////////////////////////////////////////////////////////////////////////
 //
-// CenterCLR.RelaxVersioner - Easy-usage, Git-based, auto-generate version informations toolset.
+// RelaxVersioner - Easy-usage, Git-based, auto-generate version informations toolset.
 // Copyright (c) 2016-2020 Kouji Matsui (@kozy_kekyo, @kekyo2)
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
@@ -18,17 +18,16 @@
 /////////////////////////////////////////////////////////////////////////////////////////////////
 
 using System;
-using System.IO;
 using System.Runtime.InteropServices;
 using Mono.Options;
 
-namespace CenterCLR.RelaxVersioner
+namespace RelaxVersioner
 {
     public static class Program
     {
         public static int Main(string[] args)
         {
-            var relaxVersionerVersion = typeof(Program).Assembly.GetName().Version;
+            var relaxVersionerVersion = ThisAssembly.AssemblyVersion;
             var logger = Logger.Create($"RelaxVersioner[{relaxVersionerVersion}]", LogImportance.Normal, Console.Out, Console.Error, Console.Error);
 
             try
@@ -36,17 +35,26 @@ namespace CenterCLR.RelaxVersioner
                 var processor = new Processor(logger);
                 var languages = string.Join("|", processor.Languages);
 
-                var language = "C#";
-                string buildIdentifier = null;
-                string outputPath = null;
+                var context = new ProcessorContext
+                {
+                    Language = "C#",
+                    GenerateStatic = true,
+                };
+
                 string resultPath = null;
                 var help = false;
 
                 var options = new OptionSet
                 {
-                    { "language=", $"target language [{languages}]", v => language = v },
-                    { "buildIdentifier=", $"build identifier", v => buildIdentifier = v },
-                    { "outputPath=", $"output source file", v => outputPath = v },
+                    { "language=", $"target language [{languages}]", v => context.Language = v },
+                    { "namespace=", "applying namespace", v => context.Namespace = v },
+                    { "tfm=", "target framework moniker definition (TargetFramework)", v => context.TargetFramework = v },
+                    { "tfid=", "target framework identity definition (TargetFrameworkIdentifier)", v => context.TargetFrameworkIdentity = v },
+                    { "tfv=", "target framework version definition (TargetFrameworkVersion)", v => context.TargetFrameworkVersion = v },
+                    { "tfp=", "target framework profile definition (TargetFrameworkProfile)", v => context.TargetFrameworkProfile = v },
+                    { "genStatic=", $"generate static informations", v => context.GenerateStatic = bool.TryParse(v, out var genStatic) ? genStatic : true },
+                    { "buildIdentifier=", $"build identifier", v => context.BuildIdentifier = v },
+                    { "outputPath=", $"output source file", v => context.OutputPath = v },
                     { "resultPath=", $"output result via xml file", v => resultPath = v },
                     { "help", "help", v => help = v != null },
                 };
@@ -59,13 +67,12 @@ namespace CenterCLR.RelaxVersioner
                     return 1;
                 }
 
-                var projectDirectory = trails[0];
+                context.ProjectDirectory = trails[0];
 
-                var result = processor.Run(
-                    projectDirectory, outputPath, language, buildIdentifier);
+                var result = processor.Run(context);
 
-                var dryrunDisplay = string.IsNullOrWhiteSpace(outputPath) ? " (dryrun)" : string.Empty;
-                var languageDisplay = string.IsNullOrWhiteSpace(outputPath) ? string.Empty : $"Language={language}, ";
+                var dryrunDisplay = string.IsNullOrWhiteSpace(context.OutputPath) ? " (dryrun)" : string.Empty;
+                var languageDisplay = string.IsNullOrWhiteSpace(context.OutputPath) ? string.Empty : $"Language={context.Language}, ";
 
                 if (!string.IsNullOrWhiteSpace(resultPath))
                 {

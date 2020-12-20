@@ -1,7 +1,7 @@
 @echo off
 
-rem CenterCLR.RelaxVersioner - Easy-usage, Git-based, auto-generate version informations toolset.
-rem Copyright (c) 2016-2018 Kouji Matsui (@kozy_kekyo, @kekyo2)
+rem RelaxVersioner - Easy-usage, Git-based, auto-generate version informations toolset.
+rem Copyright (c) 2016-2020 Kouji Matsui (@kozy_kekyo, @kekyo2)
 rem 
 rem Licensed under the Apache License, Version 2.0 (the "License");
 rem you may not use this file except in compliance with the License.
@@ -17,9 +17,9 @@ rem limitations under the License.
 
 echo.
 echo "==========================================================="
-echo "Build CenterCLR.RelaxVersioner"
+echo "Build RelaxVersioner"
 echo.
 
 dotnet clean -c Release -p:Platform=AnyCPU CenterCLR.RelaxVersioner\CenterCLR.RelaxVersioner.csproj
-
+dotnet restore
 dotnet pack -p:Configuration=Release -p:Platform=AnyCPU -o artifacts CenterCLR.RelaxVersioner\CenterCLR.RelaxVersioner.csproj
