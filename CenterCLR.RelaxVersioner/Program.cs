@@ -27,7 +27,7 @@ namespace RelaxVersioner
     {
         public static int Main(string[] args)
         {
-            var relaxVersionerVersion = typeof(Program).Assembly.GetName().Version;
+            var relaxVersionerVersion = ThisAssembly.AssemblyVersion;
             var logger = Logger.Create($"RelaxVersioner[{relaxVersionerVersion}]", LogImportance.Normal, Console.Out, Console.Error, Console.Error);
 
             try
