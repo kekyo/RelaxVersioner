@@ -76,6 +76,7 @@ namespace RelaxVersioner.Writers
         {
             if (!string.IsNullOrWhiteSpace(tw.Context.Namespace))
             {
+                tw.UnShift();
                 tw.WriteLine("namespace {0}", tw.Context.Namespace);
                 tw.Shift();
             }
@@ -100,7 +101,6 @@ namespace RelaxVersioner.Writers
             {
                 tw.UnShift();
             }
-            tw.UnShift();
         }
 
         protected override void WriteAfterBody(SourceCodeWriter tw)
