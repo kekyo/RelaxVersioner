@@ -43,16 +43,11 @@
   </PropertyGroup>
 
   <!-- ======================== -->
-  <!-- For all languages except F# -->
-  <PropertyGroup Condition="'$(Language)' != 'F#'">
-    <RelaxVersionerNamespace Condition="'$(RelaxVersionerNamespace)' == ''">$(RootNamespace)</RelaxVersionerNamespace>
-  </PropertyGroup>
-
-  <!-- ======================== -->
   <!-- For C++ (or C++/CLI) -->
   <PropertyGroup Condition="'$(Language)' == 'C++'">
     <RelaxVersionerLanguage Condition="('$(RelaxVersionerLanguage)' == '') AND ('$(CLRSupport)' == 'true')">C++/CLI</RelaxVersionerLanguage>
     <RelaxVersionerLanguage Condition="'$(RelaxVersionerLanguage)' == ''">C++</RelaxVersionerLanguage>
+    <RelaxVersionerNamespace Condition="'$(RelaxVersionerNamespace)' == ''"></RelaxVersionerNamespace>
     <BuildCompileTargets>
       RelaxVersionerBuild;
       $(BuildCompileTargets)
@@ -69,7 +64,13 @@
     </CoreBuildDependsOn>
   </PropertyGroup>
 
-  <!-- ============================================================================= -->
+    <!-- ======================== -->
+    <!-- For all languages except F# and C++ -->
+    <PropertyGroup Condition="'$(Language)' != 'F#' AND '$(Language)' != 'C++'">
+        <RelaxVersionerNamespace Condition="'$(RelaxVersionerNamespace)' == ''">$(RootNamespace)</RelaxVersionerNamespace>
+    </PropertyGroup>
+
+    <!-- ============================================================================= -->
   <!-- Build definition -->
   <Target Name="RelaxVersionerBuild" BeforeTargets="BeforeCompile" Outputs="$(RelaxVersionerOutputPath)">
 
