@@ -17,9 +17,9 @@
 
 echo ""
 echo "==========================================================="
-echo "Build (mono) CenterCLR.RelaxVersioner"
+echo "Build CenterCLR.RelaxVersioner"
 echo ""
 
-msbuild /t:restore /p:Configuration=Release /p:Platform=AnyCpu CenterCLR.RelaxVersioner/CenterCLR.RelaxVersioner.csproj
+dotnet clean -c Release -p:Platform=AnyCPU CenterCLR.RelaxVersioner/CenterCLR.RelaxVersioner.csproj
 dotnet restore
-msbuild /p:Configuration=Release /p:Platform=AnyCpu CenterCLR.RelaxVersioner/CenterCLR.RelaxVersioner.csproj
+dotnet pack -p:Configuration=Release -p:Platform=AnyCPU -o artifacts CenterCLR.RelaxVersioner/CenterCLR.RelaxVersioner.csproj
