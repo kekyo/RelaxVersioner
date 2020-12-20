@@ -10,14 +10,14 @@
 | | master | devel |
 |:---|:---|:---|
 | Packages | [![NuGet RelaxVersioner (master)](https://img.shields.io/nuget/v/RelaxVersioner.svg?style=flat)](https://www.nuget.org/packages/RelaxVersioner) | [![MyGet RelaxVersioner (devel)](https://img.shields.io/myget/kekyo/v/RelaxVersioner.svg?style=flat&label=myget)](https://www.myget.org/feed/kekyo/package/nuget/RelaxVersioner)
-| Continuous integration | [![RelaxVersioner CI build (master)](https://github.com/kekyo/CenterCLR.RelaxVersioner/workflows/.NET/badge.svg?branch=master)](https://github.com/kekyo/CenterCLR.RelaxVersioner/actions) | [![RelaxVersioner CI build (devel)](https://github.com/kekyo/CenterCLR.RelaxVersioner/workflows/.NET/badge.svg?branch=master)](https://github.com/kekyo/CenterCLR.RelaxVersioner/actions)
+| Continuous integration | [![RelaxVersioner CI build (master)](https://github.com/kekyo/CenterCLR.RelaxVersioner/workflows/.NET/badge.svg?branch=master)](https://github.com/kekyo/CenterCLR.RelaxVersioner/actions) | [![RelaxVersioner CI build (devel)](https://github.com/kekyo/CenterCLR.RelaxVersioner/workflows/.NET/badge.svg?branch=devel)](https://github.com/kekyo/CenterCLR.RelaxVersioner/actions)
 
 ## What is this?
 * RelaxVersioner is a easy, full-automatic, git based version inserter for .NET 5/.NET Core/.NET Framework.
 * If you use RelaxVersioner, version handling ONLY use with Git tags/branches/commit messages. Of course you don't need more tooling usage, and easy integrates continuous-integration environments.
 * Target language/environments:
   * C#, F#, VB.NET, C++/CLI and NuGet packaging (dotnet cli packer).
-  * Visual Studio 2019/2017/2015, dotnet SDK cli, MSBuild on netcoreapp2.1/net461 environment (NOT your project platform) and related IDEs.
+  * Visual Studio 2019/2017/2015, Rider 2020.3, dotnet SDK cli, MSBuild on netcoreapp2.1/net461 environment (NOT your project platform) and related IDEs.
   * Linux(x64) and Windows(x86/x64).  (The project validates only them, but maybe can run at same as [libgit2sharp](https://github.com/libgit2/libgit2sharp) required environment)
 * Auto collect version information from local Git repository tags/branch name.
 * Independent AssemblyInfo.cs file, generated code will output into a temporary file. (Not manipulate directly AssemblyInfo.cs file).

@@ -10,14 +10,14 @@
 | | master | devel |
 |:---|:---|:---|
 | Packages | [![NuGet RelaxVersioner (master)](https://img.shields.io/nuget/v/RelaxVersioner.svg?style=flat)](https://www.nuget.org/packages/RelaxVersioner) | [![MyGet RelaxVersioner (devel)](https://img.shields.io/myget/kekyo/v/RelaxVersioner.svg?style=flat&label=myget)](https://www.myget.org/feed/kekyo/package/nuget/RelaxVersioner)
-| Continuous integration | [![RelaxVersioner CI build (master)](https://github.com/kekyo/CenterCLR.RelaxVersioner/workflows/.NET/badge.svg?branch=master)](https://github.com/kekyo/CenterCLR.RelaxVersioner/actions) | [![RelaxVersioner CI build (devel)](https://github.com/kekyo/CenterCLR.RelaxVersioner/workflows/.NET/badge.svg?branch=master)](https://github.com/kekyo/CenterCLR.RelaxVersioner/actions)
+| Continuous integration | [![RelaxVersioner CI build (master)](https://github.com/kekyo/CenterCLR.RelaxVersioner/workflows/.NET/badge.svg?branch=master)](https://github.com/kekyo/CenterCLR.RelaxVersioner/actions) | [![RelaxVersioner CI build (devel)](https://github.com/kekyo/CenterCLR.RelaxVersioner/workflows/.NET/badge.svg?branch=devel)](https://github.com/kekyo/CenterCLR.RelaxVersioner/actions)
 
 ## これは何？
 * RelaxVersionerは、軽量で簡単に使用することが出来る、Gitベースの「自動バージョニング」ツールセットです。.NET 5/.NET Core/.NET Frameworkベースのソースコードを対象としていて、ビルド時にアセンブリ属性を自動的に適用します。
 * RelaxVersionerのNuGetパッケージをインストールするだけで、Gitのタグ・ブランチ・コミットメッセージだけを使って、バージョン管理が出来ます。つまり、追加のツール操作が不要なため、Gitさえ知っていれば学習コストがほとんどなく、CI環境にも容易に対応できます。
 * サポートしている言語と環境は:
   * C#・F#・VB.NET・C++/CLI、そしてNuGetパッケージング (dotnet cli packコマンド)
-  * Visual Studio 2019/2017/2015, dotnet SDK cli, netcoreapp2.1/net461の元で動作するMSBuild環境 (注: MSBuildの動作プラットフォームの事です、あなたがターゲットにしたいプロジェクトの事ではありません)、及びこれらを使用する任意のIDE。
+  * Visual Studio 2019/2017/2015, Rider 2020.3, dotnet SDK cli, netcoreapp2.1/net461の元で動作するMSBuild環境 (注: MSBuildの動作プラットフォームの事です、あなたがターゲットにしたいプロジェクトの事ではありません)、及びこれらを使用する任意のIDE。
   * Linux(x64)及びWindows(x86/x64)  （検証している環境は先のとおりですが、[libgit2sharp](https://github.com/libgit2/libgit2sharp)の動作要件に準じて動作する可能性があります）
 * ローカルのGitリポジトリから、自動的にタグ・ブランチの名称を取得し、アセンブリ属性に適用することが出来ます。
 * AssemblyInfo.csファイルを直接変更しません。RelaxVersionerはテンポラリファイルに定義を出力し、それをコンパイルさせます。
