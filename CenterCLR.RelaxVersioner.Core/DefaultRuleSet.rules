@@ -52,7 +52,7 @@
         <Rule name="AssemblyInformationalVersion">{commitId}</Rule>
 
         <!--
-            "key" attribute is only using for "AssemblyVersionMetadataAttribute".
+            "key" attribute can only use with "AssemblyMetadataAttribute".
             "committer.When" or you can use another choice "author.When".
             "branch" can use property "FriendlyName" and "CanonicalName". (Derived from libgit2sharp)
             "author" and "committer" can use property "Name", "Email", and "When". (Derived from libgit2sharp)

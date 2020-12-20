@@ -13,14 +13,14 @@
 | Continuous integration | [![RelaxVersioner CI build (master)](https://github.com/kekyo/CenterCLR.RelaxVersioner/workflows/.NET/badge.svg?branch=master)](https://github.com/kekyo/CenterCLR.RelaxVersioner/actions) | [![RelaxVersioner CI build (devel)](https://github.com/kekyo/CenterCLR.RelaxVersioner/workflows/.NET/badge.svg?branch=master)](https://github.com/kekyo/CenterCLR.RelaxVersioner/actions)
 
 ## What is this?
-* RelaxVersioner is Very easy-usage, Git-based, auto-generate version informations in .NET Core/.NET Framework source code. (Assembly attribute based)
-* If you use RelaxVersioner, version handling ONLY use for Git tags/branches/commit messages. Of course you don't need more tooling usage, and easy managing continuous-integration environments.
+* RelaxVersioner is a easy, full-automatic, git based version inserter for .NET 5/.NET Core/.NET Framework.
+* If you use RelaxVersioner, version handling ONLY use with Git tags/branches/commit messages. Of course you don't need more tooling usage, and easy integrates continuous-integration environments.
 * Target language/environments:
-  * C#, F#, VB.NET, C++/CLI and NuGet packaging (dotnet cli pack).
+  * C#, F#, VB.NET, C++/CLI and NuGet packaging (dotnet cli packer).
   * Visual Studio 2019/2017/2015, dotnet SDK cli, MSBuild on netcoreapp2.1/net461 environment (NOT your project platform) and related IDEs.
-  * Linux(x64) and Windows(x86/x64).  (The project validates only them, but maybe runs same as [libgit2sharp](https://github.com/libgit2/libgit2sharp) required environment)
+  * Linux(x64) and Windows(x86/x64).  (The project validates only them, but maybe can run at same as [libgit2sharp](https://github.com/libgit2/libgit2sharp) required environment)
 * Auto collect version information from local Git repository tags/branch name.
-* Independent AssemblyInfo.cs file, RelaxVersioner is output into temporary file. (No direct manipulate AssemblyInfo file).
+* Independent AssemblyInfo.cs file, generated code will output into a temporary file. (Not manipulate directly AssemblyInfo.cs file).
 * Place source code location which isn't obstructive for Git. (ex: obj/Debug)
 * You can customize output attribute/values with custom rule set file.
 
@@ -38,15 +38,28 @@
 
 ``` csharp
 using System.Reflection;
-[assembly: AssemblyVersionAttribute("0.5.30.0")]
-[assembly: AssemblyFileVersionAttribute("2016.1.15.41306")]
-[assembly: AssemblyInformationalVersionAttribute("a05ab9fc87b22234596f4ddd43136e9e526ebb90")]
-[assembly: AssemblyVersionMetadataAttribute("Build","Fri, 15 Jan 2016 13:56:53 GMT")]
-[assembly: AssemblyVersionMetadataAttribute("Branch","master")]
-[assembly: AssemblyVersionMetadataAttribute("Tags","0.5.30")]
-[assembly: AssemblyVersionMetadataAttribute("Author","Kouji Matsui <k@kekyo.net>")]
-[assembly: AssemblyVersionMetadataAttribute("Committer","Kouji Matsui <k@kekyo.net>")]
-[assembly: AssemblyVersionMetadataAttribute("Message","Fixed tab")]
+[assembly: AssemblyVersion("0.5.30.0")]
+[assembly: AssemblyFileVersion("2016.1.15.41306")]
+[assembly: AssemblyInformationalVersion("a05ab9fc87b22234596f4ddd43136e9e526ebb90")]
+[assembly: AssemblyMetadata("Build","Fri, 15 Jan 2016 13:56:53 GMT")]
+[assembly: AssemblyMetadata("Branch","master")]
+[assembly: AssemblyMetadata("Tags","0.5.30")]
+[assembly: AssemblyMetadata("Author","Kouji Matsui <k@kekyo.net>")]
+[assembly: AssemblyMetadata("Committer","Kouji Matsui <k@kekyo.net>")]
+[assembly: AssemblyMetadata("Message","Fixed tab")]
+[assembly: AssemblyMetadata("Message","Fixed tab")]
+[assembly: AssemblyMetadata("TargetFramework", "net461")]
+
+namespace YourApp
+{
+  internal static class ThisAssembly
+  {
+    public const string AssemblyVersion = "0.5.30.0";
+    public const string AssemblyFileVersion = "2016.1.15.41306";
+    public const string AssemblyInformationalVersion = "a05ab9fc87b22234596f4ddd43136e9e526ebb90";
+// TODO:
+  }
+}
 ```
 
 ### For F#:
@@ -54,46 +67,49 @@ using System.Reflection;
 ``` fsharp
 namespace global
   open System.Reflection
-  [<assembly: AssemblyVersionAttribute("0.5.30.0")>]
-  [<assembly: AssemblyFileVersionAttribute("2016.1.15.41306")>]
-  [<assembly: AssemblyInformationalVersionAttribute("a05ab9fc87b22234596f4ddd43136e9e526ebb90")>]
-  [<assembly: AssemblyVersionMetadataAttribute("Build","Fri, 15 Jan 2016 13:56:53 GMT")>]
-  [<assembly: AssemblyVersionMetadataAttribute("Branch","master")>]
-  [<assembly: AssemblyVersionMetadataAttribute("Tags","0.5.30")>]
-  [<assembly: AssemblyVersionMetadataAttribute("Author","Kouji Matsui <k@kekyo.net>")>]
-  [<assembly: AssemblyVersionMetadataAttribute("Committer","Kouji Matsui <k@kekyo.net>")>]
-  [<assembly: AssemblyVersionMetadataAttribute("Message","Fixed tab")>]
+  [<assembly: AssemblyVersion("0.5.30.0")>]
+  [<assembly: AssemblyFileVersion("2016.1.15.41306")>]
+  [<assembly: AssemblyInformationalVersion("a05ab9fc87b22234596f4ddd43136e9e526ebb90")>]
+  [<assembly: AssemblyMetadata("Build","Fri, 15 Jan 2016 13:56:53 GMT")>]
+  [<assembly: AssemblyMetadata("Branch","master")>]
+  [<assembly: AssemblyMetadata("Tags","0.5.30")>]
+  [<assembly: AssemblyMetadata("Author","Kouji Matsui <k@kekyo.net>")>]
+  [<assembly: AssemblyMetadata("Committer","Kouji Matsui <k@kekyo.net>")>]
+  [<assembly: AssemblyMetadata("Message","Fixed tab")>]
   do()
+// TODO:
 ```
 
 ### For VB.NET:
 
 ``` visualbasic
 Imports System.Reflection
-<Assembly: AssemblyVersionAttribute("0.5.30.0")>
-<Assembly: AssemblyFileVersionAttribute("2016.1.15.41306")>
-<Assembly: AssemblyInformationalVersionAttribute("a05ab9fc87b22234596f4ddd43136e9e526ebb90")>
-<Assembly: AssemblyVersionMetadataAttribute("Build","Fri, 15 Jan 2016 13:56:53 GMT")>
-<Assembly: AssemblyVersionMetadataAttribute("Branch","master")>
-<Assembly: AssemblyVersionMetadataAttribute("Tags","0.5.30")>
-<Assembly: AssemblyVersionMetadataAttribute("Author","Kouji Matsui <k@kekyo.net>")>
-<Assembly: AssemblyVersionMetadataAttribute("Committer","Kouji Matsui <k@kekyo.net>")>
-<Assembly: AssemblyVersionMetadataAttribute("Message","Fixed tab")>
+<Assembly: AssemblyVersion("0.5.30.0")>
+<Assembly: AssemblyFileVersion("2016.1.15.41306")>
+<Assembly: AssemblyInformationalVersion("a05ab9fc87b22234596f4ddd43136e9e526ebb90")>
+<Assembly: AssemblyMetadata("Build","Fri, 15 Jan 2016 13:56:53 GMT")>
+<Assembly: AssemblyMetadata("Branch","master")>
+<Assembly: AssemblyMetadata("Tags","0.5.30")>
+<Assembly: AssemblyMetadata("Author","Kouji Matsui <k@kekyo.net>")>
+<Assembly: AssemblyMetadata("Committer","Kouji Matsui <k@kekyo.net>")>
+<Assembly: AssemblyMetadata("Message","Fixed tab")>
+' TODO:
 ```
 
 ### For C++/CLI:
 
 ``` cpp
 using namespace System::Reflection;
-[assembly: AssemblyVersionAttribute("0.5.30.0")];
-[assembly: AssemblyFileVersionAttribute("2016.1.15.41306")];
-[assembly: AssemblyInformationalVersionAttribute("a05ab9fc87b22234596f4ddd43136e9e526ebb90")];
-[assembly: AssemblyVersionMetadataAttribute("Build","Fri, 15 Jan 2016 13:56:53 GMT")];
-[assembly: AssemblyVersionMetadataAttribute("Branch","master")];
-[assembly: AssemblyVersionMetadataAttribute("Tags","0.5.30")];
-[assembly: AssemblyVersionMetadataAttribute("Author","Kouji Matsui <k@kekyo.net>")];
-[assembly: AssemblyVersionMetadataAttribute("Committer","Kouji Matsui <k@kekyo.net>")];
-[assembly: AssemblyVersionMetadataAttribute("Message","Fixed tab")];
+[assembly: AssemblyVersion("0.5.30.0")];
+[assembly: AssemblyFileVersion("2016.1.15.41306")];
+[assembly: AssemblyInformationalVersion("a05ab9fc87b22234596f4ddd43136e9e526ebb90")];
+[assembly: AssemblyMetadata("Build","Fri, 15 Jan 2016 13:56:53 GMT")];
+[assembly: AssemblyMetadata("Branch","master")];
+[assembly: AssemblyMetadata("Tags","0.5.30")];
+[assembly: AssemblyMetadata("Author","Kouji Matsui <k@kekyo.net>")];
+[assembly: AssemblyMetadata("Committer","Kouji Matsui <k@kekyo.net>")];
+[assembly: AssemblyMetadata("Message","Fixed tab")];
+// TODO:
 ```
 
 ## Getting started
@@ -157,7 +173,7 @@ using namespace System::Reflection;
     <Rule name="AssemblyInformationalVersion">{commitId}</Rule>
     
     <!--
-      "key" attribute is only using for "AssemblyMetadataAttribute".
+      "key" attribute can only use with "AssemblyMetadataAttribute".
       "committer.When" or you can use another choice "author.When".
       "branch" can use property "FriendlyName" and "CanonicalName". (Derived from libgit2sharp)
       "author" and "committer" can use property "Name", "Email", and "When". (Derived from libgit2sharp)

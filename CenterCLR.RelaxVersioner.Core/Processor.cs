@@ -37,6 +37,7 @@ namespace RelaxVersioner
         public string TargetFrameworkIdentity;
         public string TargetFrameworkVersion;
         public string TargetFrameworkProfile;
+        public bool GenerateStatic;
         public string BuildIdentifier;
     }
 

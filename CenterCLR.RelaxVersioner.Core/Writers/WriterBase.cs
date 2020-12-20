@@ -88,38 +88,41 @@ namespace RelaxVersioner.Writers
                 }
                 tw.WriteLine();
                 
-                this.WriteBeforeLiteralBody(tw);
-                
-                foreach (var g in ruleSet.GroupBy(rule => rule.Name + "@#@" + (rule.Key ?? "")))
+                if (context.GenerateStatic)
                 {
-                    var rules = g.ToArray();
+                    this.WriteBeforeLiteralBody(tw);
 
-                    if (rules.Length >= 2)
+                    foreach (var g in ruleSet.GroupBy(rule => rule.Name))
                     {
-                        this.WriteBeforeNestedLiteralBody(tw, rules[0].Name);
-                    }
+                        var rules = g.ToArray();
 
-                    foreach (var rule in rules)
-                    {
-                        var formattedValue = Named.Format(rule.Format, keyValues);
-                        if (!string.IsNullOrWhiteSpace(rule.Key))
+                        if (rules.Length >= 2)
                         {
-                            this.WriteLiteralWithArgument(tw, rule.Key, formattedValue);
+                            this.WriteBeforeNestedLiteralBody(tw, rules[0].Name);
                         }
-                        else
+
+                        foreach (var rule in rules)
                         {
-                            this.WriteLiteralWithArgument(tw, rule.Name, formattedValue);
+                            var formattedValue = Named.Format(rule.Format, keyValues);
+                            if (!string.IsNullOrWhiteSpace(rule.Key))
+                            {
+                                this.WriteLiteralWithArgument(tw, rule.Key, formattedValue);
+                            }
+                            else
+                            {
+                                this.WriteLiteralWithArgument(tw, rule.Name, formattedValue);
+                            }
+                        }
+
+                        if (rules.Length >= 2)
+                        {
+                            this.WriteAfterNestedLiteralBody(tw);
                         }
                     }
 
-                    if (rules.Length >= 2)
-                    {
-                        this.WriteAfterNestedLiteralBody(tw);
-                    }
+                    this.WriteAfterLiteralBody(tw);
+                    tw.WriteLine();
                 }
-
-                this.WriteAfterLiteralBody(tw);
-                tw.WriteLine();
 
                 this.WriteAfterBody(tw);
 
