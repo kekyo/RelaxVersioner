@@ -10,7 +10,7 @@
     <developmentDependency>true</developmentDependency>
     <summary>Easy-usage, Git-based, auto-generate version informations toolset.</summary>
     <copyright>Copyright (c) 2016-2020 Kouji Matsui</copyright>
-    <licenseUrl>http://www.apache.org/licenses/LICENSE-2.0</licenseUrl>
+    <license type="expression">Apache-2.0</license>
     <projectUrl>https://github.com/kekyo/CenterCLR.RelaxVersioner</projectUrl>
     <icon>CenterCLR.RelaxVersioner.100.png</icon>
     <requireLicenseAcceptance>false</requireLicenseAcceptance>
