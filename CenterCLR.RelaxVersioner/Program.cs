@@ -18,7 +18,6 @@
 /////////////////////////////////////////////////////////////////////////////////////////////////
 
 using System;
-using System.IO;
 using System.Runtime.InteropServices;
 using Mono.Options;
 
@@ -36,17 +35,24 @@ namespace RelaxVersioner
                 var processor = new Processor(logger);
                 var languages = string.Join("|", processor.Languages);
 
-                var language = "C#";
-                string buildIdentifier = null;
-                string outputPath = null;
+                var context = new ProcessorContext
+                {
+                    Language = "C#"
+                };
+
                 string resultPath = null;
                 var help = false;
 
                 var options = new OptionSet
                 {
-                    { "language=", $"target language [{languages}]", v => language = v },
-                    { "buildIdentifier=", $"build identifier", v => buildIdentifier = v },
-                    { "outputPath=", $"output source file", v => outputPath = v },
+                    { "language=", $"target language [{languages}]", v => context.Language = v },
+                    { "namespace=", "applying namespace", v => context.Namespace = v },
+                    { "tfm=", "target framework moniker definition (TargetFramework)", v => context.TargetFramework = v },
+                    { "tfid=", "target framework identity definition (TargetFrameworkIdentifier)", v => context.TargetFrameworkIdentity = v },
+                    { "tfv=", "target framework version definition (TargetFrameworkVersion)", v => context.TargetFrameworkVersion = v },
+                    { "tfp=", "target framework profile definition (TargetFrameworkProfile)", v => context.TargetFrameworkProfile = v },
+                    { "buildIdentifier=", $"build identifier", v => context.BuildIdentifier = v },
+                    { "outputPath=", $"output source file", v => context.OutputPath = v },
                     { "resultPath=", $"output result via xml file", v => resultPath = v },
                     { "help", "help", v => help = v != null },
                 };
@@ -59,13 +65,12 @@ namespace RelaxVersioner
                     return 1;
                 }
 
-                var projectDirectory = trails[0];
+                context.ProjectDirectory = trails[0];
 
-                var result = processor.Run(
-                    projectDirectory, outputPath, language, buildIdentifier);
+                var result = processor.Run(context);
 
-                var dryrunDisplay = string.IsNullOrWhiteSpace(outputPath) ? " (dryrun)" : string.Empty;
-                var languageDisplay = string.IsNullOrWhiteSpace(outputPath) ? string.Empty : $"Language={language}, ";
+                var dryrunDisplay = string.IsNullOrWhiteSpace(context.OutputPath) ? " (dryrun)" : string.Empty;
+                var languageDisplay = string.IsNullOrWhiteSpace(context.OutputPath) ? string.Empty : $"Language={context.Language}, ";
 
                 if (!string.IsNullOrWhiteSpace(resultPath))
                 {

@@ -17,65 +17,69 @@
 //
 /////////////////////////////////////////////////////////////////////////////////////////////////
 
-using System.IO;
-using System.Xml.Linq;
-
 namespace RelaxVersioner.Writers
 {
     internal sealed class CSharpWriter : WriterBase
     {
         public override string Language => "C#";
 
-        protected override void WriteImport(TextWriter tw, string namespaceName) =>
+        protected override void WriteImport(SourceCodeWriter tw, string namespaceName) =>
             tw.WriteLine("using {0};", namespaceName);
         
         protected override string GetArgumentString(string argumentValue) =>
             string.Format("@\"{0}\"", argumentValue.Replace("\"", "\"\""));
 
-        protected override void WriteAttribute(TextWriter tw, string name, string args) =>
+        protected override void WriteAttribute(SourceCodeWriter tw, string name, string args) =>
             tw.WriteLine("[assembly: {0}({1})]", name, args);
 
-        protected override void WriteLiteral(TextWriter tw, string name, string value) =>
+        protected override void WriteLiteral(SourceCodeWriter tw, string name, string value) =>
             tw.WriteLine("    public const string {0} = {1};", name, value);
 
-        protected override void WriteBeforeLiteralBody(TextWriter tw)
+        protected override void WriteBeforeLiteralBody(SourceCodeWriter tw, string namespaceName)
         {
-            tw.WriteLine("namespace global");
+            if (!string.IsNullOrWhiteSpace(namespaceName))
+            {
+                tw.WriteLine("namespace {0}", namespaceName);
+                tw.WriteLine("{");
+            }
+
+            tw.WriteLine("internal static class ThisAssembly");
             tw.WriteLine("{");
-            tw.WriteLine("    internal static class ThisAssembly");
+        }
+
+        protected override void WriteBeforeNestedLiteralBody(SourceCodeWriter tw, string name)
+        {
+            tw.WriteLine("    public static class {0}", name);
             tw.WriteLine("    {");
         }
 
-        protected override void WriteBeforeNestedLiteralBody(TextWriter tw, string name)
-        {
-            tw.WriteLine("        public static class {0}", name);
-            tw.WriteLine("        {");
-        }
-
-        protected override void WriteAfterNestedLiteralBody(TextWriter tw) =>
-            tw.WriteLine("        }");
-
-        protected override void WriteAfterLiteralBody(TextWriter tw)
-        {
+        protected override void WriteAfterNestedLiteralBody(SourceCodeWriter tw) =>
             tw.WriteLine("    }");
+
+        protected override void WriteAfterLiteralBody(SourceCodeWriter tw, string namespaceName)
+        {
+            if (!string.IsNullOrWhiteSpace(namespaceName))
+            {
+                tw.WriteLine("}");
+            }
             tw.WriteLine("}");
         }
 
-        protected override void WriteAfterBody(TextWriter tw)
+        protected override void WriteAfterBody(SourceCodeWriter tw)
         {
             tw.WriteLine("namespace System.Reflection");
             tw.WriteLine("{");
-            tw.WriteLine("	[AttributeUsage(AttributeTargets.Assembly, AllowMultiple = true, Inherited = false)]");
-            tw.WriteLine("	internal sealed class AssemblyVersionMetadataAttribute : Attribute");
-            tw.WriteLine("	{");
-            tw.WriteLine("		public AssemblyVersionMetadataAttribute(string key, string value)");
-            tw.WriteLine("		{");
-            tw.WriteLine("			this.Key = key;");
-            tw.WriteLine("			this.Value = value;");
-            tw.WriteLine("		}");
-            tw.WriteLine("		public string Key { get; private set; }");
-            tw.WriteLine("		public string Value { get; private set; }");
-            tw.WriteLine("	}");
+            tw.WriteLine("    [AttributeUsage(AttributeTargets.Assembly, AllowMultiple = true, Inherited = false)]");
+            tw.WriteLine("    internal sealed class AssemblyVersionMetadataAttribute : Attribute");
+            tw.WriteLine("    {");
+            tw.WriteLine("        public AssemblyVersionMetadataAttribute(string key, string value)");
+            tw.WriteLine("        {");
+            tw.WriteLine("            this.Key = key;");
+            tw.WriteLine("            this.Value = value;");
+            tw.WriteLine("        }");
+            tw.WriteLine("        public string Key { get; private set; }");
+            tw.WriteLine("        public string Value { get; private set; }");
+            tw.WriteLine("    }");
             tw.WriteLine("}");
             tw.WriteLine();
         }

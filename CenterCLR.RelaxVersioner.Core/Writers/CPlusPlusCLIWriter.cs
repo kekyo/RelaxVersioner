@@ -25,7 +25,7 @@ namespace RelaxVersioner.Writers
     {
         public override string Language => "C++/CLI";
 
-        protected override void WriteBeforeBody(TextWriter tw)
+        protected override void WriteBeforeBody(SourceCodeWriter tw)
         {
             tw.WriteLine("#include \"stdafx.h\"");
             tw.WriteLine();
@@ -51,36 +51,47 @@ namespace RelaxVersioner.Writers
             tw.WriteLine();
         }
 
-        protected override void WriteImport(TextWriter tw, string namespaceName) =>
+        protected override void WriteImport(SourceCodeWriter tw, string namespaceName) =>
             tw.WriteLine("using namespace {0};", namespaceName.Replace(".", "::"));
         
         protected override string GetArgumentString(string argumentValue) =>
             string.Format("\"{0}\"", argumentValue.Replace("\\", "\\\\").Replace("\"", "\\\""));
 
-        protected override void WriteAttribute(TextWriter tw, string name, string args) =>
+        protected override void WriteAttribute(SourceCodeWriter tw, string name, string args) =>
             tw.WriteLine("[assembly: {0}({1})];", name.Replace(".", "::"), args);
 
-        protected override void WriteLiteral(TextWriter tw, string name, string value) =>
+        protected override void WriteLiteral(SourceCodeWriter tw, string name, string value) =>
             tw.WriteLine("    literal System::String^ {0} = {1};", name, value);
 
-        protected override void WriteBeforeLiteralBody(TextWriter tw)
+        protected override void WriteBeforeLiteralBody(SourceCodeWriter tw, string namespaceName)
         {
+            if (!string.IsNullOrWhiteSpace(namespaceName))
+            {
+                tw.WriteLine("namespace {0}", namespaceName);
+                tw.WriteLine("{");
+            }
+
             tw.WriteLine("private ref class ThisAssembly abstract sealed");
             tw.WriteLine("{");
             tw.WriteLine("public:");
         }
 
-        protected override void WriteBeforeNestedLiteralBody(TextWriter tw, string name)
+        protected override void WriteBeforeNestedLiteralBody(SourceCodeWriter tw, string name)
         {
             tw.WriteLine("    ref class {0} abstract sealed", name);
             tw.WriteLine("    {");
         }
 
-        protected override void WriteAfterNestedLiteralBody(TextWriter tw) =>
+        protected override void WriteAfterNestedLiteralBody(SourceCodeWriter tw) =>
             tw.WriteLine("    };");
 
-        protected override void WriteAfterLiteralBody(TextWriter tw)
+        protected override void WriteAfterLiteralBody(SourceCodeWriter tw, string namespaceName)
         {
+            if (!string.IsNullOrWhiteSpace(namespaceName))
+            {
+                tw.WriteLine("};");
+            }
+
             tw.WriteLine("};");
         }
     }

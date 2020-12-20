@@ -31,18 +31,18 @@ namespace RelaxVersioner.Writers
         public abstract string Language { get; }
 
         public void Write(
-            string outputFilePath,
+            ProcessorContext context,
             Dictionary<string, object> keyValues,
             DateTimeOffset generated,
             IEnumerable<Rule> ruleSet,
             IEnumerable<string> importSet)
         {
-            Debug.Assert(string.IsNullOrWhiteSpace(outputFilePath) == false);
+            Debug.Assert(string.IsNullOrWhiteSpace(context.OutputPath) == false);
             Debug.Assert(keyValues != null);
             Debug.Assert(ruleSet != null);
             Debug.Assert(importSet != null);
 
-            var targetFolder = Path.GetDirectoryName(outputFilePath);
+            var targetFolder = Path.GetDirectoryName(context.OutputPath);
             if (!string.IsNullOrWhiteSpace(targetFolder) && !Directory.Exists(targetFolder))
             {
                 try
@@ -56,8 +56,10 @@ namespace RelaxVersioner.Writers
                 }
             }
 
-            using (var tw = File.CreateText(outputFilePath))
+            using (var ftw = File.CreateText(context.OutputPath))
             {
+                var tw = new SourceCodeWriter(ftw);
+
                 this.WriteComment(tw,
                     $"This is auto-generated version information attributes by RelaxVersioner.{this.GetType().Assembly.GetName().Version}, Do not edit.");
                 this.WriteComment(tw,
@@ -66,9 +68,9 @@ namespace RelaxVersioner.Writers
 
                 this.WriteBeforeBody(tw);
 
-                foreach (var namespaceName in importSet)
+                foreach (var importNamespace in importSet)
                 {
-                    this.WriteImport(tw, namespaceName);
+                    this.WriteImport(tw, importNamespace);
                 }
                 tw.WriteLine();
 
@@ -86,7 +88,7 @@ namespace RelaxVersioner.Writers
                 }
                 tw.WriteLine();
                 
-                this.WriteBeforeLiteralBody(tw);
+                this.WriteBeforeLiteralBody(tw, context.Namespace);
                 
                 foreach (var g in ruleSet.GroupBy(rule => rule.Name + "@#@" + (rule.Key ?? "")))
                 {
@@ -116,7 +118,7 @@ namespace RelaxVersioner.Writers
                     }
                 }
 
-                this.WriteAfterLiteralBody(tw);
+                this.WriteAfterLiteralBody(tw, context.Namespace);
                 tw.WriteLine();
 
                 this.WriteAfterBody(tw);
@@ -125,41 +127,41 @@ namespace RelaxVersioner.Writers
             }
         }
 
-        protected virtual void WriteComment(TextWriter tw, string format, params object[] args) =>
+        protected virtual void WriteComment(SourceCodeWriter tw, string format, params object[] args) =>
             tw.WriteLine("// " + format, args);
 
-        protected virtual void WriteBeforeBody(TextWriter tw)
+        protected virtual void WriteBeforeBody(SourceCodeWriter tw)
         {
         }
 
-        protected abstract void WriteAttribute(TextWriter tw, string name, string args);
-        protected abstract void WriteLiteral(TextWriter tw, string name, string value);
+        protected abstract void WriteAttribute(SourceCodeWriter tw, string name, string args);
+        protected abstract void WriteLiteral(SourceCodeWriter tw, string name, string value);
 
         protected virtual string GetArgumentString(string argumentValue) =>
             string.Format("\"{0}\"", argumentValue.Replace("\"", "\"\""));
 
-        protected abstract void WriteBeforeLiteralBody(TextWriter tw);
-        protected abstract void WriteBeforeNestedLiteralBody(TextWriter tw, string name);
-        protected abstract void WriteAfterNestedLiteralBody(TextWriter tw);
-        protected abstract void WriteAfterLiteralBody(TextWriter tw);
+        protected abstract void WriteBeforeLiteralBody(SourceCodeWriter tw, string namespaceName);
+        protected abstract void WriteBeforeNestedLiteralBody(SourceCodeWriter tw, string name);
+        protected abstract void WriteAfterNestedLiteralBody(SourceCodeWriter tw);
+        protected abstract void WriteAfterLiteralBody(SourceCodeWriter tw, string namespaceName);
 
-        private void WriteAttributeWithArguments(TextWriter tw, string name, params object[] args) =>
+        private void WriteAttributeWithArguments(SourceCodeWriter tw, string name, params object[] args) =>
             this.WriteAttribute(
                 tw,
                 name,
                 string.Join(",", args.Select(arg => this.GetArgumentString((arg != null) ? arg.ToString() : string.Empty))));
 
-        private void WriteLiteralWithArgument(TextWriter tw, string name, object arg) =>
+        private void WriteLiteralWithArgument(SourceCodeWriter tw, string name, object arg) =>
             this.WriteLiteral(
                 tw,
                 name,
                 this.GetArgumentString((arg != null) ? arg.ToString() : string.Empty));
 
-        protected virtual void WriteImport(TextWriter tw, string namespaceName)
+        protected virtual void WriteImport(SourceCodeWriter tw, string namespaceName)
         {
         }
 
-        protected virtual void WriteAfterBody(TextWriter tw)
+        protected virtual void WriteAfterBody(SourceCodeWriter tw)
         {
         }
     }

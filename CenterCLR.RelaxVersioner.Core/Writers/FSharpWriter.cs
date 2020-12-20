@@ -17,6 +17,7 @@
 //
 /////////////////////////////////////////////////////////////////////////////////////////////////
 
+using System.Collections.Generic;
 using System.IO;
 
 namespace RelaxVersioner.Writers
@@ -25,7 +26,7 @@ namespace RelaxVersioner.Writers
     {
         public override string Language => "F#";
 
-        protected override void WriteBeforeBody(TextWriter tw)
+        protected override void WriteBeforeBody(SourceCodeWriter tw)
         {
             tw.WriteLine("namespace System.Reflection");
             tw.WriteLine("    open System");
@@ -34,7 +35,7 @@ namespace RelaxVersioner.Writers
             tw.WriteLine("    [<NoComparison>]");
             tw.WriteLine("    [<AutoSerializable(false)>]");
             tw.WriteLine("    [<AttributeUsage(AttributeTargets.Assembly, AllowMultiple = true, Inherited = false)>]");
-            tw.WriteLine("    type internal AssemblyVersionMetadataAttribute(key: string, value: string) =");
+            tw.WriteLine("    type internal AssemblyMetadataAttribute(key: string, value: string) =");
             tw.WriteLine("        inherit Attribute()");
             tw.WriteLine("        member this.Key = key");
             tw.WriteLine("        member this.Value = value");
@@ -43,36 +44,42 @@ namespace RelaxVersioner.Writers
             tw.WriteLine("namespace global");
         }
 
-        protected override void WriteImport(TextWriter tw, string namespaceName) =>
+        protected override void WriteImport(SourceCodeWriter tw, string namespaceName) =>
             tw.WriteLine("    open {0}", namespaceName);
         
         protected override string GetArgumentString(string argumentValue) =>
             string.Format("@\"{0}\"", argumentValue.Replace("\"", "\"\""));
 
-        protected override void WriteAttribute(TextWriter tw, string name, string args) =>
+        protected override void WriteAttribute(SourceCodeWriter tw, string name, string args) =>
             tw.WriteLine("    [<assembly: {0}({1})>]", name, args);
 
-        protected override void WriteLiteral(TextWriter tw, string name, string value)
+        protected override void WriteLiteral(SourceCodeWriter tw, string name, string value)
         {
             tw.WriteLine("        [<Literal>]");
             tw.WriteLine("        let {0} = @\"{1}\";", name, value);
         }
 
-        protected override void WriteBeforeLiteralBody(TextWriter tw) =>
+        protected override void WriteBeforeLiteralBody(SourceCodeWriter tw, string namespaceName)
+        {
+            if (!string.IsNullOrWhiteSpace(namespaceName))
+            {
+                tw.WriteLine("    namespace {0}", namespaceName);
+            }
             tw.WriteLine("    module internal ThisAssembly =");
+        }
 
-        protected override void WriteBeforeNestedLiteralBody(TextWriter tw, string name) =>
+        protected override void WriteBeforeNestedLiteralBody(SourceCodeWriter tw, string name) =>
             tw.WriteLine("        module {0} =", name);
 
-        protected override void WriteAfterNestedLiteralBody(TextWriter tw)
+        protected override void WriteAfterNestedLiteralBody(SourceCodeWriter tw)
         {
         }
 
-        protected override void WriteAfterLiteralBody(TextWriter tw)
+        protected override void WriteAfterLiteralBody(SourceCodeWriter tw, string namespaceName)
         {
         }
 
-        protected override void WriteAfterBody(TextWriter tw)
+        protected override void WriteAfterBody(SourceCodeWriter tw)
         {
             tw.WriteLine("    do()");
             tw.WriteLine();

@@ -36,20 +36,20 @@
             "versionLabel" is extract numerical-notate version string [1.2.3.4] or [v1.2.3.4] from git repository tags traverse start HEAD.
             If not found, use [0.0.1].
         -->
-        <Rule name="AssemblyVersionAttribute">{versionLabel}</Rule>
+        <Rule name="AssemblyVersion">{versionLabel}</Rule>
 
         <!--
             "safeVersion" is extract committed date (from commmiter) from git repository HEAD.
             "safeVersion" specialized from "committer.When".
             (The format is safe-numerical-notate version string [2016.2.14.12345]. (Last number is 2sec prec.))
         -->
-        <Rule name="AssemblyFileVersionAttribute">{safeVersion}</Rule>
+        <Rule name="AssemblyFileVersion">{safeVersion}</Rule>
 
         <!--
             "commitId" is extract commit id from git repository HEAD.
             "commitId" alias to "commit.Sha".
         -->
-        <Rule name="AssemblyInformationalVersionAttribute">{commitId}</Rule>
+        <Rule name="AssemblyInformationalVersion">{commitId}</Rule>
 
         <!--
             "key" attribute is only using for "AssemblyVersionMetadataAttribute".
@@ -59,13 +59,14 @@
             "buildIdentifier" is passing from MSBuild property named "RelaxVersionerBuildIdentifier" or "BuildIdentifier". We can use in CI building.
             "generated" is generated date by RelaxVersioner.
         -->
-        <Rule name="AssemblyVersionMetadataAttribute" key="Date">{committer.When:R}</Rule>
-        <Rule name="AssemblyVersionMetadataAttribute" key="Branch">{branch.FriendlyName}</Rule>
-        <Rule name="AssemblyVersionMetadataAttribute" key="Tags">{tags}</Rule>
-        <Rule name="AssemblyVersionMetadataAttribute" key="Author">{author}</Rule>
-        <Rule name="AssemblyVersionMetadataAttribute" key="Committer">{committer}</Rule>
-        <Rule name="AssemblyVersionMetadataAttribute" key="Message">{commit.MessageShort}</Rule>
-        <Rule name="AssemblyVersionMetadataAttribute" key="Build">{buildIdentifier}</Rule>
-        <Rule name="AssemblyVersionMetadataAttribute" key="Generated">{generated:R}</Rule>
+        <Rule name="AssemblyMetadata" key="Date">{committer.When:R}</Rule>
+        <Rule name="AssemblyMetadata" key="Branch">{branch.FriendlyName}</Rule>
+        <Rule name="AssemblyMetadata" key="Tags">{tags}</Rule>
+        <Rule name="AssemblyMetadata" key="Author">{author}</Rule>
+        <Rule name="AssemblyMetadata" key="Committer">{committer}</Rule>
+        <Rule name="AssemblyMetadata" key="Message">{commit.MessageShort}</Rule>
+        <Rule name="AssemblyMetadata" key="Build">{buildIdentifier}</Rule>
+        <Rule name="AssemblyMetadata" key="Generated">{generated:R}</Rule>
+        <Rule name="AssemblyMetadata" key="TargetFramework">{tfm}</Rule>
     </WriterRules>
 </RelaxVersioner>

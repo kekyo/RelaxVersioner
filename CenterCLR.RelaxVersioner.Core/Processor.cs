@@ -27,6 +27,19 @@ using LibGit2Sharp;
 
 namespace RelaxVersioner
 {
+    public sealed class ProcessorContext
+    {
+        public string ProjectDirectory;
+        public string OutputPath;
+        public string Language;
+        public string Namespace;
+        public string TargetFramework;
+        public string TargetFrameworkIdentity;
+        public string TargetFrameworkVersion;
+        public string TargetFrameworkProfile;
+        public string BuildIdentifier;
+    }
+
     public sealed class Processor
     {
         private static readonly Branch[] emtyBranches = new Branch[0];
@@ -129,11 +142,10 @@ namespace RelaxVersioner
         private static Result WriteVersionSourceFile(
             Logger logger,
             WriterBase writer,
-            string outputPath,
+            ProcessorContext context,
             Branch branchHint,
             Dictionary<string, Tag[]> tagsDictionary,
             Dictionary<string, Branch[]> branchesDictionary,
-            string buildIdentifier,
             DateTimeOffset generated,
             IEnumerable<Rule> ruleSet,
             IEnumerable<string> importSet)
@@ -179,7 +191,12 @@ namespace RelaxVersioner
                     {"commitId", commitId},
                     {"versionLabel", versionLabel},
                     {"safeVersion", safeVersion},
-                    {"buildIdentifier", buildIdentifier}
+                    {"buildIdentifier", context.BuildIdentifier},
+                    {"namespace", context.Namespace},
+                    {"tfm", context.TargetFramework},
+                    {"tfid", context.TargetFrameworkIdentity},
+                    {"tfv", context.TargetFrameworkVersion},
+                    {"tfp", context.TargetFrameworkProfile},
                 };
 
             foreach (var entry in keyValues)
@@ -187,9 +204,9 @@ namespace RelaxVersioner
                 logger.Message(LogImportance.Low, "Values: {0}={1}", entry.Key, entry.Value);
             }
 
-            if (!string.IsNullOrWhiteSpace(outputPath))
+            if (!string.IsNullOrWhiteSpace(context.OutputPath))
             {
-                writer.Write(outputPath, keyValues, generated, ruleSet, importSet);
+                writer.Write(context, keyValues, generated, ruleSet, importSet);
             }
 
             return new Result(
@@ -204,24 +221,20 @@ namespace RelaxVersioner
                 commit.Message);
         }
 
-        public Result Run(
-            string projectDirectory,
-            string outputPath,
-            string language,
-            string buildIdentifier)
+        public Result Run(ProcessorContext context)
         {
-            var writer = writers[language];
+            var writer = writers[context.Language];
 
             var elementSets = Utilities.GetElementSets(
-                Utilities.LoadRuleSets(projectDirectory).
+                Utilities.LoadRuleSets(context.ProjectDirectory).
                     Concat(new[] { Utilities.GetDefaultRuleSet() }));
 
-            var elementSet = elementSets[language];
+            var elementSet = elementSets[context.Language];
             var importSet = Utilities.AggregateImports(elementSet);
             var ruleSet = Utilities.AggregateRules(elementSet);
 
             // Traverse git repository between projectDirectory and the root.
-            var repository = Utilities.OpenRepository(logger, projectDirectory);
+            var repository = Utilities.OpenRepository(logger, context.ProjectDirectory);
 
             try
             {
@@ -248,11 +261,10 @@ namespace RelaxVersioner
                 return WriteVersionSourceFile(
                     logger,
                     writer,
-                    outputPath,
+                    context,
                     repository?.Head,
                     tags,
                     branches,
-                    buildIdentifier,
                     DateTimeOffset.Now,
                     ruleSet,
                     importSet);

@@ -25,42 +25,48 @@ namespace RelaxVersioner.Writers
     {
         public override string Language => "VB";
 
-        protected override void WriteComment(TextWriter tw, string format, params object[] args) =>
+        protected override void WriteComment(SourceCodeWriter tw, string format, params object[] args) =>
             tw.WriteLine("' " + format, args);
 
-        protected override void WriteImport(TextWriter tw, string namespaceName) =>
+        protected override void WriteImport(SourceCodeWriter tw, string namespaceName) =>
             tw.WriteLine("Imports {0}", namespaceName);
 
         protected override string GetArgumentString(string argumentValue) =>
             string.Format("\"{0}\"", argumentValue.Replace("\"", "\"\""));
 
-        protected override void WriteAttribute(TextWriter tw, string name, string args) =>
+        protected override void WriteAttribute(SourceCodeWriter tw, string name, string args) =>
             tw.WriteLine("<Assembly: {0}({1})>", name, args);
         
-        protected override void WriteLiteral(TextWriter tw, string name, string value) =>
+        protected override void WriteLiteral(SourceCodeWriter tw, string name, string value) =>
             tw.WriteLine("    Public Const {0} As String = {1}", name, value);
 
-        protected override void WriteBeforeLiteralBody(TextWriter tw)
+        protected override void WriteBeforeLiteralBody(SourceCodeWriter tw, string namespaceName)
         {
-            tw.WriteLine("Namespace global");
+            if (!string.IsNullOrWhiteSpace(namespaceName))
+            {
+                tw.WriteLine("Namespace {0}", namespaceName);
+            }
             tw.WriteLine("  Friend NotInheritable Class ThisAssembly");
         }
 
-        protected override void WriteBeforeNestedLiteralBody(TextWriter tw, string name)
+        protected override void WriteBeforeNestedLiteralBody(SourceCodeWriter tw, string name)
         {
             tw.WriteLine("    Public NotInheritable Class {0}", name);
         }
 
-        protected override void WriteAfterNestedLiteralBody(TextWriter tw) =>
+        protected override void WriteAfterNestedLiteralBody(SourceCodeWriter tw) =>
             tw.WriteLine("	  End Class");
 
-        protected override void WriteAfterLiteralBody(TextWriter tw)
+        protected override void WriteAfterLiteralBody(SourceCodeWriter tw, string namespaceName)
         {
             tw.WriteLine("	End Class");
-            tw.WriteLine("End Namespace");
+            if (!string.IsNullOrWhiteSpace(namespaceName))
+            {
+                tw.WriteLine("End Namespace");
+            }
         }
 
-        protected override void WriteAfterBody(TextWriter tw)
+        protected override void WriteAfterBody(SourceCodeWriter tw)
         {
             tw.WriteLine("Namespace global.System.Reflection");
             tw.WriteLine("	<AttributeUsage(AttributeTargets.Assembly, AllowMultiple := True, Inherited := False)>");
