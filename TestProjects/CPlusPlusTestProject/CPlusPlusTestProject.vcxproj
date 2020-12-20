@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <Project DefaultTargets="Build" ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="..\packages\RelaxVersioner.1.0.44\build\RelaxVersioner.props" Condition="Exists('..\packages\RelaxVersioner.1.0.44\build\RelaxVersioner.props')" />
   <ItemGroup Label="ProjectConfigurations">
     <ProjectConfiguration Include="Debug|Win32">
       <Configuration>Debug</Configuration>
@@ -58,7 +59,9 @@
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
   <ImportGroup Label="ExtensionSettings">
   </ImportGroup>
-  <ImportGroup Label="Shared" />
+  <ImportGroup Label="Shared">
+    <Import Project="..\packages\RelaxVersioner.1.0.44\build\RelaxVersioner.targets" Condition="Exists('..\packages\RelaxVersioner.1.0.44\build\RelaxVersioner.targets')" />
+  </ImportGroup>
   <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
   </ImportGroup>
@@ -160,5 +163,15 @@
   <ItemGroup>
     <Image Include="app.ico" />
   </ItemGroup>
+  <ItemGroup>
+    <None Include="packages.config" />
+  </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
+  <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
+    <PropertyGroup>
+      <ErrorText>このプロジェクトは、このコンピューター上にない NuGet パッケージを参照しています。それらのパッケージをダウンロードするには、[NuGet パッケージの復元] を使用します。詳細については、http://go.microsoft.com/fwlink/?LinkID=322105 を参照してください。見つからないファイルは {0} です。</ErrorText>
+    </PropertyGroup>
+    <Error Condition="!Exists('..\packages\RelaxVersioner.1.0.44\build\RelaxVersioner.props')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\RelaxVersioner.1.0.44\build\RelaxVersioner.props'))" />
+    <Error Condition="!Exists('..\packages\RelaxVersioner.1.0.44\build\RelaxVersioner.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\RelaxVersioner.1.0.44\build\RelaxVersioner.targets'))" />
+  </Target>
 </Project>

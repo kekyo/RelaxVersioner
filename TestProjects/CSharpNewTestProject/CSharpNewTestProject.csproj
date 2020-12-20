@@ -19,4 +19,11 @@
     <PackageIconUrl>https://github.com/kekyo/CenterCLR.RelaxVersioner/raw/master/Images/CenterCLR.RelaxVersioner.100.png</PackageIconUrl>
   </PropertyGroup>
 
+  <ItemGroup>
+    <PackageReference Include="RelaxVersioner" Version="1.0.44">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
+  </ItemGroup>
+
 </Project>
