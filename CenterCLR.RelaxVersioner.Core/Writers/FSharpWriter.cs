@@ -74,14 +74,20 @@ namespace RelaxVersioner.Writers
 
         protected override void WriteBeforeLiteralBody(SourceCodeWriter tw)
         {
+            tw.WriteLine("do()");
+            tw.UnShift();
+            tw.WriteLine();
+
             if (!string.IsNullOrWhiteSpace(tw.Context.Namespace))
             {
-                tw.WriteLine("do()");
-                tw.UnShift();
-                tw.WriteLine();
                 tw.WriteLine("namespace {0}", tw.Context.Namespace);
-                tw.Shift();
             }
+            else
+            {
+                tw.WriteLine("namespace global");
+            }
+            tw.Shift();
+
             tw.WriteLine("module internal ThisAssembly =");
             tw.Shift();
         }
@@ -97,6 +103,7 @@ namespace RelaxVersioner.Writers
 
         protected override void WriteAfterLiteralBody(SourceCodeWriter tw)
         {
+            tw.UnShift();
             if (!string.IsNullOrWhiteSpace(tw.Context.Namespace))
             {
                 tw.UnShift();

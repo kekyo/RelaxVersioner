@@ -77,7 +77,20 @@ namespace global
   [<assembly: AssemblyMetadata("Committer","Kouji Matsui <k@kekyo.net>")>]
   [<assembly: AssemblyMetadata("Message","Fixed tab")>]
   do()
+
+namespace global
+  module internal ThisAssembly =
+  [<Literal>]
+  let AssemblyVersion = @"0.0.1";
+  [<Literal>]
+  let AssemblyFileVersion = @"2020.12.20.31761";
+  [<Literal>]
+  let AssemblyInformationalVersion = @"(Unknown commit id)";
+  module AssemblyMetadata =
+    [<Literal>]
+    let Date = @"Sun, 20 Dec 2020 08:38:43 GMT";
 // TODO:
+  do()
 ```
 
 ### For VB.NET:

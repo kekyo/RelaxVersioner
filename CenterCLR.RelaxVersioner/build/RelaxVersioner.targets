@@ -24,7 +24,6 @@
   <!-- Common -->
   <PropertyGroup>
     <!-- This path identicate auto-generated source code by RelaxVersioner. -->
-    <RelaxVersionerNamespace Condition="'$(RelaxVersionerNamespace)' == ''">$(RootNamespace)</RelaxVersionerNamespace>
     <RelaxVersionerOutputPath Condition="'$(RelaxVersionerOutputPath)' == ''">$([System.IO.Path]::Combine('$(MSBuildProjectDirectory)','$(IntermediateOutputPath)','RelaxVersioner$(DefaultLanguageSourceExtension)'))</RelaxVersionerOutputPath>
     <BuildIdentifier Condition="'$(BuildIdentifier)' == ''"></BuildIdentifier>
     <RelaxVersionerBuildIdentifier Condition="'$(RelaxVersionerBuildIdentifier)' == ''">$(BuildIdentifier)</RelaxVersionerBuildIdentifier>
@@ -40,6 +39,13 @@
   <PropertyGroup Condition="'$(Language)' == 'F#'">
     <!-- HACK: https://github.com/fsharp/fsharp/issues/289 -->
     <NoWarn>$(NoWarn) 2003</NoWarn>
+    <RelaxVersionerNamespace Condition="'$(RelaxVersionerNamespace)' == ''"></RelaxVersionerNamespace>
+  </PropertyGroup>
+
+  <!-- ======================== -->
+  <!-- For all languages except F# -->
+  <PropertyGroup Condition="'$(Language)' != 'F#'">
+    <RelaxVersionerNamespace Condition="'$(RelaxVersionerNamespace)' == ''">$(RootNamespace)</RelaxVersionerNamespace>
   </PropertyGroup>
 
   <!-- ======================== -->
