@@ -17,7 +17,7 @@
 * If you use RelaxVersioner, version handling ONLY use for Git tags/branches/commit messages. Of course you don't need more tooling usage, and easy managing continuous-integration environments.
 * Target language/environments:
   * C#, F#, VB.NET, C++/CLI and NuGet packaging (dotnet cli pack).
-  * Visual Studio 2019/2017/2015, dotnet SDK cli, MSBuild on netstandard2.0/net46 (NOT your project platform) and related IDEs.
+  * Visual Studio 2019/2017/2015, dotnet SDK cli, MSBuild on netcoreapp2.1/net461 environment (NOT your project platform) and related IDEs.
   * Linux(x64) and Windows(x86/x64).  (The project validates only them, but maybe runs same as [libgit2sharp](https://github.com/libgit2/libgit2sharp) required environment)
 * Auto collect version information from local Git repository tags/branch name.
 * Independent AssemblyInfo.cs file, RelaxVersioner is output into temporary file. (No direct manipulate AssemblyInfo file).
@@ -198,7 +198,7 @@ Apply `fetch-depth: 0` predication into your build.yml script.
 [You can understand with this real script.](https://github.com/kekyo/CenterCLR.RelaxVersioner/blob/master/.github/workflows/build.yml#L13)
 
 ## Another topics
-* RelaxVersioner supported on Visual Studio 2012/2013 only installed .NET Framework 4.6 or upper. Because it requires uses compatibility for net46 MSBuild.Framework assembly.
+* RelaxVersioner supported on Visual Studio 2012/2013 only installed .NET Framework 4.6 or upper. Because it requires uses compatibility for net461 MSBuild.Framework assembly.
 
 ## TODO:
 * Support exclude rule set.

@@ -23,11 +23,7 @@
     <file src="build/RelaxVersioner.targets" target="build" />
     <file src="buildMultiTargeting/RelaxVersioner.props" target="buildMultiTargeting" />
     <file src="buildMultiTargeting/RelaxVersioner.targets" target="buildMultiTargeting" />
-    <file src="bin\$Configuration$\net46\publish\**\*.*" target="tools/net46" />
-    <file src="bin\$Configuration$\netcoreapp2.0\publish\**\*.*" target="tools/netcoreapp2.0" />
+    <file src="bin\$Configuration$\net461\publish\**\*.*" target="tools/net461" />
     <file src="bin\$Configuration$\netcoreapp2.1\publish\**\*.*" target="tools/netcoreapp2.1" />
-    <file src="bin\$Configuration$\netcoreapp3.0\publish\**\*.*" target="tools/netcoreapp3.0" />
-    <file src="bin\$Configuration$\netcoreapp3.1\publish\**\*.*" target="tools/netcoreapp3.1" />
-    <file src="bin\$Configuration$\net5.0\publish\**\*.*" target="tools/net5.0" />
   </files>
 </package>

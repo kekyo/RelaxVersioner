@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFrameworks>net46;netstandard2.0;netstandard2.1;net5.0</TargetFrameworks>
+    <TargetFrameworks>net461;netstandard2.0;netstandard2.1;net5.0</TargetFrameworks>
 
     <AssemblyName>RelaxVersioner.Core</AssemblyName>
     <LangVersion>latest</LangVersion>
@@ -33,7 +33,7 @@
 
   <ItemGroup>
     <PackageReference Include="RelaxVersioner" Version="1.0.21" PrivateAssets="All" />
-    <PackageReference Include="LibGit2Sharp" Version="0.27.0-preview-0034" />
+    <PackageReference Include="LibGit2Sharp" Version="0.27.0-preview-0096" />
     <PackageReference Include="Microsoft.NETFramework.ReferenceAssemblies" Version="1.0.0" PrivateAssets="All" />
     <PackageReference Include="NamingFormatter" Version="2.0.16" />
   </ItemGroup>
