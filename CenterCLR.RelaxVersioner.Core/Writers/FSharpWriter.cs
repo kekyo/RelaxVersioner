@@ -17,9 +17,6 @@
 //
 /////////////////////////////////////////////////////////////////////////////////////////////////
 
-using System.Collections.Generic;
-using System.IO;
-
 namespace RelaxVersioner.Writers
 {
     internal sealed class FSharpWriter : WriterBase
@@ -28,60 +25,88 @@ namespace RelaxVersioner.Writers
 
         protected override void WriteBeforeBody(SourceCodeWriter tw)
         {
+            var required = IsRequiredSelfHostingMetadataAttribute(tw.Context);
+            if (!required)
+            {
+                tw.WriteLine("#if NET20 || NET30 || NET35 || NET40");
+            }
+
             tw.WriteLine("namespace System.Reflection");
-            tw.WriteLine("    open System");
-            tw.WriteLine("    [<Sealed>]");
-            tw.WriteLine("    [<NoEquality>]");
-            tw.WriteLine("    [<NoComparison>]");
-            tw.WriteLine("    [<AutoSerializable(false)>]");
-            tw.WriteLine("    [<AttributeUsage(AttributeTargets.Assembly, AllowMultiple = true, Inherited = false)>]");
-            tw.WriteLine("    type internal AssemblyMetadataAttribute(key: string, value: string) =");
-            tw.WriteLine("        inherit Attribute()");
-            tw.WriteLine("        member this.Key = key");
-            tw.WriteLine("        member this.Value = value");
+            tw.Shift();
+            tw.WriteLine("open System");
+            tw.WriteLine("[<Sealed>]");
+            tw.WriteLine("[<NoEquality>]");
+            tw.WriteLine("[<NoComparison>]");
+            tw.WriteLine("[<AutoSerializable(false)>]");
+            tw.WriteLine("[<AttributeUsage(AttributeTargets.Assembly, AllowMultiple = true, Inherited = false)>]");
+            tw.WriteLine("type internal AssemblyMetadataAttribute(key: string, value: string) =");
+            tw.Shift();
+            tw.WriteLine("inherit Attribute()");
+            tw.WriteLine("member this.Key = key");
+            tw.WriteLine("member this.Value = value");
+            tw.UnShift();
+            tw.UnShift();
             tw.WriteLine();
 
+            if (!required)
+            {
+                tw.WriteLine("#endif");
+            }
+
             tw.WriteLine("namespace global");
+            tw.Shift();
         }
 
         protected override void WriteImport(SourceCodeWriter tw, string namespaceName) =>
-            tw.WriteLine("    open {0}", namespaceName);
+            tw.WriteLine("open {0}", namespaceName);
         
         protected override string GetArgumentString(string argumentValue) =>
             string.Format("@\"{0}\"", argumentValue.Replace("\"", "\"\""));
 
         protected override void WriteAttribute(SourceCodeWriter tw, string name, string args) =>
-            tw.WriteLine("    [<assembly: {0}({1})>]", name, args);
+            tw.WriteLine("[<assembly: {0}({1})>]", name, args);
 
         protected override void WriteLiteral(SourceCodeWriter tw, string name, string value)
         {
-            tw.WriteLine("        [<Literal>]");
-            tw.WriteLine("        let {0} = @\"{1}\";", name, value);
+            tw.WriteLine("[<Literal>]");
+            tw.WriteLine("let {0} = @\"{1}\";", name, value);
         }
 
-        protected override void WriteBeforeLiteralBody(SourceCodeWriter tw, string namespaceName)
+        protected override void WriteBeforeLiteralBody(SourceCodeWriter tw)
         {
-            if (!string.IsNullOrWhiteSpace(namespaceName))
+            if (!string.IsNullOrWhiteSpace(tw.Context.Namespace))
             {
-                tw.WriteLine("    namespace {0}", namespaceName);
+                tw.WriteLine("namespace {0}", tw.Context.Namespace);
+                tw.Shift();
             }
-            tw.WriteLine("    module internal ThisAssembly =");
+            tw.WriteLine("module internal ThisAssembly =");
+            tw.Shift();
         }
 
-        protected override void WriteBeforeNestedLiteralBody(SourceCodeWriter tw, string name) =>
-            tw.WriteLine("        module {0} =", name);
+        protected override void WriteBeforeNestedLiteralBody(SourceCodeWriter tw, string name)
+        {
+            tw.WriteLine("module {0} =", name);
+            tw.Shift();
+        }
 
         protected override void WriteAfterNestedLiteralBody(SourceCodeWriter tw)
         {
+            tw.UnShift();
         }
 
-        protected override void WriteAfterLiteralBody(SourceCodeWriter tw, string namespaceName)
+        protected override void WriteAfterLiteralBody(SourceCodeWriter tw)
         {
+            if (!string.IsNullOrWhiteSpace(tw.Context.Namespace))
+            {
+                tw.UnShift();
+            }
+            tw.UnShift();
         }
 
         protected override void WriteAfterBody(SourceCodeWriter tw)
         {
-            tw.WriteLine("    do()");
+            tw.WriteLine("do()");
+            tw.UnShift();
             tw.WriteLine();
         }
     }

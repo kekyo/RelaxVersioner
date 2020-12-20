@@ -28,8 +28,13 @@ namespace RelaxVersioner.Writers
         private int indentLevel;
         private string indent = string.Empty;
 
-        public SourceCodeWriter(TextWriter tw) =>
+        public readonly ProcessorContext Context;
+
+        public SourceCodeWriter(TextWriter tw, ProcessorContext context)
+        {
+            this.Context = context;
             this.tw = tw;
+        }
 
         public void WriteLine() =>
             this.tw.WriteLine();

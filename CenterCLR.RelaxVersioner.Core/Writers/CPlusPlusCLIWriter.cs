@@ -17,8 +17,6 @@
 //
 /////////////////////////////////////////////////////////////////////////////////////////////////
 
-using System.IO;
-
 namespace RelaxVersioner.Writers
 {
     internal sealed class CPlusPlusCLIWriter : WriterBase
@@ -29,6 +27,12 @@ namespace RelaxVersioner.Writers
         {
             tw.WriteLine("#include \"stdafx.h\"");
             tw.WriteLine();
+
+            var required = IsRequiredSelfHostingMetadataAttribute(tw.Context);
+            if (!required)
+            {
+                tw.WriteLine("#if defined(NET20) || defined(NET30) || defined(NET35) || defined(NET40)");
+            }
 
             tw.WriteLine("namespace System");
             tw.WriteLine("{");
@@ -48,6 +52,12 @@ namespace RelaxVersioner.Writers
             tw.WriteLine("		};");
             tw.WriteLine("	}");
             tw.WriteLine("}");
+
+            if (!required)
+            {
+                tw.WriteLine("#endif");
+            }
+
             tw.WriteLine();
         }
 
@@ -60,38 +70,45 @@ namespace RelaxVersioner.Writers
         protected override void WriteAttribute(SourceCodeWriter tw, string name, string args) =>
             tw.WriteLine("[assembly: {0}({1})];", name.Replace(".", "::"), args);
 
-        protected override void WriteLiteral(SourceCodeWriter tw, string name, string value) =>
-            tw.WriteLine("    literal System::String^ {0} = {1};", name, value);
-
-        protected override void WriteBeforeLiteralBody(SourceCodeWriter tw, string namespaceName)
+        protected override void WriteBeforeLiteralBody(SourceCodeWriter tw)
         {
-            if (!string.IsNullOrWhiteSpace(namespaceName))
+            if (!string.IsNullOrWhiteSpace(tw.Context.Namespace))
             {
-                tw.WriteLine("namespace {0}", namespaceName);
+                tw.WriteLine("namespace {0}", tw.Context.Namespace);
                 tw.WriteLine("{");
+                tw.Shift();
             }
 
             tw.WriteLine("private ref class ThisAssembly abstract sealed");
             tw.WriteLine("{");
             tw.WriteLine("public:");
+            tw.Shift();
         }
 
         protected override void WriteBeforeNestedLiteralBody(SourceCodeWriter tw, string name)
         {
-            tw.WriteLine("    ref class {0} abstract sealed", name);
-            tw.WriteLine("    {");
+            tw.WriteLine("ref class {0} abstract sealed", name);
+            tw.WriteLine("{");
+            tw.Shift();
         }
 
-        protected override void WriteAfterNestedLiteralBody(SourceCodeWriter tw) =>
-            tw.WriteLine("    };");
+        protected override void WriteLiteral(SourceCodeWriter tw, string name, string value) =>
+            tw.WriteLine("literal System::String^ {0} = {1};", name, value);
 
-        protected override void WriteAfterLiteralBody(SourceCodeWriter tw, string namespaceName)
+        protected override void WriteAfterNestedLiteralBody(SourceCodeWriter tw)
         {
-            if (!string.IsNullOrWhiteSpace(namespaceName))
+            tw.UnShift();
+            tw.WriteLine("};");
+        }
+
+        protected override void WriteAfterLiteralBody(SourceCodeWriter tw)
+        {
+            if (!string.IsNullOrWhiteSpace(tw.Context.Namespace))
             {
+                tw.UnShift();
                 tw.WriteLine("};");
             }
-
+            tw.UnShift();
             tw.WriteLine("};");
         }
     }

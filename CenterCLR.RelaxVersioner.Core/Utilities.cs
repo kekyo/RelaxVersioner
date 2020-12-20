@@ -82,7 +82,8 @@ namespace RelaxVersioner
                 {
                     try
                     {
-                        logger.Message(LogImportance.High, "libgit2sharp.NativeLibraryPath, Path={0}", GlobalSettings.NativeLibraryPath ?? "(null)");
+                        logger.Message(LogImportance.Low, "libgit2sharp.NativeLibraryPath, Path={0}", GlobalSettings.NativeLibraryPath ?? "(null)");
+
                         var r = new Repository(GetDirectoryNameWithTrailingSeparator(path));
                         logger.Message(LogImportance.Low, "Repository opened, Path={0}", path);
                         return r;
