@@ -24,7 +24,7 @@
     <RepositoryType>git</RepositoryType>
     <PackageLicenseExpression>Apache-2.0</PackageLicenseExpression>
     <PackageProjectUrl>https://github.com/kekyo/CenterCLR.RelaxVersioner.git</PackageProjectUrl>
-    <PackageIcon>RelaxVersioner.100.png</PackageIcon>
+    <PackageIcon>CenterCLR.RelaxVersioner.100.png</PackageIcon>
     <RepositoryUrl>https://github.com/kekyo/CenterCLR.RelaxVersioner.git</RepositoryUrl>
     <PackageTags>version;generator;git;auto;easy;generate;versioning;continuous;integration;delivery;tag;branch;assemblyinfo;msbuild</PackageTags>
     <PublishRepositoryUrl>true</PublishRepositoryUrl>
@@ -41,6 +41,10 @@
   <ItemGroup>
     <None Remove="DefaultRuleSet.rules" />
     <EmbeddedResource Include="DefaultRuleSet.rules" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Include="..\Images\CenterCLR.RelaxVersioner.100.png" Link="Images\CenterCLR.RelaxVersioner.100.png" Pack="true" PackagePath="\" />
   </ItemGroup>
 
 </Project>
