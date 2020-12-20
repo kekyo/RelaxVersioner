@@ -136,7 +136,10 @@ namespace RelaxVersioner.Writers
             tfv.StartsWith("v") &&
             tfv.Substring(1) is { } vs &&
             Version.TryParse(vs, out var version) &&
-            (version.Major< 4 || (version.Major == 4 && version.Minor< 5));
+            ((version.Major < 4) ||
+             (version.Major == 4) && (version.Minor == 0) &&
+             context.TargetFrameworkProfile is {} tfp &&
+             (string.CompareOrdinal(tfp, "Client") == 0));
 
         protected virtual void WriteComment(SourceCodeWriter tw, string format, params object[] args) =>
             tw.WriteLine("// " + format, args);

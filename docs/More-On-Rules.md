@@ -25,7 +25,7 @@ A `Rule` element may also have a `key` attribute, but that's just for making you
 <Import>System.Reflection</Import>
 <Rule name="AssemblyMetadata" key="Branch">Nacho Libre</Rule>
 <Rule name="AssemblyMetadata" key="Committer">Jack Black</Rule>
-<Rule name="AssemblyMetadata" key="Message">Change song to Encarnación<Rule>
+<Rule name="AssemblyMetadata" key="Message">Change song to Encarnación</Rule>
 ```
 ```csharp
 using System.Reflection;
@@ -35,7 +35,7 @@ using System.Reflection;
 [assembly: AssemblyMetadata(@"Message",@"Change song to Encarnación")]
 ```
 
-There is no such thing as `AssemblyMetadata` in the .NET Framework 4.0 or above, so RelaxVersioner will generate the necessary code in the source file.
+There is no such thing as `AssemblyMetadata` in the .NET Framework 3.5 or above, so RelaxVersioner will generate the necessary code in the source file.
 
 ## Key Values
 

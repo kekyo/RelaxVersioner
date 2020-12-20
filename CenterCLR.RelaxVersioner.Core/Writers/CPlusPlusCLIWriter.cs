@@ -31,7 +31,8 @@ namespace RelaxVersioner.Writers
             var required = IsRequiredSelfHostingMetadataAttribute(tw.Context);
             if (!required)
             {
-                tw.WriteLine("#if defined(NET20) || defined(NET30) || defined(NET35) || defined(NET40)");
+                tw.WriteLine("#if defined(NET20) || defined(NET30) || defined(NET35) || defined(NET40_CLIENT)");
+                tw.WriteLine();
             }
 
             tw.WriteLine("namespace System");
@@ -55,6 +56,7 @@ namespace RelaxVersioner.Writers
 
             if (!required)
             {
+                tw.WriteLine();
                 tw.WriteLine("#endif");
             }
 

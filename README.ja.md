@@ -313,6 +313,8 @@ RelaxVersioner (や、その他の自動バージョニングツール) は、
 * Under Apache v2
 
 ## 履歴
+* 2.0.5:
+  * C#でnet40-clientを使用する場合に、AssemblyMetadataAttributeクラスの重複ウォーニングが発生していたのを修正。
 * 2.0.0:
   * 2.0公開 🎉
   * .NET 5とLinux環境の(正式な)サポート。

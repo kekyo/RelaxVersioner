@@ -310,6 +310,8 @@ Apply `fetch-depth: 0` predication into your build.yml script.
 * Under Apache v2
 
 ## History
+* 2.0.5:
+  * Fixed duplicates AssemblyMetadataAttribute class on C# and net40-client platform.
 * 2.0.0:
   * Reached 2.0 🎉
   * Support .NET 5 and Linux environments.
