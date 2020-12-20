@@ -54,7 +54,7 @@ namespace RelaxVersioner.Writers
         }
 
         protected override void WriteLiteral(SourceCodeWriter tw, string name, string value) =>
-            tw.WriteLine("public const string {0} = {1};", name, value);
+            tw.WriteLine("public const string @{0} = {1};", name, value);
 
         protected override void WriteAfterNestedLiteralBody(SourceCodeWriter tw)
         {

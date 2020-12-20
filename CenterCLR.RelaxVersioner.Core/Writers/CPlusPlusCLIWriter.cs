@@ -93,7 +93,7 @@ namespace RelaxVersioner.Writers
         }
 
         protected override void WriteLiteral(SourceCodeWriter tw, string name, string value) =>
-            tw.WriteLine("literal System::String^ {0} = {1};", name, value);
+            tw.WriteLine("literal System::String^ __identifier({0}) = {1};", name, value);
 
         protected override void WriteAfterNestedLiteralBody(SourceCodeWriter tw)
         {

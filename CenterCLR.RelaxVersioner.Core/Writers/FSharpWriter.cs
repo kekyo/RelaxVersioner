@@ -69,7 +69,7 @@ namespace RelaxVersioner.Writers
         protected override void WriteLiteral(SourceCodeWriter tw, string name, string value)
         {
             tw.WriteLine("[<Literal>]");
-            tw.WriteLine("let {0} = {1};", name, value);
+            tw.WriteLine("let ``{0}`` = {1};", name, value);
         }
 
         protected override void WriteBeforeLiteralBody(SourceCodeWriter tw)
