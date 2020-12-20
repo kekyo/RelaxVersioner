@@ -86,7 +86,7 @@ namespace RelaxVersioner.Writers
             tw.WriteLine("Namespace global.System.Reflection");
             tw.Shift();
             tw.WriteLine("<AttributeUsage(AttributeTargets.Assembly, AllowMultiple := True, Inherited := False)>");
-            tw.WriteLine("Friend NotInheritable Class AssemblyVersionMetadataAttribute");
+            tw.WriteLine("Friend NotInheritable Class AssemblyMetadataAttribute");
             tw.Shift();
             tw.WriteLine("Inherits Attribute");
             tw.WriteLine("Public Sub New(key As String, value As String)");
