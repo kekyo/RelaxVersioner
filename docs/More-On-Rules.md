@@ -23,24 +23,24 @@ A `Rule` element may also have a `key` attribute, but that's just for making you
 
 ```xml
 <Import>System.Reflection</Import>
-<Rule name="AssemblyVersionMetadata" key="Branch">Nacho Libre</Rule>
-<Rule name="AssemblyVersionMetadata" key="Committer">Jack Black</Rule>
-<Rule name="AssemblyVersionMetadata" key="Message">Change song to Encarnación<Rule>
+<Rule name="AssemblyMetadata" key="Branch">Nacho Libre</Rule>
+<Rule name="AssemblyMetadata" key="Committer">Jack Black</Rule>
+<Rule name="AssemblyMetadata" key="Message">Change song to Encarnación<Rule>
 ```
 ```csharp
 using System.Reflection;
 
-[assembly: AssemblyVersionMetadata(@"Branch",@"Nacho Libre")]
-[assembly: AssemblyVersionMetadata(@"Committer",@"Jack Black")]
-[assembly: AssemblyVersionMetadata(@"Message",@"Change song to Encarnación")]
+[assembly: AssemblyMetadata(@"Branch",@"Nacho Libre")]
+[assembly: AssemblyMetadata(@"Committer",@"Jack Black")]
+[assembly: AssemblyMetadata(@"Message",@"Change song to Encarnación")]
 ```
 
-There is no such thing as `AssemblyVersionMetadata` in the .NET Framework, so RelaxVersioner will generate the necessary code in the source file.
+There is no such thing as `AssemblyMetadata` in the .NET Framework 4.0 or above, so RelaxVersioner will generate the necessary code in the source file.
 
 ## Key Values
 
 On top of all of this, Rules can also have certain **key values** as part of their value.
-For example, in  `<Rule name="AssemblyVersionMetadata">{committer}</Rule>`, the value `{committer}` will be replaced with the author of the last commit.
+For example, in  `<Rule name="AssemblyMetadata">{committer}</Rule>`, the value `{committer}` will be replaced with the author of the last commit.
 This kind of magic is the result of 
 [Naming Formatter](https://github.com/kekyo/CenterCLR.NamingFormatter)
 and

@@ -34,7 +34,6 @@ The `WriterRules` element may have three kinds of child elements:
    * F#
    * VB
    * C++/CLI
-   * Wix
 2. `Import` elements, which import a namespace given its value.
    
 3. `Rule` elements, which define an assembly attribute to be written down.
@@ -58,6 +57,10 @@ It doesn't matter wheather your building a **C#** project or a **C++/CLI** proje
 
 ### Extra Options
 
+These options will be accepted into **PropertyGroup** elements inside the project files (csproj, fsproj, vbproj and vcxproj).
+
+#### RelaxVersionerOutputPath
+
 The behavior of RelaxVersioner can be further altered by editing your msbuild file. For instance, the default path of the generated source file is:
 
 ```xml
@@ -67,3 +70,15 @@ The behavior of RelaxVersioner can be further altered by editing your msbuild fi
 ```
 
 You can define your own **RelaxVersionerOutputPath** in your project file if you wish, and RelaxVersioner will use that instead :)
+
+#### BuildIdentifier and RelaxVersionerBuildIdentifier
+
+// TODO:
+
+#### RelaxVersionerGenerateStatic
+
+// TODO:
+
+#### RelaxVersionerNamespace
+
+// TODO:
