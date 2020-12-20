@@ -76,7 +76,9 @@ namespace RelaxVersioner.Writers
         {
             if (!string.IsNullOrWhiteSpace(tw.Context.Namespace))
             {
+                tw.WriteLine("do()");
                 tw.UnShift();
+                tw.WriteLine();
                 tw.WriteLine("namespace {0}", tw.Context.Namespace);
                 tw.Shift();
             }
@@ -97,9 +99,7 @@ namespace RelaxVersioner.Writers
         {
             if (!string.IsNullOrWhiteSpace(tw.Context.Namespace))
             {
-                tw.WriteLine("do()");
                 tw.UnShift();
-                tw.WriteLine();
             }
         }
 
