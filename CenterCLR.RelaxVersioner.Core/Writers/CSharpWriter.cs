@@ -23,8 +23,17 @@ namespace RelaxVersioner.Writers
     {
         public override string Language => "C#";
 
-        protected override void WriteImport(SourceCodeWriter tw, string namespaceName) =>
+        protected override void WriteImport(SourceCodeWriter tw, string namespaceName)
+        {
+            var required = IsRequiredSelfHostingMetadataAttribute(tw.Context);
+            if (required)
+            {
+                tw.WriteLine("#pragma warning disable 436");
+                tw.WriteLine();
+            }
+            
             tw.WriteLine("using {0};", namespaceName);
+        }
         
         protected override string GetArgumentString(string argumentValue) =>
             string.Format("@\"{0}\"", argumentValue.Replace("\"", "\"\""));
@@ -78,7 +87,8 @@ namespace RelaxVersioner.Writers
             var required = IsRequiredSelfHostingMetadataAttribute(tw.Context);
             if (!required)
             {
-                tw.WriteLine("#if NET10 || NET11 || NET20 || NET30 || NET35 || NET40");
+                tw.WriteLine("#if NET10 || NET11 || NET20 || NET30 || NET35 || NET40_CLIENT");
+                tw.WriteLine();
             }
 
             tw.WriteLine("namespace System.Reflection");
@@ -104,6 +114,7 @@ namespace RelaxVersioner.Writers
 
             if (!required)
             {
+                tw.WriteLine();
                 tw.WriteLine("#endif");
             }
 
