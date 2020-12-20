@@ -41,10 +41,10 @@ namespace RelaxVersioner.Writers
         {
             if (!string.IsNullOrWhiteSpace(tw.Context.Namespace))
             {
-                tw.WriteLine("Namespace {0}", tw.Context.Namespace);
+                tw.WriteLine("Namespace global.[{0}]", tw.Context.Namespace);
                 tw.Shift();
             }
-            tw.WriteLine("Friend NotInheritable Class ThisAssembly");
+            tw.WriteLine("Module ThisAssembly");
             tw.Shift();
         }
 
@@ -66,7 +66,7 @@ namespace RelaxVersioner.Writers
         protected override void WriteAfterLiteralBody(SourceCodeWriter tw)
         {
             tw.UnShift();
-            tw.WriteLine("End Class");
+            tw.WriteLine("End Module");
 
             if (!string.IsNullOrWhiteSpace(tw.Context.Namespace))
             {
