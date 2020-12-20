@@ -46,13 +46,13 @@ namespace RelaxVersioner.Writers
             tw.WriteLine("member this.Value = value");
             tw.UnShift();
             tw.UnShift();
-            tw.WriteLine();
 
             if (!required)
             {
                 tw.WriteLine("#endif");
             }
 
+            tw.WriteLine();
             tw.WriteLine("namespace global");
             tw.Shift();
         }
@@ -69,7 +69,7 @@ namespace RelaxVersioner.Writers
         protected override void WriteLiteral(SourceCodeWriter tw, string name, string value)
         {
             tw.WriteLine("[<Literal>]");
-            tw.WriteLine("let {0} = @\"{1}\";", name, value);
+            tw.WriteLine("let {0} = {1};", name, value);
         }
 
         protected override void WriteBeforeLiteralBody(SourceCodeWriter tw)
@@ -90,10 +90,8 @@ namespace RelaxVersioner.Writers
             tw.Shift();
         }
 
-        protected override void WriteAfterNestedLiteralBody(SourceCodeWriter tw)
-        {
+        protected override void WriteAfterNestedLiteralBody(SourceCodeWriter tw) =>
             tw.UnShift();
-        }
 
         protected override void WriteAfterLiteralBody(SourceCodeWriter tw)
         {
