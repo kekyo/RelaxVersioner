@@ -32,32 +32,42 @@
 
 ![Assembly wide attributes at ILSpy](Images/ILSpy.png)
 
-## Sample output codes
+## Sample output code
 
 ### For C#:
 
 ``` csharp
 using System.Reflection;
-[assembly: AssemblyVersion("0.5.30.0")]
-[assembly: AssemblyFileVersion("2016.1.15.41306")]
-[assembly: AssemblyInformationalVersion("a05ab9fc87b22234596f4ddd43136e9e526ebb90")]
-[assembly: AssemblyMetadata("Build","Fri, 15 Jan 2016 13:56:53 GMT")]
+[assembly: AssemblyVersion("1.0.21")]
+[assembly: AssemblyFileVersion("2020.12.20.33529")]
+[assembly: AssemblyInformationalVersion("561387e2f6dc90046f56ef4c3ac501aad0d5ec0a")]
+[assembly: AssemblyMetadata("Date","Sun, 20 Dec 2020 09:37:39 GMT")]
 [assembly: AssemblyMetadata("Branch","master")]
-[assembly: AssemblyMetadata("Tags","0.5.30")]
+[assembly: AssemblyMetadata("Tags","")]
 [assembly: AssemblyMetadata("Author","Kouji Matsui <k@kekyo.net>")]
 [assembly: AssemblyMetadata("Committer","Kouji Matsui <k@kekyo.net>")]
-[assembly: AssemblyMetadata("Message","Fixed tab")]
-[assembly: AssemblyMetadata("Message","Fixed tab")]
-[assembly: AssemblyMetadata("TargetFramework", "net461")]
+[assembly: AssemblyMetadata("Message","Merge branch 'devel'")]
+[assembly: AssemblyMetadata("Build","")]
+[assembly: AssemblyMetadata("Generated","Sun, 20 Dec 2020 09:37:43 GMT")]
 
 namespace YourApp
 {
   internal static class ThisAssembly
   {
-    public const string AssemblyVersion = "0.5.30.0";
-    public const string AssemblyFileVersion = "2016.1.15.41306";
-    public const string AssemblyInformationalVersion = "a05ab9fc87b22234596f4ddd43136e9e526ebb90";
-// TODO:
+    public const string AssemblyVersion = "1.0.21";
+    public const string AssemblyFileVersion = "2020.12.20.33529";
+    public const string AssemblyInformationalVersion = "561387e2f6dc90046f56ef4c3ac501aad0d5ec0a";
+    public static class AssemblyMetadata
+    {
+      public const string Date = "Sun, 20 Dec 2020 09:37:39 GMT";
+      public const string Branch = "master";
+      public const string Tags = "";
+      public const string Author = "Kouji Matsui <k@kekyo.net>";
+      public const string Committer = "Kouji Matsui <k@kekyo.net>";
+      public const string Message = "Merge branch 'devel'";
+      public const string Build = "";
+      public const string Generated = "Sun, 20 Dec 2020 09:37:43 GMT";
+    }
   }
 }
 ```
@@ -67,62 +77,116 @@ namespace YourApp
 ``` fsharp
 namespace global
   open System.Reflection
-  [<assembly: AssemblyVersion("0.5.30.0")>]
-  [<assembly: AssemblyFileVersion("2016.1.15.41306")>]
-  [<assembly: AssemblyInformationalVersion("a05ab9fc87b22234596f4ddd43136e9e526ebb90")>]
-  [<assembly: AssemblyMetadata("Build","Fri, 15 Jan 2016 13:56:53 GMT")>]
+  [<assembly: AssemblyVersion("1.0.21")>]
+  [<assembly: AssemblyFileVersion("2020.12.20.33529")>]
+  [<assembly: AssemblyInformationalVersion("561387e2f6dc90046f56ef4c3ac501aad0d5ec0a")>]
+  [<assembly: AssemblyMetadata("Date","Sun, 20 Dec 2020 09:37:39 GMT")>]
   [<assembly: AssemblyMetadata("Branch","master")>]
-  [<assembly: AssemblyMetadata("Tags","0.5.30")>]
+  [<assembly: AssemblyMetadata("Tags","")>]
   [<assembly: AssemblyMetadata("Author","Kouji Matsui <k@kekyo.net>")>]
   [<assembly: AssemblyMetadata("Committer","Kouji Matsui <k@kekyo.net>")>]
-  [<assembly: AssemblyMetadata("Message","Fixed tab")>]
+  [<assembly: AssemblyMetadata("Message","Merge branch 'devel'")>]
+  [<assembly: AssemblyMetadata("Build","")>]
+  [<assembly: AssemblyMetadata("Generated","Sun, 20 Dec 2020 09:38:33 GMT")>]
   do()
 
 namespace global
   module internal ThisAssembly =
-  [<Literal>]
-  let AssemblyVersion = @"0.0.1";
-  [<Literal>]
-  let AssemblyFileVersion = @"2020.12.20.31761";
-  [<Literal>]
-  let AssemblyInformationalVersion = @"(Unknown commit id)";
-  module AssemblyMetadata =
     [<Literal>]
-    let Date = @"Sun, 20 Dec 2020 08:38:43 GMT";
-// TODO:
+    let AssemblyVersion = "1.0.21";
+    [<Literal>]
+    let AssemblyFileVersion = "2020.12.20.33529";
+    [<Literal>]
+    let AssemblyInformationalVersion = "561387e2f6dc90046f56ef4c3ac501aad0d5ec0a";
+    module AssemblyMetadata =
+      [<Literal>]
+      let Date = "Sun, 20 Dec 2020 09:37:39 GMT";
+      [<Literal>]
+      let Branch = "master";
+      [<Literal>]
+      let Tags = "";
+      [<Literal>]
+      let Author = "Kouji Matsui <k@kekyo.net>";
+      [<Literal>]
+      let Committer = "Kouji Matsui <k@kekyo.net>";
+      [<Literal>]
+      let Message = "Merge branch 'devel'";
+      [<Literal>]
+      let Build = "";
+      [<Literal>]
+      let Generated = "Sun, 20 Dec 2020 09:38:33 GMT";
   do()
 ```
 
 ### For VB.NET:
 
 ``` visualbasic
-Imports System.Reflection
-<Assembly: AssemblyVersion("0.5.30.0")>
-<Assembly: AssemblyFileVersion("2016.1.15.41306")>
-<Assembly: AssemblyInformationalVersion("a05ab9fc87b22234596f4ddd43136e9e526ebb90")>
-<Assembly: AssemblyMetadata("Build","Fri, 15 Jan 2016 13:56:53 GMT")>
+<Assembly: AssemblyVersion("1.0.21")>
+<Assembly: AssemblyFileVersion("2020.12.20.33529")>
+<Assembly: AssemblyInformationalVersion("561387e2f6dc90046f56ef4c3ac501aad0d5ec0a")>
+<Assembly: AssemblyMetadata("Date","Sun, 20 Dec 2020 09:37:39 GMT")>
 <Assembly: AssemblyMetadata("Branch","master")>
-<Assembly: AssemblyMetadata("Tags","0.5.30")>
+<Assembly: AssemblyMetadata("Tags","")>
 <Assembly: AssemblyMetadata("Author","Kouji Matsui <k@kekyo.net>")>
 <Assembly: AssemblyMetadata("Committer","Kouji Matsui <k@kekyo.net>")>
-<Assembly: AssemblyMetadata("Message","Fixed tab")>
-' TODO:
+<Assembly: AssemblyMetadata("Message","Merge branch 'devel'")>
+<Assembly: AssemblyMetadata("Build","")>
+<Assembly: AssemblyMetadata("Generated","Sun, 20 Dec 2020 09:38:33 GMT")>
+<Assembly: AssemblyMetadata("TargetFramework","")>
+
+Namespace global.YourApp
+  Module ThisAssembly
+    Public Const AssemblyVersion As String = "1.0.21"
+    Public Const AssemblyFileVersion As String = "2020.12.20.33529"
+    Public Const AssemblyInformationalVersion As String = "561387e2f6dc90046f56ef4c3ac501aad0d5ec0a"
+    Public NotInheritable Class AssemblyMetadata
+      Public Const Date As String = "Sun, 20 Dec 2020 09:37:39 GMT"
+      Public Const Branch As String = "master"
+      Public Const Tags As String = ""
+      Public Const Author As String = "Kouji Matsui <k@kekyo.net>"
+      Public Const Committer As String = "Kouji Matsui <k@kekyo.net>"
+      Public Const Message As String = "Merge branch 'devel'"
+      Public Const Build As String = ""
+      Public Const Generated As String = "Sun, 20 Dec 2020 09:38:33 GMT"
+    End Class
+  End Module
+End Namespace
 ```
 
 ### For C++/CLI:
 
 ``` cpp
 using namespace System::Reflection;
-[assembly: AssemblyVersion("0.5.30.0")];
-[assembly: AssemblyFileVersion("2016.1.15.41306")];
-[assembly: AssemblyInformationalVersion("a05ab9fc87b22234596f4ddd43136e9e526ebb90")];
-[assembly: AssemblyMetadata("Build","Fri, 15 Jan 2016 13:56:53 GMT")];
-[assembly: AssemblyMetadata("Branch","master")];
-[assembly: AssemblyMetadata("Tags","0.5.30")];
+[assembly: AssemblyVersion("1.0.44")];
+[assembly: AssemblyFileVersion("2020.12.20.33300")];
+[assembly: AssemblyInformationalVersion("7faf4071fdc2f169ecc58d705ea3304dd91af414")];
+[assembly: AssemblyMetadata("Date","Sun, 20 Dec 2020 09:30:00 GMT")];
+[assembly: AssemblyMetadata("Branch","devel")];
+[assembly: AssemblyMetadata("Tags","")];
 [assembly: AssemblyMetadata("Author","Kouji Matsui <k@kekyo.net>")];
 [assembly: AssemblyMetadata("Committer","Kouji Matsui <k@kekyo.net>")];
-[assembly: AssemblyMetadata("Message","Fixed tab")];
-// TODO:
+[assembly: AssemblyMetadata("Message","Fixed generating path in C++.")];
+[assembly: AssemblyMetadata("Build","")];
+[assembly: AssemblyMetadata("Generated","Sun, 20 Dec 2020 09:34:03 GMT")];
+
+private ref class ThisAssembly abstract sealed
+{
+public:
+    literal System::String^ AssemblyVersion = "1.0.44";
+    literal System::String^ AssemblyFileVersion = "2020.12.20.33300";
+    literal System::String^ AssemblyInformationalVersion = "7faf4071fdc2f169ecc58d705ea3304dd91af414";
+    ref class AssemblyMetadata abstract sealed
+    {
+        literal System::String^ Date = "Sun, 20 Dec 2020 09:30:00 GMT";
+        literal System::String^ Branch = "devel";
+        literal System::String^ Tags = "";
+        literal System::String^ Author = "Kouji Matsui <k@kekyo.net>";
+        literal System::String^ Committer = "Kouji Matsui <k@kekyo.net>";
+        literal System::String^ Message = "Fixed generating path in C++.";
+        literal System::String^ Build = "";
+        literal System::String^ Generated = "Sun, 20 Dec 2020 09:34:03 GMT";
+    };
+};
 ```
 
 ## Getting started
@@ -201,6 +265,12 @@ using namespace System::Reflection;
     <Rule name="AssemblyMetadata" key="Message">{commit.MessageShort}</Rule>
     <Rule name="AssemblyMetadata" key="Build">{buildIdentifier}</Rule>
     <Rule name="AssemblyMetadata" key="Generated">{generated:R}</Rule>
+    <Rule name="AssemblyMetadata" key="TargetFramework">{tfm}</Rule>
+    <!-- These definitions are not included by defaults.
+    <Rule name="AssemblyMetadata" key="TargetFrameworkIdentity">{tfid}</Rule>
+    <Rule name="AssemblyMetadata" key="TargetFrameworkVersion">{tfv}</Rule>
+    <Rule name="AssemblyMetadata" key="TargetFrameworkProfile">{tfp}</Rule>
+    -->
   </WriterRules>
 </RelaxVersioner>
 ```
@@ -234,13 +304,19 @@ Apply `fetch-depth: 0` predication into your build.yml script.
 * Support native C++ project.
 * Support templated output.
 * Support fallback rule set.
-* Support Mono on linux environments.
 
 ## License
 * Copyright (c) 2015-2020 Kouji Matsui (@kozy_kekyo, @kekyo2)
 * Under Apache v2
 
 ## History
+* 2.0.0:
+  * Reached 2.0 🎉
+  * Support .NET 5 and Linux environments.
+  * Added static literals. You can refer all symbols inside of "ThisAssembly" class/module, doesn't require using any reflection API.
+  * Added support keys "TargetFramework" (tfm), "TargetFrameworkIdentity" (tfid), "TargetFrameworkVersion" (tfv) and "TargetFrameworkProfile" (tfp). Only includes tfm by defaults. See also rule set file section.
+  * Reduced package size.
+  * Breaking change: Changed package naming from "CenterCLR.RelaxVersioner" to "RelaxVersioner". Old packages will make unlisting.
 * 1.0.10:
   * Fixed failure aggregating referenced package versions (related changing nuget impls).
 * 1.0.5:

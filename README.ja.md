@@ -13,8 +13,8 @@
 | Continuous integration | [![RelaxVersioner CI build (master)](https://github.com/kekyo/CenterCLR.RelaxVersioner/workflows/.NET/badge.svg?branch=master)](https://github.com/kekyo/CenterCLR.RelaxVersioner/actions) | [![RelaxVersioner CI build (devel)](https://github.com/kekyo/CenterCLR.RelaxVersioner/workflows/.NET/badge.svg?branch=master)](https://github.com/kekyo/CenterCLR.RelaxVersioner/actions)
 
 ## これは何？
-* RelaxVersionerは、軽量で非常に簡単に使用することが出来る、Gitベースの「自動バージョニング」ツールセットです。.NET Core/.NET Frameworkベースのソースコードを対象としていて、ビルド時にアセンブリ属性を自動的に適用します。
-* RelaxVersionerを使うと、Gitのタグ・ブランチ・コミットメッセージだけを使って、バージョン管理が出来ます。つまり、追加のツール操作が不要なため、Gitを知ってさえいれば学習コストがほとんどなく、CI環境にも容易に対応できます。
+* RelaxVersionerは、軽量で簡単に使用することが出来る、Gitベースの「自動バージョニング」ツールセットです。.NET 5/.NET Core/.NET Frameworkベースのソースコードを対象としていて、ビルド時にアセンブリ属性を自動的に適用します。
+* RelaxVersionerのNuGetパッケージをインストールするだけで、Gitのタグ・ブランチ・コミットメッセージだけを使って、バージョン管理が出来ます。つまり、追加のツール操作が不要なため、Gitさえ知っていれば学習コストがほとんどなく、CI環境にも容易に対応できます。
 * サポートしている言語と環境は:
   * C#・F#・VB.NET・C++/CLI、そしてNuGetパッケージング (dotnet cli packコマンド)
   * Visual Studio 2019/2017/2015, dotnet SDK cli, netcoreapp2.1/net461の元で動作するMSBuild環境 (注: MSBuildの動作プラットフォームの事です、あなたがターゲットにしたいプロジェクトの事ではありません)、及びこれらを使用する任意のIDE。
@@ -38,15 +38,38 @@
 
 ``` csharp
 using System.Reflection;
-[assembly: AssemblyVersionAttribute("0.5.30.0")]
-[assembly: AssemblyFileVersionAttribute("2016.1.15.41306")]
-[assembly: AssemblyInformationalVersionAttribute("a05ab9fc87b22234596f4ddd43136e9e526ebb90")]
-[assembly: AssemblyVersionMetadataAttribute("Build","Fri, 15 Jan 2016 13:56:53 GMT")]
-[assembly: AssemblyVersionMetadataAttribute("Branch","master")]
-[assembly: AssemblyVersionMetadataAttribute("Tags","0.5.30")]
-[assembly: AssemblyVersionMetadataAttribute("Author","Kouji Matsui <k@kekyo.net>")]
-[assembly: AssemblyVersionMetadataAttribute("Committer","Kouji Matsui <k@kekyo.net>")]
-[assembly: AssemblyVersionMetadataAttribute("Message","Fixed tab")]
+[assembly: AssemblyVersion("1.0.21")]
+[assembly: AssemblyFileVersion("2020.12.20.33529")]
+[assembly: AssemblyInformationalVersion("561387e2f6dc90046f56ef4c3ac501aad0d5ec0a")]
+[assembly: AssemblyMetadata("Date","Sun, 20 Dec 2020 09:37:39 GMT")]
+[assembly: AssemblyMetadata("Branch","master")]
+[assembly: AssemblyMetadata("Tags","")]
+[assembly: AssemblyMetadata("Author","Kouji Matsui <k@kekyo.net>")]
+[assembly: AssemblyMetadata("Committer","Kouji Matsui <k@kekyo.net>")]
+[assembly: AssemblyMetadata("Message","Merge branch 'devel'")]
+[assembly: AssemblyMetadata("Build","")]
+[assembly: AssemblyMetadata("Generated","Sun, 20 Dec 2020 09:37:43 GMT")]
+
+namespace YourApp
+{
+  internal static class ThisAssembly
+  {
+    public const string AssemblyVersion = "1.0.21";
+    public const string AssemblyFileVersion = "2020.12.20.33529";
+    public const string AssemblyInformationalVersion = "561387e2f6dc90046f56ef4c3ac501aad0d5ec0a";
+    public static class AssemblyMetadata
+    {
+      public const string Date = "Sun, 20 Dec 2020 09:37:39 GMT";
+      public const string Branch = "master";
+      public const string Tags = "";
+      public const string Author = "Kouji Matsui <k@kekyo.net>";
+      public const string Committer = "Kouji Matsui <k@kekyo.net>";
+      public const string Message = "Merge branch 'devel'";
+      public const string Build = "";
+      public const string Generated = "Sun, 20 Dec 2020 09:37:43 GMT";
+    }
+  }
+}
 ```
 
 ### For F#:
@@ -54,46 +77,116 @@ using System.Reflection;
 ``` fsharp
 namespace global
   open System.Reflection
-  [<assembly: AssemblyVersionAttribute("0.5.30.0")>]
-  [<assembly: AssemblyFileVersionAttribute("2016.1.15.41306")>]
-  [<assembly: AssemblyInformationalVersionAttribute("a05ab9fc87b22234596f4ddd43136e9e526ebb90")>]
-  [<assembly: AssemblyVersionMetadataAttribute("Build","Fri, 15 Jan 2016 13:56:53 GMT")>]
-  [<assembly: AssemblyVersionMetadataAttribute("Branch","master")>]
-  [<assembly: AssemblyVersionMetadataAttribute("Tags","0.5.30")>]
-  [<assembly: AssemblyVersionMetadataAttribute("Author","Kouji Matsui <k@kekyo.net>")>]
-  [<assembly: AssemblyVersionMetadataAttribute("Committer","Kouji Matsui <k@kekyo.net>")>]
-  [<assembly: AssemblyVersionMetadataAttribute("Message","Fixed tab")>]
+  [<assembly: AssemblyVersion("1.0.21")>]
+  [<assembly: AssemblyFileVersion("2020.12.20.33529")>]
+  [<assembly: AssemblyInformationalVersion("561387e2f6dc90046f56ef4c3ac501aad0d5ec0a")>]
+  [<assembly: AssemblyMetadata("Date","Sun, 20 Dec 2020 09:37:39 GMT")>]
+  [<assembly: AssemblyMetadata("Branch","master")>]
+  [<assembly: AssemblyMetadata("Tags","")>]
+  [<assembly: AssemblyMetadata("Author","Kouji Matsui <k@kekyo.net>")>]
+  [<assembly: AssemblyMetadata("Committer","Kouji Matsui <k@kekyo.net>")>]
+  [<assembly: AssemblyMetadata("Message","Merge branch 'devel'")>]
+  [<assembly: AssemblyMetadata("Build","")>]
+  [<assembly: AssemblyMetadata("Generated","Sun, 20 Dec 2020 09:38:33 GMT")>]
+  do()
+
+namespace global
+  module internal ThisAssembly =
+    [<Literal>]
+    let AssemblyVersion = "1.0.21";
+    [<Literal>]
+    let AssemblyFileVersion = "2020.12.20.33529";
+    [<Literal>]
+    let AssemblyInformationalVersion = "561387e2f6dc90046f56ef4c3ac501aad0d5ec0a";
+    module AssemblyMetadata =
+      [<Literal>]
+      let Date = "Sun, 20 Dec 2020 09:37:39 GMT";
+      [<Literal>]
+      let Branch = "master";
+      [<Literal>]
+      let Tags = "";
+      [<Literal>]
+      let Author = "Kouji Matsui <k@kekyo.net>";
+      [<Literal>]
+      let Committer = "Kouji Matsui <k@kekyo.net>";
+      [<Literal>]
+      let Message = "Merge branch 'devel'";
+      [<Literal>]
+      let Build = "";
+      [<Literal>]
+      let Generated = "Sun, 20 Dec 2020 09:38:33 GMT";
   do()
 ```
 
 ### For VB.NET:
 
 ``` visualbasic
-Imports System.Reflection
-<Assembly: AssemblyVersionAttribute("0.5.30.0")>
-<Assembly: AssemblyFileVersionAttribute("2016.1.15.41306")>
-<Assembly: AssemblyInformationalVersionAttribute("a05ab9fc87b22234596f4ddd43136e9e526ebb90")>
-<Assembly: AssemblyVersionMetadataAttribute("Build","Fri, 15 Jan 2016 13:56:53 GMT")>
-<Assembly: AssemblyVersionMetadataAttribute("Branch","master")>
-<Assembly: AssemblyVersionMetadataAttribute("Tags","0.5.30")>
-<Assembly: AssemblyVersionMetadataAttribute("Author","Kouji Matsui <k@kekyo.net>")>
-<Assembly: AssemblyVersionMetadataAttribute("Committer","Kouji Matsui <k@kekyo.net>")>
-<Assembly: AssemblyVersionMetadataAttribute("Message","Fixed tab")>
+<Assembly: AssemblyVersion("1.0.21")>
+<Assembly: AssemblyFileVersion("2020.12.20.33529")>
+<Assembly: AssemblyInformationalVersion("561387e2f6dc90046f56ef4c3ac501aad0d5ec0a")>
+<Assembly: AssemblyMetadata("Date","Sun, 20 Dec 2020 09:37:39 GMT")>
+<Assembly: AssemblyMetadata("Branch","master")>
+<Assembly: AssemblyMetadata("Tags","")>
+<Assembly: AssemblyMetadata("Author","Kouji Matsui <k@kekyo.net>")>
+<Assembly: AssemblyMetadata("Committer","Kouji Matsui <k@kekyo.net>")>
+<Assembly: AssemblyMetadata("Message","Merge branch 'devel'")>
+<Assembly: AssemblyMetadata("Build","")>
+<Assembly: AssemblyMetadata("Generated","Sun, 20 Dec 2020 09:38:33 GMT")>
+<Assembly: AssemblyMetadata("TargetFramework","")>
+
+Namespace global.YourApp
+  Module ThisAssembly
+    Public Const AssemblyVersion As String = "1.0.21"
+    Public Const AssemblyFileVersion As String = "2020.12.20.33529"
+    Public Const AssemblyInformationalVersion As String = "561387e2f6dc90046f56ef4c3ac501aad0d5ec0a"
+    Public NotInheritable Class AssemblyMetadata
+      Public Const Date As String = "Sun, 20 Dec 2020 09:37:39 GMT"
+      Public Const Branch As String = "master"
+      Public Const Tags As String = ""
+      Public Const Author As String = "Kouji Matsui <k@kekyo.net>"
+      Public Const Committer As String = "Kouji Matsui <k@kekyo.net>"
+      Public Const Message As String = "Merge branch 'devel'"
+      Public Const Build As String = ""
+      Public Const Generated As String = "Sun, 20 Dec 2020 09:38:33 GMT"
+    End Class
+  End Module
+End Namespace
 ```
 
 ### For C++/CLI:
 
 ``` cpp
 using namespace System::Reflection;
-[assembly: AssemblyVersionAttribute("0.5.30.0")];
-[assembly: AssemblyFileVersionAttribute("2016.1.15.41306")];
-[assembly: AssemblyInformationalVersionAttribute("a05ab9fc87b22234596f4ddd43136e9e526ebb90")];
-[assembly: AssemblyVersionMetadataAttribute("Build","Fri, 15 Jan 2016 13:56:53 GMT")];
-[assembly: AssemblyVersionMetadataAttribute("Branch","master")];
-[assembly: AssemblyVersionMetadataAttribute("Tags","0.5.30")];
-[assembly: AssemblyVersionMetadataAttribute("Author","Kouji Matsui <k@kekyo.net>")];
-[assembly: AssemblyVersionMetadataAttribute("Committer","Kouji Matsui <k@kekyo.net>")];
-[assembly: AssemblyVersionMetadataAttribute("Message","Fixed tab")];
+[assembly: AssemblyVersion("1.0.44")];
+[assembly: AssemblyFileVersion("2020.12.20.33300")];
+[assembly: AssemblyInformationalVersion("7faf4071fdc2f169ecc58d705ea3304dd91af414")];
+[assembly: AssemblyMetadata("Date","Sun, 20 Dec 2020 09:30:00 GMT")];
+[assembly: AssemblyMetadata("Branch","devel")];
+[assembly: AssemblyMetadata("Tags","")];
+[assembly: AssemblyMetadata("Author","Kouji Matsui <k@kekyo.net>")];
+[assembly: AssemblyMetadata("Committer","Kouji Matsui <k@kekyo.net>")];
+[assembly: AssemblyMetadata("Message","Fixed generating path in C++.")];
+[assembly: AssemblyMetadata("Build","")];
+[assembly: AssemblyMetadata("Generated","Sun, 20 Dec 2020 09:34:03 GMT")];
+
+private ref class ThisAssembly abstract sealed
+{
+public:
+    literal System::String^ AssemblyVersion = "1.0.44";
+    literal System::String^ AssemblyFileVersion = "2020.12.20.33300";
+    literal System::String^ AssemblyInformationalVersion = "7faf4071fdc2f169ecc58d705ea3304dd91af414";
+    ref class AssemblyMetadata abstract sealed
+    {
+        literal System::String^ Date = "Sun, 20 Dec 2020 09:30:00 GMT";
+        literal System::String^ Branch = "devel";
+        literal System::String^ Tags = "";
+        literal System::String^ Author = "Kouji Matsui <k@kekyo.net>";
+        literal System::String^ Committer = "Kouji Matsui <k@kekyo.net>";
+        literal System::String^ Message = "Fixed generating path in C++.";
+        literal System::String^ Build = "";
+        literal System::String^ Generated = "Sun, 20 Dec 2020 09:34:03 GMT";
+    };
+};
 ```
 
 ## RelaxVersionerの使い方
@@ -142,37 +235,42 @@ using namespace System::Reflection;
       "versionLabel" is extract numerical-notate version string [1.2.3.4] or [v1.2.3.4] from git repository tags traverse start HEAD.
       If not found, use [0.0.1].
     -->
-    <Rule name="AssemblyVersionAttribute">{versionLabel}</Rule>
+    <Rule name="AssemblyVersion">{versionLabel}</Rule>
     
     <!--
       "safeVersion" is extract committed date (from commmiter) from git repository HEAD.
       "safeVersion" specialized from "committer.When".
       (The format is safe-numerical-notate version string [2016.2.14.12345]. (Last number is 2sec prec.))
     -->
-    <Rule name="AssemblyFileVersionAttribute">{safeVersion}</Rule>
+    <Rule name="AssemblyFileVersion">{safeVersion}</Rule>
     
     <!--
       "commitId" is extract commit id from git repository HEAD.
       "commitId" alias to "commit.Sha".
     -->
-    <Rule name="AssemblyInformationalVersionAttribute">{commitId}</Rule>
+    <Rule name="AssemblyInformationalVersion">{commitId}</Rule>
     
     <!--
-      "key" attribute is only using for "AssemblyVersionMetadataAttribute".
+      "key" attribute can only use with "AssemblyMetadataAttribute".
       "committer.When" or you can use another choice "author.When".
       "branch" can use property "FriendlyName" and "CanonicalName". (Derived from libgit2sharp)
       "author" and "committer" can use property "Name", "Email", and "When". (Derived from libgit2sharp)
       "buildIdentifier" is passing from MSBuild property named "RelaxVersionerBuildIdentifier" or "BuildIdentifier". We can use in CI building.
       "generated" is generated date by RelaxVersioner.
     -->
-    <Rule name="AssemblyVersionMetadataAttribute" key="Date">{committer.When:R}</Rule>
-    <Rule name="AssemblyVersionMetadataAttribute" key="Branch">{branch.FriendlyName}</Rule>
-    <Rule name="AssemblyVersionMetadataAttribute" key="Tags">{tags}</Rule>
-    <Rule name="AssemblyVersionMetadataAttribute" key="Author">{author}</Rule>
-    <Rule name="AssemblyVersionMetadataAttribute" key="Committer">{committer}</Rule>
-    <Rule name="AssemblyVersionMetadataAttribute" key="Message">{commit.MessageShort}</Rule>
-    <Rule name="AssemblyVersionMetadataAttribute" key="Build">{buildIdentifier}</Rule>
-    <Rule name="AssemblyVersionMetadataAttribute" key="Generated">{generated:R}</Rule>
+    <Rule name="AssemblyMetadata" key="Date">{committer.When:R}</Rule>
+    <Rule name="AssemblyMetadata" key="Branch">{branch.FriendlyName}</Rule>
+    <Rule name="AssemblyMetadata" key="Tags">{tags}</Rule>
+    <Rule name="AssemblyMetadata" key="Author">{author}</Rule>
+    <Rule name="AssemblyMetadata" key="Committer">{committer}</Rule>
+    <Rule name="AssemblyMetadata" key="Message">{commit.MessageShort}</Rule>
+    <Rule name="AssemblyMetadata" key="Build">{buildIdentifier}</Rule>
+    <Rule name="AssemblyMetadata" key="Generated">{generated:R}</Rule>
+    <!-- These definitions are not included by defaults.
+    <Rule name="AssemblyMetadata" key="TargetFrameworkIdentity">{tfid}</Rule>
+    <Rule name="AssemblyMetadata" key="TargetFrameworkVersion">{tfv}</Rule>
+    <Rule name="AssemblyMetadata" key="TargetFrameworkProfile">{tfp}</Rule>
+    -->
   </WriterRules>
 </RelaxVersioner>
 ```
@@ -209,13 +307,19 @@ RelaxVersioner (や、その他の自動バージョニングツール) は、
 * ネイティブC++プロジェクトに対応させる
 * テンプレート出力をサポートする
 * フォールバックルールを指定可能にする
-* Mono環境のサポート
 
 ## License
 * Copyright (c) 2015-2019 Kouji Matsui (@kozy_kekyo, @kekyo2)
 * Under Apache v2
 
 ## 履歴
+* 2.0.0:
+  * 2.0公開 🎉
+  * .NET 5とLinux環境の(正式な)サポート。
+  * リテラルシンボル定義の追加。"ThisAssembly"クラス(モジュール)内に定義されたシンボルを参照することで、リフレクションAPIを使用しないで各定義を使用することが出来ます。出力されるコードの例を参照。
+  * "TargetFramework" (tfm), "TargetFrameworkIdentity" (tfid), "TargetFrameworkVersion" (tfv), "TargetFrameworkProfile" (tfp) のそれぞれのキーをサポート。デフォルトのルールではtfmが出力されます。カスタムルールファイルの例を参照。
+  * パッケージサイズが小さくなりました。
+  * 破壊的変更: パッケージ名が"CenterCLR.RelaxVersioner"から"RelaxVersioner"に変更されました。古いパッケージを参照することは出来ますが、NuGetのリストには表示されなくなります。
 * 1.0.10:
   * プロジェクト参照先のパッケージバージョンを誤って解釈する問題を修正 (NuGetの内部実装の変更による)
 * 1.0.5:
