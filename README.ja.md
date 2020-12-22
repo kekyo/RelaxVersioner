@@ -313,6 +313,8 @@ RelaxVersioner (や、その他の自動バージョニングツール) は、
 * Under Apache v2
 
 ## 履歴
+* 2.0.6:
+  * 一度もタグ付けされていないリポジトリで、誤ったdepthを計算することがあるのを修正。
 * 2.0.5:
   * C#でnet40-clientを使用する場合に、AssemblyMetadataAttributeクラスの重複ウォーニングが発生していたのを修正。
 * 2.0.0:

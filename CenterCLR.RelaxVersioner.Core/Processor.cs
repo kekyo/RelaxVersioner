@@ -43,9 +43,8 @@ namespace RelaxVersioner
 
     public sealed class Processor
     {
-        private static readonly Branch[] emtyBranches = new Branch[0];
-        private static readonly Tag[] emptyTags = new Tag[0];
-        private static readonly Commit[] emptyCommits = new Commit[0];
+        private static readonly Branch[] emptyBranches = Array.Empty<Branch>();
+        private static readonly Tag[] emptyTags = Array.Empty<Tag>();
 
         private readonly Logger logger;
         private readonly Dictionary<string, WriterBase> writers;
@@ -61,16 +60,19 @@ namespace RelaxVersioner
 
         public string[] Languages { get; }
 
-        private struct Remain
+        private readonly struct TargetCommit
         {
-            public readonly int Depth;
+            public readonly int StartDepth;
             public readonly Commit Commit;
 
-            public Remain(int depth, Commit commit)
+            public TargetCommit(int startDepth, Commit commit)
             {
-                this.Depth = depth;
+                this.StartDepth = startDepth;
                 this.Commit = commit;
             }
+
+            public override string ToString() =>
+                $"StartDepth={this.StartDepth}, {this.Commit}";
         }
 
         private static Version LookupVersionLabel(
@@ -82,34 +84,38 @@ namespace RelaxVersioner
             var topCommit = targetBranch?.Commits?.FirstOrDefault();
             if (topCommit == null)
             {
-                return Version.Empty;
+                return Version.Default;
             }
 
             var reached = new HashSet<string>();
-            var scheduled = new Stack<Remain>();
-            scheduled.Push(new Remain(0, topCommit));
+            var scheduled = new Stack<TargetCommit>();
+            scheduled.Push(new TargetCommit(0, topCommit));
 
-            var depth = 0;
+            var mainDepth = 0;
 
             while (scheduled.Count >= 1)
             {
+                // Extract an analysis commit.
                 var entry = scheduled.Pop();
-                var commit = entry.Commit;
-                depth = entry.Depth;
+                
+                var currentCommit = entry.Commit;
+                var currentDepth = entry.StartDepth;
 
                 while (true)
                 {
-                    if (!reached.Add(commit.Sha))
+                    // Rejoined parent branch.
+                    if (!reached.Add(currentCommit.Sha))
                     {
                         break;
                     }
 
-                    if (tagsDictionary.TryGetValue(commit.Sha, out var tags))
+                    // If found be applied tags at this commit:
+                    if (tagsDictionary.TryGetValue(currentCommit.Sha, out var tags))
                     {
                         var filteredTags = tags.
                             Select(tag => Version.TryParse(tag.GetFriendlyName(), out var version) ? (Version?)version : null).
                             Where(version => version.HasValue).
-                            Select(version => Utilities.IncrementLastVersionComponent(version.Value, depth)).
+                            Select(version => Utilities.IncrementLastVersionComponent(version.Value, currentDepth)).
                             ToArray();
 
                         // Found first valid tag.
@@ -119,25 +125,38 @@ namespace RelaxVersioner
                         }
                     }
 
-                    depth++;
-
-                    if ((commit.Parents?.ToArray() is Commit[] parents) && (parents.Length >= 1))
+                    // Found parents.
+                    if ((currentCommit.Parents?.ToArray() is { Length: >= 1 } parents))
                     {
-                        commit = parents[0];
+                        // Dive parent commit.
+                        currentDepth++;
 
+                        // Next commit is a primary parent.
+                        currentCommit = parents[0];
+
+                        // Enqueue analysis scheduling if it has multiple parents.
                         foreach (var parentCommit in parents.Skip(1))
                         {
-                            scheduled.Push(new Remain(depth, parentCommit));
+                            scheduled.Push(new TargetCommit(currentDepth, parentCommit));
                         }
                     }
+                    // Bottom of branch.
                     else
                     {
+                        // Save depth if it's on boarding the main branch.
+                        if (mainDepth == 0)
+                        {
+                            mainDepth = currentDepth;
+                        }
+                        
+                        // Goes to next scheduled commit.
                         break;
                     }
                 }
             }
 
-            return Utilities.IncrementLastVersionComponent(Version.Empty, depth);
+            // Finally got the main branch depth.
+            return Utilities.IncrementLastVersionComponent(Version.Default, mainDepth);
         }
 
         private static Result WriteVersionSourceFile(
@@ -166,7 +185,7 @@ namespace RelaxVersioner
             var committer = commit.Committer;
 
             var branches = branchesDictionary.
-                GetValue(commitId, emtyBranches).
+                GetValue(commitId, emptyBranches).
                 Select(b => b.GetFriendlyName()).
                 ToArray();
             var branchesString = string.Join(",", branches);
