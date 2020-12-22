@@ -43,7 +43,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="RelaxVersioner" Version="2.0.0" PrivateAssets="All" />
+    <PackageReference Include="RelaxVersioner" Version="2.0.7" PrivateAssets="All" />
     <PackageReference Include="Microsoft.NETFramework.ReferenceAssemblies" Version="1.0.0" PrivateAssets="All" />
     <PackageReference Include="Mono.Options" Version="6.6.0.161" />
     <PackageReference Include="LibGit2Sharp.NativeBinaries" Version="2.0.312" />
