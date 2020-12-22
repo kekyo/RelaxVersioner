@@ -294,7 +294,7 @@ Because it makes better fast cloning.
 
 RelaxVersioner (and other automated versioning tool) requires all commits for calculating version depth.
 Apply `fetch-depth: 0` predication into your build.yml script.
-[You can understand with this real script.](https://github.com/kekyo/CenterCLR.RelaxVersioner/blob/master/.github/workflows/build.yml#L13)
+[You can understand with this real script.](https://github.com/kekyo/CenterCLR.RelaxVersioner/blob/master/.github/workflows/build.yml#L11)
 
 ## Another topics
 * RelaxVersioner supported on Visual Studio 2012/2013 only installed .NET Framework 4.6 or upper. Because it requires uses compatibility for net461 MSBuild.Framework assembly.

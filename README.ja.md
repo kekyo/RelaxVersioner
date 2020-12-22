@@ -297,7 +297,7 @@ RelaxVersioner (や、その他の自動バージョニングツール) は、
 
 そのため、build.yml (GitHub Actionsのスクリプト) に、
 `fetch-depth: 0` を追加して下さい。
-[このリポジトリで実際に使用している例を参照できます。](https://github.com/kekyo/RelaxVersioner/blob/master/.github/workflows/build.yml#L13)
+[このリポジトリで実際に使用している例を参照できます。](https://github.com/kekyo/CenterCLR.RelaxVersioner/blob/master/.github/workflows/build.yml#L11)
 
 ## その他
 * RelaxVersionerをVisual Studio 2012/2013で使うには、システムに.NET Framework 4.6以上がインストールされている必要があります。RelaxVersionerは、MSBuild.Frameworkアセンブリのnet46以上のバージョンを必要とするためです。
