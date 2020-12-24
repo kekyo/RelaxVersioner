@@ -310,6 +310,8 @@ Apply `fetch-depth: 0` predication into your build.yml script.
 * Under Apache v2
 
 ## History
+* 2.0.9:
+  * Fixed conflicting ValueTuple assembly at net461 binary.
 * 2.0.8:
   * Fixed depth calculation for untagged repository.
 * 2.0.5:
