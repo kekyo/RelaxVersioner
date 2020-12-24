@@ -23,4 +23,4 @@ echo.
 dotnet clean -c Release -p:Platform=AnyCPU CenterCLR.RelaxVersioner\CenterCLR.RelaxVersioner.csproj
 dotnet restore
 rem dotnet pack -p:Configuration=Release -p:Platform=AnyCPU -p:NoWarn=NU5104 -o artifacts CenterCLR.RelaxVersioner.Core\CenterCLR.RelaxVersioner.Core.csproj
-dotnet pack -p:Configuration=Release -p:Platform=AnyCPU -o artifacts CenterCLR.RelaxVersionerCenterCLR.RelaxVersioner.csproj
+dotnet pack -p:Configuration=Release -p:Platform=AnyCPU -o artifacts CenterCLR.RelaxVersioner\CenterCLR.RelaxVersioner.csproj
