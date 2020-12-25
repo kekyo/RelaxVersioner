@@ -71,38 +71,10 @@
   </PropertyGroup>
 
   <!-- ============================================================================= -->
-  <!-- Extract all properties -->
+  <!-- Extract all properties task -->
   <UsingTask
-    TaskName="ExtractAllProperties"
-    TaskFactory="CodeTaskFactory"
-    AssemblyFile="$(RelaxVersionerMSBuildTaskPath)" >
-    <ParameterGroup>
-      <OutputPath ParameterType="System.String" Required="true" />
-    </ParameterGroup>
-    <Task>
-      <Using Namespace="System.IO" />
-      <Using Namespace="System.Linq" />
-      <Using Namespace="System.Text" />
-      <Using Namespace="System.Xml" />
-      <Using Namespace="System.Xml.Linq" />
-      <Using Namespace="Microsoft.Build.Evaluation" />
-      <Using Namespace="Microsoft.Build.Utilities" />
-      <Code Type="Fragment" Language="cs">
-        <![CDATA[
-        var project = new Project(BuildEngine.ProjectFileOfTaskNode);
-        using (var fs = File.Create(OutputPath))
-        {
-          var root = new XElement("Properties",
-            project.AllEvaluatedProperties.
-            Where(p => !p.IsEnvironmentProperty && !p.IsGlobalProperty && !p.IsReservedProperty).
-            Select(p => new XElement(p.Name, p.EvaluatedValue)));
-          root.Save(fs);
-          fs.Flush();
-        }
-        ]]>
-      </Code>
-    </Task>
-  </UsingTask>
+    TaskName="DumpMSBuildPropertiesTask"
+    AssemblyFile="$(RelaxVersionerMSBuildTaskPath)" />
     
   <!-- ============================================================================= -->
   <!-- Build definition -->
@@ -119,8 +91,8 @@
     
     <!-- ======================== -->
     <!-- Execute RelaxVersioner -->
-      
-    <ExtractAllProperties OutputPath="$(_RV_PropertiesPath)" />
+
+    <DumpMSBuildPropertiesTask OutputPath="$(_RV_PropertiesPath)" />
     
     <Exec WorkingDirectory="$(RelaxVersionerToolingDir)"
           Command="$(RelaxVersionerToolingRuntimeName)&quot;$(RelaxVersionerToolingPath)&quot; --language=&quot;$(RelaxVersionerLanguage)&quot; --namespace=&quot;$(RelaxVersionerNamespace)&quot; --tfm=&quot;$(_RV_TargetFramework)&quot; --tfid=&quot;$(_RV_TargetFrameworkIdentifier)&quot; --tfv=&quot;$(_RV_TargetFrameworkVersion)&quot; --tfp=&quot;$(_RV_TargetFrameworkProfile)&quot; --genStatic=&quot;$(RelaxVersionerGenerateStatic)&quot; --buildIdentifier=&quot;$(RelaxVersionerBuildIdentifier)&quot; --outputPath=&quot;$(RelaxVersionerOutputPath)&quot; --resultPath=&quot;$(_RV_ResultPath)&quot; &quot;$(MSBuildProjectFullPath)&quot;" />
@@ -181,8 +153,8 @@
 
     <!-- ======================== -->
     <!-- Execute RelaxVersioner in dryrun mode -->
-      
-    <ExtractAllProperties OutputPath="$(_RV_PackagePropertiesPath)" />
+
+    <DumpMSBuildPropertiesTask OutputPath="$(_RV_PackagePropertiesPath)" />
 
     <Exec WorkingDirectory="$(RelaxVersionerToolingDir)"
           Command="$(RelaxVersionerToolingRuntimeName)&quot;$(RelaxVersionerToolingPath)&quot; --buildIdentifier=&quot;$(RelaxVersionerBuildIdentifier)&quot; --namespace=&quot;$(RelaxVersionerNamespace)&quot; --tfm=&quot;$(_RV_TargetFramework)&quot; --tfid=&quot;$(_RV_TargetFrameworkIdentifier)&quot; --tfv=&quot;$(_RV_TargetFrameworkVersion)&quot; --tfp=&quot;$(_RV_TargetFrameworkProfile)&quot; --genStatic=&quot;$(RelaxVersionerGenerateStatic)&quot; --resultPath=&quot;$(_RV_PackageResultPath)&quot; &quot;$(MSBuildProjectFullPath)&quot;" />

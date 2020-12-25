@@ -1,0 +1,55 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFrameworks>net46;netstandard2.0</TargetFrameworks>
+
+    <AssemblyName>RelaxVersioner.Tasks</AssemblyName>
+    <LangVersion>latest</LangVersion>
+    <DebugType>portable</DebugType>
+    <DebugSymbols>true</DebugSymbols>
+    <Platforms>AnyCPU</Platforms>
+
+    <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
+    <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
+
+    <RootNamespace>RelaxVersioner</RootNamespace>
+    <AssemblyTitle>RelaxVersioner.Tasks</AssemblyTitle>
+    <Product>RelaxVersioner</Product>
+    <Trademark>RelaxVersioner</Trademark>
+    <Copyright>Copyright (c) 2016-2020 Kouji Matsui</Copyright>
+    <Description>Easy-usage, Git-based, auto-generate version informations toolset.</Description>
+
+    <Company>Kouji Matsui (@kozy_kekyo, @kekyo2)</Company>
+    <Authors>Kouji Matsui (@kozy_kekyo, @kekyo2)</Authors>
+    <RepositoryType>git</RepositoryType>
+    <PublishRepositoryUrl>true</PublishRepositoryUrl>
+    <EmbedUntrackedSources>true</EmbedUntrackedSources>
+
+    <DevelopmentDependency>true</DevelopmentDependency>
+    <AllowedOutputExtensionsInPackageBuildOutputFolder>.pdb</AllowedOutputExtensionsInPackageBuildOutputFolder>
+  </PropertyGroup>
+
+  <ItemGroup Condition="'$(TargetFramework)' == 'net35'">
+    <Reference Include="Microsoft.Build.Engine" />
+    <Reference Include="Microsoft.Build.Framework" />
+    <Reference Include="Microsoft.Build.Tasks" />
+    <Reference Include="Microsoft.Build.Utilities" />
+  </ItemGroup>
+
+  <ItemGroup Condition="'$(TargetFramework)' == 'net40'">
+    <Reference Include="Microsoft.Build" />
+    <Reference Include="Microsoft.Build.Framework" />
+    <Reference Include="Microsoft.Build.Tasks.v4.0" />
+    <Reference Include="Microsoft.Build.Utilities.v4.0" />
+  </ItemGroup>
+
+  <ItemGroup Condition="('$(TargetFramework)' != 'net35') AND ('$(TargetFramework)' != 'net40')">
+    <PackageReference Include="Microsoft.Build" Version="15.9.20" />
+    <PackageReference Include="Microsoft.Build.Tasks.Core" Version="15.9.20" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="RelaxVersioner" Version="2.0.7" PrivateAssets="All" />
+  </ItemGroup>
+
+</Project>

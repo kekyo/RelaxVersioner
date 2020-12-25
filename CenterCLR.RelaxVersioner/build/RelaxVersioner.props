@@ -21,25 +21,26 @@
     <_RV_PlatformName Condition="'$(MicrosoftNETBuildTasksTFM)' == ''">netcoreapp2.1</_RV_PlatformName>
     <_RV_RuntimeName>dotnet </_RV_RuntimeName>
     <_RV_ExecutableName>rv.dll</_RV_ExecutableName>
-    <RelaxVersionerMSBuildTaskPath>$(MSBuildToolsPath)\Microsoft.Build.Tasks.Core.dll</RelaxVersionerMSBuildTaskPath>
+    <_RV_TaskPlatformName>netstandard2.0</_RV_TaskPlatformName>
   </PropertyGroup>
   <PropertyGroup Condition="'$(MSBuildRuntimeType)' == 'Full'">
     <_RV_PlatformName>net461</_RV_PlatformName>
     <_RV_RuntimeName></_RV_RuntimeName>
     <_RV_ExecutableName>rv.exe</_RV_ExecutableName>
-    <RelaxVersionerMSBuildTaskPath>$(MSBuildToolsPath)\Microsoft.Build.Tasks.v4.0.dll</RelaxVersionerMSBuildTaskPath>
+    <_RV_TaskPlatformName>net46</_RV_TaskPlatformName>
   </PropertyGroup>
   <PropertyGroup Condition="'$(MSBuildRuntimeType)' == 'Mono'">
     <_RV_PlatformName>net461</_RV_PlatformName>
     <_RV_RuntimeName>mono </_RV_RuntimeName>
     <_RV_ExecutableName>rv.exe</_RV_ExecutableName>
-    <RelaxVersionerMSBuildTaskPath>$(MSBuildToolsPath)\Microsoft.Build.Tasks.v4.0.dll</RelaxVersionerMSBuildTaskPath>
+    <_RV_TaskPlatformName>net46</_RV_TaskPlatformName>
   </PropertyGroup>
   <PropertyGroup>
     <RelaxVersionerToolingRuntimeName>$(_RV_RuntimeName)</RelaxVersionerToolingRuntimeName>
     <_RV_ToolingDir>$([System.IO.Path]::Combine('$(MSBuildThisFileDirectory)','..','tools','$(_RV_PlatformName)'))</_RV_ToolingDir>
     <RelaxVersionerToolingDir>$([System.IO.Path]::GetFullPath('$(_RV_ToolingDir)'))</RelaxVersionerToolingDir>
     <RelaxVersionerToolingPath>$([System.IO.Path]::Combine('$(RelaxVersionerToolingDir)','$(_RV_ExecutableName)'))</RelaxVersionerToolingPath>
+    <RelaxVersionerMSBuildTaskPath>$([System.IO.Path]::Combine('$(MSBuildThisFileDirectory)','$(_RV_TaskPlatformName)'))</RelaxVersionerMSBuildTaskPath>
     <GenerateAssemblyVersionAttribute>false</GenerateAssemblyVersionAttribute>
     <GenerateAssemblyFileVersionAttribute>false</GenerateAssemblyFileVersionAttribute>
     <GenerateAssemblyInformationalVersionAttribute>false</GenerateAssemblyInformationalVersionAttribute>

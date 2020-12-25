@@ -20,7 +20,8 @@ echo "==========================================================="
 echo "Build CenterCLR.RelaxVersioner"
 echo ""
 
-dotnet clean -c Release -p:Platform=AnyCPU CenterCLR.RelaxVersioner/CenterCLR.RelaxVersioner.csproj
+dotnet clean -c Release -p:Platform="Any CPU" CenterCLR.RelaxVersioner.sln
 dotnet restore
+dotnet build -c Release -p:Platform="Any CPU" CenterCLR.RelaxVersioner.sln
 # dotnet pack -p:Configuration=Release -p:Platform=AnyCPU -p:NoWarn=NU5104 -o artifacts CenterCLR.RelaxVersioner.Core/CenterCLR.RelaxVersioner.Core.csproj
 dotnet pack -p:Configuration=Release -p:Platform=AnyCPU -o artifacts CenterCLR.RelaxVersioner/CenterCLR.RelaxVersioner.csproj

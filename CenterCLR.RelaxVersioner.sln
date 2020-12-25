@@ -6,8 +6,8 @@ MinimumVisualStudioVersion = 10.0.40219.1
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{C3592BB3-F62F-499E-B1E8-2B497161C389}"
 	ProjectSection(SolutionItems) = preProject
 		.gitignore = .gitignore
-		build-nupkg.sh = build-nupkg.sh
 		build-nupkg.bat = build-nupkg.bat
+		build-nupkg.sh = build-nupkg.sh
 		.github\workflows\build.yml = .github\workflows\build.yml
 		Images\CenterCLR.RelaxVersioner.100.png = Images\CenterCLR.RelaxVersioner.100.png
 		Images\CenterCLR.RelaxVersioner.128.png = Images\CenterCLR.RelaxVersioner.128.png
@@ -30,13 +30,18 @@ EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CenterCLR.RelaxVersioner.Core", "CenterCLR.RelaxVersioner.Core\CenterCLR.RelaxVersioner.Core.csproj", "{AD40D6E7-1B5F-4734-919A-3C55F5A40CB9}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CenterCLR.RelaxVersioner", "CenterCLR.RelaxVersioner\CenterCLR.RelaxVersioner.csproj", "{F8E532DE-24B0-49BA-A667-6447CA4BAA89}"
+	ProjectSection(ProjectDependencies) = postProject
+		{52B2423C-846D-4D9B-AB10-D5C593D3FB1D} = {52B2423C-846D-4D9B-AB10-D5C593D3FB1D}
+	EndProjectSection
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "docs", "docs", "{A8639232-70FA-4878-BC0D-B8B27B0C555D}"
-ProjectSection(SolutionItems) = preProject
-	docs\Compiling-RelaxVersioner.md = docs\Compiling-RelaxVersioner.md
-	docs\Customizing-RelaxVersioner.md = docs\Customizing-RelaxVersioner.md
-	docs\More-On-Rules.md = docs\More-On-Rules.md
-EndProjectSection
+	ProjectSection(SolutionItems) = preProject
+		docs\Compiling-RelaxVersioner.md = docs\Compiling-RelaxVersioner.md
+		docs\Customizing-RelaxVersioner.md = docs\Customizing-RelaxVersioner.md
+		docs\More-On-Rules.md = docs\More-On-Rules.md
+	EndProjectSection
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CenterCLR.RelaxVersioner.Tasks", "CenterCLR.RelaxVersioner.Tasks\CenterCLR.RelaxVersioner.Tasks.csproj", "{52B2423C-846D-4D9B-AB10-D5C593D3FB1D}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -52,6 +57,10 @@ Global
 		{F8E532DE-24B0-49BA-A667-6447CA4BAA89}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{F8E532DE-24B0-49BA-A667-6447CA4BAA89}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{F8E532DE-24B0-49BA-A667-6447CA4BAA89}.Release|Any CPU.Build.0 = Release|Any CPU
+		{52B2423C-846D-4D9B-AB10-D5C593D3FB1D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{52B2423C-846D-4D9B-AB10-D5C593D3FB1D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{52B2423C-846D-4D9B-AB10-D5C593D3FB1D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{52B2423C-846D-4D9B-AB10-D5C593D3FB1D}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
