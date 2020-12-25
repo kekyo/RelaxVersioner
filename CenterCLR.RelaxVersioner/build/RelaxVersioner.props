@@ -21,16 +21,19 @@
     <_RV_PlatformName Condition="'$(MicrosoftNETBuildTasksTFM)' == ''">netcoreapp2.1</_RV_PlatformName>
     <_RV_RuntimeName>dotnet </_RV_RuntimeName>
     <_RV_ExecutableName>rv.dll</_RV_ExecutableName>
+    <RelaxVersionerMSBuildTaskPath>$(MSBuildToolsPath)\Microsoft.Build.Tasks.Core.dll</RelaxVersionerMSBuildTaskPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(MSBuildRuntimeType)' == 'Full'">
     <_RV_PlatformName>net461</_RV_PlatformName>
     <_RV_RuntimeName></_RV_RuntimeName>
     <_RV_ExecutableName>rv.exe</_RV_ExecutableName>
+    <RelaxVersionerMSBuildTaskPath>$(MSBuildToolsPath)\Microsoft.Build.Tasks.v4.0.dll</RelaxVersionerMSBuildTaskPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(MSBuildRuntimeType)' == 'Mono'">
     <_RV_PlatformName>net461</_RV_PlatformName>
     <_RV_RuntimeName>mono </_RV_RuntimeName>
     <_RV_ExecutableName>rv.exe</_RV_ExecutableName>
+    <RelaxVersionerMSBuildTaskPath>$(MSBuildToolsPath)\Microsoft.Build.Tasks.v4.0.dll</RelaxVersionerMSBuildTaskPath>
   </PropertyGroup>
   <PropertyGroup>
     <RelaxVersionerToolingRuntimeName>$(_RV_RuntimeName)</RelaxVersionerToolingRuntimeName>
