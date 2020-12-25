@@ -17,8 +17,7 @@
 -->
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003" TreatAsLocalProperty="_RV_PlatformName;_RV_RuntimeName;_RV_ExecutableName;_RV_ToolingDir">
   <PropertyGroup Condition="'$(MSBuildRuntimeType)' == 'Core'">
-    <_RV_PlatformName Condition="'$(MicrosoftNETBuildTasksTFM)' != ''">$(MicrosoftNETBuildTasksTFM)</_RV_PlatformName>
-    <_RV_PlatformName Condition="'$(MicrosoftNETBuildTasksTFM)' == ''">netcoreapp2.1</_RV_PlatformName>
+    <_RV_PlatformName>netcoreapp2.1</_RV_PlatformName>
     <_RV_RuntimeName>dotnet </_RV_RuntimeName>
     <_RV_ExecutableName>rv.dll</_RV_ExecutableName>
     <_RV_TaskPlatformName>netstandard2.0</_RV_TaskPlatformName>
@@ -40,7 +39,7 @@
     <_RV_ToolingDir>$([System.IO.Path]::Combine('$(MSBuildThisFileDirectory)','..','tools','$(_RV_PlatformName)'))</_RV_ToolingDir>
     <RelaxVersionerToolingDir>$([System.IO.Path]::GetFullPath('$(_RV_ToolingDir)'))</RelaxVersionerToolingDir>
     <RelaxVersionerToolingPath>$([System.IO.Path]::Combine('$(RelaxVersionerToolingDir)','$(_RV_ExecutableName)'))</RelaxVersionerToolingPath>
-    <RelaxVersionerMSBuildTaskPath>$([System.IO.Path]::Combine('$(MSBuildThisFileDirectory)','$(_RV_TaskPlatformName)'))</RelaxVersionerMSBuildTaskPath>
+    <RelaxVersionerMSBuildTaskPath>$([System.IO.Path]::Combine('$(MSBuildThisFileDirectory)','$(_RV_TaskPlatformName)','RelaxVersioner.Tasks.dll'))</RelaxVersionerMSBuildTaskPath>
     <GenerateAssemblyVersionAttribute>false</GenerateAssemblyVersionAttribute>
     <GenerateAssemblyFileVersionAttribute>false</GenerateAssemblyFileVersionAttribute>
     <GenerateAssemblyInformationalVersionAttribute>false</GenerateAssemblyInformationalVersionAttribute>
