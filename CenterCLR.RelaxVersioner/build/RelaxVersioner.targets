@@ -69,12 +69,6 @@
   <PropertyGroup Condition="'$(Language)' != 'F#' AND '$(Language)' != 'C++'">
     <RelaxVersionerNamespace Condition="'$(RelaxVersionerNamespace)' == ''">$(RootNamespace)</RelaxVersionerNamespace>
   </PropertyGroup>
-
-  <!-- ============================================================================= -->
-  <!-- Extract all properties task -->
-  <UsingTask
-    TaskName="DumpMSBuildPropertiesTask"
-    AssemblyFile="$(RelaxVersionerMSBuildTaskPath)" />
     
   <!-- ============================================================================= -->
   <!-- Build definition -->
