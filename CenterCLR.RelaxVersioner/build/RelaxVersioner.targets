@@ -69,7 +69,7 @@
   <PropertyGroup Condition="'$(Language)' != 'F#' AND '$(Language)' != 'C++'">
     <RelaxVersionerNamespace Condition="'$(RelaxVersionerNamespace)' == ''">$(RootNamespace)</RelaxVersionerNamespace>
   </PropertyGroup>
-    
+
   <!-- ============================================================================= -->
   <!-- Build definition -->
   <Target Name="RelaxVersionerBuild" BeforeTargets="BeforeCompile" Outputs="$(RelaxVersionerOutputPath)">
