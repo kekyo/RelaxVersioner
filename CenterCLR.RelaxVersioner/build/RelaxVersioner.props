@@ -47,6 +47,6 @@
   </PropertyGroup>
 
   <UsingTask
-    TaskName="DumpMSBuildPropertiesTask"
+    TaskName="DumpPropertiesTask"
     AssemblyFile="$(_RV_MSBuildTaskPath)" />
 </Project>

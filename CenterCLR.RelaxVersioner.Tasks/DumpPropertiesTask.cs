@@ -17,16 +17,17 @@
 //
 /////////////////////////////////////////////////////////////////////////////////////////////////
 
-using Microsoft.Build.Execution;
-using Microsoft.Build.Framework;
-using Microsoft.Build.Utilities;
 using System.IO;
 using System.Linq;
 using System.Xml.Linq;
 
+using Microsoft.Build.Execution;
+using Microsoft.Build.Framework;
+using Microsoft.Build.Utilities;
+
 namespace RelaxVersioner
 {
-    public sealed class DumpMSBuildPropertiesTask : Task
+    public sealed class DumpPropertiesTask : Task
     {
         [Required]
         public string? OutputPath
@@ -39,7 +40,7 @@ namespace RelaxVersioner
         {
             if (string.IsNullOrWhiteSpace(OutputPath))
             {
-                this.Log.LogError("RelaxVersioner.Task: Required output path.");
+                this.Log.LogError("RelaxVersioner.DumpPropertiesTask: Required output path.");
                 return false;
             }
 
@@ -59,12 +60,12 @@ namespace RelaxVersioner
                     fs.Flush();
                 }
 
-                this.Log.LogMessage($"RelaxVersioner.Task: Dump properties from build engine, Path={OutputPath}");
+                this.Log.LogMessage($"RelaxVersioner.DumpPropertiesTask: Dump properties from build engine, Path={OutputPath}");
                 return true;
             }
             else
             {
-                this.Log.LogError("RelaxVersioner.Task: Unable contact build engine.");
+                this.Log.LogError("RelaxVersioner.DumpPropertiesTask: Unable contact build engine.");
                 return false;
             }
         }
