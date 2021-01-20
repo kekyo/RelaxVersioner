@@ -34,7 +34,7 @@ namespace RelaxVersioner
         {
             var type = instance.GetType();
             var pi = type.GetProperty(name, BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance);
-            return pi?.GetValue(instance); 
+            return pi?.GetValue(instance, new object[0]); 
         }
     }
 }
