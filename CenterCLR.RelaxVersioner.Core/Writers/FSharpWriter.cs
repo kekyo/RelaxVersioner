@@ -28,7 +28,7 @@ namespace RelaxVersioner.Writers
             var required = IsRequiredSelfHostingMetadataAttribute(tw.Context);
             if (!required)
             {
-                tw.WriteLine("#if NET20 || NET30 || NET35 || NET40_CLIENT");
+                tw.WriteLine("#if NET20 || NET30 || NET35 || NET40");
                 tw.WriteLine();
             }
 
