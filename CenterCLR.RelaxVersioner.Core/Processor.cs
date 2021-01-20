@@ -22,11 +22,12 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using System.IO;
+using System.Threading.Tasks;
 using System.Xml.Linq;
-using RelaxVersioner.Writers;
 
 using LibGit2Sharp;
-using System.Threading.Tasks;
+
+using RelaxVersioner.Writers;
 
 namespace RelaxVersioner
 {

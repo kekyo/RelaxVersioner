@@ -76,7 +76,7 @@ namespace RelaxVersioner.Writers
 
                 foreach (var rule in ruleSet)
                 {
-                    var formattedValue = Named.Format(rule.Format, keyValues);
+                    var formattedValue = Named.Format(rule.Format, keyValues, key => string.Empty);
                     if (!string.IsNullOrWhiteSpace(rule.Key))
                     {
                         this.WriteAttributeWithArguments(tw, rule.Name, rule.Key, formattedValue);
@@ -103,7 +103,7 @@ namespace RelaxVersioner.Writers
 
                         foreach (var rule in rules)
                         {
-                            var formattedValue = Named.Format(rule.Format, keyValues);
+                            var formattedValue = Named.Format(rule.Format, keyValues, key => string.Empty);
                             if (!string.IsNullOrWhiteSpace(rule.Key))
                             {
                                 this.WriteLiteralWithArgument(tw, rule.Key, formattedValue);
