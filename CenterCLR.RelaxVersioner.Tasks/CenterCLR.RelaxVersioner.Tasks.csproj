@@ -17,7 +17,7 @@
     <AssemblyTitle>RelaxVersioner.Tasks</AssemblyTitle>
     <Product>RelaxVersioner</Product>
     <Trademark>RelaxVersioner</Trademark>
-    <Copyright>Copyright (c) 2016-2020 Kouji Matsui</Copyright>
+    <Copyright>Copyright (c) 2016-2021 Kouji Matsui</Copyright>
     <Description>Easy-usage, Git-based, auto-generate version informations toolset.</Description>
 
     <Company>Kouji Matsui (@kozy_kekyo, @kekyo2)</Company>
