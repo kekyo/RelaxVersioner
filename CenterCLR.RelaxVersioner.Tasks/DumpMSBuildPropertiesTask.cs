@@ -17,7 +17,7 @@
 //
 /////////////////////////////////////////////////////////////////////////////////////////////////
 
-using Microsoft.Build.Evaluation;
+using Microsoft.Build.Execution;
 using Microsoft.Build.Framework;
 using Microsoft.Build.Utilities;
 using System.IO;
@@ -29,7 +29,7 @@ namespace RelaxVersioner
     public sealed class DumpMSBuildPropertiesTask : Task
     {
         [Required]
-        public string OutputPath
+        public string? OutputPath
         {
             get;
             set;
@@ -37,18 +37,36 @@ namespace RelaxVersioner
 
         public override bool Execute()
         {
-            var project = new Project(this.BuildEngine.ProjectFileOfTaskNode);
-            using (var fs = File.Create(OutputPath))
+            if (string.IsNullOrWhiteSpace(OutputPath))
             {
-                var root = new XElement("Properties",
-                  project.AllEvaluatedProperties.
-                  Where(p => !p.IsEnvironmentProperty && !p.IsGlobalProperty && !p.IsReservedProperty).
-                  Select(p => new XElement(p.Name, p.EvaluatedValue)));
-                root.Save(fs);
-                fs.Flush();
+                this.Log.LogError("RelaxVersioner.Task: Required output path.");
+                return false;
             }
 
-            return true;
+            var buildRequestEntry = this.BuildEngine?.GetField("_requestEntry");
+            var requestConfiguration = buildRequestEntry?.GetProperty("RequestConfiguration");
+            var project = (ProjectInstance?)requestConfiguration?.GetProperty("Project");
+
+            if (project != null)
+            {
+                using (var fs = File.Create(OutputPath))
+                {
+                    var root = new XElement("Properties",
+                        project.Properties.
+                        Cast<ProjectPropertyInstance>().
+                        Select(p => new XElement(p.Name, p.EvaluatedValue ?? "")));
+                    root.Save(fs);
+                    fs.Flush();
+                }
+
+                this.Log.LogMessage($"RelaxVersioner.Task: Dump properties from build engine, Path={OutputPath}");
+                return true;
+            }
+            else
+            {
+                this.Log.LogError("RelaxVersioner.Task: Unable contact build engine.");
+                return false;
+            }
         }
     }
 }
