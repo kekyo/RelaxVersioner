@@ -54,6 +54,7 @@ namespace RelaxVersioner
                     { "tfp=", "target framework profile definition (TargetFrameworkProfile)", v => context.TargetFrameworkProfile = v },
                     { "genStatic=", $"generate static informations", v => context.GenerateStatic = bool.TryParse(v, out var genStatic) ? genStatic : true },
                     { "buildIdentifier=", $"build identifier", v => context.BuildIdentifier = v },
+                    { "propertiesPath=", $"properties file", v => context.PropertiesPath = v },
                     { "outputPath=", $"output source file", v => context.OutputPath = v },
                     { "resultPath=", $"output result via xml file", v => resultPath = v },
                     { "help", "help", v => help = v != null },

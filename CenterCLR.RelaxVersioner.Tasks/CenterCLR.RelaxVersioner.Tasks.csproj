@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFrameworks>net46;netstandard2.0</TargetFrameworks>
+    <TargetFrameworks>net40;net46;netstandard2.0</TargetFrameworks>
 
     <AssemblyName>RelaxVersioner.Tasks</AssemblyName>
     <LangVersion>latest</LangVersion>
@@ -34,9 +34,19 @@
     <PackageReference Include="Microsoft.Win32.Registry" Version="5.0.0" />
   </ItemGroup>
 
-  <ItemGroup>
+  <ItemGroup Condition="'$(TargetFramework)' == 'net40'">
+    <Reference Include="Microsoft.Build" />
+    <Reference Include="Microsoft.Build.Framework" />
+    <Reference Include="Microsoft.Build.Tasks.v4.0" />
+    <Reference Include="Microsoft.Build.Utilities.v4.0" />
+  </ItemGroup>
+
+  <ItemGroup Condition="'$(TargetFramework)' != 'net40'">
     <PackageReference Include="Microsoft.Build" Version="15.9.20" />
     <PackageReference Include="Microsoft.Build.Tasks.Core" Version="15.9.20" />
+  </ItemGroup>
+
+  <ItemGroup>
     <PackageReference Include="RelaxVersioner" Version="2.0.33" PrivateAssets="All" />
   </ItemGroup>
 

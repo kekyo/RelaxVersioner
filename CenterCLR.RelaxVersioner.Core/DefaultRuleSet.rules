@@ -1,7 +1,7 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <!--
     RelaxVersioner - Easy-usage, Git-based, auto-generate version informations toolset.
-    Copyright (c) 2016-2020 Kouji Matsui (@kozy_kekyo, @kekyo2)
+    Copyright (c) 2016-2021 Kouji Matsui (@kozy_kekyo, @kekyo2)
 
     Licensed under the Apache License, Version 2.0 (the "License");
     you may not use this file except in compliance with the License.
@@ -68,5 +68,11 @@
         <Rule name="AssemblyMetadata" key="Build">{buildIdentifier}</Rule>
         <Rule name="AssemblyMetadata" key="Generated">{generated:R}</Rule>
         <Rule name="AssemblyMetadata" key="TargetFramework">{tfm}</Rule>
+
+        <!--
+            The "RepositoryUrl" identity is a MSBuild property name.
+            You can use "RepositoryUrl" or another identities come from PropertyGroup definitions.
+        -->
+        <Rule name="AssemblyMetadata" key="Url">{RepositoryUrl}</Rule>
     </WriterRules>
 </RelaxVersioner>

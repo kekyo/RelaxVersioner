@@ -67,6 +67,7 @@ namespace YourApp
       public const string Message = "Merge branch 'devel'";
       public const string Build = "";
       public const string Generated = "Sun, 20 Dec 2020 09:37:43 GMT";
+      public const string Url = "https://github.com/kekyo/RelaxVersioner.git";
     }
   }
 }
@@ -115,6 +116,8 @@ namespace global
       let Build = "";
       [<Literal>]
       let Generated = "Sun, 20 Dec 2020 09:38:33 GMT";
+      [<Literal>]
+      let Url = "https://github.com/kekyo/RelaxVersioner.git";
   do()
 ```
 
@@ -148,6 +151,7 @@ Namespace global.YourApp
       Public Const Message As String = "Merge branch 'devel'"
       Public Const Build As String = ""
       Public Const Generated As String = "Sun, 20 Dec 2020 09:38:33 GMT"
+      Public Const Url As String = "https://github.com/kekyo/RelaxVersioner.git"
     End Class
   End Module
 End Namespace
@@ -185,6 +189,7 @@ public:
         literal System::String^ Message = "Fixed generating path in C++.";
         literal System::String^ Build = "";
         literal System::String^ Generated = "Sun, 20 Dec 2020 09:34:03 GMT";
+        literal System::String^ Url = "https://github.com/kekyo/RelaxVersioner.git";
     };
 };
 ```
@@ -266,11 +271,18 @@ public:
     <Rule name="AssemblyMetadata" key="Message">{commit.MessageShort}</Rule>
     <Rule name="AssemblyMetadata" key="Build">{buildIdentifier}</Rule>
     <Rule name="AssemblyMetadata" key="Generated">{generated:R}</Rule>
+    
     <!-- These definitions are not included by defaults.
     <Rule name="AssemblyMetadata" key="TargetFrameworkIdentity">{tfid}</Rule>
     <Rule name="AssemblyMetadata" key="TargetFrameworkVersion">{tfv}</Rule>
     <Rule name="AssemblyMetadata" key="TargetFrameworkProfile">{tfp}</Rule>
     -->
+    
+    <!--
+      The "RepositoryUrl" identity is a MSBuild property name.
+      You can use "RepositoryUrl" or another identities come from PropertyGroup definitions.
+    -->
+    <Rule name="AssemblyMetadata" key="Url">{RepositoryUrl}</Rule>
   </WriterRules>
 </RelaxVersioner>
 ```

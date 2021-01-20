@@ -27,6 +27,7 @@
     <_RV_PlatformName>net461</_RV_PlatformName>
     <_RV_RuntimeName></_RV_RuntimeName>
     <_RV_ExecutableName>rv.exe</_RV_ExecutableName>
+    <!-- TODO: change platform to net40 if using older msbuild -->
     <_RV_TaskPlatformName>net46</_RV_TaskPlatformName>
   </PropertyGroup>
   <PropertyGroup Condition="'$(MSBuildRuntimeType)' == 'Mono'">
