@@ -1,7 +1,7 @@
 ﻿/////////////////////////////////////////////////////////////////////////////////////////////////
 //
 // RelaxVersioner - Easy-usage, Git-based, auto-generate version informations toolset.
-// Copyright (c) 2016-2020 Kouji Matsui (@kozy_kekyo, @kekyo2)
+// Copyright (c) 2016-2021 Kouji Matsui (@kozy_kekyo, @kekyo2)
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -76,7 +76,7 @@ namespace RelaxVersioner.Writers
 
                 foreach (var rule in ruleSet)
                 {
-                    var formattedValue = Named.Format(rule.Format, keyValues);
+                    var formattedValue = Named.Format(rule.Format, keyValues, key => string.Empty);
                     if (!string.IsNullOrWhiteSpace(rule.Key))
                     {
                         this.WriteAttributeWithArguments(tw, rule.Name, rule.Key, formattedValue);
@@ -103,7 +103,7 @@ namespace RelaxVersioner.Writers
 
                         foreach (var rule in rules)
                         {
-                            var formattedValue = Named.Format(rule.Format, keyValues);
+                            var formattedValue = Named.Format(rule.Format, keyValues, key => string.Empty);
                             if (!string.IsNullOrWhiteSpace(rule.Key))
                             {
                                 this.WriteLiteralWithArgument(tw, rule.Key, formattedValue);
@@ -137,9 +137,7 @@ namespace RelaxVersioner.Writers
             tfv.Substring(1) is { } vs &&
             Version.TryParse(vs, out var version) &&
             ((version.Major < 4) ||
-             (version.Major == 4) && (version.Minor == 0) &&
-             context.TargetFrameworkProfile is {} tfp &&
-             (string.CompareOrdinal(tfp, "Client") == 0));
+             (version.Major == 4) && (version.Minor == 0));
 
         protected virtual void WriteComment(SourceCodeWriter tw, string format, params object[] args) =>
             tw.WriteLine("// " + format, args);

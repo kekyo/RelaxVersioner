@@ -49,6 +49,9 @@ using System.Reflection;
 [assembly: AssemblyMetadata("Message","Merge branch 'devel'")]
 [assembly: AssemblyMetadata("Build","")]
 [assembly: AssemblyMetadata("Generated","Sun, 20 Dec 2020 09:37:43 GMT")]
+[assembly: AssemblyMetadata("Platform","AnyCPU")]
+[assembly: AssemblyMetadata("BuildOn","Unix")]
+[assembly: AssemblyMetadata("SdkVersion","5.0.101")]
 
 namespace YourApp
 {
@@ -67,6 +70,9 @@ namespace YourApp
       public const string Message = "Merge branch 'devel'";
       public const string Build = "";
       public const string Generated = "Sun, 20 Dec 2020 09:37:43 GMT";
+      public const string Platform = "AnyCPU";
+      public const string BuildOn = "Unix";
+      public const string SdkVersion = "5.0.101";
     }
   }
 }
@@ -88,6 +94,9 @@ namespace global
   [<assembly: AssemblyMetadata("Message","Merge branch 'devel'")>]
   [<assembly: AssemblyMetadata("Build","")>]
   [<assembly: AssemblyMetadata("Generated","Sun, 20 Dec 2020 09:38:33 GMT")>]
+  [<assembly: AssemblyMetadata("Platform","AnyCPU")>]
+  [<assembly: AssemblyMetadata("BuildOn","Unix")>]
+  [<assembly: AssemblyMetadata("SdkVersion","5.0.101")>]
   do()
 
 namespace global
@@ -115,6 +124,12 @@ namespace global
       let Build = "";
       [<Literal>]
       let Generated = "Sun, 20 Dec 2020 09:38:33 GMT";
+      [<Literal>]
+      let Platform = "AnyCPU";
+      [<Literal>]
+      let BuildOn = "Unix";
+      [<Literal>]
+      let SdkVersion = "5.0.101";
   do()
 ```
 
@@ -133,6 +148,9 @@ namespace global
 <Assembly: AssemblyMetadata("Build","")>
 <Assembly: AssemblyMetadata("Generated","Sun, 20 Dec 2020 09:38:33 GMT")>
 <Assembly: AssemblyMetadata("TargetFramework","")>
+<Assembly: AssemblyMetadata("Platform","x64")>
+<Assembly: AssemblyMetadata("BuildOn","Windows_NT")>
+<Assembly: AssemblyMetadata("SdkVersion","5.0.101")>
 
 Namespace global.YourApp
   Module ThisAssembly
@@ -148,6 +166,9 @@ Namespace global.YourApp
       Public Const Message As String = "Merge branch 'devel'"
       Public Const Build As String = ""
       Public Const Generated As String = "Sun, 20 Dec 2020 09:38:33 GMT"
+      Public Const Platform As String = "AnyCPU"
+      Public Const BuildOn As String = "Windows_NT"
+      Public Const SdkVersion As String = "5.0.101"
     End Class
   End Module
 End Namespace
@@ -168,6 +189,9 @@ using namespace System::Reflection;
 [assembly: AssemblyMetadata("Message","Fixed generating path in C++.")];
 [assembly: AssemblyMetadata("Build","")];
 [assembly: AssemblyMetadata("Generated","Sun, 20 Dec 2020 09:34:03 GMT")];
+[assembly: AssemblyMetadata("Platform","x64")];
+[assembly: AssemblyMetadata("BuildOn","Windows_NT")];
+[assembly: AssemblyMetadata("SdkVersion","5.0.101")];
 
 private ref class ThisAssembly abstract sealed
 {
@@ -185,6 +209,9 @@ public:
         literal System::String^ Message = "Fixed generating path in C++.";
         literal System::String^ Build = "";
         literal System::String^ Generated = "Sun, 20 Dec 2020 09:34:03 GMT";
+        literal System::String^ Platform = "x64";
+        literal System::String^ BuildOn = "Windows_NT";
+        literal System::String^ SdkVersion = "5.0.101";
     };
 };
 ```
@@ -231,20 +258,20 @@ public:
     <Import>System.Reflection</Import>
     
     <!--
-      "versionLabel" is extract numerical-notate version string [1.2.3.4] or [v1.2.3.4] from git repository tags traverse start HEAD.
+      "versionLabel" extracts numerical-notate version string [1.2.3.4] or [v1.2.3.4] from git repository tags traverse start HEAD.
       If not found, use [0.0.1].
     -->
     <Rule name="AssemblyVersion">{versionLabel}</Rule>
     
     <!--
-      "safeVersion" is extract committed date (from commmiter) from git repository HEAD.
+      "safeVersion" is extracts committed date (from commmiter) from git repository HEAD.
       "safeVersion" specialized from "committer.When".
       (The format is safe-numerical-notate version string [2016.2.14.12345]. (Last number is 2sec prec.))
     -->
     <Rule name="AssemblyFileVersion">{safeVersion}</Rule>
     
     <!--
-      "commitId" is extract commit id from git repository HEAD.
+      "commitId" is extracts commit id from git repository HEAD.
       "commitId" alias to "commit.Sha".
     -->
     <Rule name="AssemblyInformationalVersion">{commitId}</Rule>
@@ -256,6 +283,7 @@ public:
       "author" and "committer" can use property "Name", "Email", and "When". (Derived from libgit2sharp)
       "buildIdentifier" is passing from MSBuild property named "RelaxVersionerBuildIdentifier" or "BuildIdentifier". We can use in CI building.
       "generated" is generated date by RelaxVersioner.
+      You can apply format directives same as string.Format().
     -->
     <Rule name="AssemblyMetadata" key="Date">{committer.When:R}</Rule>
     <Rule name="AssemblyMetadata" key="Branch">{branch.FriendlyName}</Rule>
@@ -266,10 +294,26 @@ public:
     <Rule name="AssemblyMetadata" key="Build">{buildIdentifier}</Rule>
     <Rule name="AssemblyMetadata" key="Generated">{generated:R}</Rule>
     <Rule name="AssemblyMetadata" key="TargetFramework">{tfm}</Rule>
+    
     <!-- These definitions are not included by defaults.
     <Rule name="AssemblyMetadata" key="TargetFrameworkIdentity">{tfid}</Rule>
     <Rule name="AssemblyMetadata" key="TargetFrameworkVersion">{tfv}</Rule>
     <Rule name="AssemblyMetadata" key="TargetFrameworkProfile">{tfp}</Rule>
+    -->
+
+    <!--
+      The "Platform" identity is a MSBuild property name.
+      You can use "Platform" and another identities come from PropertyGroup definitions
+      and process environments such as "RootNamespace", "Prefer32Bit", "NETCoreSdkVersion", "PATH" and etc.
+      Each results are strictly string type, so format directives will be ignored.
+    -->
+    <Rule name="AssemblyMetadata" key="Platform">{Platform}</Rule>
+    <Rule name="AssemblyMetadata" key="BuildOn">{OS}</Rule>
+    <Rule name="AssemblyMetadata" key="SdkVersion">{NETCoreSdkVersion}</Rule>
+
+    <!-- These definitions are not included by defaults.
+    <Rule name="AssemblyMetadata" key="Language">{Language}</Rule>
+    <Rule name="AssemblyMetadata" key="HostName">{COMPUTERNAME}</Rule>
     -->
   </WriterRules>
 </RelaxVersioner>
@@ -310,6 +354,8 @@ Apply `fetch-depth: 0` predication into your build.yml script.
 * Under Apache v2
 
 ## History
+* 2.1.0:
+  * Added supporting a lot of configurable properties derived from MSBuild runtime time PropertyGroups. With MSBuild alone, it was quite a hassle to refer to these values, but you can just specify the property name in the rules file and embed the values ​​in the same way. (See custom rule set file section.)
 * 2.0.9:
   * Fixed conflicting ValueTuple assembly at net461 binary.
 * 2.0.8:

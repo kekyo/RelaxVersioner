@@ -17,33 +17,24 @@
 //
 /////////////////////////////////////////////////////////////////////////////////////////////////
 
-using System;
-using System.IO;
-using System.Linq;
-using System.Xml.Linq;
+using System.Reflection;
 
 namespace RelaxVersioner
 {
-    internal static class ResultWriter
+    internal static class Utilities
     {
-        private static string ToString(object value) =>
-            (value is Array array) ?
-                string.Join(",", array.Cast<object>().Select(ToString)):
-                value?.ToString() ?? string.Empty;
-
-        public static void Write(string path, object result)
+        public static object? GetField(this object instance, string name)
         {
-            var type = result.GetType();
-            var document = new XElement(
-                type.Name,
-                type.GetFields().
-                    Select(field => new XElement(field.Name, ToString(field.GetValue(result)))));
+            var type = instance.GetType();
+            var fi = type.GetField(name, BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance);
+            return fi?.GetValue(instance);
+        }
 
-            using (var fs = new FileStream(path, FileMode.Create, FileAccess.ReadWrite, FileShare.None))
-            {
-                document.Save(fs);
-                fs.Flush();
-            }
+        public static object? GetProperty(this object instance, string name)
+        {
+            var type = instance.GetType();
+            var pi = type.GetProperty(name, BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance);
+            return pi?.GetValue(instance, new object[0]); 
         }
     }
 }

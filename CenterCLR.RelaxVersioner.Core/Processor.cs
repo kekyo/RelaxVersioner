@@ -1,7 +1,7 @@
 ﻿/////////////////////////////////////////////////////////////////////////////////////////////////
 //
 // RelaxVersioner - Easy-usage, Git-based, auto-generate version informations toolset.
-// Copyright (c) 2016-2020 Kouji Matsui (@kozy_kekyo, @kekyo2)
+// Copyright (c) 2016-2021 Kouji Matsui (@kozy_kekyo, @kekyo2)
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -21,9 +21,13 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
-using RelaxVersioner.Writers;
+using System.IO;
+using System.Threading.Tasks;
+using System.Xml.Linq;
 
 using LibGit2Sharp;
+
+using RelaxVersioner.Writers;
 
 namespace RelaxVersioner
 {
@@ -39,6 +43,7 @@ namespace RelaxVersioner
         public string TargetFrameworkProfile;
         public bool GenerateStatic;
         public string BuildIdentifier;
+        public string PropertiesPath;
     }
 
     public sealed class Processor
@@ -197,31 +202,43 @@ namespace RelaxVersioner
             var tagsString = string.Join(",", tags);
 
             var safeVersion = Utilities.GetSafeVersionFromDate(committer.When);
-            var versionLabel = LookupVersionLabel(targetBranch, tagsDictionary);
 
-            var keyValues = new Dictionary<string, object>(StringComparer.InvariantCultureIgnoreCase)
-                {
-                    {"generated", generated},
-                    {"branch", targetBranch},
-                    {"branches", branchesString},
-                    {"tags", tagsString},
-                    {"commit", commit},
-                    {"author", author},
-                    {"committer", committer},
-                    {"commitId", commitId},
-                    {"versionLabel", versionLabel},
-                    {"safeVersion", safeVersion},
-                    {"buildIdentifier", context.BuildIdentifier},
-                    {"namespace", context.Namespace},
-                    {"tfm", context.TargetFramework},
-                    {"tfid", context.TargetFrameworkIdentity},
-                    {"tfv", context.TargetFrameworkVersion},
-                    {"tfp", context.TargetFrameworkProfile},
-                };
+            Version versionLabel = default;
+            Dictionary<string, object> keyValues = default;
+            Parallel.Invoke(
+                () => versionLabel = LookupVersionLabel(targetBranch, tagsDictionary),
+                () => keyValues =
+                    (!string.IsNullOrWhiteSpace(context.PropertiesPath) &&
+                     File.Exists(context.PropertiesPath)) ?
+                        XDocument.Load(context.PropertiesPath).
+                        Root.Elements().
+                        ToDictionary(e => e.Name.LocalName, e => (object)e.Value) :
+                     new Dictionary<string, object>());
 
-            foreach (var entry in keyValues)
+            Debug.Assert(keyValues != null);
+
+            foreach (var entry in new (string key, object value)[]
             {
-                logger.Message(LogImportance.Low, "Values: {0}={1}", entry.Key, entry.Value);
+                ("generated", generated),
+                ("branch", targetBranch),
+                ("branches", branchesString),
+                ("tags", tagsString),
+                ("commit", commit),
+                ("author", author),
+                ("committer", committer),
+                ("commitId", commitId),
+                ("versionLabel", versionLabel),
+                ("safeVersion", safeVersion),
+                ("buildIdentifier", context.BuildIdentifier),
+                ("namespace", context.Namespace),
+                ("tfm", context.TargetFramework),
+                ("tfid", context.TargetFrameworkIdentity),
+                ("tfv", context.TargetFrameworkVersion),
+                ("tfp", context.TargetFrameworkProfile),
+            })
+            {
+                logger.Message(LogImportance.Low, "Values: {0}={1}", entry.key, entry.value);
+                keyValues[entry.key] = entry.value;
             }
 
             if (!string.IsNullOrWhiteSpace(context.OutputPath))

@@ -1,7 +1,7 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <!--
     RelaxVersioner - Easy-usage, Git-based, auto-generate version informations toolset.
-    Copyright (c) 2016-2020 Kouji Matsui (@kozy_kekyo, @kekyo2)
+    Copyright (c) 2016-2021 Kouji Matsui (@kozy_kekyo, @kekyo2)
 
     Licensed under the Apache License, Version 2.0 (the "License");
     you may not use this file except in compliance with the License.
@@ -33,20 +33,20 @@
         <Import>System.Reflection</Import>
 
         <!--
-            "versionLabel" is extract numerical-notate version string [1.2.3.4] or [v1.2.3.4] from git repository tags traverse start HEAD.
+            "versionLabel" extracts numerical-notate version string [1.2.3.4] or [v1.2.3.4] from git repository tags traverse start HEAD.
             If not found, use [0.0.1].
         -->
         <Rule name="AssemblyVersion">{versionLabel}</Rule>
 
         <!--
-            "safeVersion" is extract committed date (from commmiter) from git repository HEAD.
+            "safeVersion" extracts committed date (from commmiter) from git repository HEAD.
             "safeVersion" specialized from "committer.When".
             (The format is safe-numerical-notate version string [2016.2.14.12345]. (Last number is 2sec prec.))
         -->
         <Rule name="AssemblyFileVersion">{safeVersion}</Rule>
 
         <!--
-            "commitId" is extract commit id from git repository HEAD.
+            "commitId" extracts commit id from git repository HEAD.
             "commitId" alias to "commit.Sha".
         -->
         <Rule name="AssemblyInformationalVersion">{commitId}</Rule>
@@ -58,6 +58,7 @@
             "author" and "committer" can use property "Name", "Email", and "When". (Derived from libgit2sharp)
             "buildIdentifier" is passing from MSBuild property named "RelaxVersionerBuildIdentifier" or "BuildIdentifier". We can use in CI building.
             "generated" is generated date by RelaxVersioner.
+            You can apply format directives same as string.Format().
         -->
         <Rule name="AssemblyMetadata" key="Date">{committer.When:R}</Rule>
         <Rule name="AssemblyMetadata" key="Branch">{branch.FriendlyName}</Rule>
@@ -68,5 +69,15 @@
         <Rule name="AssemblyMetadata" key="Build">{buildIdentifier}</Rule>
         <Rule name="AssemblyMetadata" key="Generated">{generated:R}</Rule>
         <Rule name="AssemblyMetadata" key="TargetFramework">{tfm}</Rule>
+
+        <!--
+            The "Platform" identity is a MSBuild property name.
+            You can use "Platform" and another identities come from PropertyGroup definitions
+            and process environments such as "RootNamespace", "Prefer32Bit", "NETCoreSdkVersion", "PATH" and etc.
+            Each results are strictly string type, so format directives will be ignored.
+        -->
+        <Rule name="AssemblyMetadata" key="Platform">{Platform}</Rule>
+        <Rule name="AssemblyMetadata" key="BuildOn">{OS}</Rule>
+        <Rule name="AssemblyMetadata" key="SdkVersion">{NETCoreSdkVersion}</Rule>
     </WriterRules>
 </RelaxVersioner>

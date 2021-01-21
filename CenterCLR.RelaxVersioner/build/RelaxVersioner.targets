@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
     RelaxVersioner - Easy-usage, Git-based, auto-generate version informations toolset.
-    Copyright (c) 2016-2020 Kouji Matsui (@kozy_kekyo, @kekyo2)
+    Copyright (c) 2016-2021 Kouji Matsui (@kozy_kekyo, @kekyo2)
 
     Licensed under the Apache License, Version 2.0 (the "License");
     you may not use this file except in compliance with the License.
@@ -64,13 +64,13 @@
     </CoreBuildDependsOn>
   </PropertyGroup>
 
-    <!-- ======================== -->
-    <!-- For all languages except F# and C++ -->
-    <PropertyGroup Condition="'$(Language)' != 'F#' AND '$(Language)' != 'C++'">
-        <RelaxVersionerNamespace Condition="'$(RelaxVersionerNamespace)' == ''">$(RootNamespace)</RelaxVersionerNamespace>
-    </PropertyGroup>
+  <!-- ======================== -->
+  <!-- For all languages except F# and C++ -->
+  <PropertyGroup Condition="'$(Language)' != 'F#' AND '$(Language)' != 'C++'">
+    <RelaxVersionerNamespace Condition="'$(RelaxVersionerNamespace)' == ''">$(RootNamespace)</RelaxVersionerNamespace>
+  </PropertyGroup>
 
-    <!-- ============================================================================= -->
+  <!-- ============================================================================= -->
   <!-- Build definition -->
   <Target Name="RelaxVersionerBuild" BeforeTargets="BeforeCompile" Outputs="$(RelaxVersionerOutputPath)">
 
@@ -79,14 +79,17 @@
       <_RV_TargetFrameworkIdentifier>$(TargetFrameworkIdentifier)</_RV_TargetFrameworkIdentifier>
       <_RV_TargetFrameworkVersion>$(TargetFrameworkVersion)</_RV_TargetFrameworkVersion>
       <_RV_TargetFrameworkProfile>$(TargetFrameworkProfile)</_RV_TargetFrameworkProfile>
-      <_RV_ResultPath>$([System.IO.Path]::Combine('$([System.IO.Path]::GetTempPath())','$([System.Guid]::NewGuid().ToString())'))</_RV_ResultPath>
+      <_RV_PropertiesPath>$([System.IO.Path]::Combine('$([System.IO.Path]::GetTempPath())','RelaxVersioner_Properties_$([System.Guid]::NewGuid().ToString())'))</_RV_PropertiesPath>
+      <_RV_ResultPath>$([System.IO.Path]::Combine('$([System.IO.Path]::GetTempPath())','RelaxVersioner_Result_$([System.Guid]::NewGuid().ToString())'))</_RV_ResultPath>
     </PropertyGroup>
     
     <!-- ======================== -->
     <!-- Execute RelaxVersioner -->
+
+    <DumpPropertiesTask OutputPath="$(_RV_PropertiesPath)" />
     
     <Exec WorkingDirectory="$(RelaxVersionerToolingDir)"
-          Command="$(RelaxVersionerToolingRuntimeName)&quot;$(RelaxVersionerToolingPath)&quot; --language=&quot;$(RelaxVersionerLanguage)&quot; --namespace=&quot;$(RelaxVersionerNamespace)&quot; --tfm=&quot;$(_RV_TargetFramework)&quot; --tfid=&quot;$(_RV_TargetFrameworkIdentifier)&quot; --tfv=&quot;$(_RV_TargetFrameworkVersion)&quot; --tfp=&quot;$(_RV_TargetFrameworkProfile)&quot; --genStatic=&quot;$(RelaxVersionerGenerateStatic)&quot; --buildIdentifier=&quot;$(RelaxVersionerBuildIdentifier)&quot; --outputPath=&quot;$(RelaxVersionerOutputPath)&quot; --resultPath=&quot;$(_RV_ResultPath)&quot; &quot;$(MSBuildProjectFullPath)&quot;" />
+          Command="$(RelaxVersionerToolingRuntimeName)&quot;$(RelaxVersionerToolingPath)&quot; --language=&quot;$(RelaxVersionerLanguage)&quot; --namespace=&quot;$(RelaxVersionerNamespace)&quot; --tfm=&quot;$(_RV_TargetFramework)&quot; --tfid=&quot;$(_RV_TargetFrameworkIdentifier)&quot; --tfv=&quot;$(_RV_TargetFrameworkVersion)&quot; --tfp=&quot;$(_RV_TargetFrameworkProfile)&quot; --genStatic=&quot;$(RelaxVersionerGenerateStatic)&quot; --buildIdentifier=&quot;$(RelaxVersionerBuildIdentifier)&quot; --propertiesPath=&quot;$(_RV_PropertiesPath)&quot; --outputPath=&quot;$(RelaxVersionerOutputPath)&quot; --resultPath=&quot;$(_RV_ResultPath)&quot; &quot;$(MSBuildProjectFullPath)&quot;" />
 
     <XmlPeek XmlInputPath="$(_RV_ResultPath)" Query="/Result/Version/text()">
       <Output TaskParameter="Result" PropertyName="_RV_DetectedVersion" />
@@ -99,6 +102,7 @@
     </XmlPeek>
 
     <Delete Files="$(_RV_ResultPath)" />
+    <Delete Files="$(_RV_PropertiesPath)" />
 
     <!-- ============================================================================= -->
     <!-- Add output rule -->
@@ -135,14 +139,17 @@
   <Target Name="RelaxVersionerBeforePack" BeforeTargets="_GetProjectReferenceVersions">
 
     <PropertyGroup>
-      <_RV_PackageResultPath>$([System.IO.Path]::Combine('$([System.IO.Path]::GetTempPath())','$([System.Guid]::NewGuid().ToString())'))</_RV_PackageResultPath>
+      <_RV_PackagePropertiesPath>$([System.IO.Path]::Combine('$([System.IO.Path]::GetTempPath())','RelaxVersioner_Properties_$([System.Guid]::NewGuid().ToString())'))</_RV_PackagePropertiesPath>
+      <_RV_PackageResultPath>$([System.IO.Path]::Combine('$([System.IO.Path]::GetTempPath())','RelaxVersioner_Result_$([System.Guid]::NewGuid().ToString())'))</_RV_PackageResultPath>
     </PropertyGroup>
 
     <!-- ======================== -->
     <!-- Execute RelaxVersioner in dryrun mode -->
 
+    <DumpPropertiesTask OutputPath="$(_RV_PackagePropertiesPath)" />
+
     <Exec WorkingDirectory="$(RelaxVersionerToolingDir)"
-          Command="$(RelaxVersionerToolingRuntimeName)&quot;$(RelaxVersionerToolingPath)&quot; --buildIdentifier=&quot;$(RelaxVersionerBuildIdentifier)&quot; --namespace=&quot;$(RelaxVersionerNamespace)&quot; --tfm=&quot;$(_RV_TargetFramework)&quot; --tfid=&quot;$(_RV_TargetFrameworkIdentifier)&quot; --tfv=&quot;$(_RV_TargetFrameworkVersion)&quot; --tfp=&quot;$(_RV_TargetFrameworkProfile)&quot; --genStatic=&quot;$(RelaxVersionerGenerateStatic)&quot; --resultPath=&quot;$(_RV_PackageResultPath)&quot; &quot;$(MSBuildProjectFullPath)&quot;" />
+          Command="$(RelaxVersionerToolingRuntimeName)&quot;$(RelaxVersionerToolingPath)&quot; --buildIdentifier=&quot;$(RelaxVersionerBuildIdentifier)&quot; --namespace=&quot;$(RelaxVersionerNamespace)&quot; --tfm=&quot;$(_RV_TargetFramework)&quot; --tfid=&quot;$(_RV_TargetFrameworkIdentifier)&quot; --tfv=&quot;$(_RV_TargetFrameworkVersion)&quot; --tfp=&quot;$(_RV_TargetFrameworkProfile)&quot; --genStatic=&quot;$(RelaxVersionerGenerateStatic)&quot; --propertiesPath=&quot;$(_RV_PackagePropertiesPath)&quot; --resultPath=&quot;$(_RV_PackageResultPath)&quot; &quot;$(MSBuildProjectFullPath)&quot;" />
 
     <XmlPeek XmlInputPath="$(_RV_PackageResultPath)" Query="/Result/ShortVersion/text()">
       <Output TaskParameter="Result" PropertyName="_RV_DetectedPackageVersion" />
@@ -152,6 +159,7 @@
     </XmlPeek>
 
     <Delete Files="$(_RV_PackageResultPath)" />
+    <Delete Files="$(_RV_PackagePropertiesPath)" />
 
     <!-- ============================================================================= -->
     <!-- Add output rule -->

@@ -9,7 +9,7 @@
     <description>Easy-usage, Git-based, auto-generate version informations toolset.</description>
     <developmentDependency>true</developmentDependency>
     <summary>Easy-usage, Git-based, auto-generate version informations toolset.</summary>
-    <copyright>Copyright (c) 2016-2020 Kouji Matsui</copyright>
+    <copyright>Copyright (c) 2016-2021 Kouji Matsui</copyright>
     <license type="expression">Apache-2.0</license>
     <projectUrl>https://github.com/kekyo/CenterCLR.RelaxVersioner</projectUrl>
     <icon>CenterCLR.RelaxVersioner.100.png</icon>
@@ -23,6 +23,9 @@
     <file src="build/RelaxVersioner.targets" target="build" />
     <file src="buildMultiTargeting/RelaxVersioner.props" target="buildMultiTargeting" />
     <file src="buildMultiTargeting/RelaxVersioner.targets" target="buildMultiTargeting" />
+    <file src="..\CenterCLR.RelaxVersioner.Tasks\bin\$Configuration$\net40\*.*" target="build/net40" />
+    <file src="..\CenterCLR.RelaxVersioner.Tasks\bin\$Configuration$\net46\*.*" target="build/net46" />
+    <file src="..\CenterCLR.RelaxVersioner.Tasks\bin\$Configuration$\netstandard2.0\*.*" target="build/netstandard2.0" />
     <file src="bin\$Configuration$\net461\publish\**\*.*" target="tools/net461" />
     <file src="bin\$Configuration$\netcoreapp2.1\publish\**\*.*" target="tools/netcoreapp2.1" />
   </files>

@@ -1,7 +1,7 @@
 ﻿/////////////////////////////////////////////////////////////////////////////////////////////////
 //
 // RelaxVersioner - Easy-usage, Git-based, auto-generate version informations toolset.
-// Copyright (c) 2016-2020 Kouji Matsui (@kozy_kekyo, @kekyo2)
+// Copyright (c) 2016-2021 Kouji Matsui (@kozy_kekyo, @kekyo2)
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -54,6 +54,7 @@ namespace RelaxVersioner
                     { "tfp=", "target framework profile definition (TargetFrameworkProfile)", v => context.TargetFrameworkProfile = v },
                     { "genStatic=", $"generate static informations", v => context.GenerateStatic = bool.TryParse(v, out var genStatic) ? genStatic : true },
                     { "buildIdentifier=", $"build identifier", v => context.BuildIdentifier = v },
+                    { "propertiesPath=", $"properties file", v => context.PropertiesPath = v },
                     { "outputPath=", $"output source file", v => context.OutputPath = v },
                     { "resultPath=", $"output result via xml file", v => resultPath = v },
                     { "help", "help", v => help = v != null },

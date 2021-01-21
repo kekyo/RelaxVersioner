@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
     RelaxVersioner - Easy-usage, Git-based, auto-generate version informations toolset.
-    Copyright (c) 2016-2020 Kouji Matsui (@kozy_kekyo, @kekyo2)
+    Copyright (c) 2016-2021 Kouji Matsui (@kozy_kekyo, @kekyo2)
 
     Licensed under the Apache License, Version 2.0 (the "License");
     you may not use this file except in compliance with the License.
@@ -15,30 +15,39 @@
     See the License for the specific language governing permissions and
     limitations under the License.
 -->
-<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003" TreatAsLocalProperty="_RV_PlatformName;_RV_RuntimeName;_RV_ExecutableName;_RV_ToolingDir">
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003"
+         TreatAsLocalProperty="_RV_PlatformName;_RV_RuntimeName;_RV_ExecutableName;_RV_ToolingDir;_RV_TaskPlatformName;_RV_MSBuildTaskPath">
   <PropertyGroup Condition="'$(MSBuildRuntimeType)' == 'Core'">
-    <_RV_PlatformName Condition="'$(MicrosoftNETBuildTasksTFM)' != ''">$(MicrosoftNETBuildTasksTFM)</_RV_PlatformName>
-    <_RV_PlatformName Condition="'$(MicrosoftNETBuildTasksTFM)' == ''">netcoreapp2.1</_RV_PlatformName>
+    <_RV_PlatformName>netcoreapp2.1</_RV_PlatformName>
     <_RV_RuntimeName>dotnet </_RV_RuntimeName>
     <_RV_ExecutableName>rv.dll</_RV_ExecutableName>
+    <_RV_TaskPlatformName>netstandard2.0</_RV_TaskPlatformName>
   </PropertyGroup>
   <PropertyGroup Condition="'$(MSBuildRuntimeType)' == 'Full'">
     <_RV_PlatformName>net461</_RV_PlatformName>
     <_RV_RuntimeName></_RV_RuntimeName>
     <_RV_ExecutableName>rv.exe</_RV_ExecutableName>
+    <!-- TODO: change platform to net40 if using older msbuild -->
+    <_RV_TaskPlatformName>net46</_RV_TaskPlatformName>
   </PropertyGroup>
   <PropertyGroup Condition="'$(MSBuildRuntimeType)' == 'Mono'">
     <_RV_PlatformName>net461</_RV_PlatformName>
     <_RV_RuntimeName>mono </_RV_RuntimeName>
     <_RV_ExecutableName>rv.exe</_RV_ExecutableName>
+    <_RV_TaskPlatformName>net46</_RV_TaskPlatformName>
   </PropertyGroup>
   <PropertyGroup>
     <RelaxVersionerToolingRuntimeName>$(_RV_RuntimeName)</RelaxVersionerToolingRuntimeName>
     <_RV_ToolingDir>$([System.IO.Path]::Combine('$(MSBuildThisFileDirectory)','..','tools','$(_RV_PlatformName)'))</_RV_ToolingDir>
     <RelaxVersionerToolingDir>$([System.IO.Path]::GetFullPath('$(_RV_ToolingDir)'))</RelaxVersionerToolingDir>
     <RelaxVersionerToolingPath>$([System.IO.Path]::Combine('$(RelaxVersionerToolingDir)','$(_RV_ExecutableName)'))</RelaxVersionerToolingPath>
+    <_RV_MSBuildTaskPath>$([System.IO.Path]::Combine('$(MSBuildThisFileDirectory)','$(_RV_TaskPlatformName)','RelaxVersioner.Tasks.dll'))</_RV_MSBuildTaskPath>
     <GenerateAssemblyVersionAttribute>false</GenerateAssemblyVersionAttribute>
     <GenerateAssemblyFileVersionAttribute>false</GenerateAssemblyFileVersionAttribute>
     <GenerateAssemblyInformationalVersionAttribute>false</GenerateAssemblyInformationalVersionAttribute>
   </PropertyGroup>
+
+  <UsingTask
+    TaskName="DumpPropertiesTask"
+    AssemblyFile="$(_RV_MSBuildTaskPath)" />
 </Project>
