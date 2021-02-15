@@ -219,6 +219,10 @@ public:
 
 ## RelaxVersionerの使い方
 
+### 解説動画があります (YouTube):
+
+[![RelaxVersionerとgitで .NETのバージョン適用を簡単にやる話 - 作ってみた 第一回](https://img.youtube.com/vi/qJ84sXT-dxI/0.jpg)](https://www.youtube.com/watch?v=qJ84sXT-dxI)
+
 ### スタートガイド
 
 [Refer start guides. (英語)](./STARTGUIDE.md)
