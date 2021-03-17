@@ -41,7 +41,7 @@
 using System.Reflection;
 [assembly: AssemblyVersion("1.0.21")]
 [assembly: AssemblyFileVersion("2020.12.20.33529")]
-[assembly: AssemblyInformationalVersion("561387e2f6dc90046f56ef4c3ac501aad0d5ec0a")]
+[assembly: AssemblyInformationalVersion("1.0.21-561387e2f6dc90046f56ef4c3ac501aad0d5ec0a")]
 [assembly: AssemblyMetadata("Date","Sun, 20 Dec 2020 09:37:39 GMT")]
 [assembly: AssemblyMetadata("Branch","master")]
 [assembly: AssemblyMetadata("Tags","")]
@@ -60,7 +60,7 @@ namespace YourApp
   {
     public const string AssemblyVersion = "1.0.21";
     public const string AssemblyFileVersion = "2020.12.20.33529";
-    public const string AssemblyInformationalVersion = "561387e2f6dc90046f56ef4c3ac501aad0d5ec0a";
+    public const string AssemblyInformationalVersion = "1.0.21-561387e2f6dc90046f56ef4c3ac501aad0d5ec0a";
     public static class AssemblyMetadata
     {
       public const string Date = "Sun, 20 Dec 2020 09:37:39 GMT";
@@ -86,7 +86,7 @@ namespace global
   open System.Reflection
   [<assembly: AssemblyVersion("1.0.21")>]
   [<assembly: AssemblyFileVersion("2020.12.20.33529")>]
-  [<assembly: AssemblyInformationalVersion("561387e2f6dc90046f56ef4c3ac501aad0d5ec0a")>]
+  [<assembly: AssemblyInformationalVersion("1.0.21-561387e2f6dc90046f56ef4c3ac501aad0d5ec0a")>]
   [<assembly: AssemblyMetadata("Date","Sun, 20 Dec 2020 09:37:39 GMT")>]
   [<assembly: AssemblyMetadata("Branch","master")>]
   [<assembly: AssemblyMetadata("Tags","")>]
@@ -107,7 +107,7 @@ namespace global
     [<Literal>]
     let AssemblyFileVersion = "2020.12.20.33529";
     [<Literal>]
-    let AssemblyInformationalVersion = "561387e2f6dc90046f56ef4c3ac501aad0d5ec0a";
+    let AssemblyInformationalVersion = "1.0.21-561387e2f6dc90046f56ef4c3ac501aad0d5ec0a";
     module AssemblyMetadata =
       [<Literal>]
       let Date = "Sun, 20 Dec 2020 09:37:39 GMT";
@@ -139,7 +139,7 @@ namespace global
 ``` visualbasic
 <Assembly: AssemblyVersion("1.0.21")>
 <Assembly: AssemblyFileVersion("2020.12.20.33529")>
-<Assembly: AssemblyInformationalVersion("561387e2f6dc90046f56ef4c3ac501aad0d5ec0a")>
+<Assembly: AssemblyInformationalVersion("1.0.21-561387e2f6dc90046f56ef4c3ac501aad0d5ec0a")>
 <Assembly: AssemblyMetadata("Date","Sun, 20 Dec 2020 09:37:39 GMT")>
 <Assembly: AssemblyMetadata("Branch","master")>
 <Assembly: AssemblyMetadata("Tags","")>
@@ -157,7 +157,7 @@ Namespace global.YourApp
   Module ThisAssembly
     Public Const AssemblyVersion As String = "1.0.21"
     Public Const AssemblyFileVersion As String = "2020.12.20.33529"
-    Public Const AssemblyInformationalVersion As String = "561387e2f6dc90046f56ef4c3ac501aad0d5ec0a"
+    Public Const AssemblyInformationalVersion As String = "1.0.21-561387e2f6dc90046f56ef4c3ac501aad0d5ec0a"
     Public NotInheritable Class AssemblyMetadata
       Public Const Date As String = "Sun, 20 Dec 2020 09:37:39 GMT"
       Public Const Branch As String = "master"
@@ -181,7 +181,7 @@ End Namespace
 using namespace System::Reflection;
 [assembly: AssemblyVersion("1.0.44")];
 [assembly: AssemblyFileVersion("2020.12.20.33300")];
-[assembly: AssemblyInformationalVersion("7faf4071fdc2f169ecc58d705ea3304dd91af414")];
+[assembly: AssemblyInformationalVersion("1.0.21-7faf4071fdc2f169ecc58d705ea3304dd91af414")];
 [assembly: AssemblyMetadata("Date","Sun, 20 Dec 2020 09:30:00 GMT")];
 [assembly: AssemblyMetadata("Branch","devel")];
 [assembly: AssemblyMetadata("Tags","")];
@@ -199,7 +199,7 @@ private ref class ThisAssembly abstract sealed
 public:
     literal System::String^ AssemblyVersion = "1.0.44";
     literal System::String^ AssemblyFileVersion = "2020.12.20.33300";
-    literal System::String^ AssemblyInformationalVersion = "7faf4071fdc2f169ecc58d705ea3304dd91af414";
+    literal System::String^ AssemblyInformationalVersion = "1.0.21-7faf4071fdc2f169ecc58d705ea3304dd91af414";
     ref class AssemblyMetadata abstract sealed
     {
         literal System::String^ Date = "Sun, 20 Dec 2020 09:30:00 GMT";
@@ -284,7 +284,7 @@ public:
       "commitId" は、現在のコミットのID（gitのコミットID、つまりはハッシュ値）を埋め込みます。
       "commitId" は、 "commit.Sha" と書くのと同じです。
     -->
-    <Rule name="AssemblyInformationalVersion">{commitId}</Rule>
+    <Rule name="AssemblyInformationalVersion">{versionLabel}-{commitId}</Rule>
     
     <!--
       "key" 属性は、通常は、 "AssemblyMetadataAttribute" 属性にのみ適用出来ます。
@@ -372,6 +372,8 @@ RelaxVersioner (や、その他の自動バージョニングツール) は、
 
 ## 履歴
 
+* 2.2.0:
+  * Sourcelink属性をサポート (AssemblyInformationalVersionの形式と、NuGetパッケージ属性)
 * 2.1.0:
   * MSBuild で定義される多くの PropertyGroups の値をそのまま使えるようにしました。MSBuildだけでは、これらの値を参照するのはかなり手間でしたが、ルールファイルにプロパティ名を指定するだけで、値を同じように埋め込むことが出来ます（具体的な例は、カスタムルールファイルの章を参照）
 * 2.0.9:
