@@ -55,7 +55,7 @@
 
   <Target Name="SetNuSpecProperties" BeforeTargets="GenerateNuspec">
     <PropertyGroup>
-      <NuspecProperties>$(NuspecProperties);Configuration=$(Configuration);PackageVersion=$(PackageVersion);PackageReleaseNotes=$(PackageReleaseNotes);libgit2_propsfile=$(libgit2_propsfile)</NuspecProperties>
+      <NuspecProperties>$(NuspecProperties);Configuration=$(Configuration);PackageVersion=$(PackageVersion);RepositoryBranch=$(RepositoryBranch);RepositoryCommit=$(RepositoryCommit);PackageReleaseNotes=$(PackageReleaseNotes);libgit2_propsfile=$(libgit2_propsfile)</NuspecProperties>
     </PropertyGroup>
   </Target>
 
