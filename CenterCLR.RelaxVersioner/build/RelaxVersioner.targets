@@ -176,7 +176,7 @@
     <XmlPeek XmlInputPath="$(_RV_PackageResultPath)" Query="/Result/CommitId/text()">
       <Output TaskParameter="Result" PropertyName="_RV_DetectedCommitId" />
     </XmlPeek>
-    <XmlPeek XmlInputPath="$(_RV_ResultPath)" Query="/Result/Branch/text()">
+    <XmlPeek XmlInputPath="$(_RV_PackageResultPath)" Query="/Result/Branch/text()">
       <Output TaskParameter="Result" PropertyName="_RV_DetectedBranch" />
     </XmlPeek>
     <XmlPeek XmlInputPath="$(_RV_PackageResultPath)" Query="/Result/Message/text()">
