@@ -22,6 +22,7 @@
 
   <!-- ======================== -->
   <!-- Common -->
+    
   <PropertyGroup>
     <BuildIdentifier Condition="'$(BuildIdentifier)' == ''"></BuildIdentifier>
     <RelaxVersionerBuildIdentifier Condition="'$(RelaxVersionerBuildIdentifier)' == ''">$(BuildIdentifier)</RelaxVersionerBuildIdentifier>
@@ -34,6 +35,7 @@
 
   <!-- ======================== -->
   <!-- For F# -->
+    
   <PropertyGroup Condition="'$(Language)' == 'F#'">
     <!-- HACK: https://github.com/fsharp/fsharp/issues/289 -->
     <NoWarn>$(NoWarn) 2003</NoWarn>
@@ -42,6 +44,7 @@
 
   <!-- ======================== -->
   <!-- For C++ (or C++/CLI) -->
+    
   <PropertyGroup Condition="'$(Language)' == 'C++'">
     <RelaxVersionerOutputPath Condition="'$(RelaxVersionerOutputPath)' == ''">$([System.IO.Path]::Combine('$(MSBuildProjectDirectory)','$(IntDir)','RelaxVersioner$(DefaultLanguageSourceExtension)'))</RelaxVersionerOutputPath>
     <RelaxVersionerLanguage Condition="('$(RelaxVersionerLanguage)' == '') AND ('$(CLRSupport)' == 'true')">C++/CLI</RelaxVersionerLanguage>
@@ -55,6 +58,7 @@
 
   <!-- ======================== -->
   <!-- For all languages except C++ -->
+    
   <PropertyGroup Condition="'$(Language)' != 'C++'">
     <RelaxVersionerOutputPath Condition="'$(RelaxVersionerOutputPath)' == ''">$([System.IO.Path]::Combine('$(MSBuildProjectDirectory)','$(IntermediateOutputPath)','RelaxVersioner$(DefaultLanguageSourceExtension)'))</RelaxVersionerOutputPath>
     <RelaxVersionerLanguage Condition="'$(RelaxVersionerLanguage)' == ''">$(Language)</RelaxVersionerLanguage>
@@ -66,12 +70,14 @@
 
   <!-- ======================== -->
   <!-- For all languages except F# and C++ -->
+    
   <PropertyGroup Condition="'$(Language)' != 'F#' AND '$(Language)' != 'C++'">
     <RelaxVersionerNamespace Condition="'$(RelaxVersionerNamespace)' == ''">$(RootNamespace)</RelaxVersionerNamespace>
   </PropertyGroup>
 
   <!-- ============================================================================= -->
   <!-- Build definition -->
+    
   <Target Name="RelaxVersionerBuild" BeforeTargets="BeforeCompile" Outputs="$(RelaxVersionerOutputPath)">
 
     <PropertyGroup>
@@ -97,6 +103,12 @@
     <XmlPeek XmlInputPath="$(_RV_ResultPath)" Query="/Result/ShortVersion/text()">
       <Output TaskParameter="Result" PropertyName="_RV_DetectedShortVersion" />
     </XmlPeek>
+    <XmlPeek XmlInputPath="$(_RV_ResultPath)" Query="/Result/CommitId/text()">
+      <Output TaskParameter="Result" PropertyName="_RV_DetectedCommitId" />
+    </XmlPeek>
+    <XmlPeek XmlInputPath="$(_RV_ResultPath)" Query="/Result/Branch/text()">
+      <Output TaskParameter="Result" PropertyName="_RV_DetectedBranch" />
+    </XmlPeek>
     <XmlPeek XmlInputPath="$(_RV_ResultPath)" Query="/Result/Message/text()">
       <Output TaskParameter="Result" PropertyName="_RV_DetectedMessage" />
     </XmlPeek>
@@ -110,11 +122,15 @@
     <PropertyGroup>
       <!-- Apply NuGet versioning -->
       <PackageVersion>$(_RV_DetectedShortVersion)</PackageVersion>
+      <SourceRevisionId>$(_RV_DetectedCommitId)</SourceRevisionId>   <!-- Sourcelink symbol, same as RepositoryCommit -->
+      <RepositoryCommit>$(_RV_DetectedCommitId)</RepositoryCommit>
+      <RepositoryBranch>$(_RV_DetectedBranch)</RepositoryBranch>
       <PackageReleaseNotes>$(_RV_DetectedMessage)</PackageReleaseNotes>
     </PropertyGroup>
 
     <!-- ======================== -->
     <!-- For F# -->
+      
     <ItemGroup Condition="'$(Language)' == 'F#'">
       <!-- HACK: F#'s EntryPoint expression is ignoring namespace/module if source code is last compilation.
             So, RelaxVersioner code insert before any source codes. -->
@@ -123,19 +139,22 @@
 
     <!-- ======================== -->
     <!-- For C++ (or C++/CLI) -->
+      
     <ItemGroup Condition="'$(Language)' == 'C++'">
       <ClCompile Include="$(RelaxVersionerOutputPath)" />
     </ItemGroup>
 
     <!-- ======================== -->
     <!-- For other languages -->
+      
     <ItemGroup Condition="('$(Language)' != 'F#') and ('$(Language)' != 'C++')">
       <Compile Include="$(RelaxVersionerOutputPath)" />
     </ItemGroup>
   </Target>
 
   <!-- ============================================================================= -->
-  <!-- Pre publish definition -->
+  <!-- Nuget packaging definition -->
+
   <Target Name="RelaxVersionerBeforePack" BeforeTargets="_GetProjectReferenceVersions">
 
     <PropertyGroup>
@@ -154,6 +173,12 @@
     <XmlPeek XmlInputPath="$(_RV_PackageResultPath)" Query="/Result/ShortVersion/text()">
       <Output TaskParameter="Result" PropertyName="_RV_DetectedPackageVersion" />
     </XmlPeek>
+    <XmlPeek XmlInputPath="$(_RV_PackageResultPath)" Query="/Result/CommitId/text()">
+      <Output TaskParameter="Result" PropertyName="_RV_DetectedCommitId" />
+    </XmlPeek>
+    <XmlPeek XmlInputPath="$(_RV_PackageResultPath)" Query="/Result/Branch/text()">
+      <Output TaskParameter="Result" PropertyName="_RV_DetectedBranch" />
+    </XmlPeek>
     <XmlPeek XmlInputPath="$(_RV_PackageResultPath)" Query="/Result/Message/text()">
       <Output TaskParameter="Result" PropertyName="_RV_DetectedPackageMessage" />
     </XmlPeek>
@@ -167,7 +192,18 @@
     <PropertyGroup>
       <!-- Apply NuGet versioning -->
       <PackageVersion>$(_RV_DetectedPackageVersion)</PackageVersion>
+      <SourceRevisionId>$(_RV_DetectedCommitId)</SourceRevisionId>   <!-- Sourcelink symbol, same as RepositoryCommit -->
+      <RepositoryCommit>$(_RV_DetectedCommitId)</RepositoryCommit>
+      <RepositoryBranch>$(_RV_DetectedBranch)</RepositoryBranch>
       <PackageReleaseNotes>$(_RV_DetectedPackageMessage)</PackageReleaseNotes>
     </PropertyGroup>
   </Target>
+
+  <Target Name="SetNuSpecProperties" BeforeTargets="GenerateNuspec">
+    <!-- Better referring ability in the nuspec declaration. -->
+    <PropertyGroup>
+      <NuspecProperties>$(NuspecProperties);Configuration=$(Configuration);PackageVersion=$(PackageVersion);RepositoryBranch=$(RepositoryBranch);RepositoryCommit=$(RepositoryCommit);PackageReleaseNotes=$(PackageReleaseNotes)</NuspecProperties>
+    </PropertyGroup>
+  </Target>
+
 </Project>

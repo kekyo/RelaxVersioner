@@ -49,7 +49,7 @@
             "commitId" extracts commit id from git repository HEAD.
             "commitId" alias to "commit.Sha".
         -->
-        <Rule name="AssemblyInformationalVersion">{commitId}</Rule>
+        <Rule name="AssemblyInformationalVersion">{versionLabel}-{commitId}</Rule>
 
         <!--
             "key" attribute can only use with "AssemblyMetadataAttribute".
