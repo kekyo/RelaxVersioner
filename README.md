@@ -33,6 +33,8 @@
 
 ![Assembly wide attributes at ILSpy](Images/ILSpy.png)
 
+----
+
 ## Sample output code
 
 ### For C#:
@@ -217,6 +219,8 @@ public:
 };
 ```
 
+----
+
 ## Getting started
 
 ### Start guide
@@ -246,6 +250,8 @@ public:
 8. All rights codes, tags. Push to remote repository, all done.
 9. Development cycles: next codes change and ready to release, you are tagging new version and then build, output binary auto tagged in AssemblyVersion and store informations.
   * We can apply with automated version number when "dotnet cli" for generate NuGet package (`PackageVersion` and `PackageReleaseNotes` attributes). You can use only `dotnet pack` command.
+
+----
 
 ## Sample custom rule set file (RelaxVersioner.rules):
 
@@ -323,6 +329,8 @@ public:
 </RelaxVersioner>
 ```
 
+----
+
 ## TIPS
 
 If your CI process causes error with this description like:
@@ -344,6 +352,29 @@ RelaxVersioner (and other automated versioning tool) requires all commits for ca
 Apply `fetch-depth: 0` predication into your build.yml script.
 [You can understand with this real script.](https://github.com/kekyo/CenterCLR.RelaxVersioner/blob/master/.github/workflows/build.yml#L11)
 
+### Use nuspec file to generate NuGet package
+
+When you are using a nuspec file to generate a NuGet package, there are additional symbols available besides the default placeholders, we can do automated building NuGet package with nuspec file. Please refer to the example below:
+
+```xml
+<package xmlns="http://schemas.microsoft.com/packaging/2010/07/nuspec.xsd">
+  <metadata>
+    <!-- Embedding package version -->
+    <version>$PackageVersion$</version>
+
+    <!-- Embedding branch name and commit ID -->
+    <repository type="git" url="https://example.com/your/repo.git" branch="$RepositoryBranch$" commit="$RepositoryCommit$" />
+
+    <!-- Embedding commit message -->
+    <releaseNotes>$PackageReleaseNotes$</releaseNotes>
+  </metadata>
+</package>
+```
+
+* Add the prepared nuspec file to the project and specify it with the `NuSpecFile` property inside of `PropertyGroup`. The rest of the procedure is the same as the general NuGet packaging procedure.
+
+----
+
 ## Another topics
 
 * RelaxVersioner supported on Visual Studio 2012/2013 only installed .NET Framework 4.6 or upper. Because it requires uses compatibility for net461 MSBuild.Framework assembly.
@@ -359,6 +390,8 @@ Apply `fetch-depth: 0` predication into your build.yml script.
 
 * Copyright (c) 2015-2021 Kouji Matsui (@kozy_kekyo, @kekyo2)
 * Under Apache v2
+
+----
 
 ## History
 

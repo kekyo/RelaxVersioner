@@ -33,6 +33,8 @@
 
 ![Assembly wide attributes at ILSpy](Images/ILSpy.png)
 
+----
+
 ## 出力されるコードの例:
 
 ### For C#:
@@ -217,6 +219,8 @@ public:
 };
 ```
 
+----
+
 ## RelaxVersionerの使い方
 
 ### 解説動画があります (YouTube):
@@ -251,6 +255,8 @@ public:
 8. 全て良ければ、リモートリポジトリにpushして完了です。
 9. 以後、コードを変更してリリースの準備が出来たら、新たにタグをつければそれがAssemblyVersionに反映されるので、ビルドしてバイナリをリリースします。
   * dotnet cliを使用してNuGetのパッケージをビルドする場合にも、`PackageVersion`と`PackageReleaseNotes`は自動的に適用されます。完成してデプロイする場合は、`dotnet pack`コマンドを使えば、NuGetのバージョンを一元管理できます。
+
+----
 
 ## カスタムルールファイル(RelaxVersioner.rules)の例:
 
@@ -330,12 +336,16 @@ public:
 </RelaxVersioner>
 ```
 
+----
+
 ## TIPS
+
+### Gitのコミット検索でエラーが発生する
 
 もしCIプロセスで使ったときに、以下のようなエラーが発生した場合:
 
 ```
-RelaxVersioner[1.0.13.0]: NotFoundException=object not found -
+RelaxVersioner[2.2.0]: NotFoundException=object not found -
    no match for id (a2b834535c00e7b1a604fccc28cfebe78ea0ec31),
    Unknown exception occurred, ...
 ```
@@ -354,6 +364,29 @@ RelaxVersioner (や、その他の自動バージョニングツール) は、
 `fetch-depth: 0` を追加して下さい。
 [このリポジトリで実際に使用している例を参照できます。](https://github.com/kekyo/CenterCLR.RelaxVersioner/blob/master/.github/workflows/build.yml#L11)
 
+### NuGetパッケージ生成にnuspecファイルを使用する
+
+nuspecファイルを使ってパッケージを生成する場合は、デフォルトのプレースホルダ以外にも使用可能なシンボルがあります。この機能により、nuspecファイルを使用してNuGetパッケージを生成する場合でも、生成を自動化出来ます。以下の例を参考にして下さい:
+
+```xml
+<package xmlns="http://schemas.microsoft.com/packaging/2010/07/nuspec.xsd">
+  <metadata>
+    <!-- パッケージバージョンの埋め込み -->
+    <version>$PackageVersion$</version>
+
+    <!-- ブランチ名とコミットIDの埋め込み -->
+    <repository type="git" url="https://example.com/your/repo.git" branch="$RepositoryBranch$" commit="$RepositoryCommit$" />
+
+    <!-- コミットメッセージの埋め込み -->
+    <releaseNotes>$PackageReleaseNotes$</releaseNotes>
+  </metadata>
+</package>
+```
+
+* 用意したnuspecファイルをプロジェクトに追加して、`PropertyGroup`の`NuSpecFile`プロパティで指定します。後の手順は、一般的なNuGetパッケージングの手順と同じです。
+
+----
+
 ## その他
 
 * RelaxVersionerをVisual Studio 2012/2013で使うには、システムに.NET Framework 4.6以上がインストールされている必要があります。RelaxVersionerは、MSBuild.Frameworkアセンブリのnet46以上のバージョンを必要とするためです。
@@ -369,6 +402,8 @@ RelaxVersioner (や、その他の自動バージョニングツール) は、
 
 * Copyright (c) 2015-2021 Kouji Matsui (@kozy_kekyo, @kekyo2)
 * Under Apache v2
+
+----
 
 ## 履歴
 
