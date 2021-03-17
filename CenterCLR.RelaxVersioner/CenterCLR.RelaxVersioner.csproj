@@ -12,6 +12,7 @@
 
     <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
     <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
+    <CopyLocalLockFileAssemblies>true</CopyLocalLockFileAssemblies>
 
     <RootNamespace>RelaxVersioner</RootNamespace>
     <AssemblyTitle>RelaxVersioner</AssemblyTitle>
@@ -29,17 +30,13 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <None Remove="buildMultiTargeting\RelaxVersioner.props" />
-    <None Remove="buildMultiTargeting\RelaxVersioner.targets" />
-    <None Remove="build\RelaxVersioner.props" />
-    <None Remove="build\RelaxVersioner.targets" />
+    <None Remove="buildMultiTargeting\*.*" />
+    <None Remove="build\*.*" />
   </ItemGroup>
 
   <ItemGroup>
-    <Content Include="buildMultiTargeting\RelaxVersioner.props" />
-    <Content Include="buildMultiTargeting\RelaxVersioner.targets" />
-    <Content Include="build\RelaxVersioner.props" />
-    <Content Include="build\RelaxVersioner.targets" />
+    <Content Include="buildMultiTargeting\*.*" />
+    <Content Include="build\*.*" />
   </ItemGroup>
 
   <ItemGroup>
@@ -53,7 +50,7 @@
     <ProjectReference Include="..\CenterCLR.RelaxVersioner.Core\CenterCLR.RelaxVersioner.Core.csproj" />
   </ItemGroup>
 
-  <Target Name="SetNuSpecProperties" BeforeTargets="GenerateNuspec">
+  <Target Name="Append_libgit2props" BeforeTargets="GenerateNuspec">
     <PropertyGroup>
       <NuspecProperties>$(NuspecProperties);Configuration=$(Configuration);PackageVersion=$(PackageVersion);RepositoryBranch=$(RepositoryBranch);RepositoryCommit=$(RepositoryCommit);PackageReleaseNotes=$(PackageReleaseNotes);libgit2_propsfile=$(libgit2_propsfile)</NuspecProperties>
     </PropertyGroup>

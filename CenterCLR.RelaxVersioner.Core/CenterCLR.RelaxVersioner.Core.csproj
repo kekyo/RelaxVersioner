@@ -11,6 +11,7 @@
 
     <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
     <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
+    <CopyLocalLockFileAssemblies>true</CopyLocalLockFileAssemblies>
 
     <RootNamespace>RelaxVersioner</RootNamespace>
     <AssemblyTitle>RelaxVersioner.Core</AssemblyTitle>
