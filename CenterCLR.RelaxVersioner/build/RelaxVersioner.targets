@@ -198,5 +198,12 @@
       <PackageReleaseNotes>$(_RV_DetectedPackageMessage)</PackageReleaseNotes>
     </PropertyGroup>
   </Target>
-    
+
+  <Target Name="SetNuSpecProperties" BeforeTargets="GenerateNuspec">
+    <!-- Better referring ability in the nuspec declaration. -->
+    <PropertyGroup>
+      <NuspecProperties>$(NuspecProperties);Configuration=$(Configuration);PackageVersion=$(PackageVersion);RepositoryBranch=$(RepositoryBranch);RepositoryCommit=$(RepositoryCommit);PackageReleaseNotes=$(PackageReleaseNotes)</NuspecProperties>
+    </PropertyGroup>
+  </Target>
+
 </Project>
