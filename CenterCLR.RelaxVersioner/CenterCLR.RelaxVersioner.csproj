@@ -40,7 +40,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="RelaxVersioner" Version="2.1.0" PrivateAssets="All" />
+    <PackageReference Include="RelaxVersioner" Version="2.1.7" PrivateAssets="All" />
     <PackageReference Include="Microsoft.NETFramework.ReferenceAssemblies" Version="1.0.0" PrivateAssets="All" />
     <PackageReference Include="Mono.Options" Version="6.6.0.161" />
     <PackageReference Include="LibGit2Sharp.NativeBinaries" Version="2.0.312" />
@@ -52,15 +52,8 @@
 
   <Target Name="Append_libgit2props" BeforeTargets="GenerateNuspec">
     <PropertyGroup>
-      <NuspecProperties>$(NuspecProperties);Configuration=$(Configuration);PackageVersion=$(PackageVersion);RepositoryBranch=$(RepositoryBranch);RepositoryCommit=$(RepositoryCommit);PackageReleaseNotes=$(PackageReleaseNotes);libgit2_propsfile=$(libgit2_propsfile)</NuspecProperties>
+      <NuspecProperties>$(NuspecProperties);libgit2_propsfile=$(libgit2_propsfile)</NuspecProperties>
     </PropertyGroup>
-  </Target>
-
-  <Target Name="PublishAll" BeforeTargets="SetNuSpecProperties">
-    <ItemGroup>
-      <_TargetFramework Include="$(TargetFrameworks)" />
-    </ItemGroup>
-    <MSBuild Projects="$(MSBuildProjectFullPath)" Targets="Publish" Properties="TargetFramework=%(_TargetFramework.Identity)" />
   </Target>
 
 </Project>
