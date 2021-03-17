@@ -12,7 +12,6 @@
 
     <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
     <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
-    <CopyLocalLockFileAssemblies>true</CopyLocalLockFileAssemblies>
 
     <RootNamespace>RelaxVersioner</RootNamespace>
     <AssemblyTitle>RelaxVersioner.Tasks</AssemblyTitle>
@@ -49,7 +48,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="RelaxVersioner" Version="2.0.37" PrivateAssets="All" />
+    <PackageReference Include="RelaxVersioner" Version="2.1.0" PrivateAssets="All" />
   </ItemGroup>
 
 </Project>

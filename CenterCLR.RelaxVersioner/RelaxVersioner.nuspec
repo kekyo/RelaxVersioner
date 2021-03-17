@@ -20,12 +20,12 @@
   </metadata>
   <files>
     <file src="..\Images\CenterCLR.RelaxVersioner.100.png" target="/" />
-    <file src="build/*.*" target="build" />
-    <file src="buildMultiTargeting/*.*" target="buildMultiTargeting" />
+    <file src="build\*.*" target="build" />
+    <file src="buildMultiTargeting\*.*" target="buildMultiTargeting" />
     <file src="..\CenterCLR.RelaxVersioner.Tasks\bin\$Configuration$\net40\*.*" target="build/net40" />
     <file src="..\CenterCLR.RelaxVersioner.Tasks\bin\$Configuration$\net46\*.*" target="build/net46" />
     <file src="..\CenterCLR.RelaxVersioner.Tasks\bin\$Configuration$\netstandard2.0\*.*" target="build/netstandard2.0" />
-    <file src="bin\$Configuration$\net461\publish\**\*.*" target="tools/net461" />
-    <file src="bin\$Configuration$\netcoreapp2.1\publish\**\*.*" target="tools/netcoreapp2.1" />
+    <file src="bin\$Configuration$\net461\**\*.*" target="tools/net461" />
+    <file src="bin\$Configuration$\netcoreapp2.1\**\*.*" target="tools/netcoreapp2.1" />
   </files>
 </package>
