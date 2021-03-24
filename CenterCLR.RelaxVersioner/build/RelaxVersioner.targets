@@ -84,7 +84,8 @@
   <Target Name="RelaxVersionerBuild" BeforeTargets="BeforeCompile" Outputs="$(RelaxVersionerOutputPath)">
 
     <PropertyGroup Condition="'$(MSBuildRuntimeType)' == 'Core'">
-      <_RV_PlatformName Condition="'$(DotnetCliToolTargetFramework)' == ''">netcoreapp2.0</_RV_PlatformName>
+      <_RV_PlatformName Condition="('$(DotnetCliToolTargetFramework)' == '') AND ('$(BundledNETCoreAppTargetFrameworkVersion)' == '')">netcoreapp2.0</_RV_PlatformName>
+      <_RV_PlatformName Condition="'$(DotnetCliToolTargetFramework)' == ''">netcoreapp$(BundledNETCoreAppTargetFrameworkVersion)</_RV_PlatformName>
       <_RV_PlatformName Condition="'$(DotnetCliToolTargetFramework)' != ''">$(DotnetCliToolTargetFramework)</_RV_PlatformName>
     </PropertyGroup>
     <PropertyGroup Condition="'$(MSBuildRuntimeType)' != 'Core'">
@@ -176,7 +177,8 @@
   <Target Name="RelaxVersionerBeforePack" BeforeTargets="_GetProjectReferenceVersions">
       
     <PropertyGroup Condition="'$(MSBuildRuntimeType)' == 'Core'">
-      <_RV_PlatformName Condition="'$(DotnetCliToolTargetFramework)' == ''">netcoreapp2.0</_RV_PlatformName>
+      <_RV_PlatformName Condition="('$(DotnetCliToolTargetFramework)' == '') AND ('$(BundledNETCoreAppTargetFrameworkVersion)' == '')">netcoreapp2.0</_RV_PlatformName>
+      <_RV_PlatformName Condition="'$(DotnetCliToolTargetFramework)' == ''">netcoreapp$(BundledNETCoreAppTargetFrameworkVersion)</_RV_PlatformName>
       <_RV_PlatformName Condition="'$(DotnetCliToolTargetFramework)' != ''">$(DotnetCliToolTargetFramework)</_RV_PlatformName>
     </PropertyGroup>
     <PropertyGroup Condition="'$(MSBuildRuntimeType)' != 'Core'">
