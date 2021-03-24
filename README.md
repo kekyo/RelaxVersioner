@@ -395,6 +395,8 @@ When you are using a nuspec file to generate a NuGet package, there are addition
 
 ## History
 
+* 2.3.0:
+  * Fixed executing on only installed sdk3.1 or 5.0.
 * 2.2.0:
   * Supported sourcelink annotations (AssemblyInformationalVersion format and NuGet packaging.)
 * 2.1.0:
