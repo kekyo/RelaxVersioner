@@ -31,6 +31,9 @@
       RelaxVersionerBeforePack;
       $(GetPackageVersionDependsOn)
     </GetPackageVersionDependsOn>
+
+    <_RV_TemporaryBasePath Condition="'$(RelaxVersionerTemporaryBasePath)' == ''">$([System.IO.Path]::GetTempPath())</_RV_TemporaryBasePath>
+    <_RV_TemporaryBasePath Condition="'$(RelaxVersionerTemporaryBasePath)' != ''">$(RelaxVersionerTemporaryBasePath)</_RV_TemporaryBasePath>
   </PropertyGroup>
 
   <!-- ======================== -->
@@ -85,8 +88,8 @@
       <_RV_TargetFrameworkIdentifier>$(TargetFrameworkIdentifier)</_RV_TargetFrameworkIdentifier>
       <_RV_TargetFrameworkVersion>$(TargetFrameworkVersion)</_RV_TargetFrameworkVersion>
       <_RV_TargetFrameworkProfile>$(TargetFrameworkProfile)</_RV_TargetFrameworkProfile>
-      <_RV_PropertiesPath>$([System.IO.Path]::Combine('$([System.IO.Path]::GetTempPath())','RelaxVersioner_Properties_$([System.Guid]::NewGuid().ToString())'))</_RV_PropertiesPath>
-      <_RV_ResultPath>$([System.IO.Path]::Combine('$([System.IO.Path]::GetTempPath())','RelaxVersioner_Result_$([System.Guid]::NewGuid().ToString())'))</_RV_ResultPath>
+      <_RV_PropertiesPath>$([System.IO.Path]::Combine('$(_RV_TemporaryBasePath)','RelaxVersioner_Properties_$([System.Guid]::NewGuid().ToString())'))</_RV_PropertiesPath>
+      <_RV_ResultPath>$([System.IO.Path]::Combine('$(_RV_TemporaryBasePath)','RelaxVersioner_Result_$([System.Guid]::NewGuid().ToString())'))</_RV_ResultPath>
     </PropertyGroup>
     
     <!-- ======================== -->
@@ -113,8 +116,8 @@
       <Output TaskParameter="Result" PropertyName="_RV_DetectedMessage" />
     </XmlPeek>
 
-    <Delete Files="$(_RV_ResultPath)" />
-    <Delete Files="$(_RV_PropertiesPath)" />
+    <Delete Condition="'$(RelaxVersionerTemporaryBasePath)' == ''" Files="$(_RV_ResultPath)" />
+    <Delete Condition="'$(RelaxVersionerTemporaryBasePath)' == ''" Files="$(_RV_PropertiesPath)" />
 
     <!-- ============================================================================= -->
     <!-- Add output rule -->
@@ -158,7 +161,7 @@
   <Target Name="RelaxVersionerBeforePack" BeforeTargets="_GetProjectReferenceVersions">
 
     <PropertyGroup>
-      <_RV_PackagePropertiesPath>$([System.IO.Path]::Combine('$([System.IO.Path]::GetTempPath())','RelaxVersioner_Properties_$([System.Guid]::NewGuid().ToString())'))</_RV_PackagePropertiesPath>
+      <_RV_PackagePropertiesPath>$([System.IO.Path]::Combine('$(_RV_TemporaryBasePath)','RelaxVersioner_Properties_$([System.Guid]::NewGuid().ToString())'))</_RV_PackagePropertiesPath>
       <_RV_PackageResultPath>$([System.IO.Path]::Combine('$([System.IO.Path]::GetTempPath())','RelaxVersioner_Result_$([System.Guid]::NewGuid().ToString())'))</_RV_PackageResultPath>
     </PropertyGroup>
 
@@ -183,8 +186,8 @@
       <Output TaskParameter="Result" PropertyName="_RV_DetectedPackageMessage" />
     </XmlPeek>
 
-    <Delete Files="$(_RV_PackageResultPath)" />
-    <Delete Files="$(_RV_PackagePropertiesPath)" />
+    <Delete Condition="'$(RelaxVersionerTemporaryBasePath)' == ''" Files="$(_RV_PackageResultPath)" />
+    <Delete Condition="'$(RelaxVersionerTemporaryBasePath)' == ''" Files="$(_RV_PackagePropertiesPath)" />
 
     <!-- ============================================================================= -->
     <!-- Add output rule -->
