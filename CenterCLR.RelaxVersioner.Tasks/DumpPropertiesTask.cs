@@ -52,6 +52,18 @@ namespace RelaxVersioner
 
             if (project != null)
             {
+                var basePath = Path.GetDirectoryName(OutputPath);
+                if (!Directory.Exists(basePath))
+                {
+                    try
+                    {
+                        Directory.CreateDirectory(basePath);
+                    }
+                    catch
+                    {
+                    }
+                }
+
                 using (var fs = File.Create(OutputPath))
                 {
                     var root = new XElement("Properties",

@@ -2,33 +2,12 @@
 
   <PropertyGroup>
     <TargetFrameworks>net40;net46;netstandard2.0</TargetFrameworks>
+    <Nullable>Enable</Nullable>
 
     <AssemblyName>RelaxVersioner.Tasks</AssemblyName>
-    <LangVersion>latest</LangVersion>
-    <Nullable>enable</Nullable>
-    <DebugType>portable</DebugType>
-    <DebugSymbols>true</DebugSymbols>
-    <Platforms>AnyCPU</Platforms>
-
-    <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
-    <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
-
-    <RootNamespace>RelaxVersioner</RootNamespace>
     <AssemblyTitle>RelaxVersioner.Tasks</AssemblyTitle>
-    <Product>RelaxVersioner</Product>
-    <Trademark>RelaxVersioner</Trademark>
-    <Copyright>Copyright (c) 2016-2021 Kouji Matsui</Copyright>
-    <Description>Easy-usage, Git-based, auto-generate version informations toolset.</Description>
-
-    <Company>Kouji Matsui (@kozy_kekyo, @kekyo2)</Company>
-    <Authors>Kouji Matsui (@kozy_kekyo, @kekyo2)</Authors>
-    <RepositoryType>git</RepositoryType>
-    <PublishRepositoryUrl>true</PublishRepositoryUrl>
-    <EmbedUntrackedSources>true</EmbedUntrackedSources>
-    <RepositoryUrl>https://github.com/kekyo/CenterCLR.RelaxVersioner.git</RepositoryUrl>
 
     <DevelopmentDependency>true</DevelopmentDependency>
-    <AllowedOutputExtensionsInPackageBuildOutputFolder>.pdb</AllowedOutputExtensionsInPackageBuildOutputFolder>
   </PropertyGroup>
 
   <ItemGroup Condition="'$(TargetFramework)' == 'netstandard2.0'">
@@ -48,7 +27,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="RelaxVersioner" Version="2.1.8" PrivateAssets="All" />
+    <PackageReference Include="RelaxVersioner" Version="2.2.0" PrivateAssets="All" />
   </ItemGroup>
 
 </Project>

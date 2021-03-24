@@ -22,7 +22,7 @@
 
   <!-- ======================== -->
   <!-- Common -->
-    
+
   <PropertyGroup>
     <BuildIdentifier Condition="'$(BuildIdentifier)' == ''"></BuildIdentifier>
     <RelaxVersionerBuildIdentifier Condition="'$(RelaxVersionerBuildIdentifier)' == ''">$(BuildIdentifier)</RelaxVersionerBuildIdentifier>
@@ -31,6 +31,9 @@
       RelaxVersionerBeforePack;
       $(GetPackageVersionDependsOn)
     </GetPackageVersionDependsOn>
+
+    <_RV_TemporaryBasePath Condition="'$(RelaxVersionerTemporaryBasePath)' == ''">$([System.IO.Path]::GetTempPath())</_RV_TemporaryBasePath>
+    <_RV_TemporaryBasePath Condition="'$(RelaxVersionerTemporaryBasePath)' != ''">$([System.IO.Path]::GetFullPath('$(RelaxVersionerTemporaryBasePath)'))</_RV_TemporaryBasePath>
   </PropertyGroup>
 
   <!-- ======================== -->
@@ -80,13 +83,29 @@
     
   <Target Name="RelaxVersionerBuild" BeforeTargets="BeforeCompile" Outputs="$(RelaxVersionerOutputPath)">
 
+    <PropertyGroup Condition="'$(MSBuildRuntimeType)' == 'Core'">
+      <_RV_PlatformName Condition="('$(MicrosoftNETBuildTasksTFM)' == '') AND ('$(BundledNETCoreAppTargetFrameworkVersion)' == '')">netcoreapp2.0</_RV_PlatformName>
+      <_RV_PlatformName Condition="'$(MicrosoftNETBuildTasksTFM)' == ''">netcoreapp$(BundledNETCoreAppTargetFrameworkVersion)</_RV_PlatformName>
+      <_RV_PlatformName Condition="'$(MicrosoftNETBuildTasksTFM)' != ''">$(MicrosoftNETBuildTasksTFM)</_RV_PlatformName>
+    </PropertyGroup>
+    <PropertyGroup Condition="'$(MSBuildRuntimeType)' != 'Core'">
+      <_RV_PlatformName>net461</_RV_PlatformName>
+    </PropertyGroup>
+    
+    <PropertyGroup>
+      <RelaxVersionerToolingRuntimeName Condition="'$(RelaxVersionerToolingRuntimeName)' == ''">$(_RV_RuntimeName)</RelaxVersionerToolingRuntimeName>
+      <_RV_ToolingDir>$([System.IO.Path]::Combine('$(MSBuildThisFileDirectory)','..','tools','$(_RV_PlatformName)'))</_RV_ToolingDir>
+      <RelaxVersionerToolingDir Condition="'$(RelaxVersionerToolingDir)' == ''">$([System.IO.Path]::GetFullPath('$(_RV_ToolingDir)'))</RelaxVersionerToolingDir>
+      <RelaxVersionerToolingPath Condition="'$(RelaxVersionerToolingPath)' == ''">$([System.IO.Path]::Combine('$(RelaxVersionerToolingDir)','$(_RV_ExecutableName)'))</RelaxVersionerToolingPath>
+    </PropertyGroup>
+
     <PropertyGroup>
       <_RV_TargetFramework>$(TargetFramework)</_RV_TargetFramework>
       <_RV_TargetFrameworkIdentifier>$(TargetFrameworkIdentifier)</_RV_TargetFrameworkIdentifier>
       <_RV_TargetFrameworkVersion>$(TargetFrameworkVersion)</_RV_TargetFrameworkVersion>
       <_RV_TargetFrameworkProfile>$(TargetFrameworkProfile)</_RV_TargetFrameworkProfile>
-      <_RV_PropertiesPath>$([System.IO.Path]::Combine('$([System.IO.Path]::GetTempPath())','RelaxVersioner_Properties_$([System.Guid]::NewGuid().ToString())'))</_RV_PropertiesPath>
-      <_RV_ResultPath>$([System.IO.Path]::Combine('$([System.IO.Path]::GetTempPath())','RelaxVersioner_Result_$([System.Guid]::NewGuid().ToString())'))</_RV_ResultPath>
+      <_RV_PropertiesPath>$([System.IO.Path]::Combine('$(_RV_TemporaryBasePath)','RelaxVersioner_Properties_$([System.Guid]::NewGuid().ToString())'))</_RV_PropertiesPath>
+      <_RV_ResultPath>$([System.IO.Path]::Combine('$(_RV_TemporaryBasePath)','RelaxVersioner_Result_$([System.Guid]::NewGuid().ToString())'))</_RV_ResultPath>
     </PropertyGroup>
     
     <!-- ======================== -->
@@ -113,8 +132,8 @@
       <Output TaskParameter="Result" PropertyName="_RV_DetectedMessage" />
     </XmlPeek>
 
-    <Delete Files="$(_RV_ResultPath)" />
-    <Delete Files="$(_RV_PropertiesPath)" />
+    <Delete Condition="'$(RelaxVersionerTemporaryBasePath)' == ''" Files="$(_RV_ResultPath)" />
+    <Delete Condition="'$(RelaxVersionerTemporaryBasePath)' == ''" Files="$(_RV_PropertiesPath)" />
 
     <!-- ============================================================================= -->
     <!-- Add output rule -->
@@ -156,9 +175,25 @@
   <!-- Nuget packaging definition -->
 
   <Target Name="RelaxVersionerBeforePack" BeforeTargets="_GetProjectReferenceVersions">
+      
+    <PropertyGroup Condition="'$(MSBuildRuntimeType)' == 'Core'">
+      <_RV_PlatformName Condition="('$(MicrosoftNETBuildTasksTFM)' == '') AND ('$(BundledNETCoreAppTargetFrameworkVersion)' == '')">netcoreapp2.0</_RV_PlatformName>
+      <_RV_PlatformName Condition="'$(MicrosoftNETBuildTasksTFM)' == ''">netcoreapp$(BundledNETCoreAppTargetFrameworkVersion)</_RV_PlatformName>
+      <_RV_PlatformName Condition="'$(MicrosoftNETBuildTasksTFM)' != ''">$(MicrosoftNETBuildTasksTFM)</_RV_PlatformName>
+    </PropertyGroup>
+    <PropertyGroup Condition="'$(MSBuildRuntimeType)' != 'Core'">
+      <_RV_PlatformName>net461</_RV_PlatformName>
+    </PropertyGroup>
+    
+    <PropertyGroup>
+      <RelaxVersionerToolingRuntimeName Condition="'$(RelaxVersionerToolingRuntimeName)' == ''">$(_RV_RuntimeName)</RelaxVersionerToolingRuntimeName>
+      <_RV_ToolingDir>$([System.IO.Path]::Combine('$(MSBuildThisFileDirectory)','..','tools','$(_RV_PlatformName)'))</_RV_ToolingDir>
+      <RelaxVersionerToolingDir Condition="'$(RelaxVersionerToolingDir)' == ''">$([System.IO.Path]::GetFullPath('$(_RV_ToolingDir)'))</RelaxVersionerToolingDir>
+      <RelaxVersionerToolingPath Condition="'$(RelaxVersionerToolingPath)' == ''">$([System.IO.Path]::Combine('$(RelaxVersionerToolingDir)','$(_RV_ExecutableName)'))</RelaxVersionerToolingPath>
+    </PropertyGroup>
 
     <PropertyGroup>
-      <_RV_PackagePropertiesPath>$([System.IO.Path]::Combine('$([System.IO.Path]::GetTempPath())','RelaxVersioner_Properties_$([System.Guid]::NewGuid().ToString())'))</_RV_PackagePropertiesPath>
+      <_RV_PackagePropertiesPath>$([System.IO.Path]::Combine('$(_RV_TemporaryBasePath)','RelaxVersioner_Properties_$([System.Guid]::NewGuid().ToString())'))</_RV_PackagePropertiesPath>
       <_RV_PackageResultPath>$([System.IO.Path]::Combine('$([System.IO.Path]::GetTempPath())','RelaxVersioner_Result_$([System.Guid]::NewGuid().ToString())'))</_RV_PackageResultPath>
     </PropertyGroup>
 
@@ -183,8 +218,8 @@
       <Output TaskParameter="Result" PropertyName="_RV_DetectedPackageMessage" />
     </XmlPeek>
 
-    <Delete Files="$(_RV_PackageResultPath)" />
-    <Delete Files="$(_RV_PackagePropertiesPath)" />
+    <Delete Condition="'$(RelaxVersionerTemporaryBasePath)' == ''" Files="$(_RV_PackageResultPath)" />
+    <Delete Condition="'$(RelaxVersionerTemporaryBasePath)' == ''" Files="$(_RV_PackagePropertiesPath)" />
 
     <!-- ============================================================================= -->
     <!-- Add output rule -->
