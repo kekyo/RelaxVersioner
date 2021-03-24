@@ -22,7 +22,7 @@
 
   <!-- ======================== -->
   <!-- Common -->
-    
+
   <PropertyGroup>
     <BuildIdentifier Condition="'$(BuildIdentifier)' == ''"></BuildIdentifier>
     <RelaxVersionerBuildIdentifier Condition="'$(RelaxVersionerBuildIdentifier)' == ''">$(BuildIdentifier)</RelaxVersionerBuildIdentifier>
@@ -33,7 +33,7 @@
     </GetPackageVersionDependsOn>
 
     <_RV_TemporaryBasePath Condition="'$(RelaxVersionerTemporaryBasePath)' == ''">$([System.IO.Path]::GetTempPath())</_RV_TemporaryBasePath>
-    <_RV_TemporaryBasePath Condition="'$(RelaxVersionerTemporaryBasePath)' != ''">$(RelaxVersionerTemporaryBasePath)</_RV_TemporaryBasePath>
+    <_RV_TemporaryBasePath Condition="'$(RelaxVersionerTemporaryBasePath)' != ''">$([System.IO.Path]::GetFullPath('$(RelaxVersionerTemporaryBasePath)'))</_RV_TemporaryBasePath>
   </PropertyGroup>
 
   <!-- ======================== -->
@@ -82,6 +82,21 @@
   <!-- Build definition -->
     
   <Target Name="RelaxVersionerBuild" BeforeTargets="BeforeCompile" Outputs="$(RelaxVersionerOutputPath)">
+
+    <PropertyGroup Condition="'$(MSBuildRuntimeType)' == 'Core'">
+      <_RV_PlatformName Condition="'$(DotnetCliToolTargetFramework)' == ''">netcoreapp2.0</_RV_PlatformName>
+      <_RV_PlatformName Condition="'$(DotnetCliToolTargetFramework)' != ''">$(DotnetCliToolTargetFramework)</_RV_PlatformName>
+    </PropertyGroup>
+    <PropertyGroup Condition="'$(MSBuildRuntimeType)' != 'Core'">
+      <_RV_PlatformName>net461</_RV_PlatformName>
+    </PropertyGroup>
+    
+    <PropertyGroup>
+      <RelaxVersionerToolingRuntimeName Condition="'$(RelaxVersionerToolingRuntimeName)' == ''">$(_RV_RuntimeName)</RelaxVersionerToolingRuntimeName>
+      <_RV_ToolingDir>$([System.IO.Path]::Combine('$(MSBuildThisFileDirectory)','..','tools','$(_RV_PlatformName)'))</_RV_ToolingDir>
+      <RelaxVersionerToolingDir Condition="'$(RelaxVersionerToolingDir)' == ''">$([System.IO.Path]::GetFullPath('$(_RV_ToolingDir)'))</RelaxVersionerToolingDir>
+      <RelaxVersionerToolingPath Condition="'$(RelaxVersionerToolingPath)' == ''">$([System.IO.Path]::Combine('$(RelaxVersionerToolingDir)','$(_RV_ExecutableName)'))</RelaxVersionerToolingPath>
+    </PropertyGroup>
 
     <PropertyGroup>
       <_RV_TargetFramework>$(TargetFramework)</_RV_TargetFramework>
@@ -159,6 +174,21 @@
   <!-- Nuget packaging definition -->
 
   <Target Name="RelaxVersionerBeforePack" BeforeTargets="_GetProjectReferenceVersions">
+      
+    <PropertyGroup Condition="'$(MSBuildRuntimeType)' == 'Core'">
+      <_RV_PlatformName Condition="'$(DotnetCliToolTargetFramework)' == ''">netcoreapp2.0</_RV_PlatformName>
+      <_RV_PlatformName Condition="'$(DotnetCliToolTargetFramework)' != ''">$(DotnetCliToolTargetFramework)</_RV_PlatformName>
+    </PropertyGroup>
+    <PropertyGroup Condition="'$(MSBuildRuntimeType)' != 'Core'">
+      <_RV_PlatformName>net461</_RV_PlatformName>
+    </PropertyGroup>
+    
+    <PropertyGroup>
+      <RelaxVersionerToolingRuntimeName Condition="'$(RelaxVersionerToolingRuntimeName)' == ''">$(_RV_RuntimeName)</RelaxVersionerToolingRuntimeName>
+      <_RV_ToolingDir>$([System.IO.Path]::Combine('$(MSBuildThisFileDirectory)','..','tools','$(_RV_PlatformName)'))</_RV_ToolingDir>
+      <RelaxVersionerToolingDir Condition="'$(RelaxVersionerToolingDir)' == ''">$([System.IO.Path]::GetFullPath('$(_RV_ToolingDir)'))</RelaxVersionerToolingDir>
+      <RelaxVersionerToolingPath Condition="'$(RelaxVersionerToolingPath)' == ''">$([System.IO.Path]::Combine('$(RelaxVersionerToolingDir)','$(_RV_ExecutableName)'))</RelaxVersionerToolingPath>
+    </PropertyGroup>
 
     <PropertyGroup>
       <_RV_PackagePropertiesPath>$([System.IO.Path]::Combine('$(_RV_TemporaryBasePath)','RelaxVersioner_Properties_$([System.Guid]::NewGuid().ToString())'))</_RV_PackagePropertiesPath>

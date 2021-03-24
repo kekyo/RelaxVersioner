@@ -1,38 +1,18 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFrameworks>net461;netcoreapp2.1</TargetFrameworks>
+    <TargetFrameworks>net461;netcoreapp2.0;netcoreapp2.1;netcoreapp2.2;netcoreapp3.0;netcoreapp3.1;net5.0</TargetFrameworks>
     <OutputType>WinExe</OutputType>
-    <AssemblyName>rv</AssemblyName>
-
-    <LangVersion>latest</LangVersion>
-    <DebugType>portable</DebugType>
-    <DebugSymbols>true</DebugSymbols>
-    <Platforms>AnyCPU</Platforms>
-
-    <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
-    <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
     <CopyLocalLockFileAssemblies>true</CopyLocalLockFileAssemblies>
 
-    <RootNamespace>RelaxVersioner</RootNamespace>
-    <AssemblyTitle>RelaxVersioner</AssemblyTitle>
-    <Product>RelaxVersioner</Product>
-    <Trademark>RelaxVersioner</Trademark>
-    <Copyright>Copyright (c) 2016-2021 Kouji Matsui</Copyright>
-    <Description>Easy-usage, Git-based, auto-generate version informations toolset.</Description>
+    <AssemblyName>rv</AssemblyName>
 
     <NuspecFile>RelaxVersioner.nuspec</NuspecFile>
 
     <DevelopmentDependency>true</DevelopmentDependency>
     <NoPackageAnalysis>true</NoPackageAnalysis>
     <IncludeBuildOutput>false</IncludeBuildOutput>
-    <AllowedOutputExtensionsInPackageBuildOutputFolder>.pdb</AllowedOutputExtensionsInPackageBuildOutputFolder>
   </PropertyGroup>
-
-  <ItemGroup>
-    <None Remove="buildMultiTargeting\*.*" />
-    <None Remove="build\*.*" />
-  </ItemGroup>
 
   <ItemGroup>
     <Content Include="buildMultiTargeting\*.*" />
@@ -40,7 +20,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="RelaxVersioner" Version="2.1.8" PrivateAssets="All" />
+    <PackageReference Include="RelaxVersioner" Version="2.2.0" PrivateAssets="All" />
     <PackageReference Include="Microsoft.NETFramework.ReferenceAssemblies" Version="1.0.0" PrivateAssets="All" />
     <PackageReference Include="Mono.Options" Version="6.6.0.161" />
     <PackageReference Include="LibGit2Sharp.NativeBinaries" Version="2.0.312" />
