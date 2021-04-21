@@ -80,10 +80,22 @@ namespace RelaxVersioner
             {
                 if (Directory.Exists(Path.Combine(path, ".git")))
                 {
+                    string GetNativeLibraryPath()
+                    {
+                        try
+                        {
+                            return GlobalSettings.NativeLibraryPath ?? "(null)";
+                        }
+                        catch
+                        {
+                            return "(unspecified)";
+                        }
+                    }
+                    
+                    logger.Message(LogImportance.Low, "libgit2sharp.NativeLibraryPath, Path={0}", GetNativeLibraryPath());
+
                     try
                     {
-                        logger.Message(LogImportance.Low, "libgit2sharp.NativeLibraryPath, Path={0}", GlobalSettings.NativeLibraryPath ?? "(null)");
-
                         var r = new Repository(GetDirectoryNameWithTrailingSeparator(path));
                         logger.Message(LogImportance.Low, "Repository opened, Path={0}", path);
                         return r;
