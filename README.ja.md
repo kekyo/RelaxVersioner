@@ -340,6 +340,52 @@ public:
 
 ## TIPS
 
+### SourceLinkに対応させる方法
+
+[Sourcelink](https://github.com/dotnet/sourcelink) は、Gitソースコードリポジトリからオンザフライでダウンロードしたソースコードをデバッガーに表示するための、統合パッケージです。
+
+この機能を使うと、パッケージを使用するコードのデバッグ中に、（事前の準備なしに）パッケージ内にステップインして、ソースコードデバッグする事が出来るようになります。
+
+RelaxVersionerはすでにSourcelink統合をサポートしています。 簡単な手順で、Sourcelinkに対応させる事が出来ます:
+
+```xml
+<!-- Sourcelink統合で定義する共通プロパティ -->
+<PropertyGroup>
+  <!-- プロジェクトで参照されないソースコードの情報を含める -->
+  <EmbedUntrackedSources>true</EmbedUntrackedSources>
+
+  <!-- シンボルの情報をアセンブリ内に含める（推奨） -->
+  <DebugType>embedded</DebugType>
+
+  <!-- または、以下のような指定でシンボル (*.pdb) をパッケージに取り込む -->
+  <!-- <DebugType>portable</DebugType> -->
+  <!-- <AllowedOutputExtensionsInPackageBuildOutputFolder>.pdb</AllowedOutputExtensionsInPackageBuildOutputFolder> -->
+
+  <!-- Gitリポジトリの情報（必須） -->
+  <PublishRepositoryUrl>true</PublishRepositoryUrl>
+  <RepositoryType>git</RepositoryType>
+  <RepositoryUrl>https://github.com/kekyo/Epoxy.git</RepositoryUrl>
+</PropertyGroup>
+
+<!-- GitHub CI Releaseビルド時に、安定したバイナリを生成 -->
+<!-- （まったく同じソースコードからはまったく同じバイナリが生成される） -->
+<PropertyGroup Condition="'$(Configuration)' == 'Release'">
+  <Deterministic>true</Deterministic>
+  <ContinuousIntegrationBuild>true</ContinuousIntegrationBuild>
+</PropertyGroup>
+
+<ItemGroup>
+  <PackageReference Include="RelaxVersioner" Version="2.3.2" PrivateAssets="All" />
+</ItemGroup>
+
+<!-- Sourcelink GitHubパッケージを追加 -->
+<ItemGroup Condition="'$(Configuration)' == 'Release'">
+  <PackageReference Include="Microsoft.SourceLink.GitHub" Version="1.0.0" PrivateAssets="All" />
+</ItemGroup>
+```
+
+より詳しい情報は、[Sourcelinkのドキュメントを参照してください。](https://github.com/dotnet/sourcelink/blob/main/docs/README.md)
+
 ### Gitのコミット検索でエラーが発生する
 
 もしCIプロセスで使ったときに、以下のようなエラーが発生した場合:

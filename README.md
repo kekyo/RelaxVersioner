@@ -333,6 +333,51 @@ public:
 
 ## TIPS
 
+### SourceLink integration
+
+[Sourcelink](https://github.com/dotnet/sourcelink) is a cool stuff debugger integration package for showing source code on-the-fly downloading from Git source code repository. 
+
+RelaxVersioner already supported Sourcelink integration. You can integrate using both RelaxVersioner and Sourcelink on simple step:
+
+```xml
+<!-- Example common properties for Sourcelink integration -->
+<PropertyGroup>
+  <!-- Will embed project untracked source files -->
+  <EmbedUntrackedSources>true</EmbedUntrackedSources>
+
+  <!-- Symbol embedding is recommended -->
+  <DebugType>embedded</DebugType>
+
+  <!-- Or you have to include symbol files (*.pdb) into same package -->
+  <!-- <DebugType>portable</DebugType> -->
+  <!-- <AllowedOutputExtensionsInPackageBuildOutputFolder>.pdb</AllowedOutputExtensionsInPackageBuildOutputFolder> -->
+
+  <!-- Required: Will include Git repository information into assembly -->
+  <PublishRepositoryUrl>true</PublishRepositoryUrl>
+  <RepositoryType>git</RepositoryType>
+  <RepositoryUrl>https://github.com/kekyo/Epoxy.git</RepositoryUrl>
+</PropertyGroup>
+
+<!-- Will build deterministic binary on GitHub CI Release building -->
+<PropertyGroup Condition="'$(Configuration)' == 'Release'">
+  <Deterministic>true</Deterministic>
+  <ContinuousIntegrationBuild>true</ContinuousIntegrationBuild>
+</PropertyGroup>
+
+<ItemGroup>
+  <PackageReference Include="RelaxVersioner" Version="2.3.2" PrivateAssets="All" />
+</ItemGroup>
+
+<!-- Required: Add Sourcelink package reference on only Release build -->
+<ItemGroup Condition="'$(Configuration)' == 'Release'">
+  <PackageReference Include="Microsoft.SourceLink.GitHub" Version="1.0.0" PrivateAssets="All" />
+</ItemGroup>
+```
+
+For more further informations, [see Sourcelink documentation.](https://github.com/dotnet/sourcelink/blob/main/docs/README.md)
+
+### CI process trouble shooting
+
 If your CI process causes error with this description like:
 
 ```
