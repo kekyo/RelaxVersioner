@@ -2,7 +2,7 @@
 <package xmlns="http://schemas.microsoft.com/packaging/2010/07/nuspec.xsd">
   <metadata>
     <id>RelaxVersioner</id>
-    <version>2.3.5</version>
+    <version>$PackageVersion$</version>
     <title>RelaxVersioner</title>
     <authors>Kouji Matsui</authors>
     <owners>Kouji Matsui</owners>
@@ -12,30 +12,26 @@
     <copyright>Copyright (c) 2016-2021 Kouji Matsui</copyright>
     <license type="expression">Apache-2.0</license>
     <projectUrl>https://github.com/kekyo/CenterCLR.RelaxVersioner</projectUrl>
-    <!--
     <repository type="git" url="https://github.com/kekyo/CenterCLR.RelaxVersioner.git" branch="$RepositoryBranch$" commit="$RepositoryCommit$" />
-    -->
     <icon>CenterCLR.RelaxVersioner.100.png</icon>
     <requireLicenseAcceptance>false</requireLicenseAcceptance>
-    <!--
     <releaseNotes>$PackageReleaseNotes$</releaseNotes>
-    -->
     <tags>version;generator;git;auto;easy;generate;versioning;continuous;integration;delivery;tag;branch;assemblyinfo;msbuild;tool</tags>
   </metadata>
   <files>
     <file src="..\Images\CenterCLR.RelaxVersioner.100.png" target="/" />
     <file src="build\*.*" target="build" />
     <file src="buildMultiTargeting\*.*" target="buildMultiTargeting" />
-    <file src="..\CenterCLR.RelaxVersioner.Tasks\bin\Release\net40\*.*" target="build/net40" />
-    <file src="..\CenterCLR.RelaxVersioner.Tasks\bin\Release\net46\*.*" target="build/net46" />
-    <file src="..\CenterCLR.RelaxVersioner.Tasks\bin\Release\netstandard2.0\*.*" target="build/netstandard2.0" />
-    <file src="bin\Release\net461\**\*.*" target="tools/net461" />
-    <file src="bin\Release\netcoreapp2.0\**\*.*" target="tools/netcoreapp2.0" />
-    <file src="bin\Release\netcoreapp2.1\**\*.*" target="tools/netcoreapp2.1" />
-    <file src="bin\Release\netcoreapp2.2\**\*.*" target="tools/netcoreapp2.2" />
-    <file src="bin\Release\netcoreapp3.0\**\*.*" target="tools/netcoreapp3.0" />
-    <file src="bin\Release\netcoreapp2.1\**\*.*" target="tools/netcoreapp3.1" />
-    <file src="bin\Release\net5.0\**\*.*" target="tools/net5.0" />
-    <file src="bin\Release\net6.0\**\*.*" target="tools/net6.0" />
+    <file src="..\CenterCLR.RelaxVersioner.Tasks\bin\$Configuration$\net40\*.*" target="build/net40" />
+    <file src="..\CenterCLR.RelaxVersioner.Tasks\bin\$Configuration$\net46\*.*" target="build/net46" />
+    <file src="..\CenterCLR.RelaxVersioner.Tasks\bin\$Configuration$\netstandard2.0\*.*" target="build/netstandard2.0" />
+    <file src="bin\$Configuration$\net461\**\*.*" target="tools/net461" />
+    <file src="bin\$Configuration$\netcoreapp2.0\**\*.*" target="tools/netcoreapp2.0" />
+    <file src="bin\$Configuration$\netcoreapp2.1\**\*.*" target="tools/netcoreapp2.1" />
+    <file src="bin\$Configuration$\netcoreapp2.2\**\*.*" target="tools/netcoreapp2.2" />
+    <file src="bin\$Configuration$\netcoreapp3.0\**\*.*" target="tools/netcoreapp3.0" />
+    <file src="bin\$Configuration$\netcoreapp2.1\**\*.*" target="tools/netcoreapp3.1" />
+    <file src="bin\$Configuration$\net5.0\**\*.*" target="tools/net5.0" />
+    <file src="bin\$Configuration$\net6.0\**\*.*" target="tools/net6.0" />
   </files>
 </package>
