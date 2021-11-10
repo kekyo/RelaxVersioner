@@ -14,11 +14,11 @@
 
 ## これは何？
 
-* RelaxVersionerは、軽量で簡単に使用することが出来る、Gitベースの「自動バージョニング」ツールセットです。.NET 5/.NET Core/.NET Frameworkベースのソースコードを対象としていて、ビルド時にアセンブリ属性を自動的に適用します。
+* RelaxVersionerは、軽量で簡単に使用することが出来る、Gitベースの「自動バージョニング」ツールセットです。.NET 6.0/5.0/.NET Core/.NET Frameworkベースのソースコードを対象としていて、ビルド時にアセンブリ属性を自動的に適用します。
 * RelaxVersionerのNuGetパッケージをインストールするだけで、Gitのタグ・ブランチ・コミットメッセージだけを使って、バージョン管理が出来ます。つまり、追加のツール操作が不要なため、Gitさえ知っていれば学習コストがほとんどなく、CI環境にも容易に対応できます。
 * サポートしている言語と環境は、以下の通りです（恐らく、現在のほとんどの.NET開発環境に適合します）:
   * C#・F#・VB.NET・C++/CLI、そしてNuGetパッケージング (dotnet cli packコマンド)
-  * Visual Studio 2019/2017/2015, Rider, dotnet SDK cli, netcoreapp2.1/net461の元で動作するMSBuild環境 (注: MSBuildの動作プラットフォームの事です、あなたがターゲットにしたいプロジェクトの事ではありません)、及びこれらを使用する任意のIDE。
+  * Visual Studio 2022/2019/2017/2015, Rider, dotnet SDK cli, netcoreapp2.1/net461の元で動作するMSBuild環境 (注: MSBuildの動作プラットフォームの事です、あなたがターゲットにしたいプロジェクトの事ではありません)、及びこれらを使用する任意のIDE。
   * Linux(x64)及びWindows(x86/x64)  （検証している環境は先のとおりですが、[libgit2sharp](https://github.com/libgit2/libgit2sharp)の動作要件に準じて動作する可能性があります）
 * ローカルのGitリポジトリから、自動的にタグ・ブランチの名称を取得し、アセンブリ属性に適用することが出来ます。
 * AssemblyInfo.csファイルを直接変更しません。RelaxVersionerはテンポラリファイルに定義を出力し、それをコンパイルさせます。
@@ -453,6 +453,8 @@ nuspecファイルを使ってパッケージを生成する場合は、デフ�
 
 ## 履歴
 
+* 2.4.0:
+  * .NET 6.0 SDKをサポート。
 * 2.3.2:
   * VisualStudio for Mac上で使用した場合に、LibGit2SharpExceptionが発生する問題を修正。
 * 2.3.0:

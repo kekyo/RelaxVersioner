@@ -440,6 +440,8 @@ When you are using a nuspec file to generate a NuGet package, there are addition
 
 ## History
 
+* 2.4.0:
+  * Supported .NET 6.0 SDK.
 * 2.3.2:
   * Fixed causing LibGit2SharpException built on VisualStudio for Mac.
 * 2.3.0:
