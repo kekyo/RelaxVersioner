@@ -440,6 +440,9 @@ When you are using a nuspec file to generate a NuGet package, there are addition
 
 ## History
 
+* 2.5.0:
+  * Upgraded VS2022 (Project doesn't change)
+  * Fixed detection for building runtime version on NET5/6.
 * 2.4.0:
   * Supported .NET 6.0 SDK.
 * 2.3.2:
