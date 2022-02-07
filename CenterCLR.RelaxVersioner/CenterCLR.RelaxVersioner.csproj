@@ -20,10 +20,16 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="RelaxVersioner" Version="2.3.5" PrivateAssets="All" />
     <PackageReference Include="Microsoft.NETFramework.ReferenceAssemblies" Version="1.0.2" PrivateAssets="All" />
     <PackageReference Include="Mono.Options" Version="6.12.0.148" />
     <PackageReference Include="LibGit2Sharp.NativeBinaries" Version="2.0.312" />
+
+    <!-- Both debug and release build because refer ThisAssembly symbol. -->  
+    <PackageReference Include="RelaxVersioner" Version="2.4.0" PrivateAssets="all" />
+  </ItemGroup>
+
+  <ItemGroup Condition="'$(Configuration)' == 'Release'">
+    <PackageReference Include="Microsoft.SourceLink.GitHub" Version="1.1.1" PrivateAssets="All" />
   </ItemGroup>
 
   <ItemGroup>
