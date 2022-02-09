@@ -35,11 +35,15 @@
     <_RVB_TaskPlatformName>net46</_RVB_TaskPlatformName>
   </PropertyGroup>
 
-  <PropertyGroup Condition="'$(MSBuildRuntimeType)' == 'Core'">
-    <_RVB_PlatformName Condition="('$(MicrosoftNETBuildTasksTFM)' == '') AND ('$(BundledNETCoreAppTargetFrameworkVersion)' == '')">netcoreapp2.0</_RVB_PlatformName>
-    <_RVB_PlatformName Condition="('$(MicrosoftNETBuildTasksTFM)' == '') AND ($(BundledNETCoreAppTargetFrameworkVersion) &gt;= 5.0)">net$(BundledNETCoreAppTargetFrameworkVersion)</_RVB_PlatformName>
-    <_RVB_PlatformName Condition="('$(MicrosoftNETBuildTasksTFM)' == '') AND ($(BundledNETCoreAppTargetFrameworkVersion) &lt; 5.0)">netcoreapp$(BundledNETCoreAppTargetFrameworkVersion)</_RVB_PlatformName>
-    <_RVB_PlatformName Condition="'$(MicrosoftNETBuildTasksTFM)' != ''">$(MicrosoftNETBuildTasksTFM)</_RVB_PlatformName>
+  <PropertyGroup Condition="('$(MSBuildRuntimeType)' == 'Core') AND ('$(MicrosoftNETBuildTasksTFM)' != '')">
+    <_RVB_PlatformName>$(MicrosoftNETBuildTasksTFM)</_RVB_PlatformName>
+  </PropertyGroup>
+  <PropertyGroup Condition="('$(MSBuildRuntimeType)' == 'Core') AND ('$(MicrosoftNETBuildTasksTFM)' == '') AND ('$(BundledNETCoreAppTargetFrameworkVersion)' != '')">
+    <_RVB_PlatformName Condition="$(BundledNETCoreAppTargetFrameworkVersion) &gt;= 5.0">net$(BundledNETCoreAppTargetFrameworkVersion)</_RVB_PlatformName>
+    <_RVB_PlatformName Condition="$(BundledNETCoreAppTargetFrameworkVersion) &lt; 5.0">netcoreapp$(BundledNETCoreAppTargetFrameworkVersion)</_RVB_PlatformName>
+  </PropertyGroup>
+  <PropertyGroup Condition="('$(MSBuildRuntimeType)' == 'Core') AND ('$(MicrosoftNETBuildTasksTFM)' == '') AND ('$(BundledNETCoreAppTargetFrameworkVersion)' == '')">
+    <_RVB_PlatformName>netcoreapp2.0</_RVB_PlatformName>
   </PropertyGroup>
   <PropertyGroup Condition="'$(MSBuildRuntimeType)' != 'Core'">
     <_RVB_PlatformName>net461</_RVB_PlatformName>

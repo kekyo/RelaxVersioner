@@ -440,6 +440,8 @@ When you are using a nuspec file to generate a NuGet package, there are addition
 
 ## History
 
+* 2.5.1:
+  * Fixed causing undefined `BundledNETCoreAppTargetFrameworkVersion` at some environment.
 * 2.5.0:
   * Upgraded VS2022 (Project doesn't change)
   * Fixed detection for building runtime version on NET5/6.
