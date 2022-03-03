@@ -53,6 +53,7 @@
     <_RVB_ScriptBaseDir>$(MSBuildThisFileDirectory)</_RVB_ScriptBaseDir>
     <_RVB_ToolingDir>$([System.IO.Path]::Combine('$(_RVB_ScriptBaseDir)','..','tools','$(_RVB_PlatformName)'))</_RVB_ToolingDir>
     <_RVB_MSBuildTaskPath>$([System.IO.Path]::Combine('$(MSBuildThisFileDirectory)','$(_RVB_TaskPlatformName)','RelaxVersioner.Tasks.dll'))</_RVB_MSBuildTaskPath>
+    <GenerateAssemblyInfo>true</GenerateAssemblyInfo>
     <GenerateAssemblyVersionAttribute>false</GenerateAssemblyVersionAttribute>
     <GenerateAssemblyFileVersionAttribute>false</GenerateAssemblyFileVersionAttribute>
     <GenerateAssemblyInformationalVersionAttribute>false</GenerateAssemblyInformationalVersionAttribute>
