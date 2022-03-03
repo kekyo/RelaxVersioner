@@ -440,6 +440,8 @@ When you are using a nuspec file to generate a NuGet package, there are addition
 
 ## History
 
+* 2.5.2:
+  * In .NET 6 environment, fixed an issue where the default set of additional attributes was not being applied.
 * 2.5.1:
   * Fixed causing undefined `BundledNETCoreAppTargetFrameworkVersion` at some environment.
 * 2.5.0:
