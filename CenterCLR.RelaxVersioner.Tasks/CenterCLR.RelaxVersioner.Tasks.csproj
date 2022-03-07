@@ -27,7 +27,7 @@
   </ItemGroup>
 
   <ItemGroup Condition="'$(Configuration)' == 'Release'">
-    <PackageReference Include="RelaxVersioner" Version="2.5.1" PrivateAssets="all" />
+    <PackageReference Include="RelaxVersioner" Version="2.5.4" PrivateAssets="all" />
     <PackageReference Include="Microsoft.SourceLink.GitHub" Version="1.1.1" PrivateAssets="All" />
   </ItemGroup>
 
