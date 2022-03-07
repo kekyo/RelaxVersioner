@@ -34,24 +34,9 @@
     <_RVB_ExecutableName>rv.exe</_RVB_ExecutableName>
     <_RVB_TaskPlatformName>net46</_RVB_TaskPlatformName>
   </PropertyGroup>
-
-  <PropertyGroup Condition="('$(MSBuildRuntimeType)' == 'Core') AND ('$(MicrosoftNETBuildTasksTFM)' != '')">
-    <_RVB_PlatformName>$(MicrosoftNETBuildTasksTFM)</_RVB_PlatformName>
-  </PropertyGroup>
-  <PropertyGroup Condition="('$(MSBuildRuntimeType)' == 'Core') AND ('$(MicrosoftNETBuildTasksTFM)' == '') AND ('$(BundledNETCoreAppTargetFrameworkVersion)' != '')">
-    <_RVB_PlatformName Condition="$(BundledNETCoreAppTargetFrameworkVersion) &gt;= 5.0">net$(BundledNETCoreAppTargetFrameworkVersion)</_RVB_PlatformName>
-    <_RVB_PlatformName Condition="$(BundledNETCoreAppTargetFrameworkVersion) &lt; 5.0">netcoreapp$(BundledNETCoreAppTargetFrameworkVersion)</_RVB_PlatformName>
-  </PropertyGroup>
-  <PropertyGroup Condition="('$(MSBuildRuntimeType)' == 'Core') AND ('$(MicrosoftNETBuildTasksTFM)' == '') AND ('$(BundledNETCoreAppTargetFrameworkVersion)' == '')">
-    <_RVB_PlatformName>netcoreapp2.0</_RVB_PlatformName>
-  </PropertyGroup>
-  <PropertyGroup Condition="'$(MSBuildRuntimeType)' != 'Core'">
-    <_RVB_PlatformName>net461</_RVB_PlatformName>
-  </PropertyGroup>
     
   <PropertyGroup>
     <_RVB_ScriptBaseDir>$(MSBuildThisFileDirectory)</_RVB_ScriptBaseDir>
-    <_RVB_ToolingDir>$([System.IO.Path]::Combine('$(_RVB_ScriptBaseDir)','..','tools','$(_RVB_PlatformName)'))</_RVB_ToolingDir>
     <_RVB_MSBuildTaskPath>$([System.IO.Path]::Combine('$(MSBuildThisFileDirectory)','$(_RVB_TaskPlatformName)','RelaxVersioner.Tasks.dll'))</_RVB_MSBuildTaskPath>
     <GenerateAssemblyInfo>true</GenerateAssemblyInfo>
     <GenerateAssemblyVersionAttribute>false</GenerateAssemblyVersionAttribute>
