@@ -22,7 +22,7 @@
 
   <!-- ======================== -->
   <!-- Common -->
-
+    
   <PropertyGroup>
     <BuildIdentifier Condition="'$(BuildIdentifier)' == ''"></BuildIdentifier>
     <RelaxVersionerBuildIdentifier Condition="'$(RelaxVersionerBuildIdentifier)' == ''">$(BuildIdentifier)</RelaxVersionerBuildIdentifier>
@@ -31,7 +31,27 @@
       RelaxVersionerBeforePack;
       $(GetPackageVersionDependsOn)
     </GetPackageVersionDependsOn>
+  </PropertyGroup>
 
+  <!-- ======================== -->
+  <!-- Common (internal) -->
+    
+  <PropertyGroup Condition="('$(MSBuildRuntimeType)' == 'Core') AND ('$(MicrosoftNETBuildTasksTFM)' != '')">
+    <_RVB_PlatformName>$(MicrosoftNETBuildTasksTFM)</_RVB_PlatformName>
+  </PropertyGroup>
+  <PropertyGroup Condition="('$(MSBuildRuntimeType)' == 'Core') AND ('$(MicrosoftNETBuildTasksTFM)' == '') AND ('$(BundledNETCoreAppTargetFrameworkVersion)' != '')">
+    <_RVB_PlatformName Condition="$(BundledNETCoreAppTargetFrameworkVersion) &gt;= 5.0">net$(BundledNETCoreAppTargetFrameworkVersion)</_RVB_PlatformName>
+    <_RVB_PlatformName Condition="$(BundledNETCoreAppTargetFrameworkVersion) &lt; 5.0">netcoreapp$(BundledNETCoreAppTargetFrameworkVersion)</_RVB_PlatformName>
+  </PropertyGroup>
+  <PropertyGroup Condition="('$(MSBuildRuntimeType)' == 'Core') AND ('$(MicrosoftNETBuildTasksTFM)' == '') AND ('$(BundledNETCoreAppTargetFrameworkVersion)' == '')">
+    <_RVB_PlatformName>netcoreapp2.0</_RVB_PlatformName>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(MSBuildRuntimeType)' != 'Core'">
+    <_RVB_PlatformName>net461</_RVB_PlatformName>
+  </PropertyGroup>
+    
+  <PropertyGroup>
+    <_RVB_ToolingDir>$([System.IO.Path]::Combine('$(_RVB_ScriptBaseDir)','..','tools','$(_RVB_PlatformName)'))</_RVB_ToolingDir>
     <_RVB_TemporaryBasePath Condition="'$(RelaxVersionerTemporaryBasePath)' == ''">$([System.IO.Path]::GetTempPath())</_RVB_TemporaryBasePath>
     <_RVB_TemporaryBasePath Condition="'$(RelaxVersionerTemporaryBasePath)' != ''">$([System.IO.Path]::GetFullPath('$(RelaxVersionerTemporaryBasePath)'))</_RVB_TemporaryBasePath>
   </PropertyGroup>
