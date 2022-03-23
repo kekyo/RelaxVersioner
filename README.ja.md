@@ -375,12 +375,17 @@ RelaxVersionerはすでにSourcelink統合をサポートしています。 簡�
 </PropertyGroup>
 
 <ItemGroup>
-  <PackageReference Include="RelaxVersioner" Version="2.3.2" PrivateAssets="All" />
+  <!-- RelaxVersioner -->
+  <PackageReference Include="RelaxVersioner" Version="2.5.5" PrivateAssets="All" />
+
+  <!-- ソリューションファイルが存在する場合の、ルートディレクトリ位置 -->
+  <!-- 参照: https://github.com/dotnet/roslyn/issues/37379 -->
+  <SourceRoot Include="$(MSBuildThisFileDirectory)/"/>
 </ItemGroup>
 
 <!-- Sourcelink GitHubパッケージを追加 -->
 <ItemGroup Condition="'$(Configuration)' == 'Release'">
-  <PackageReference Include="Microsoft.SourceLink.GitHub" Version="1.0.0" PrivateAssets="All" />
+  <PackageReference Include="Microsoft.SourceLink.GitHub" Version="1.1.1" PrivateAssets="All" />
 </ItemGroup>
 ```
 

@@ -365,12 +365,17 @@ RelaxVersioner already supported Sourcelink integration. You can integrate using
 </PropertyGroup>
 
 <ItemGroup>
-  <PackageReference Include="RelaxVersioner" Version="2.3.2" PrivateAssets="All" />
+  <!-- RelaxVersioner -->
+  <PackageReference Include="RelaxVersioner" Version="2.5.5" PrivateAssets="All" />
+
+  <!-- Root directory location of the solution file, if it exists. -->
+  <!-- Refer: https://github.com/dotnet/roslyn/issues/37379 -->
+  <SourceRoot Include="$(MSBuildThisFileDirectory)/"/>
 </ItemGroup>
 
 <!-- Required: Add Sourcelink package reference on only Release build -->
 <ItemGroup Condition="'$(Configuration)' == 'Release'">
-  <PackageReference Include="Microsoft.SourceLink.GitHub" Version="1.0.0" PrivateAssets="All" />
+  <PackageReference Include="Microsoft.SourceLink.GitHub" Version="1.1.1" PrivateAssets="All" />
 </ItemGroup>
 ```
 
