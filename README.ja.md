@@ -229,7 +229,8 @@ public:
 
 ### スタートガイド
 
-[Refer start guides. (英語)](./STARTGUIDE.md)
+* [An easy way to practice version embedding on .NET (英語/dev.to)](https://dev.to/kozy_kekyo/an-easy-way-to-practice-version-embedding-on-net-45h8)
+* [Refer start guides. (英語)](./STARTGUIDE.md)
 
 ### 簡単な使い方
 

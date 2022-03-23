@@ -225,7 +225,8 @@ public:
 
 ### Start guide
 
-[Refer start guides.](./STARTGUIDE.md)
+* [An easy way to practice version embedding on .NET (dev.to)](https://dev.to/kozy_kekyo/an-easy-way-to-practice-version-embedding-on-net-45h8)
+* [Refer start guides.](./STARTGUIDE.md)
 
 ### How to use
 
