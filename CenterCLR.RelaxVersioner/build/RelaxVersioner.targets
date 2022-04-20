@@ -73,10 +73,6 @@
     <RelaxVersionerLanguage Condition="('$(RelaxVersionerLanguage)' == '') AND ('$(CLRSupport)' == 'true')">C++/CLI</RelaxVersionerLanguage>
     <RelaxVersionerLanguage Condition="'$(RelaxVersionerLanguage)' == ''">C++</RelaxVersionerLanguage>
     <RelaxVersionerNamespace Condition="'$(RelaxVersionerNamespace)' == ''"></RelaxVersionerNamespace>
-    <BuildCompileTargets>
-      RelaxVersionerBuild;
-      $(BuildCompileTargets)
-    </BuildCompileTargets>
   </PropertyGroup>
 
   <!-- ======================== -->
@@ -85,10 +81,6 @@
   <PropertyGroup Condition="'$(Language)' != 'C++'">
     <RelaxVersionerOutputPath Condition="'$(RelaxVersionerOutputPath)' == ''">$([System.IO.Path]::Combine('$(MSBuildProjectDirectory)','$(IntermediateOutputPath)','RelaxVersioner$(DefaultLanguageSourceExtension)'))</RelaxVersionerOutputPath>
     <RelaxVersionerLanguage Condition="'$(RelaxVersionerLanguage)' == ''">$(Language)</RelaxVersionerLanguage>
-    <CoreBuildDependsOn>
-      RelaxVersionerBuild;
-      $(CoreBuildDependsOn)
-    </CoreBuildDependsOn>
   </PropertyGroup>
 
   <!-- ======================== -->
@@ -101,7 +93,12 @@
   <!-- ============================================================================= -->
   <!-- Build definition -->
     
-  <Target Name="RelaxVersionerBuild" BeforeTargets="BeforeCompile" Outputs="$(RelaxVersionerOutputPath)">
+  <Target Name="GenerateRelaxVersioner"
+    BeforeTargets="BeforeCompile;CoreCompile"
+    DependsOnTargets="PrepareForBuild;CoreGenerateRelaxVersioner" />
+    
+  <Target Name="CoreGenerateRelaxVersioner"
+    Outputs="$(RelaxVersionerOutputPath)">
     
     <PropertyGroup>
       <RelaxVersionerToolingRuntimeName Condition="'$(RelaxVersionerToolingRuntimeName)' == ''">$(_RVB_RuntimeName)</RelaxVersionerToolingRuntimeName>
@@ -118,6 +115,24 @@
       <_RVB_ResultPath>$([System.IO.Path]::Combine('$(_RVB_TemporaryBasePath)','RelaxVersioner_Result_$([System.Guid]::NewGuid().ToString())'))</_RVB_ResultPath>
     </PropertyGroup>
     
+    <!-- ======================== -->
+    <!-- Remove previous declaration before generating. -->
+
+    <!-- For F# -->
+    <ItemGroup Condition="'$(Language)' == 'F#'">
+      <CompileBefore Remove="$(RelaxVersionerOutputPath)" />
+    </ItemGroup>
+
+    <!-- For C++ (or C++/CLI) -->
+    <ItemGroup Condition="'$(Language)' == 'C++'">
+      <ClCompile Remove="$(RelaxVersionerOutputPath)" />
+    </ItemGroup>
+
+    <!-- For other languages -->
+    <ItemGroup Condition="('$(Language)' != 'F#') and ('$(Language)' != 'C++')">
+      <Compile Remove="$(RelaxVersionerOutputPath)" />
+    </ItemGroup>
+
     <!-- ======================== -->
     <!-- Execute RelaxVersioner -->
 
@@ -164,6 +179,7 @@
       <!-- HACK: F#'s EntryPoint expression is ignoring namespace/module if source code is last compilation.
             So, RelaxVersioner code insert before any source codes. -->
       <CompileBefore Include="$(RelaxVersionerOutputPath)" />
+      <FileWrites Include="$(RelaxVersionerOutputPath)" />
     </ItemGroup>
 
     <!-- ======================== -->
@@ -171,6 +187,7 @@
       
     <ItemGroup Condition="'$(Language)' == 'C++'">
       <ClCompile Include="$(RelaxVersionerOutputPath)" />
+      <FileWrites Include="$(RelaxVersionerOutputPath)" />
     </ItemGroup>
 
     <!-- ======================== -->
@@ -178,6 +195,7 @@
       
     <ItemGroup Condition="('$(Language)' != 'F#') and ('$(Language)' != 'C++')">
       <Compile Include="$(RelaxVersionerOutputPath)" />
+      <FileWrites Include="$(RelaxVersionerOutputPath)" />
     </ItemGroup>
   </Target>
 
