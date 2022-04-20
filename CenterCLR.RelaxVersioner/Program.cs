@@ -82,9 +82,10 @@ namespace RelaxVersioner
 
                 logger.Message(
                     LogImportance.High,
-                    "Generated versions code{0}: {1}Version={2}",
+                    "Generated versions code{0}: {1}{2}, Version={3}",
                     dryrunDisplay,
                     languageDisplay,
+                    context.TargetFramework,
                     result.Version);
             }
             catch (Exception ex)
