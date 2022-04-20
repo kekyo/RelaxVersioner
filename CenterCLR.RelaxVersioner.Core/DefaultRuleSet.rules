@@ -60,6 +60,7 @@
             "generated" is generated date by RelaxVersioner.
             You can apply format directives same as string.Format().
         -->
+        <Rule name="AssemblyMetadata" key="CommitId">{commitId}</Rule>
         <Rule name="AssemblyMetadata" key="Date">{committer.When:R}</Rule>
         <Rule name="AssemblyMetadata" key="Branch">{branch.FriendlyName}</Rule>
         <Rule name="AssemblyMetadata" key="Tags">{tags}</Rule>
