@@ -15,10 +15,10 @@
 ## What is this?
 
 * RelaxVersioner is a easy, full-automatic, git based version inserter for .NET 5/.NET Core/.NET Framework.
-* If you use RelaxVersioner, version handling ONLY use with Git tags/branches/commit messages. Of course you don't need more tooling usage, and easy integrates continuous-integration environments.
+* If you use RelaxVersioner, version handling ONLY use with Git tags/branches/commit messages. Of course you don't need more tooling knowledge, and easy integrates continuous-integration environments.
 * Target language/environments (Probably fits most current .NET development environments):
   * C#, F#, VB.NET, C++/CLI and NuGet packaging (dotnet cli packer).
-  * Visual Studio 2019/2017/2015, Rider, dotnet SDK cli, MSBuild on `net6.0`, `net5.0`, `netcoreapp3.1`, `netcoreapp2.2` and `net461` environment (NOT your project platform) and related IDEs.
+  * Visual Studio 2022/2019/2017/2015, Rider, dotnet SDK cli, MSBuild on `net6.0`, `net5.0`, `netcoreapp3.1`, `netcoreapp2.2` and `net461` environment (NOT your project platform) and related IDEs.
   * Linux(x64) and Windows(x86/x64).  (The project validates only them, but maybe can run at same as [libgit2sharp](https://github.com/libgit2/libgit2sharp) required environment)
 * Auto collect version information from local Git repository tags/branch name.
 * Independent AssemblyInfo.cs file, generated code will output into a temporary file. (Not manipulate directly AssemblyInfo.cs file).
