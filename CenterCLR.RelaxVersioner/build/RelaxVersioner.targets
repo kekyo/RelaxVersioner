@@ -45,50 +45,56 @@
     <_RVB_TemporaryBasePath Condition="'$(RelaxVersionerTemporaryBasePath)' == ''">$([System.IO.Path]::GetTempPath())</_RVB_TemporaryBasePath>
     <_RVB_TemporaryBasePath Condition="'$(RelaxVersionerTemporaryBasePath)' != ''">$([System.IO.Path]::GetFullPath('$(RelaxVersionerTemporaryBasePath)'))</_RVB_TemporaryBasePath>
   </PropertyGroup>
-
-  <!-- ======================== -->
-  <!-- For F# -->
     
-  <PropertyGroup Condition="'$(Language)' == 'F#'">
-    <!-- HACK: https://github.com/fsharp/fsharp/issues/289 -->
-    <NoWarn>$(NoWarn) 2003</NoWarn>
-    <RelaxVersionerNamespace Condition="'$(RelaxVersionerNamespace)' == ''"></RelaxVersionerNamespace>
-  </PropertyGroup>
-
-  <!-- ======================== -->
-  <!-- For C++ (or C++/CLI) -->
+  <UsingTask
+    TaskName="DumpPropertiesTask"
+    AssemblyFile="$(_RVB_MSBuildTaskPath)" />
     
-  <PropertyGroup Condition="'$(Language)' == 'C++'">
-    <RelaxVersionerOutputPath Condition="'$(RelaxVersionerOutputPath)' == ''">$([System.IO.Path]::Combine('$(MSBuildProjectDirectory)','$(IntDir)','RelaxVersioner$(DefaultLanguageSourceExtension)'))</RelaxVersionerOutputPath>
-    <RelaxVersionerLanguage Condition="('$(RelaxVersionerLanguage)' == '') AND ('$(CLRSupport)' == 'true')">C++/CLI</RelaxVersionerLanguage>
-    <RelaxVersionerLanguage Condition="'$(RelaxVersionerLanguage)' == ''">C++</RelaxVersionerLanguage>
-    <RelaxVersionerNamespace Condition="'$(RelaxVersionerNamespace)' == ''"></RelaxVersionerNamespace>
-  </PropertyGroup>
-
-  <!-- ======================== -->
-  <!-- For all languages except C++ -->
-    
-  <PropertyGroup Condition="'$(Language)' != 'C++'">
-    <RelaxVersionerOutputPath Condition="'$(RelaxVersionerOutputPath)' == ''">$([System.IO.Path]::Combine('$(MSBuildProjectDirectory)','$(IntermediateOutputPath)','RelaxVersioner$(DefaultLanguageSourceExtension)'))</RelaxVersionerOutputPath>
-    <RelaxVersionerLanguage Condition="'$(RelaxVersionerLanguage)' == ''">$(Language)</RelaxVersionerLanguage>
-  </PropertyGroup>
-
-  <!-- ======================== -->
-  <!-- For all languages except F# and C++ -->
-    
-  <PropertyGroup Condition="'$(Language)' != 'F#' AND '$(Language)' != 'C++'">
-    <RelaxVersionerNamespace Condition="'$(RelaxVersionerNamespace)' == ''">$(RootNamespace)</RelaxVersionerNamespace>
-  </PropertyGroup>
-
   <!-- ============================================================================= -->
   <!-- Build definition -->
+
+  <Target Name="RelaxVersionerBeforeCompile" BeforeTargets="PrepareForBuild;BeforeCompile">
+    <CallTarget Targets="RelaxVersionerPrepare;RelaxVersionerCoreGenerate" />
+  </Target>
+
+  <Target Name="RelaxVersionerPrepare">
+    <!-- For F# -->
+    <PropertyGroup Condition="'$(Language)' == 'F#'">
+      <!-- HACK: https://github.com/fsharp/fsharp/issues/289 -->
+      <NoWarn>$(NoWarn) 2003</NoWarn>
+      <RelaxVersionerNamespace Condition="'$(RelaxVersionerNamespace)' == ''"></RelaxVersionerNamespace>
+    </PropertyGroup>
+  
+    <!-- ======================== -->
+    <!-- For C++ (or C++/CLI) -->
+    <PropertyGroup Condition="'$(Language)' == 'C++'">
+      <RelaxVersionerOutputPath Condition="'$(RelaxVersionerOutputPath)' == ''">$([System.IO.Path]::Combine('$(MSBuildProjectDirectory)','$(IntDir)','RelaxVersioner$(DefaultLanguageSourceExtension)'))</RelaxVersionerOutputPath>
+      <RelaxVersionerLanguage Condition="('$(RelaxVersionerLanguage)' == '') AND ('$(CLRSupport)' == 'true')">C++/CLI</RelaxVersionerLanguage>
+      <RelaxVersionerLanguage Condition="'$(RelaxVersionerLanguage)' == ''">C++</RelaxVersionerLanguage>
+      <RelaxVersionerNamespace Condition="'$(RelaxVersionerNamespace)' == ''"></RelaxVersionerNamespace>
+    </PropertyGroup>
+  
+    <!-- ======================== -->
+    <!-- For all languages except C++ -->
+    <PropertyGroup Condition="'$(Language)' != 'C++'">
+      <RelaxVersionerOutputPath Condition="'$(RelaxVersionerOutputPath)' == ''">$([System.IO.Path]::Combine('$(MSBuildProjectDirectory)','$(IntermediateOutputPath)','RelaxVersioner$(DefaultLanguageSourceExtension)'))</RelaxVersionerOutputPath>
+      <RelaxVersionerLanguage Condition="'$(RelaxVersionerLanguage)' == ''">$(Language)</RelaxVersionerLanguage>
+    </PropertyGroup>
+  
+    <!-- ======================== -->
+    <!-- For all languages except F# and C++ -->
+    <PropertyGroup Condition="'$(Language)' != 'F#' AND '$(Language)' != 'C++'">
+      <RelaxVersionerNamespace Condition="'$(RelaxVersionerNamespace)' == ''">$(RootNamespace)</RelaxVersionerNamespace>
+    </PropertyGroup>
+
+    <ItemGroup>
+      <_RVB_OutputPath Include="$(RelaxVersionerOutputPath)" />
+    </ItemGroup>
+  </Target>
     
-  <Target Name="GenerateRelaxVersioner"
-    BeforeTargets="BeforeCompile;CoreCompile"
-    DependsOnTargets="PrepareForBuild;CoreGenerateRelaxVersioner" />
-    
-  <Target Name="CoreGenerateRelaxVersioner"
-    Outputs="$(RelaxVersionerOutputPath)">
+  <Target Name="RelaxVersionerCoreGenerate"
+    Inputs="@(Compile);@(ClCompile)"
+    Outputs="@(_RVB_OutputPath)">
     
     <PropertyGroup>
       <RelaxVersionerToolingRuntimeName Condition="'$(RelaxVersionerToolingRuntimeName)' == ''">$(_RVB_RuntimeName)</RelaxVersionerToolingRuntimeName>
@@ -110,17 +116,17 @@
 
     <!-- For F# -->
     <ItemGroup Condition="'$(Language)' == 'F#'">
-      <CompileBefore Remove="$(RelaxVersionerOutputPath)" />
+      <CompileBefore Remove="@(_RVB_OutputPath)" />
     </ItemGroup>
 
     <!-- For C++ (or C++/CLI) -->
     <ItemGroup Condition="'$(Language)' == 'C++'">
-      <ClCompile Remove="$(RelaxVersionerOutputPath)" />
+      <ClCompile Remove="@(_RVB_OutputPath)" />
     </ItemGroup>
 
     <!-- For other languages -->
     <ItemGroup Condition="('$(Language)' != 'F#') and ('$(Language)' != 'C++')">
-      <Compile Remove="$(RelaxVersionerOutputPath)" />
+      <Compile Remove="@(_RVB_OutputPath)" />
     </ItemGroup>
 
     <!-- ======================== -->
@@ -129,7 +135,7 @@
     <DumpPropertiesTask OutputPath="$(_RVB_PropertiesPath)" />
     
     <Exec WorkingDirectory="$(RelaxVersionerToolingDir)"
-          Command="$(RelaxVersionerToolingRuntimeName)&quot;$(RelaxVersionerToolingPath)&quot; --language=&quot;$(RelaxVersionerLanguage)&quot; --namespace=&quot;$(RelaxVersionerNamespace)&quot; --tfm=&quot;$(_RVB_TargetFramework)&quot; --tfid=&quot;$(_RVB_TargetFrameworkIdentifier)&quot; --tfv=&quot;$(_RVB_TargetFrameworkVersion)&quot; --tfp=&quot;$(_RVB_TargetFrameworkProfile)&quot; --genStatic=&quot;$(RelaxVersionerGenerateStatic)&quot; --buildIdentifier=&quot;$(RelaxVersionerBuildIdentifier)&quot; --propertiesPath=&quot;$(_RVB_PropertiesPath)&quot; --outputPath=&quot;$(RelaxVersionerOutputPath)&quot; --resultPath=&quot;$(_RVB_ResultPath)&quot; &quot;$(MSBuildProjectFullPath)&quot;" />
+          Command="$(RelaxVersionerToolingRuntimeName)&quot;$(RelaxVersionerToolingPath)&quot; --language=&quot;$(RelaxVersionerLanguage)&quot; --namespace=&quot;$(RelaxVersionerNamespace)&quot; --tfm=&quot;$(_RVB_TargetFramework)&quot; --tfid=&quot;$(_RVB_TargetFrameworkIdentifier)&quot; --tfv=&quot;$(_RVB_TargetFrameworkVersion)&quot; --tfp=&quot;$(_RVB_TargetFrameworkProfile)&quot; --genStatic=&quot;$(RelaxVersionerGenerateStatic)&quot; --buildIdentifier=&quot;$(RelaxVersionerBuildIdentifier)&quot; --propertiesPath=&quot;$(_RVB_PropertiesPath)&quot; --outputPath=@(_RVB_OutputPath->'&quot;%(FullPath)&quot;',' ') --resultPath=&quot;$(_RVB_ResultPath)&quot; &quot;$(MSBuildProjectFullPath)&quot;" />
 
     <XmlPeek XmlInputPath="$(_RVB_ResultPath)" Query="/Result/Version/text()">
       <Output TaskParameter="Result" PropertyName="_RVB_DetectedVersion" />
@@ -168,24 +174,24 @@
     <ItemGroup Condition="'$(Language)' == 'F#'">
       <!-- HACK: F#'s EntryPoint expression is ignoring namespace/module if source code is last compilation.
             So, RelaxVersioner code insert before any source codes. -->
-      <CompileBefore Include="$(RelaxVersionerOutputPath)" />
-      <FileWrites Include="$(RelaxVersionerOutputPath)" />
+      <CompileBefore Include="@(_RVB_OutputPath)" />
+      <FileWrites Include="@(_RVB_OutputPath)" />
     </ItemGroup>
 
     <!-- ======================== -->
     <!-- For C++ (or C++/CLI) -->
       
     <ItemGroup Condition="'$(Language)' == 'C++'">
-      <ClCompile Include="$(RelaxVersionerOutputPath)" />
-      <FileWrites Include="$(RelaxVersionerOutputPath)" />
+      <ClCompile Include="@(_RVB_OutputPath)" />
+      <FileWrites Include="@(_RVB_OutputPath)" />
     </ItemGroup>
 
     <!-- ======================== -->
     <!-- For other languages -->
       
     <ItemGroup Condition="('$(Language)' != 'F#') and ('$(Language)' != 'C++')">
-      <Compile Include="$(RelaxVersionerOutputPath)" />
-      <FileWrites Include="$(RelaxVersionerOutputPath)" />
+      <Compile Include="@(_RVB_OutputPath)" />
+      <FileWrites Include="@(_RVB_OutputPath)" />
     </ItemGroup>
   </Target>
 

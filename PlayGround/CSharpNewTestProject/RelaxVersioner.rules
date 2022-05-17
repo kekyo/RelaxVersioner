@@ -1,0 +1,42 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<!--
+    RelaxVersioner - Easy-usage, Git-based, auto-generate version informations toolset.
+    Copyright (c) Kouji Matsui (@kozy_kekyo, @kekyo2)
+    
+    Licensed under Apache-v2: https://opensource.org/licenses/Apache-2.0
+-->
+<!--
+    This is sample of RelaxVersioner overridable rule sets.
+    Sample contains default rule sets below.
+    You can place custom version rule set file naming "RelaxVersioner.rules" into $(SolutionDir) or $(ProjectDir).
+    RelaxVersioner use files fallback with priority first $(ProjectDir), second $(SolutionDir), and default rule sets.
+-->
+<RelaxVersioner version="1.0">
+    <WriterRules>
+        <!-- Should load the default rule set since the language isn't here -->
+        <Language>F#</Language>
+        <Language>C++/CLI</Language>
+
+        <!-- Namespaces to be imported -->
+        <Import>System.Reflection</Import>
+        <Import>System.Runtime.InteropServices</Import>
+
+        <Rule name="AssemblyVersionAttribute">{gitLabel}</Rule>
+        <Rule name="AssemblyFileVersionAttribute">{safeVersion}</Rule>
+        <Rule name="AssemblyInformationalVersionAttribute">{commitId}</Rule>
+
+        <Rule name="AssemblyVersionMetadataAttribute" key="Build">{committer.When:R}</Rule>
+        <Rule name="AssemblyVersionMetadataAttribute" key="Branch">{branch.Name}</Rule>
+        <Rule name="AssemblyVersionMetadataAttribute" key="Tags">{tags}</Rule>
+        <Rule name="AssemblyVersionMetadataAttribute" key="Author">{author}</Rule>
+        <Rule name="AssemblyVersionMetadataAttribute" key="Committer">{committer}</Rule>
+        <Rule name="AssemblyVersionMetadataAttribute" key="Message">{commit.MessageShort}</Rule>
+    </WriterRules>
+    <WriterRules>
+        <!-- Target languages -->
+        <Language>Wix</Language>
+
+        <Rule name="VERSION">{gitLabel}</Rule>
+        <Rule name="DESCRIPTION">{gitLabel}</Rule>
+    </WriterRules>
+</RelaxVersioner>

@@ -34,7 +34,4 @@
     <GenerateAssemblyInformationalVersionAttribute>false</GenerateAssemblyInformationalVersionAttribute>
   </PropertyGroup>
 
-  <UsingTask
-    TaskName="DumpPropertiesTask"
-    AssemblyFile="$(_RVB_MSBuildTaskPath)" />
 </Project>
