@@ -446,6 +446,8 @@ When you are using a nuspec file to generate a NuGet package, there are addition
 
 ## History
 
+* 2.7.0:
+  * Defined file dependency rules at build time to avoid unnecessary builds.
 * 2.6.0:
   * Improved clean build stability.
   * The development environments of `netcoreapp2.0`, `2.1` and `netcoreapp3.0` are no longer supported.
