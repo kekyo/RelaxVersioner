@@ -452,7 +452,7 @@ nuspecファイルを使ってパッケージを生成する場合は、デフ�
 
 ## License
 
-* Copyright (c) 2015-2021 Kouji Matsui (@kozy_kekyo, @kekyo2)
+* Copyright (c) Kouji Matsui (@kozy_kekyo, @kekyo@mastodon.cloud)
 * Under Apache v2
 
 ----

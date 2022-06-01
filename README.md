@@ -439,7 +439,7 @@ When you are using a nuspec file to generate a NuGet package, there are addition
 
 ## License
 
-* Copyright (c) 2015-2021 Kouji Matsui (@kozy_kekyo, @kekyo2)
+* Copyright (c) Kouji Matsui (@kozy_kekyo, @kekyo@mastodon.cloud)
 * Under Apache v2
 
 ----
