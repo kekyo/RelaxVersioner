@@ -62,8 +62,12 @@ namespace RelaxVersioner
 
                 var result = processor.Run(context);
 
-                var dryrunDisplay = string.IsNullOrWhiteSpace(context.OutputPath) ? " (dryrun)" : string.Empty;
-                var languageDisplay = string.IsNullOrWhiteSpace(context.OutputPath) ? string.Empty : $"Language={context.Language}, ";
+                var dryrunDisplay = string.IsNullOrWhiteSpace(context.OutputPath) ?
+                    " (dryrun)" : string.Empty;
+                var languageDisplay = string.IsNullOrWhiteSpace(context.OutputPath) ?
+                    string.Empty : $"Language={context.Language}, ";
+                var tfmDisplay = string.IsNullOrWhiteSpace(context.TargetFramework) ?
+                    string.Empty : $"TFM={context.TargetFramework}, ";
 
                 if (!string.IsNullOrWhiteSpace(resultPath))
                 {
@@ -72,10 +76,10 @@ namespace RelaxVersioner
 
                 logger.Message(
                     LogImportance.High,
-                    "Generated versions code{0}: {1}TFM={2}, Version={3}",
+                    "Generated versions code{0}: {1}{2}Version={3}",
                     dryrunDisplay,
                     languageDisplay,
-                    context.TargetFramework,
+                    tfmDisplay,
                     result.Version);
             }
             catch (Exception ex)
