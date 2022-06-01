@@ -1,11 +1,13 @@
 ﻿////////////////////////////////////////////////////////////////////////////////////////
 //
 // RelaxVersioner - Easy-usage, Git-based, auto-generate version informations toolset.
-// Copyright (c) Kouji Matsui (@kozy_kekyo, @kekyo2)
+// Copyright (c) Kouji Matsui (@kozy_kekyo, @kekyo@mastodon.cloud)
 //
 // Licensed under Apache-v2: https://opensource.org/licenses/Apache-2.0
 //
 ////////////////////////////////////////////////////////////////////////////////////////
+
+#nullable enable
 
 using System;
 using System.IO;
@@ -28,23 +30,23 @@ namespace RelaxVersioner
 
         public abstract void Message(LogImportance importance, string message);
 
-        public virtual void Message(LogImportance importance, string format, params object[] args) =>
+        public virtual void Message(LogImportance importance, string format, params object?[] args) =>
             this.Message(importance, $"{this.Header}: {string.Format(format, args)}");
-        public virtual void Message(LogImportance importance, Exception ex, string format, params object[] args) =>
+        public virtual void Message(LogImportance importance, Exception ex, string format, params object?[] args) =>
             this.Message(importance, $"{this.Header}: {ex.GetType().Name}={ex.Message}, {string.Format(format, args)}");
 
         public abstract void Warning(string message);
 
-        public virtual void Warning(string format, params object[] args) =>
+        public virtual void Warning(string format, params object?[] args) =>
             this.Warning($"{this.Header}: {string.Format(format, args)}");
-        public virtual void Warning(Exception ex, string format, params object[] args) =>
+        public virtual void Warning(Exception ex, string format, params object?[] args) =>
             this.Warning($"{this.Header}: {ex.GetType().Name}={ex.Message}, {string.Format(format, args)}");
 
         public abstract void Error(string message);
 
-        public virtual void Error(string format, params object[] args) =>
+        public virtual void Error(string format, params object?[] args) =>
             this.Error($"{this.Header}: {string.Format(format, args)}");
-        public virtual void Error(Exception ex, string format, params object[] args) =>
+        public virtual void Error(Exception ex, string format, params object?[] args) =>
             this.Error($"{this.Header}: {ex.GetType().Name}={ex.Message}, {string.Format(format, args)}");
 
         public static Logger Create(string header, LogImportance lowerImportance, TextWriter @out, TextWriter warning, TextWriter error) =>

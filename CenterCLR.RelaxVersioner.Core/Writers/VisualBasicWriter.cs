@@ -1,11 +1,13 @@
 ﻿////////////////////////////////////////////////////////////////////////////////////////
 //
 // RelaxVersioner - Easy-usage, Git-based, auto-generate version informations toolset.
-// Copyright (c) Kouji Matsui (@kozy_kekyo, @kekyo2)
+// Copyright (c) Kouji Matsui (@kozy_kekyo, @kekyo@mastodon.cloud)
 //
 // Licensed under Apache-v2: https://opensource.org/licenses/Apache-2.0
 //
 ////////////////////////////////////////////////////////////////////////////////////////
+
+#nullable enable
 
 using System.IO;
 
@@ -15,7 +17,7 @@ namespace RelaxVersioner.Writers
     {
         public override string Language => "VB";
 
-        protected override void WriteComment(SourceCodeWriter tw, string format, params object[] args) =>
+        protected override void WriteComment(SourceCodeWriter tw, string format, params object?[] args) =>
             tw.WriteLine("' " + format, args);
 
         protected override void WriteImport(SourceCodeWriter tw, string namespaceName) =>

@@ -1,11 +1,13 @@
 ﻿////////////////////////////////////////////////////////////////////////////////////////
 //
 // RelaxVersioner - Easy-usage, Git-based, auto-generate version informations toolset.
-// Copyright (c) Kouji Matsui (@kozy_kekyo, @kekyo2)
+// Copyright (c) Kouji Matsui (@kozy_kekyo, @kekyo@mastodon.cloud)
 //
 // Licensed under Apache-v2: https://opensource.org/licenses/Apache-2.0
 //
 ////////////////////////////////////////////////////////////////////////////////////////
+
+#nullable enable
 
 using System.Diagnostics;
 using System.IO;
@@ -32,7 +34,7 @@ namespace RelaxVersioner.Writers
         public void WriteLine(string code) =>
             this.tw.WriteLine(indent + code);
 
-        public void WriteLine(string code, params object[] args) =>
+        public void WriteLine(string code, params object?[] args) =>
             this.tw.WriteLine(indent + code, args);
 
         public void Flush() =>

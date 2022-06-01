@@ -1,11 +1,13 @@
 ﻿////////////////////////////////////////////////////////////////////////////////////////
 //
 // RelaxVersioner - Easy-usage, Git-based, auto-generate version informations toolset.
-// Copyright (c) Kouji Matsui (@kozy_kekyo, @kekyo2)
+// Copyright (c) Kouji Matsui (@kozy_kekyo, @kekyo@mastodon.cloud)
 //
 // Licensed under Apache-v2: https://opensource.org/licenses/Apache-2.0
 //
 ////////////////////////////////////////////////////////////////////////////////////////
+
+#nullable enable
 
 using NamingFormatter;
 using System;
@@ -22,15 +24,12 @@ namespace RelaxVersioner.Writers
 
         public void Write(
             ProcessorContext context,
-            Dictionary<string, object> keyValues,
+            Dictionary<string, object?> keyValues,
             DateTimeOffset generated,
             IEnumerable<Rule> ruleSet,
             IEnumerable<string> importSet)
         {
             Debug.Assert(string.IsNullOrWhiteSpace(context.OutputPath) == false);
-            Debug.Assert(keyValues != null);
-            Debug.Assert(ruleSet != null);
-            Debug.Assert(importSet != null);
 
             var targetFolder = Path.GetDirectoryName(context.OutputPath);
             if (!string.IsNullOrWhiteSpace(targetFolder) && !Directory.Exists(targetFolder))
@@ -51,7 +50,7 @@ namespace RelaxVersioner.Writers
                 var tw = new SourceCodeWriter(ftw, context);
 
                 this.WriteComment(tw,
-                    $"This is auto-generated version information attributes by RelaxVersioner.{this.GetType().Assembly.GetName().Version}, Do not edit.");
+                    $"This is auto-generated version information attributes by RelaxVersioner [{ThisAssembly.AssemblyVersion}], Do not edit.");
                 this.WriteComment(tw,
                     $"Generated date: {generated:R}");
                 tw.WriteLine();
@@ -129,7 +128,7 @@ namespace RelaxVersioner.Writers
             ((version.Major < 4) ||
              (version.Major == 4) && (version.Minor == 0));
 
-        protected virtual void WriteComment(SourceCodeWriter tw, string format, params object[] args) =>
+        protected virtual void WriteComment(SourceCodeWriter tw, string format, params object?[] args) =>
             tw.WriteLine("// " + format, args);
 
         protected virtual void WriteBeforeBody(SourceCodeWriter tw)
@@ -147,17 +146,17 @@ namespace RelaxVersioner.Writers
         protected abstract void WriteAfterNestedLiteralBody(SourceCodeWriter tw);
         protected abstract void WriteAfterLiteralBody(SourceCodeWriter tw);
 
-        private void WriteAttributeWithArguments(SourceCodeWriter tw, string name, params object[] args) =>
+        private void WriteAttributeWithArguments(SourceCodeWriter tw, string name, params object?[] args) =>
             this.WriteAttribute(
                 tw,
                 name,
-                string.Join(",", args.Select(arg => this.GetArgumentString((arg != null) ? arg.ToString() : string.Empty))));
+                string.Join(",", args.Select(arg => this.GetArgumentString(arg?.ToString() ?? string.Empty))));
 
-        private void WriteLiteralWithArgument(SourceCodeWriter tw, string name, object arg) =>
+        private void WriteLiteralWithArgument(SourceCodeWriter tw, string name, object? arg) =>
             this.WriteLiteral(
                 tw,
                 name,
-                this.GetArgumentString((arg != null) ? arg.ToString() : string.Empty));
+                this.GetArgumentString(arg?.ToString() ?? string.Empty));
 
         protected virtual void WriteImport(SourceCodeWriter tw, string namespaceName)
         {

@@ -1,7 +1,7 @@
 ﻿////////////////////////////////////////////////////////////////////////////////////////
 //
 // RelaxVersioner - Easy-usage, Git-based, auto-generate version informations toolset.
-// Copyright (c) Kouji Matsui (@kozy_kekyo, @kekyo2)
+// Copyright (c) Kouji Matsui (@kozy_kekyo, @kekyo@mastodon.cloud)
 //
 // Licensed under Apache-v2: https://opensource.org/licenses/Apache-2.0
 //
@@ -31,7 +31,7 @@ namespace RelaxVersioner
                     GenerateStatic = true,
                 };
 
-                string resultPath = null;
+                string? resultPath = null;
                 var help = false;
 
                 var options = new OptionSet
@@ -62,20 +62,24 @@ namespace RelaxVersioner
 
                 var result = processor.Run(context);
 
-                var dryrunDisplay = string.IsNullOrWhiteSpace(context.OutputPath) ? " (dryrun)" : string.Empty;
-                var languageDisplay = string.IsNullOrWhiteSpace(context.OutputPath) ? string.Empty : $"Language={context.Language}, ";
+                var dryrunDisplay = string.IsNullOrWhiteSpace(context.OutputPath) ?
+                    " (dryrun)" : string.Empty;
+                var languageDisplay = string.IsNullOrWhiteSpace(context.OutputPath) ?
+                    string.Empty : $"Language={context.Language}, ";
+                var tfmDisplay = string.IsNullOrWhiteSpace(context.TargetFramework) ?
+                    string.Empty : $"TFM={context.TargetFramework}, ";
 
                 if (!string.IsNullOrWhiteSpace(resultPath))
                 {
-                    ResultWriter.Write(resultPath, result);
+                    ResultWriter.Write(resultPath!, result);
                 }
 
                 logger.Message(
                     LogImportance.High,
-                    "Generated versions code{0}: {1}TFM={2}, Version={3}",
+                    "Generated versions code{0}: {1}{2}Version={3}",
                     dryrunDisplay,
                     languageDisplay,
-                    context.TargetFramework,
+                    tfmDisplay,
                     result.Version);
             }
             catch (Exception ex)

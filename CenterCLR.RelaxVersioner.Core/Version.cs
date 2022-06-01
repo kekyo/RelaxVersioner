@@ -1,11 +1,13 @@
 ﻿////////////////////////////////////////////////////////////////////////////////////////
 //
 // RelaxVersioner - Easy-usage, Git-based, auto-generate version informations toolset.
-// Copyright (c) Kouji Matsui (@kozy_kekyo, @kekyo2)
+// Copyright (c) Kouji Matsui (@kozy_kekyo, @kekyo@mastodon.cloud)
 //
 // Licensed under Apache-v2: https://opensource.org/licenses/Apache-2.0
 //
 ////////////////////////////////////////////////////////////////////////////////////////
+
+#nullable enable
 
 using System;
 using System.Collections.Generic;
@@ -94,6 +96,7 @@ namespace RelaxVersioner
             var numberComponents = components.
                 Select(numberString => int.TryParse(numberString, out var number) ? (int?)number : null).
                 TakeWhile(number => number.HasValue).
+                Select(number => number!.Value).
                 ToArray();
             switch (numberComponents.Length)
             {
@@ -102,25 +105,25 @@ namespace RelaxVersioner
                     return false;
                 case 1:
                     version = new Version(
-                        numberComponents[0].Value);
+                        numberComponents[0]);
                     return true;
                 case 2:
                     version = new Version(
-                        numberComponents[0].Value,
-                        numberComponents[1].Value);
+                        numberComponents[0],
+                        numberComponents[1]);
                     return true;
                 case 3:
                     version = new Version(
-                        numberComponents[0].Value,
-                        numberComponents[1].Value,
-                        numberComponents[2].Value);
+                        numberComponents[0],
+                        numberComponents[1],
+                        numberComponents[2]);
                     return true;
                 default:
                     version = new Version(
-                        numberComponents[0].Value,
-                        numberComponents[1].Value,
-                        numberComponents[2].Value,
-                        numberComponents[3].Value);
+                        numberComponents[0],
+                        numberComponents[1],
+                        numberComponents[2],
+                        numberComponents[3]);
                     return true;
             }
         }

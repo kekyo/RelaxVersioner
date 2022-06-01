@@ -1,12 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
     RelaxVersioner - Easy-usage, Git-based, auto-generate version informations toolset.
-    Copyright (c) Kouji Matsui (@kozy_kekyo, @kekyo2)
+    Copyright (c) Kouji Matsui (@kozy_kekyo, @kekyo@mastodon.cloud)
     
     Licensed under Apache-v2: https://opensource.org/licenses/Apache-2.0
 -->
-<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003"
-  TreatAsLocalProperty="_RVB_MSBuildTaskPath">
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
 
   <PropertyGroup Condition="'$(MSBuildRuntimeType)' == 'Core'">
     <_RVB_RuntimeName>dotnet </_RVB_RuntimeName>
@@ -32,6 +31,10 @@
     <GenerateAssemblyVersionAttribute>false</GenerateAssemblyVersionAttribute>
     <GenerateAssemblyFileVersionAttribute>false</GenerateAssemblyFileVersionAttribute>
     <GenerateAssemblyInformationalVersionAttribute>false</GenerateAssemblyInformationalVersionAttribute>
+    <BeforePack>
+      RelaxVersionerBeforePack;
+      $(BeforePack)
+    </BeforePack>
   </PropertyGroup>
 
 </Project>
