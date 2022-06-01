@@ -152,7 +152,8 @@
   
   </Target>
     
-  <Target Name="RelaxVersionerGatherResult">
+  <Target Name="RelaxVersionerGatherResult"
+    Condition="Exists($(RelaxVersionerResultPath))">
       
     <XmlPeek XmlInputPath="$(RelaxVersionerResultPath)" Query="/Result/Version/text()">
       <Output TaskParameter="Result" PropertyName="_RVB_DetectedVersion" />
@@ -272,7 +273,8 @@
 
   </Target>
 
-  <Target Name="RelaxVersionerPackGatherResult">
+  <Target Name="RelaxVersionerPackGatherResult"
+    Condition="Exists($(RelaxVersionerResultPath))">
 
     <XmlPeek XmlInputPath="$(RelaxVersionerResultPath)" Query="/Result/ShortVersion/text()">
       <Output TaskParameter="Result" PropertyName="_RVB_DetectedShortVersion" />

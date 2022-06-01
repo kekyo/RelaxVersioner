@@ -467,6 +467,9 @@ When you are using a nuspec file to generate a NuGet package, there are addition
 ----
 
 ## History
+
+* 2.9.0:
+  * Fixed causing XML file reading errors in projects that did not generate any outputs.
 * 2.8.0:
   * Added output of a text file containing only the version, which can be used externally.
   * Adjusted build timing to fix a problem that sometimes prevented Intellisense from recognizing the `ThisAssembly` class.
