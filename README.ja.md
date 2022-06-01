@@ -341,6 +341,28 @@ public:
 
 ## TIPS
 
+### ビルド後にバージョン番号を使用する方法
+
+RelaxVersionerは、ビルド後に、以下の位置にファイルを保存します:
+
+```
+<your project dir>/obj/<configuration>/<tfm>/
+```
+
+* 正確には、`$(IntermediateOutputPath)` です。
+
+例えば、`FooBarProject/obj/Debug/net6.0/` のような階層です。以下に保存するファイルを示します:
+
+* `RelaxVersioner.cs` : バージョン属性や`ThisAssembly`クラスの定義を含む、ソースコードです。RelaxVersionerの中心的な役割を果たします。
+* `RelaxVersioner_Properties.xml` : RelaxVersionerがバージョン計算を行う直前の、MSBuildの全てのプロパティを、XML形式でダンプしたものです。
+* `RelaxVersioner_Result.xml` : RelaxVersionerがバージョン計算を行った後の、主要なバージョン情報をXML形式でダンプしたものです。
+* `RelaxVersioner_Version.txt` : RelaxVersionerがバージョン計算を行った後の、バージョン番号のみをテキスト形式で保存したものです。
+* `RelaxVersioner_ShortVersion.txt` : RelaxVersionerがバージョン計算を行った後の、短いバージョン番号のみをテキスト形式で保存したものです。
+
+あなたのプログラムからバージョン情報を参照する場合は、バージョン属性や`ThisAssembly`から取得すれば良いでしょう。他の、XMLやテキストファイルは、CI/CD（継続インテグレーションや継続デプロイ）で参照する事で、ビルドプロセスにバージョン情報を適用する事が出来ます。例えば、`RelaxVersioner_ShortVersion.txt`には、`2.5.4`のような文字列が格納されているので、ビルド成果物をサーバーにアップロードする際に、バージョン番号で付けて保存する事が出来るかもしれません。
+
+`RelaxVersioner_Properties.xml`には、非常に有用な、多くの情報が格納されています。MSBuildのカスタムスクリプトを書かなくても、このXMLファイルから情報を引き出すだけで、細かなニーズを満たせられるかもしれません。
+
 ### SourceLinkに対応させる方法
 
 [Sourcelink](https://github.com/dotnet/sourcelink) は、Gitソースコードリポジトリからオンザフライでダウンロードしたソースコードをデバッガーに表示するための、統合パッケージです。
@@ -459,6 +481,10 @@ nuspecファイルを使ってパッケージを生成する場合は、デフ�
 
 ## 履歴
 
+* 2.8.0:
+  * 外部で流用可能な、バージョンのみを格納したテキストファイルを出力するようにしました。
+  * ビルドタイミングを調整して、Intellisenseが`ThisAssembly`クラスを認識できない事がある問題を修正しました。
+  * NuGetパッケージビルド時に、ビルドが実行されない場合がある問題を修正しました。
 * 2.7.0:
   * ビルド時のファイル依存関係ルールを定義し、不要なビルドを避けるようにしました。
 * 2.6.0:

@@ -334,6 +334,28 @@ public:
 
 ## TIPS
 
+### How to use version numbers after build
+
+RelaxVersioner saves the files in the following location after build:
+
+```
+<your project dir>/obj/<configuration>/<tfm>/
+```
+
+* The exact value is `$(IntermediateOutputPath)`.
+
+For example, `FooBarProject/obj/Debug/net6.0/` hierarchy. Here are the files to save:
+
+* `RelaxVersioner.cs` : Source code including version attributes and `ThisAssembly` class definition, which is the core feature of RelaxVersioner.
+* `RelaxVersioner_Properties.xml` : A dump of all MSBuild properties in XML format, just before RelaxVersioner calculates the version.
+* `RelaxVersioner_Result.xml` : An XML dump of the main version information after RelaxVersioner has calculated the version.
+* `RelaxVersioner_Version.txt` : A text file containing only the version number after RelaxVersioner has calculated the version.
+* `RelaxVersioner_ShortVersion.txt` : A text file containing only the short version number after RelaxVersioner has calculated the version.
+
+If you want to refer to the version information from your program, you can get it from the version attributes or `ThisAssembly`. Other, XML or text files can be referenced by CI/CD (Continuous Integration and Continuous Deployment) to apply version information to the build process. For example, `RelaxVersioner_ShortVersion.txt` contains a string like `2.5.4`, so you may be able to save your build artifacts with a version number when you upload them to the server.
+
+`RelaxVersioner_Properties.xml` contains a lot of very useful information, and you may be able to pull information from this XML file to meet your specific needs without having to write custom MSBuild scripts.
+
 ### SourceLink integration
 
 [Sourcelink](https://github.com/dotnet/sourcelink) is a cool stuff debugger integration package for showing source code on-the-fly downloading from Git source code repository. 
@@ -445,7 +467,10 @@ When you are using a nuspec file to generate a NuGet package, there are addition
 ----
 
 ## History
-
+* 2.8.0:
+  * Added output of a text file containing only the version, which can be used externally.
+  * Adjusted build timing to fix a problem that sometimes prevented Intellisense from recognizing the `ThisAssembly` class.
+  * Fixed a problem that sometimes prevented builds from executing when building NuGet packages.
 * 2.7.0:
   * Defined file dependency rules at build time to avoid unnecessary builds.
 * 2.6.0:
