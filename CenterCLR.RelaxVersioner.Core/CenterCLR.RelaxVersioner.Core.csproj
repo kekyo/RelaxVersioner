@@ -15,7 +15,7 @@
     <PackageReference Include="NamingFormatter" Version="2.1.0" />
     <PackageReference Include="LibGit2Sharp" Version="0.27.0-preview-0096" />
     <PackageReference Include="Microsoft.NETFramework.ReferenceAssemblies" Version="1.0.2" PrivateAssets="All" />
-    <PackageReference Include="RelaxVersioner" Version="2.7.8" PrivateAssets="all" />
+    <PackageReference Include="RelaxVersioner" Version="2.7.12" PrivateAssets="all" />
   </ItemGroup>
 
   <ItemGroup Condition="'$(Configuration)' == 'Release'">
