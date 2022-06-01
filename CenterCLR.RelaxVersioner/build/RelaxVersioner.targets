@@ -47,7 +47,7 @@
   <!-- ============================================================================= -->
   <!-- Build before compile definition -->
 
-  <Target Name="RelaxVersionerBeforeCompile" DependsOnTargets="PrepareForBuild" AfterTargets="GetAssemblyVersion">
+  <Target Name="RelaxVersionerBeforeCompile" BeforeTargets="PrepareForBuild">
     <CallTarget Targets="RelaxVersionerPrepare;RelaxVersionerCoreGenerate;RelaxVersionerGatherResult" />
   </Target>
 
