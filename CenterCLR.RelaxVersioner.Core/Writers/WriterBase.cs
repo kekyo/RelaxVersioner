@@ -50,7 +50,7 @@ namespace RelaxVersioner.Writers
                 var tw = new SourceCodeWriter(ftw, context);
 
                 this.WriteComment(tw,
-                    $"This is auto-generated version information attributes by RelaxVersioner [{ThisAssembly.AssemblyVersion}, Do not edit.");
+                    $"This is auto-generated version information attributes by RelaxVersioner [{ThisAssembly.AssemblyVersion}], Do not edit.");
                 this.WriteComment(tw,
                     $"Generated date: {generated:R}");
                 tw.WriteLine();
