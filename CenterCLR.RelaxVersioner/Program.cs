@@ -31,7 +31,7 @@ namespace RelaxVersioner
                     GenerateStatic = true,
                 };
 
-                string resultPath = null;
+                string? resultPath = null;
                 var help = false;
 
                 var options = new OptionSet
@@ -67,7 +67,7 @@ namespace RelaxVersioner
 
                 if (!string.IsNullOrWhiteSpace(resultPath))
                 {
-                    ResultWriter.Write(resultPath, result);
+                    ResultWriter.Write(resultPath!, result);
                 }
 
                 logger.Message(

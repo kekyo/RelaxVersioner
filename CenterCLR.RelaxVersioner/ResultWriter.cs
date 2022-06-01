@@ -16,7 +16,7 @@ namespace RelaxVersioner
 {
     internal static class ResultWriter
     {
-        private static string ToString(object value) =>
+        private static string ToString(object? value) =>
             (value is Array array) ?
                 string.Join(",", array.Cast<object>().Select(ToString)):
                 value?.ToString() ?? string.Empty;

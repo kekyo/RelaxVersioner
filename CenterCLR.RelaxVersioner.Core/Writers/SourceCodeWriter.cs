@@ -7,6 +7,8 @@
 //
 ////////////////////////////////////////////////////////////////////////////////////////
 
+#nullable enable
+
 using System.Diagnostics;
 using System.IO;
 
@@ -32,7 +34,7 @@ namespace RelaxVersioner.Writers
         public void WriteLine(string code) =>
             this.tw.WriteLine(indent + code);
 
-        public void WriteLine(string code, params object[] args) =>
+        public void WriteLine(string code, params object?[] args) =>
             this.tw.WriteLine(indent + code, args);
 
         public void Flush() =>

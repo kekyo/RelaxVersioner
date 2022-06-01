@@ -7,11 +7,13 @@
 //
 ////////////////////////////////////////////////////////////////////////////////////////
 
+#nullable enable
+
 using System;
 
 namespace RelaxVersioner
 {
-    public struct Result
+    public readonly struct Result
     {
         public readonly Version Version;
         public readonly string ShortVersion;

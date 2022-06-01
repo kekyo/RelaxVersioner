@@ -7,6 +7,8 @@
 //
 ////////////////////////////////////////////////////////////////////////////////////////
 
+#nullable enable
+
 using System.IO;
 
 namespace RelaxVersioner.Writers
@@ -15,7 +17,7 @@ namespace RelaxVersioner.Writers
     {
         public override string Language => "VB";
 
-        protected override void WriteComment(SourceCodeWriter tw, string format, params object[] args) =>
+        protected override void WriteComment(SourceCodeWriter tw, string format, params object?[] args) =>
             tw.WriteLine("' " + format, args);
 
         protected override void WriteImport(SourceCodeWriter tw, string namespaceName) =>
