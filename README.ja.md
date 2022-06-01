@@ -349,7 +349,7 @@ RelaxVersionerは、ビルド後に、以下の位置にファイルを保存し
 <your project dir>/obj/<configuration>/<tfm>/
 ```
 
-* 正確には、`$(IntermediateOutputPath)` です。
+* 正確には、ビルド時は`$(IntermediateOutputPath)`、NuGetパッケージ生成時は`$(NuspecOutputPath)`です。
 
 例えば、`FooBarProject/obj/Debug/net6.0/` のような階層です。以下に保存するファイルを示します:
 

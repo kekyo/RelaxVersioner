@@ -342,7 +342,7 @@ RelaxVersioner saves the files in the following location after build:
 <your project dir>/obj/<configuration>/<tfm>/
 ```
 
-* The exact value is `$(IntermediateOutputPath)`.
+* To be precise, `$(IntermediateOutputPath)` at build time and `$(NuspecOutputPath)` at NuGet package generation.
 
 For example, `FooBarProject/obj/Debug/net6.0/` hierarchy. Here are the files to save:
 

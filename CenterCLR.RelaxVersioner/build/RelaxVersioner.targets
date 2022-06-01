@@ -238,7 +238,7 @@
       <RelaxVersionerToolingDir Condition="'$(RelaxVersionerToolingDir)' == ''">$([System.IO.Path]::GetFullPath('$(_RVB_ToolingDir)'))</RelaxVersionerToolingDir>
       <RelaxVersionerToolingPath Condition="'$(RelaxVersionerToolingPath)' == ''">$([System.IO.Path]::Combine('$(RelaxVersionerToolingDir)','$(_RVB_ExecutableName)'))</RelaxVersionerToolingPath>
 
-      <RelaxVersionerOutputDir Condition="'$(RelaxVersionerOutputDir)' == ''">$([System.IO.Path]::Combine('$(MSBuildProjectDirectory)','$(IntermediateOutputPath)'))</RelaxVersionerOutputDir>
+      <RelaxVersionerOutputDir Condition="'$(RelaxVersionerOutputDir)' == ''">$([System.IO.Path]::Combine('$(MSBuildProjectDirectory)','$(NuspecOutputPath)'))</RelaxVersionerOutputDir>
     </PropertyGroup>
 
     <PropertyGroup>
