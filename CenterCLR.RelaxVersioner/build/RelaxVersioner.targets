@@ -30,7 +30,7 @@
     <_RVB_PlatformName Condition="$(BundledNETCoreAppTargetFrameworkVersion) &lt; 5.0">netcoreapp$(BundledNETCoreAppTargetFrameworkVersion)</_RVB_PlatformName>
   </PropertyGroup>
   <PropertyGroup Condition="('$(MSBuildRuntimeType)' == 'Core') AND ('$(MicrosoftNETBuildTasksTFM)' == '') AND ('$(BundledNETCoreAppTargetFrameworkVersion)' == '')">
-    <_RVB_PlatformName>netcoreapp2.0</_RVB_PlatformName>
+    <_RVB_PlatformName>netcoreapp2.2</_RVB_PlatformName>
   </PropertyGroup>
   <PropertyGroup Condition="'$(MSBuildRuntimeType)' != 'Core'">
     <_RVB_PlatformName>net461</_RVB_PlatformName>
