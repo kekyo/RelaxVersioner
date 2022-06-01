@@ -18,5 +18,12 @@
   <PropertyGroup>
     <_RVB_ToolingDir>$([System.IO.Path]::Combine('$(MSBuildThisFileDirectory)','..','..','CenterCLR.RelaxVersioner','bin','$(Configuration)','$(_RVB_PlatformName)'))</_RVB_ToolingDir>
   </PropertyGroup>
-
+    
+  <Target Name="AB" AfterTargets="Compile">
+    <Message Importance="High" Text="ResolvedVersion: $(RelaxVersionerResolvedVersion)" />
+    <Message Importance="High" Text="ResolvedShortVersion: $(RelaxVersionerResolvedShortVersion)" />
+    <Message Importance="High" Text="PropertiesPath: $(RelaxVersionerPropertiesPath)" />
+    <Message Importance="High" Text="ResultPath: $(RelaxVersionerResultPath)" />
+  </Target>
+    
 </Project>

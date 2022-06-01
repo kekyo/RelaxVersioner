@@ -31,6 +31,10 @@
     <GenerateAssemblyVersionAttribute>false</GenerateAssemblyVersionAttribute>
     <GenerateAssemblyFileVersionAttribute>false</GenerateAssemblyFileVersionAttribute>
     <GenerateAssemblyInformationalVersionAttribute>false</GenerateAssemblyInformationalVersionAttribute>
+    <BeforePack>
+      RelaxVersionerBeforePack;
+      $(BeforePack)
+    </BeforePack>
   </PropertyGroup>
 
 </Project>
