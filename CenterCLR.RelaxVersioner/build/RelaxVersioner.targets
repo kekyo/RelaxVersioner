@@ -45,15 +45,15 @@
     <_RVB_TemporaryBasePath Condition="'$(RelaxVersionerTemporaryBasePath)' == ''">$([System.IO.Path]::GetTempPath())</_RVB_TemporaryBasePath>
     <_RVB_TemporaryBasePath Condition="'$(RelaxVersionerTemporaryBasePath)' != ''">$([System.IO.Path]::GetFullPath('$(RelaxVersionerTemporaryBasePath)'))</_RVB_TemporaryBasePath>
   </PropertyGroup>
-    
+
   <UsingTask
     TaskName="DumpPropertiesTask"
     AssemblyFile="$(_RVB_MSBuildTaskPath)" />
-    
+
   <!-- ============================================================================= -->
   <!-- Build definition -->
 
-  <Target Name="RelaxVersionerBeforeCompile" BeforeTargets="PrepareForBuild;BeforeCompile">
+  <Target Name="RelaxVersionerBeforeCompile" DependsOnTargets="PrepareForBuild" AfterTargets="GetAssemblyVersion">
     <CallTarget Targets="RelaxVersionerPrepare;RelaxVersionerCoreGenerate" />
   </Target>
 
