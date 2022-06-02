@@ -26,6 +26,6 @@ jobs:
       with:
         dotnet-version: 6.0.100
     - name: Install dependencies
-      run: dotnet restore
+      run: dotnet restore --configuration Release
     - name: Build
       run: dotnet build --configuration Release --no-restore
