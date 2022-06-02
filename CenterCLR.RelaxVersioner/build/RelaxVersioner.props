@@ -31,10 +31,17 @@
     <GenerateAssemblyVersionAttribute>false</GenerateAssemblyVersionAttribute>
     <GenerateAssemblyFileVersionAttribute>false</GenerateAssemblyFileVersionAttribute>
     <GenerateAssemblyInformationalVersionAttribute>false</GenerateAssemblyInformationalVersionAttribute>
-    <BeforePack>
+  </PropertyGroup>
+
+  <PropertyGroup>
+    <GenerateNuspecDependsOn>
       RelaxVersionerBeforePack;
-      $(BeforePack)
-    </BeforePack>
+      $(GenerateNuspecDependsOn)
+    </GenerateNuspecDependsOn>
+    <GetPackageVersionDependsOn>
+      RelaxVersionerBeforePack;
+      $(GetPackageVersionDependsOn)
+    </GetPackageVersionDependsOn>
   </PropertyGroup>
 
 </Project>

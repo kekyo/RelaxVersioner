@@ -468,6 +468,8 @@ When you are using a nuspec file to generate a NuGet package, there are addition
 
 ## History
 
+* 2.10.0:
+  * Fixed doesn't update package version on project referenced targets.
 * 2.9.0:
   * Fixed causing XML file reading errors in projects that did not generate any outputs.
 * 2.8.0:

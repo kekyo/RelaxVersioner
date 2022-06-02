@@ -39,15 +39,15 @@
   <PropertyGroup>
     <_RVB_ToolingDir>$([System.IO.Path]::Combine('$(_RVB_ScriptBaseDir)','..','tools','$(_RVB_PlatformName)'))</_RVB_ToolingDir>
   </PropertyGroup>
-
+    
   <UsingTask
     TaskName="DumpPropertiesTask"
     AssemblyFile="$(_RVB_MSBuildTaskPath)" />
-
+    
   <!-- ============================================================================= -->
   <!-- Build before compile definition -->
 
-  <Target Name="RelaxVersionerBeforeCompile" BeforeTargets="PrepareForBuild">
+  <Target Name="RelaxVersionerBeforeCompile" BeforeTargets="PrepareForBuild;_GenerateRestoreProjectSpec">
     <CallTarget Targets="RelaxVersionerPrepare;RelaxVersionerCoreGenerate;RelaxVersionerGatherResult" />
   </Target>
 
@@ -233,7 +233,7 @@
   </Target>
 
   <Target Name="RelaxVersionerPackPrepare">
-      
+
     <PropertyGroup>
       <RelaxVersionerToolingRuntimeName Condition="'$(RelaxVersionerToolingRuntimeName)' == ''">$(_RVB_RuntimeName)</RelaxVersionerToolingRuntimeName>
       <RelaxVersionerToolingDir Condition="'$(RelaxVersionerToolingDir)' == ''">$([System.IO.Path]::GetFullPath('$(_RVB_ToolingDir)'))</RelaxVersionerToolingDir>
@@ -301,7 +301,12 @@
       <RepositoryBranch>$(_RVB_DetectedBranch)</RepositoryBranch>
       <PackageReleaseNotes>$(_RVB_DetectedMessage)</PackageReleaseNotes>
     </PropertyGroup>
-  
+        
+    <!-- Better referring ability in the nuspec declaration. -->
+    <PropertyGroup>
+      <NuspecProperties>$(NuspecProperties);Configuration=$(Configuration);PackageVersion=$(PackageVersion);RepositoryBranch=$(RepositoryBranch);RepositoryCommit=$(RepositoryCommit);PackageReleaseNotes=$(PackageReleaseNotes)</NuspecProperties>
+    </PropertyGroup>
+
     <!-- ============================================================================= -->
     <!-- Write helper files -->
 
@@ -315,13 +320,6 @@
       <FileWrites Include="$(RelaxVersionerShortVersionPath)" />
     </ItemGroup>
 
-  </Target>
-
-  <Target Name="SetNuSpecProperties" BeforeTargets="GenerateNuspec">
-    <!-- Better referring ability in the nuspec declaration. -->
-    <PropertyGroup>
-      <NuspecProperties>$(NuspecProperties);Configuration=$(Configuration);PackageVersion=$(PackageVersion);RepositoryBranch=$(RepositoryBranch);RepositoryCommit=$(RepositoryCommit);PackageReleaseNotes=$(PackageReleaseNotes)</NuspecProperties>
-    </PropertyGroup>
   </Target>
 
 </Project>
