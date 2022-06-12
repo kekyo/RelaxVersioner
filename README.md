@@ -468,6 +468,8 @@ When you are using a nuspec file to generate a NuGet package, there are addition
 
 ## History
 
+* 2.11.0:
+  * Fixed causing error on NuGet packaging when contains no source code input files.
 * 2.10.0:
   * Fixed doesn't update package version on project referenced targets.
 * 2.9.0:
