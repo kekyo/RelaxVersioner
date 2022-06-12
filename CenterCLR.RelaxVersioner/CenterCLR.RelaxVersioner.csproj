@@ -9,6 +9,9 @@
 
     <AssemblyName>rv</AssemblyName>
 
+    <!-- https://github.com/dotnet/msbuild/issues/4303 -->
+    <AddSyntheticProjectReferencesForSolutionDependencies>false</AddSyntheticProjectReferencesForSolutionDependencies>
+
     <NuspecFile>RelaxVersioner.nuspec</NuspecFile>
 
     <DevelopmentDependency>true</DevelopmentDependency>
