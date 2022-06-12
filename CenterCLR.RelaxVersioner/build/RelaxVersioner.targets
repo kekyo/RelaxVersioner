@@ -153,7 +153,7 @@
   </Target>
     
   <Target Name="RelaxVersionerGatherResult"
-    Condition="Exists($(RelaxVersionerResultPath))">
+    Condition="Exists($(RelaxVersionerResultPath)) AND ('@(Compile);@(ClCompile)' != ';')">
       
     <XmlPeek XmlInputPath="$(RelaxVersionerResultPath)" Query="/Result/Version/text()">
       <Output TaskParameter="Result" PropertyName="_RVB_DetectedVersion" />
