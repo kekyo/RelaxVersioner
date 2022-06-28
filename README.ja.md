@@ -339,7 +339,7 @@ public:
 
 ----
 
-## TIPS
+## ヒントや参考情報
 
 ### ビルド後にバージョン番号を使用する方法
 
@@ -349,27 +349,57 @@ RelaxVersionerは、ビルド後に、以下の位置にファイルを保存し
 <your project dir>/obj/<configuration>/<tfm>/
 ```
 
-* 正確には、ビルド時は`$(IntermediateOutputPath)`、NuGetパッケージ生成時は`$(NuspecOutputPath)`です。
+正確には:
 
-例えば、`FooBarProject/obj/Debug/net6.0/` のような階層です。以下に保存するファイルを示します:
+* ビルド時は`$(IntermediateOutputPath)`です。
+* NuGetパッケージ生成時は`$(NuspecOutputPath)`です。
+
+例えば、`FooBarProject/obj/Debug/net6.0/` のようなディレクトリ階層です。以下に保存するファイルを示します:
 
 * `RelaxVersioner.cs` : バージョン属性や`ThisAssembly`クラスの定義を含む、ソースコードです。RelaxVersionerの中心的な役割を果たします。
 * `RelaxVersioner_Properties.xml` : RelaxVersionerがバージョン計算を行う直前の、MSBuildの全てのプロパティを、XML形式でダンプしたものです。
 * `RelaxVersioner_Result.xml` : RelaxVersionerがバージョン計算を行った後の、主要なバージョン情報をXML形式でダンプしたものです。
 * `RelaxVersioner_Version.txt` : RelaxVersionerがバージョン計算を行った後の、バージョン番号のみをテキスト形式で保存したものです。
 * `RelaxVersioner_ShortVersion.txt` : RelaxVersionerがバージョン計算を行った後の、短いバージョン番号のみをテキスト形式で保存したものです。
+* `RelaxVersioner_SafeVersion.txt` : RelaxVersionerがバージョン計算を行った後の、安全な日時バージョン番号のみをテキスト形式で保存したものです。
+* `RelaxVersioner_Branch.txt` : RelaxVersionerがバージョン計算を行った時の、チェックアウトブランチ名をテキスト形式で保存したものです。
+* `RelaxVersioner_Tags.txt` : RelaxVersionerがバージョン計算を行った時の、コミットに対応するタグ群をテキスト形式で保存したものです。
 
-あなたのプログラムからバージョン情報を参照する場合は、バージョン属性や`ThisAssembly`から取得すれば良いでしょう。他の、XMLやテキストファイルは、CI/CD（継続インテグレーションや継続デプロイ）で参照する事で、ビルドプロセスにバージョン情報を適用する事が出来ます。例えば、`RelaxVersioner_ShortVersion.txt`には、`2.5.4`のような文字列が格納されているので、ビルド成果物をサーバーにアップロードする際に、バージョン番号で付けて保存する事が出来るかもしれません。
+プログラムの内部からバージョン情報を参照する場合は、バージョン属性や`ThisAssembly`から取得すれば良いでしょう。
+他の、XMLやテキストファイルは、CI/CD（継続インテグレーションや継続デプロイ）で参照する事で、
+ビルドプロセスにバージョン情報を適用する事が出来ます。
+例えば、`RelaxVersioner_ShortVersion.txt`には、`2.5.4`のような文字列が格納されているので、
+ビルド成果物をサーバーにアップロードする際に、バージョン番号をファイル名に追加して保存する事が出来るかもしれません。
 
-`RelaxVersioner_Properties.xml`には、非常に有用な、多くの情報が格納されています。MSBuildのカスタムスクリプトを書かなくても、このXMLファイルから情報を引き出すだけで、細かなニーズを満たせられるかもしれません。
+これらの情報をMSBuildターゲット内から参照する場合は、テキストファイルにアクセスすることなく、以下のようにプロパティを使用できます:
+
+```xml
+  <Target Name="AB" AfterTargets="Compile">
+    <Message Importance="High" Text="PropertiesPath: $(RelaxVersionerPropertiesPath)" />
+    <Message Importance="High" Text="ResultPath: $(RelaxVersionerResultPath)" />
+    <Message Importance="High" Text="ResolvedVersion: $(RelaxVersionerResolvedVersion)" />
+    <Message Importance="High" Text="ResolvedShortVersion: $(RelaxVersionerResolvedShortVersion)" />
+    <Message Importance="High" Text="ResolvedSafeVersion: $(RelaxVersionerResolvedSafeVersion)" />
+    <Message Importance="High" Text="ResolvedCommitId: $(RelaxVersionerResolvedCommitId)" />
+    <Message Importance="High" Text="ResolvedBranch: $(RelaxVersionerResolvedBranch)" />
+    <Message Importance="High" Text="ResolvedTags: $(RelaxVersionerResolvedTags)" />
+  </Target>
+```
+
+`RelaxVersioner_Properties.xml`には、非常に有用な、多くの情報が格納されています。
+MSBuildのカスタムスクリプトを書かなくても、このXMLファイルから情報を引き出すだけで、
+細かなニーズを満たせられるかもしれません。
 
 ### SourceLinkに対応させる方法
 
-[Sourcelink](https://github.com/dotnet/sourcelink) は、Gitソースコードリポジトリからオンザフライでダウンロードしたソースコードをデバッガーに表示するための、統合パッケージです。
+[Sourcelink](https://github.com/dotnet/sourcelink) は、
+Gitソースコードリポジトリからオンザフライでダウンロードしたソースコードをデバッガーに表示するための、統合パッケージです。
 
-この機能を使うと、パッケージを使用するコードのデバッグ中に、（事前の準備なしに）パッケージ内にステップインして、ソースコードデバッグする事が出来るようになります。
+この機能を使うと、パッケージを使用するコードのデバッグ中に、
+（事前の準備なしに）パッケージ内にステップインして、ソースコードデバッグする事が出来るようになります。
 
-RelaxVersionerはすでにSourcelink統合をサポートしています。 簡単な手順で、Sourcelinkに対応させる事が出来ます:
+RelaxVersionerはすでにSourcelink統合をサポートしています。
+簡単な手順で、Sourcelinkに対応させる事が出来ます:
 
 ```xml
 <!-- Sourcelink統合で定義する共通プロパティ -->
@@ -399,7 +429,7 @@ RelaxVersionerはすでにSourcelink統合をサポートしています。 簡�
 
 <ItemGroup>
   <!-- RelaxVersioner -->
-  <PackageReference Include="RelaxVersioner" Version="2.5.5" PrivateAssets="All" />
+  <PackageReference Include="RelaxVersioner" Version="2.12.0" PrivateAssets="All" />
 
   <!-- ソリューションファイルが存在する場合の、ルートディレクトリ位置 -->
   <!-- 参照: https://github.com/dotnet/roslyn/issues/37379 -->
@@ -419,7 +449,7 @@ RelaxVersionerはすでにSourcelink統合をサポートしています。 簡�
 もしCIプロセスで使ったときに、以下のようなエラーが発生した場合:
 
 ```
-RelaxVersioner[2.2.0]: NotFoundException=object not found -
+RelaxVersioner [2.12.0]: NotFoundException=object not found -
    no match for id (a2b834535c00e7b1a604fccc28cfebe78ea0ec31),
    Unknown exception occurred, ...
 ```
@@ -481,6 +511,12 @@ nuspecファイルを使ってパッケージを生成する場合は、デフ�
 
 ## 履歴
 
+* 2.12.0:
+  * バージョンの結果テキストファイルを拡充しました。
+    `RelaxVersioner_SafeVersion.txt`, `RelaxVersioner_Branch.txt`, `RelaxVersioner_Tags.txt`に関する結果を使用できます。
+  * バージョンの結果テキストファイルに改行コードが入らないようにしました。
+  * ビルド直後のMSBuildプロパティ`Version`に、`ShortVersion`をフォールバック代入するようにしました。
+    `Version`プロパティを使用する、後続のMSBuildスクリプトでも、安全に認識されたバージョン番号を使用できます。
 * 2.11.0:
   * NuGetパッケージ生成時に、入力となるソースコードが存在しないプロジェクトでエラーが発生する問題を修正しました。
 * 2.10.0:

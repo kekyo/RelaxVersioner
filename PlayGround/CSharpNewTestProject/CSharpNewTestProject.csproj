@@ -22,6 +22,10 @@
   <Target Name="AB" AfterTargets="Compile">
     <Message Importance="High" Text="ResolvedVersion: $(RelaxVersionerResolvedVersion)" />
     <Message Importance="High" Text="ResolvedShortVersion: $(RelaxVersionerResolvedShortVersion)" />
+    <Message Importance="High" Text="ResolvedSafeVersion: $(RelaxVersionerResolvedSafeVersion)" />
+    <Message Importance="High" Text="ResolvedCommitId: $(RelaxVersionerResolvedCommitId)" />
+    <Message Importance="High" Text="ResolvedBranch: $(RelaxVersionerResolvedBranch)" />
+    <Message Importance="High" Text="ResolvedTags: $(RelaxVersionerResolvedTags)" />
     <Message Importance="High" Text="PropertiesPath: $(RelaxVersionerPropertiesPath)" />
     <Message Importance="High" Text="ResultPath: $(RelaxVersionerResultPath)" />
   </Target>
