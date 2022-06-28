@@ -489,7 +489,7 @@ When you are using a nuspec file to generate a NuGet package, there are addition
 
 ## History
 
-* 2.12.0:
+* 2.12.1:
   * Expanded version result text files.
     Results for `RelaxVersioner_SafeVersion.txt`, `RelaxVersioner_Branch.txt`, and `RelaxVersioner_Tags.txt` are available.
   * The version result text file does not contain line feed codes.

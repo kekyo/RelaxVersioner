@@ -69,7 +69,7 @@
     AssemblyFile="$(MSBuildToolsPath)\Microsoft.Build.Tasks.Core.dll" >
     <ParameterGroup>
       <File ParameterType="Microsoft.Build.Framework.ITaskItem" Required="true" />
-      <Text ParameterType="System.String" Required="true" />
+      <Text ParameterType="System.String" />
     </ParameterGroup>
     <Task>
       <Using Namespace="System"/>
