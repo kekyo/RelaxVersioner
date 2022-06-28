@@ -92,6 +92,9 @@
 
       <RelaxVersionerVersionPath>$([System.IO.Path]::Combine('$(_RVB_DumpBasePath)','RelaxVersioner_Version.txt'))</RelaxVersionerVersionPath>
       <RelaxVersionerShortVersionPath>$([System.IO.Path]::Combine('$(_RVB_DumpBasePath)','RelaxVersioner_ShortVersion.txt'))</RelaxVersionerShortVersionPath>
+      <RelaxVersionerSafeVersionPath>$([System.IO.Path]::Combine('$(_RVB_DumpBasePath)','RelaxVersioner_SafeVersion.txt'))</RelaxVersionerSafeVersionPath>
+      <RelaxVersionerCommitIdPath>$([System.IO.Path]::Combine('$(_RVB_DumpBasePath)','RelaxVersioner_CommitId.txt'))</RelaxVersionerCommitIdPath>
+      <RelaxVersionerBranchPath>$([System.IO.Path]::Combine('$(_RVB_DumpBasePath)','RelaxVersioner_Branch.txt'))</RelaxVersionerBranchPath>
     </PropertyGroup>
 
     <ItemGroup>
@@ -161,6 +164,9 @@
     <XmlPeek XmlInputPath="$(RelaxVersionerResultPath)" Query="/Result/ShortVersion/text()">
       <Output TaskParameter="Result" PropertyName="_RVB_DetectedShortVersion" />
     </XmlPeek>
+    <XmlPeek XmlInputPath="$(RelaxVersionerResultPath)" Query="/Result/SafeVersion/text()">
+      <Output TaskParameter="Result" PropertyName="_RVB_DetectedSafeVersion" />
+    </XmlPeek>
     <XmlPeek XmlInputPath="$(RelaxVersionerResultPath)" Query="/Result/CommitId/text()">
       <Output TaskParameter="Result" PropertyName="_RVB_DetectedCommitId" />
     </XmlPeek>
@@ -177,6 +183,9 @@
     <PropertyGroup>
       <RelaxVersionerResolvedVersion>$(_RVB_DetectedVersion)</RelaxVersionerResolvedVersion>
       <RelaxVersionerResolvedShortVersion>$(_RVB_DetectedShortVersion)</RelaxVersionerResolvedShortVersion>
+      <RelaxVersionerResolvedSafeVersion>$(_RVB_DetectedSafeVersion)</RelaxVersionerResolvedSafeVersion>
+      <RelaxVersionerResolvedCommitId>$(_RVB_DetectedCommitId)</RelaxVersionerResolvedCommitId>
+      <RelaxVersionerResolvedBranch>$(_RVB_DetectedBranch)</RelaxVersionerResolvedBranch>
       <Version>$(_RVB_DetectedShortVersion)</Version>
       <PackageVersion>$(_RVB_DetectedShortVersion)</PackageVersion>
       <SourceRevisionId>$(_RVB_DetectedCommitId)</SourceRevisionId>   <!-- Sourcelink symbol, same as RepositoryCommit -->
@@ -188,14 +197,29 @@
     <!-- ============================================================================= -->
     <!-- Write helper files -->
 
-    <WriteLinesToFile File="$(RelaxVersionerVersionPath)" Lines="$(_RVB_DetectedVersion)" Overwrite="True" />
+    <_RVB_WriteTextToFile File="$(RelaxVersionerVersionPath)" Text="$(_RVB_DetectedVersion)" />
     <ItemGroup>
       <FileWrites Include="$(RelaxVersionerVersionPath)" />
     </ItemGroup>
 
-    <WriteLinesToFile File="$(RelaxVersionerShortVersionPath)" Lines="$(_RVB_DetectedShortVersion)" Overwrite="True" /> 
+    <_RVB_WriteTextToFile File="$(RelaxVersionerShortVersionPath)" Text="$(_RVB_DetectedShortVersion)" /> 
     <ItemGroup>
       <FileWrites Include="$(RelaxVersionerShortVersionPath)" />
+    </ItemGroup>
+
+    <_RVB_WriteTextToFile File="$(RelaxVersionerSafeVersionPath)" Text="$(_RVB_DetectedSafeVersion)" /> 
+    <ItemGroup>
+      <FileWrites Include="$(RelaxVersionerSafeVersionPath)" />
+    </ItemGroup>
+
+    <_RVB_WriteTextToFile File="$(RelaxVersionerCommitIdPath)" Text="$(_RVB_DetectedCommitId)" /> 
+    <ItemGroup>
+      <FileWrites Include="$(RelaxVersionerCommitIdPath)" />
+    </ItemGroup>
+
+    <_RVB_WriteTextToFile File="$(RelaxVersionerBranchPath)" Text="$(_RVB_DetectedBranch)" /> 
+    <ItemGroup>
+      <FileWrites Include="$(RelaxVersionerBranchPath)" />
     </ItemGroup>
 
     <!-- ======================== -->
@@ -252,6 +276,9 @@
 
       <RelaxVersionerVersionPath>$([System.IO.Path]::Combine('$(_RVB_DumpBasePath)','RelaxVersioner_Version.txt'))</RelaxVersionerVersionPath>
       <RelaxVersionerShortVersionPath>$([System.IO.Path]::Combine('$(_RVB_DumpBasePath)','RelaxVersioner_ShortVersion.txt'))</RelaxVersionerShortVersionPath>
+      <RelaxVersionerSafeVersionPath>$([System.IO.Path]::Combine('$(_RVB_DumpBasePath)','RelaxVersioner_SafeVersion.txt'))</RelaxVersionerSafeVersionPath>
+      <RelaxVersionerCommitIdPath>$([System.IO.Path]::Combine('$(_RVB_DumpBasePath)','RelaxVersioner_CommitId.txt'))</RelaxVersionerCommitIdPath>
+      <RelaxVersionerBranchPath>$([System.IO.Path]::Combine('$(_RVB_DumpBasePath)','RelaxVersioner_Branch.txt'))</RelaxVersionerBranchPath>
     </PropertyGroup>
 
   </Target>
@@ -277,8 +304,14 @@
   <Target Name="RelaxVersionerPackGatherResult"
     Condition="Exists($(RelaxVersionerResultPath))">
 
+    <XmlPeek XmlInputPath="$(RelaxVersionerResultPath)" Query="/Result/Version/text()">
+      <Output TaskParameter="Result" PropertyName="_RVB_DetectedVersion" />
+    </XmlPeek>
     <XmlPeek XmlInputPath="$(RelaxVersionerResultPath)" Query="/Result/ShortVersion/text()">
       <Output TaskParameter="Result" PropertyName="_RVB_DetectedShortVersion" />
+    </XmlPeek>
+    <XmlPeek XmlInputPath="$(RelaxVersionerResultPath)" Query="/Result/SafeVersion/text()">
+      <Output TaskParameter="Result" PropertyName="_RVB_DetectedSafeVersion" />
     </XmlPeek>
     <XmlPeek XmlInputPath="$(RelaxVersionerResultPath)" Query="/Result/CommitId/text()">
       <Output TaskParameter="Result" PropertyName="_RVB_DetectedCommitId" />
@@ -296,6 +329,9 @@
     <PropertyGroup>
       <RelaxVersionerResolvedVersion>$(_RVB_DetectedVersion)</RelaxVersionerResolvedVersion>
       <RelaxVersionerResolvedShortVersion>$(_RVB_DetectedShortVersion)</RelaxVersionerResolvedShortVersion>
+      <RelaxVersionerResolvedSafeVersion>$(_RVB_DetectedSafeVersion)</RelaxVersionerResolvedSafeVersion>
+      <RelaxVersionerResolvedCommitId>$(_RVB_DetectedCommitId)</RelaxVersionerResolvedCommitId>
+      <RelaxVersionerResolvedBranch>$(_RVB_DetectedBranch)</RelaxVersionerResolvedBranch>
       <Version>$(_RVB_DetectedShortVersion)</Version>
       <PackageVersion>$(_RVB_DetectedShortVersion)</PackageVersion>
       <SourceRevisionId>$(_RVB_DetectedCommitId)</SourceRevisionId>   <!-- Sourcelink symbol, same as RepositoryCommit -->
@@ -312,14 +348,24 @@
     <!-- ============================================================================= -->
     <!-- Write helper files -->
 
-    <WriteLinesToFile File="$(RelaxVersionerVersionPath)" Lines="$(_RVB_DetectedVersion)" Overwrite="True" />
+    <_RVB_WriteTextToFile File="$(RelaxVersionerVersionPath)" Text="$(_RVB_DetectedVersion)" />
     <ItemGroup>
       <FileWrites Include="$(RelaxVersionerVersionPath)" />
     </ItemGroup>
 
-    <WriteLinesToFile File="$(RelaxVersionerShortVersionPath)" Lines="$(_RVB_DetectedShortVersion)" Overwrite="True" /> 
+    <_RVB_WriteTextToFile File="$(RelaxVersionerShortVersionPath)" Text="$(_RVB_DetectedShortVersion)" /> 
     <ItemGroup>
       <FileWrites Include="$(RelaxVersionerShortVersionPath)" />
+    </ItemGroup>
+
+    <_RVB_WriteTextToFile File="$(RelaxVersionerCommitIdPath)" Text="$(_RVB_DetectedCommitId)" /> 
+    <ItemGroup>
+      <FileWrites Include="$(RelaxVersionerCommitIdPath)" />
+    </ItemGroup>
+
+    <_RVB_WriteTextToFile File="$(RelaxVersionerBranchPath)" Text="$(_RVB_DetectedBranch)" /> 
+    <ItemGroup>
+      <FileWrites Include="$(RelaxVersionerBranchPath)" />
     </ItemGroup>
 
   </Target>

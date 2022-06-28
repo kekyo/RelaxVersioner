@@ -44,4 +44,59 @@
     </GetPackageVersionDependsOn>
   </PropertyGroup>
 
+
+  <!-- ============================================================================= -->
+
+  <!-- https://docs.microsoft.com/en-us/visualstudio/msbuild/msbuild-roslyncodetaskfactory?view=vs-2022#provide-backward-compatibility -->
+  <Choose>
+    <When Condition="'$(MSBuildVersion.Substring(0,2))' &gt;= 16 OR ('$(MSBuildVersion.Substring(0,2))' == 15 AND '$(MSBuildVersion.Substring(3,1))' &gt;= 8)">
+      <PropertyGroup>
+        <_RVB_TaskFactory>RoslynCodeTaskFactory</_RVB_TaskFactory>
+      </PropertyGroup>
+    </When>
+    <Otherwise>
+      <PropertyGroup>
+        <_RVB_TaskFactory>CodeTaskFactory</_RVB_TaskFactory>
+      </PropertyGroup>
+    </Otherwise>
+  </Choose>
+
+  <!-- Custom inlined task -->
+    
+  <UsingTask
+    TaskName="_RVB_WriteTextToFile"
+    TaskFactory="$(_RVB_TaskFactory)"
+    AssemblyFile="$(MSBuildToolsPath)\Microsoft.Build.Tasks.Core.dll" >
+    <ParameterGroup>
+      <File ParameterType="Microsoft.Build.Framework.ITaskItem" Required="true" />
+      <Text ParameterType="System.String" Required="true" />
+    </ParameterGroup>
+    <Task>
+      <Using Namespace="System"/>
+      <Using Namespace="System.IO"/>
+      <Using Namespace="System.Text"/>
+      <Using Namespace="Microsoft.Build.Framework"/>
+      <Code Type="Fragment" Language="cs">
+<![CDATA[
+        string path = Path.GetFullPath(File.ItemSpec);
+        using (Stream fs = new FileStream(path, FileMode.Create, FileAccess.ReadWrite, FileShare.Read))
+        {
+            TextWriter tw = new StreamWriter(fs, Encoding.UTF8);
+            string text = Text;
+            if (text != null)
+            {
+                text = text.Replace("\r", "").Replace("\n", "");
+            }
+            else
+            {
+                text = "";
+            }
+            tw.Write(text);
+            tw.Flush();
+        }
+]]>
+      </Code>
+    </Task>
+  </UsingTask>
+    
 </Project>
