@@ -332,9 +332,9 @@ public:
 
 ----
 
-## TIPS
+## Hints and Tips
 
-### How to use version numbers after build
+### How to use version numbers after building process
 
 RelaxVersioner saves the files in the following location after build:
 
@@ -342,17 +342,38 @@ RelaxVersioner saves the files in the following location after build:
 <your project dir>/obj/<configuration>/<tfm>/
 ```
 
-* To be precise, `$(IntermediateOutputPath)` at build time and `$(NuspecOutputPath)` at NuGet package generation.
+To be precise:
 
-For example, `FooBarProject/obj/Debug/net6.0/` hierarchy. Here are the files to save:
+* `$(IntermediateOutputPath)` at build time.
+* `$(NuspecOutputPath)` at NuGet package generation.
+
+For example, `FooBarProject/obj/Debug/net6.0/` directory hierarchy. Here are the files to save:
 
 * `RelaxVersioner.cs` : Source code including version attributes and `ThisAssembly` class definition, which is the core feature of RelaxVersioner.
 * `RelaxVersioner_Properties.xml` : A dump of all MSBuild properties in XML format, just before RelaxVersioner calculates the version.
 * `RelaxVersioner_Result.xml` : An XML dump of the main version information after RelaxVersioner has calculated the version.
 * `RelaxVersioner_Version.txt` : A text file containing only the version number after RelaxVersioner has calculated the version.
 * `RelaxVersioner_ShortVersion.txt` : A text file containing only the short version number after RelaxVersioner has calculated the version.
+* `RelaxVersioner_SafeVersion.txt` : A text file containing only the safe (safe-numerical-notate) version number after RelaxVersioner has calculated the version.
+* `RelaxVersioner_Branch.txt` : a text file containing the name of the checkout branch from the time RelaxVersioner has calculated the version.
+* `RelaxVersioner_Tags.txt` : A text file containing the tags corresponding to the commits when RelaxVersioner has calculated the version.
 
-If you want to refer to the version information from your program, you can get it from the version attributes or `ThisAssembly`. Other, XML or text files can be referenced by CI/CD (Continuous Integration and Continuous Deployment) to apply version information to the build process. For example, `RelaxVersioner_ShortVersion.txt` contains a string like `2.5.4`, so you may be able to save your build artifacts with a version number when you upload them to the server.
+If you want to reference this information from your program, you can get it from the version attributes or `ThisAssembly`. Other, XML or text files can be referenced by CI/CD (Continuous Integration and Continuous Deployment) to apply version information to the build process. For example, `RelaxVersioner_ShortVersion.txt` contains a string like `2.5.4`, so you may be able to save your build artifacts with a version number when you upload them to the server.
+
+If you want to reference this information from within the MSBuild target, you can use the properties as follows without having to access the text file:
+
+```xml
+  <Target Name="AB" AfterTargets="Compile">
+    <Message Importance="High" Text="PropertiesPath: $(RelaxVersionerPropertiesPath)" />
+    <Message Importance="High" Text="ResultPath: $(RelaxVersionerResultPath)" />
+    <Message Importance="High" Text="ResolvedVersion: $(RelaxVersionerResolvedVersion)" />
+    <Message Importance="High" Text="ResolvedShortVersion: $(RelaxVersionerResolvedShortVersion)" />
+    <Message Importance="High" Text="ResolvedSafeVersion: $(RelaxVersionerResolvedSafeVersion)" />
+    <Message Importance="High" Text="ResolvedCommitId: $(RelaxVersionerResolvedCommitId)" />
+    <Message Importance="High" Text="ResolvedBranch: $(RelaxVersionerResolvedBranch)" />
+    <Message Importance="High" Text="ResolvedTags: $(RelaxVersionerResolvedTags)" />
+  </Target>
+```
 
 `RelaxVersioner_Properties.xml` contains a lot of very useful information, and you may be able to pull information from this XML file to meet your specific needs without having to write custom MSBuild scripts.
 
@@ -389,7 +410,7 @@ RelaxVersioner already supported Sourcelink integration. You can integrate using
 
 <ItemGroup>
   <!-- RelaxVersioner -->
-  <PackageReference Include="RelaxVersioner" Version="2.5.5" PrivateAssets="All" />
+  <PackageReference Include="RelaxVersioner" Version="2.12.0" PrivateAssets="All" />
 
   <!-- Root directory location of the solution file, if it exists. -->
   <!-- Refer: https://github.com/dotnet/roslyn/issues/37379 -->
@@ -409,7 +430,7 @@ For more further informations, [see Sourcelink documentation.](https://github.co
 If your CI process causes error with this description like:
 
 ```
-RelaxVersioner[1.0.13.0]: NotFoundException=object not found -
+RelaxVersioner [2.12.0]: NotFoundException=object not found -
    no match for id (a2b834535c00e7b1a604fccc28cfebe78ea0ec31),
    Unknown exception occurred, ...
 ```
@@ -468,6 +489,12 @@ When you are using a nuspec file to generate a NuGet package, there are addition
 
 ## History
 
+* 2.12.0:
+  * Expanded version result text files.
+    Results for `RelaxVersioner_SafeVersion.txt`, `RelaxVersioner_Branch.txt`, and `RelaxVersioner_Tags.txt` are available.
+  * The version result text file does not contain line feed codes.
+  * `ShortVersion` is now fallback assigned to the MSBuild property `Version` immediately after a build.
+    Subsequent MSBuild scripts that use the `Version` property can safely use the recognized version number.
 * 2.11.0:
   * Fixed causing error on NuGet packaging when contains no source code input files.
 * 2.10.0:

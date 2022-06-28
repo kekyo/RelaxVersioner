@@ -95,6 +95,7 @@
       <RelaxVersionerSafeVersionPath>$([System.IO.Path]::Combine('$(_RVB_DumpBasePath)','RelaxVersioner_SafeVersion.txt'))</RelaxVersionerSafeVersionPath>
       <RelaxVersionerCommitIdPath>$([System.IO.Path]::Combine('$(_RVB_DumpBasePath)','RelaxVersioner_CommitId.txt'))</RelaxVersionerCommitIdPath>
       <RelaxVersionerBranchPath>$([System.IO.Path]::Combine('$(_RVB_DumpBasePath)','RelaxVersioner_Branch.txt'))</RelaxVersionerBranchPath>
+      <RelaxVersionerTagsPath>$([System.IO.Path]::Combine('$(_RVB_DumpBasePath)','RelaxVersioner_Tags.txt'))</RelaxVersionerTagsPath>
     </PropertyGroup>
 
     <ItemGroup>
@@ -173,6 +174,9 @@
     <XmlPeek XmlInputPath="$(RelaxVersionerResultPath)" Query="/Result/Branch/text()">
       <Output TaskParameter="Result" PropertyName="_RVB_DetectedBranch" />
     </XmlPeek>
+    <XmlPeek XmlInputPath="$(RelaxVersionerResultPath)" Query="/Result/Tags/text()">
+      <Output TaskParameter="Result" PropertyName="_RVB_DetectedTags" />
+    </XmlPeek>
     <XmlPeek XmlInputPath="$(RelaxVersionerResultPath)" Query="/Result/Message/text()">
       <Output TaskParameter="Result" PropertyName="_RVB_DetectedMessage" />
     </XmlPeek>
@@ -186,6 +190,7 @@
       <RelaxVersionerResolvedSafeVersion>$(_RVB_DetectedSafeVersion)</RelaxVersionerResolvedSafeVersion>
       <RelaxVersionerResolvedCommitId>$(_RVB_DetectedCommitId)</RelaxVersionerResolvedCommitId>
       <RelaxVersionerResolvedBranch>$(_RVB_DetectedBranch)</RelaxVersionerResolvedBranch>
+      <RelaxVersionerResolvedTags>$(_RVB_DetectedTags)</RelaxVersionerResolvedTags>
       <Version>$(_RVB_DetectedShortVersion)</Version>
       <PackageVersion>$(_RVB_DetectedShortVersion)</PackageVersion>
       <SourceRevisionId>$(_RVB_DetectedCommitId)</SourceRevisionId>   <!-- Sourcelink symbol, same as RepositoryCommit -->
@@ -220,6 +225,11 @@
     <_RVB_WriteTextToFile File="$(RelaxVersionerBranchPath)" Text="$(_RVB_DetectedBranch)" /> 
     <ItemGroup>
       <FileWrites Include="$(RelaxVersionerBranchPath)" />
+    </ItemGroup>
+
+    <_RVB_WriteTextToFile File="$(RelaxVersionerTagsPath)" Text="$(_RVB_DetectedTags)" /> 
+    <ItemGroup>
+      <FileWrites Include="$(RelaxVersionerTagsPath)" />
     </ItemGroup>
 
     <!-- ======================== -->
@@ -279,6 +289,7 @@
       <RelaxVersionerSafeVersionPath>$([System.IO.Path]::Combine('$(_RVB_DumpBasePath)','RelaxVersioner_SafeVersion.txt'))</RelaxVersionerSafeVersionPath>
       <RelaxVersionerCommitIdPath>$([System.IO.Path]::Combine('$(_RVB_DumpBasePath)','RelaxVersioner_CommitId.txt'))</RelaxVersionerCommitIdPath>
       <RelaxVersionerBranchPath>$([System.IO.Path]::Combine('$(_RVB_DumpBasePath)','RelaxVersioner_Branch.txt'))</RelaxVersionerBranchPath>
+      <RelaxVersionerTagsPath>$([System.IO.Path]::Combine('$(_RVB_DumpBasePath)','RelaxVersioner_Tags.txt'))</RelaxVersionerTagsPath>
     </PropertyGroup>
 
   </Target>
@@ -319,6 +330,9 @@
     <XmlPeek XmlInputPath="$(RelaxVersionerResultPath)" Query="/Result/Branch/text()">
       <Output TaskParameter="Result" PropertyName="_RVB_DetectedBranch" />
     </XmlPeek>
+    <XmlPeek XmlInputPath="$(RelaxVersionerResultPath)" Query="/Result/Tags/text()">
+      <Output TaskParameter="Result" PropertyName="_RVB_DetectedTags" />
+    </XmlPeek>
     <XmlPeek XmlInputPath="$(RelaxVersionerResultPath)" Query="/Result/Message/text()">
       <Output TaskParameter="Result" PropertyName="_RVB_DetectedMessage" />
     </XmlPeek>
@@ -332,6 +346,7 @@
       <RelaxVersionerResolvedSafeVersion>$(_RVB_DetectedSafeVersion)</RelaxVersionerResolvedSafeVersion>
       <RelaxVersionerResolvedCommitId>$(_RVB_DetectedCommitId)</RelaxVersionerResolvedCommitId>
       <RelaxVersionerResolvedBranch>$(_RVB_DetectedBranch)</RelaxVersionerResolvedBranch>
+      <RelaxVersionerResolvedTags>$(_RVB_DetectedTags)</RelaxVersionerResolvedTags>
       <Version>$(_RVB_DetectedShortVersion)</Version>
       <PackageVersion>$(_RVB_DetectedShortVersion)</PackageVersion>
       <SourceRevisionId>$(_RVB_DetectedCommitId)</SourceRevisionId>   <!-- Sourcelink symbol, same as RepositoryCommit -->
@@ -366,6 +381,11 @@
     <_RVB_WriteTextToFile File="$(RelaxVersionerBranchPath)" Text="$(_RVB_DetectedBranch)" /> 
     <ItemGroup>
       <FileWrites Include="$(RelaxVersionerBranchPath)" />
+    </ItemGroup>
+
+    <_RVB_WriteTextToFile File="$(RelaxVersionerTagsPath)" Text="$(_RVB_DetectedTags)" /> 
+    <ItemGroup>
+      <FileWrites Include="$(RelaxVersionerTagsPath)" />
     </ItemGroup>
 
   </Target>
