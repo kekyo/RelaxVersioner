@@ -511,7 +511,7 @@ nuspecファイルを使ってパッケージを生成する場合は、デフ�
 
 ## 履歴
 
-* 2.12.0:
+* 2.12.1:
   * バージョンの結果テキストファイルを拡充しました。
     `RelaxVersioner_SafeVersion.txt`, `RelaxVersioner_Branch.txt`, `RelaxVersioner_Tags.txt`に関する結果を使用できます。
   * バージョンの結果テキストファイルに改行コードが入らないようにしました。
