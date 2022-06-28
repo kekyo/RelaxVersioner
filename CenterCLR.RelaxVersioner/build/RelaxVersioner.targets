@@ -177,6 +177,7 @@
     <PropertyGroup>
       <RelaxVersionerResolvedVersion>$(_RVB_DetectedVersion)</RelaxVersionerResolvedVersion>
       <RelaxVersionerResolvedShortVersion>$(_RVB_DetectedShortVersion)</RelaxVersionerResolvedShortVersion>
+      <Version>$(_RVB_DetectedShortVersion)</Version>
       <PackageVersion>$(_RVB_DetectedShortVersion)</PackageVersion>
       <SourceRevisionId>$(_RVB_DetectedCommitId)</SourceRevisionId>   <!-- Sourcelink symbol, same as RepositoryCommit -->
       <RepositoryCommit>$(_RVB_DetectedCommitId)</RepositoryCommit>
@@ -295,6 +296,7 @@
     <PropertyGroup>
       <RelaxVersionerResolvedVersion>$(_RVB_DetectedVersion)</RelaxVersionerResolvedVersion>
       <RelaxVersionerResolvedShortVersion>$(_RVB_DetectedShortVersion)</RelaxVersionerResolvedShortVersion>
+      <Version>$(_RVB_DetectedShortVersion)</Version>
       <PackageVersion>$(_RVB_DetectedShortVersion)</PackageVersion>
       <SourceRevisionId>$(_RVB_DetectedCommitId)</SourceRevisionId>   <!-- Sourcelink symbol, same as RepositoryCommit -->
       <RepositoryCommit>$(_RVB_DetectedCommitId)</RepositoryCommit>
