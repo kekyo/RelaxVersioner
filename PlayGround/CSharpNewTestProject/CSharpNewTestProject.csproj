@@ -10,6 +10,8 @@
   <PropertyGroup>
     <OutputType>Exe</OutputType>
     <TargetFramework>net6.0</TargetFramework>
+
+    <RelaxVersionerLaunchDebugger>false</RelaxVersionerLaunchDebugger>
   </PropertyGroup>
 
   <!-- ====================================================== -->
