@@ -44,6 +44,8 @@ using System.Reflection;
 [assembly: AssemblyVersion("1.0.21")]
 [assembly: AssemblyFileVersion("2020.12.20.33529")]
 [assembly: AssemblyInformationalVersion("1.0.21-561387e2f6dc90046f56ef4c3ac501aad0d5ec0a")]
+[assembly: AssemblyConfiguration("Release")]
+[assembly: AssemblyMetadata("AssemblyName","YourApp")]
 [assembly: AssemblyMetadata("Date","Sun, 20 Dec 2020 09:37:39 GMT")]
 [assembly: AssemblyMetadata("Branch","master")]
 [assembly: AssemblyMetadata("Tags","")]
@@ -63,8 +65,10 @@ namespace YourApp
     public const string AssemblyVersion = "1.0.21";
     public const string AssemblyFileVersion = "2020.12.20.33529";
     public const string AssemblyInformationalVersion = "1.0.21-561387e2f6dc90046f56ef4c3ac501aad0d5ec0a";
+    public const string AssemblyConfiguration = "Release";
     public static class AssemblyMetadata
     {
+      public const string AssemblyName = "YourApp";
       public const string Date = "Sun, 20 Dec 2020 09:37:39 GMT";
       public const string Branch = "master";
       public const string Tags = "";
@@ -89,6 +93,8 @@ namespace global
   [<assembly: AssemblyVersion("1.0.21")>]
   [<assembly: AssemblyFileVersion("2020.12.20.33529")>]
   [<assembly: AssemblyInformationalVersion("1.0.21-561387e2f6dc90046f56ef4c3ac501aad0d5ec0a")>]
+  [<assembly: AssemblyConfiguration("Release")>]
+  [<assembly: AssemblyMetadata("AssemblyName","YourApp")>]
   [<assembly: AssemblyMetadata("Date","Sun, 20 Dec 2020 09:37:39 GMT")>]
   [<assembly: AssemblyMetadata("Branch","master")>]
   [<assembly: AssemblyMetadata("Tags","")>]
@@ -110,7 +116,11 @@ namespace global
     let AssemblyFileVersion = "2020.12.20.33529";
     [<Literal>]
     let AssemblyInformationalVersion = "1.0.21-561387e2f6dc90046f56ef4c3ac501aad0d5ec0a";
+    [<Literal>]
+    let AssemblyConfiguration = "Release";
     module AssemblyMetadata =
+      [<Literal>]
+      let AssemblyName = "YourApp";
       [<Literal>]
       let Date = "Sun, 20 Dec 2020 09:37:39 GMT";
       [<Literal>]
@@ -345,7 +355,7 @@ When you are using a nuspec file to generate a NuGet package, there are addition
         -->
         <Rule name="AssemblyInformationalVersion">{versionLabel}-{commitId}</Rule>
 
-        <Rule name="AssemblyConfigurationAttribute">{Configuration}</Rule>
+        <Rule name="AssemblyConfiguration">{Configuration}</Rule>
 
         <!--
             "key" attribute can only use with "AssemblyMetadataAttribute".

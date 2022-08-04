@@ -44,6 +44,8 @@ using System.Reflection;
 [assembly: AssemblyVersion("1.0.21")]
 [assembly: AssemblyFileVersion("2020.12.20.33529")]
 [assembly: AssemblyInformationalVersion("1.0.21-561387e2f6dc90046f56ef4c3ac501aad0d5ec0a")]
+[assembly: AssemblyConfiguration("Release")]
+[assembly: AssemblyMetadata("AssemblyName","YourApp")]
 [assembly: AssemblyMetadata("Date","Sun, 20 Dec 2020 09:37:39 GMT")]
 [assembly: AssemblyMetadata("Branch","master")]
 [assembly: AssemblyMetadata("Tags","")]
@@ -63,8 +65,10 @@ namespace YourApp
     public const string AssemblyVersion = "1.0.21";
     public const string AssemblyFileVersion = "2020.12.20.33529";
     public const string AssemblyInformationalVersion = "1.0.21-561387e2f6dc90046f56ef4c3ac501aad0d5ec0a";
+    public const string AssemblyConfiguration = "Release";
     public static class AssemblyMetadata
     {
+      public const string AssemblyName = "YourApp";
       public const string Date = "Sun, 20 Dec 2020 09:37:39 GMT";
       public const string Branch = "master";
       public const string Tags = "";
@@ -89,6 +93,8 @@ namespace global
   [<assembly: AssemblyVersion("1.0.21")>]
   [<assembly: AssemblyFileVersion("2020.12.20.33529")>]
   [<assembly: AssemblyInformationalVersion("1.0.21-561387e2f6dc90046f56ef4c3ac501aad0d5ec0a")>]
+  [<assembly: AssemblyConfiguration("Release")>]
+  [<assembly: AssemblyMetadata("AssemblyName","YourApp")>]
   [<assembly: AssemblyMetadata("Date","Sun, 20 Dec 2020 09:37:39 GMT")>]
   [<assembly: AssemblyMetadata("Branch","master")>]
   [<assembly: AssemblyMetadata("Tags","")>]
@@ -110,7 +116,11 @@ namespace global
     let AssemblyFileVersion = "2020.12.20.33529";
     [<Literal>]
     let AssemblyInformationalVersion = "1.0.21-561387e2f6dc90046f56ef4c3ac501aad0d5ec0a";
+    [<Literal>]
+    let AssemblyConfiguration = "Release";
     module AssemblyMetadata =
+      [<Literal>]
+      let AssemblyName = "YourApp";
       [<Literal>]
       let Date = "Sun, 20 Dec 2020 09:37:39 GMT";
       [<Literal>]
@@ -366,6 +376,8 @@ nuspecファイルを使ってパッケージを生成する場合は、デフ�
     -->
     <Rule name="AssemblyInformationalVersion">{versionLabel}-{commitId}</Rule>
     
+    <Rule name="AssemblyConfiguration">{Configuration}</Rule>
+
     <!--
       "key" 属性は、通常は、 "AssemblyMetadataAttribute" 属性にのみ適用出来ます。
       日付を埋め込みたい場合は、 "committer.When" や "author.When" と言った指定を使えます。
@@ -377,6 +389,7 @@ nuspecファイルを使ってパッケージを生成する場合は、デフ�
       "generated" は RelaxVersioner が定義を生成した日時です。
       対象のプロパティが文字列ではない場合は、string.Format() と同様に、書式指定を加えることが出来ます。
     -->
+    <Rule name="AssemblyMetadata" key="CommitId">{commitId}</Rule>
     <Rule name="AssemblyMetadata" key="Date">{committer.When:R}</Rule>
     <Rule name="AssemblyMetadata" key="Branch">{branch.FriendlyName}</Rule>
     <Rule name="AssemblyMetadata" key="Tags">{tags}</Rule>
@@ -385,12 +398,7 @@ nuspecファイルを使ってパッケージを生成する場合は、デフ�
     <Rule name="AssemblyMetadata" key="Message">{commit.MessageShort}</Rule>
     <Rule name="AssemblyMetadata" key="Build">{buildIdentifier}</Rule>
     <Rule name="AssemblyMetadata" key="Generated">{generated:R}</Rule>
-    
-    <!-- 以下の定義はデフォルトでは含まれていませんが、有効にすることで使用出来ます。
-    <Rule name="AssemblyMetadata" key="TargetFrameworkIdentity">{tfid}</Rule>
-    <Rule name="AssemblyMetadata" key="TargetFrameworkVersion">{tfv}</Rule>
-    <Rule name="AssemblyMetadata" key="TargetFrameworkProfile">{tfp}</Rule>
-    -->
+    <Rule name="AssemblyMetadata" key="TargetFramework">{tfm}</Rule>
     
     <!--
       "Platform" は、 MSBuild の PropertyGroup で定義されている値です。
@@ -398,14 +406,12 @@ nuspecファイルを使ってパッケージを生成する場合は、デフ�
       例えば、 "RootNamespace" や "Prefer32Bit" や "NETCoreSdkVersion" や "PATH" などです。
       これらの値は、全て文字列として参照されます。従って、フォーマットの書式指定は無視されます。
     -->
+    <Rule name="AssemblyMetadata" key="AssemblyName">{AssemblyName}</Rule>
+    <Rule name="AssemblyMetadata" key="PlatformTarget">{PlatformTarget}</Rule>
     <Rule name="AssemblyMetadata" key="Platform">{Platform}</Rule>
+    <Rule name="AssemblyMetadata" key="RuntimeIdentifier">{RuntimeIdentifier}</Rule>
     <Rule name="AssemblyMetadata" key="BuildOn">{OS}</Rule>
     <Rule name="AssemblyMetadata" key="SdkVersion">{NETCoreSdkVersion}</Rule>
-
-    <!-- 以下の定義はデフォルトでは含まれていませんが、有効にすることで使用出来ます。
-    <Rule name="AssemblyMetadata" key="Language">{Language}</Rule>
-    <Rule name="AssemblyMetadata" key="HostName">{COMPUTERNAME}</Rule>
-    -->
   </WriterRules>
 </RelaxVersioner>
 ```
