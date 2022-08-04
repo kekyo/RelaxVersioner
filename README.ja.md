@@ -259,86 +259,6 @@ public:
 
 ----
 
-## カスタムルールファイル(RelaxVersioner.rules)の例:
-
-``` xml
-<?xml version="1.0" encoding="utf-8"?>
-<RelaxVersioner version="1.0">
-  <WriterRules>
-    <!-- この定義を適用する言語です。 -->
-    <Language>C#</Language>
-    <Language>F#</Language>
-    <Language>VB</Language>
-    <Language>C++/CLI</Language>
-    
-    <Import>System.Reflection</Import>
-    
-    <!--
-      "versionLabel" は、ドットで区切られたバージョン番号を、gitリポジトリのタグを検索して埋め込みます。
-      タグの形式は、 [1.2.3.4] や [v1.2.3.4] のような形式です。
-      タグが見つからない場合は、 [0.0.1] を使用します。
-    -->
-    <Rule name="AssemblyVersion">{versionLabel}</Rule>
-    
-    <!--
-      "safeVersion" は、現在のコミットの日時（コミットした人）を埋め込みます。
-      "safeVersion" は、 "committer.When" と書くのと同じです。
-      （日時のフォーマットは、バージョン番号として許容される形式に従い、 [2016.2.14.12345] のような、最小2秒精度の一意な文字列となります。）
-    -->
-    <Rule name="AssemblyFileVersion">{safeVersion}</Rule>
-    
-    <!--
-      "commitId" は、現在のコミットのID（gitのコミットID、つまりはハッシュ値）を埋め込みます。
-      "commitId" は、 "commit.Sha" と書くのと同じです。
-    -->
-    <Rule name="AssemblyInformationalVersion">{versionLabel}-{commitId}</Rule>
-    
-    <!--
-      "key" 属性は、通常は、 "AssemblyMetadataAttribute" 属性にのみ適用出来ます。
-      日付を埋め込みたい場合は、 "committer.When" や "author.When" と言った指定を使えます。
-      "branch" は、 "FriendlyName" や "CanonicalName" といったプロパティ名を繋げて使うことが出来ます。
-      これらは、 libgit2sharp の Branch クラスの定義に従います。
-      "author" と "committer" は、 "Name" や "Email" や "When" と言ったプロパティ名を使用出来ます。
-      "buildIdentifier" は、 MSBuild の PropertyGroup で定義された "RelaxVersionerBuildIdentifier" 又は "BuildIdentifier" に相当します。
-      これは、 GitHub Actions などの CI 環境で、ビルド毎に適用されるビルド番号を埋め込むのに使います。
-      "generated" は RelaxVersioner が定義を生成した日時です。
-      対象のプロパティが文字列ではない場合は、string.Format() と同様に、書式指定を加えることが出来ます。
-    -->
-    <Rule name="AssemblyMetadata" key="Date">{committer.When:R}</Rule>
-    <Rule name="AssemblyMetadata" key="Branch">{branch.FriendlyName}</Rule>
-    <Rule name="AssemblyMetadata" key="Tags">{tags}</Rule>
-    <Rule name="AssemblyMetadata" key="Author">{author}</Rule>
-    <Rule name="AssemblyMetadata" key="Committer">{committer}</Rule>
-    <Rule name="AssemblyMetadata" key="Message">{commit.MessageShort}</Rule>
-    <Rule name="AssemblyMetadata" key="Build">{buildIdentifier}</Rule>
-    <Rule name="AssemblyMetadata" key="Generated">{generated:R}</Rule>
-    
-    <!-- 以下の定義はデフォルトでは含まれていませんが、有効にすることで使用出来ます。
-    <Rule name="AssemblyMetadata" key="TargetFrameworkIdentity">{tfid}</Rule>
-    <Rule name="AssemblyMetadata" key="TargetFrameworkVersion">{tfv}</Rule>
-    <Rule name="AssemblyMetadata" key="TargetFrameworkProfile">{tfp}</Rule>
-    -->
-    
-    <!--
-      "Platform" は、 MSBuild の PropertyGroup で定義されている値です。
-      その他の PropertyGroup のキー名や、環境変数から取り込まれた値を、そのまま使用することが出来ます。
-      例えば、 "RootNamespace" や "Prefer32Bit" や "NETCoreSdkVersion" や "PATH" などです。
-      これらの値は、全て文字列として参照されます。従って、フォーマットの書式指定は無視されます。
-    -->
-    <Rule name="AssemblyMetadata" key="Platform">{Platform}</Rule>
-    <Rule name="AssemblyMetadata" key="BuildOn">{OS}</Rule>
-    <Rule name="AssemblyMetadata" key="SdkVersion">{NETCoreSdkVersion}</Rule>
-
-    <!-- 以下の定義はデフォルトでは含まれていませんが、有効にすることで使用出来ます。
-    <Rule name="AssemblyMetadata" key="Language">{Language}</Rule>
-    <Rule name="AssemblyMetadata" key="HostName">{COMPUTERNAME}</Rule>
-    -->
-  </WriterRules>
-</RelaxVersioner>
-```
-
-----
-
 ## ヒントや参考情報
 
 ### ビルド後にバージョン番号を使用する方法
@@ -495,6 +415,88 @@ nuspecファイルを使ってパッケージを生成する場合は、デフ�
 
 * RelaxVersionerをVisual Studio 2012/2013で使うには、システムに.NET Framework 4.6以上がインストールされている必要があります。RelaxVersionerは、MSBuild.Frameworkアセンブリのnet46以上のバージョンを必要とするためです。
 
+----
+
+## カスタムルールファイル(RelaxVersioner.rules)の例:
+
+``` xml
+<?xml version="1.0" encoding="utf-8"?>
+<RelaxVersioner version="1.0">
+  <WriterRules>
+    <!-- この定義を適用する言語です。 -->
+    <Language>C#</Language>
+    <Language>F#</Language>
+    <Language>VB</Language>
+    <Language>C++/CLI</Language>
+    
+    <Import>System.Reflection</Import>
+    
+    <!--
+      "versionLabel" は、ドットで区切られたバージョン番号を、gitリポジトリのタグを検索して埋め込みます。
+      タグの形式は、 [1.2.3.4] や [v1.2.3.4] のような形式です。
+      タグが見つからない場合は、 [0.0.1] を使用します。
+    -->
+    <Rule name="AssemblyVersion">{versionLabel}</Rule>
+    
+    <!--
+      "safeVersion" は、現在のコミットの日時（コミットした人）を埋め込みます。
+      "safeVersion" は、 "committer.When" と書くのと同じです。
+      （日時のフォーマットは、バージョン番号として許容される形式に従い、 [2016.2.14.12345] のような、最小2秒精度の一意な文字列となります。）
+    -->
+    <Rule name="AssemblyFileVersion">{safeVersion}</Rule>
+    
+    <!--
+      "commitId" は、現在のコミットのID（gitのコミットID、つまりはハッシュ値）を埋め込みます。
+      "commitId" は、 "commit.Sha" と書くのと同じです。
+    -->
+    <Rule name="AssemblyInformationalVersion">{versionLabel}-{commitId}</Rule>
+    
+    <!--
+      "key" 属性は、通常は、 "AssemblyMetadataAttribute" 属性にのみ適用出来ます。
+      日付を埋め込みたい場合は、 "committer.When" や "author.When" と言った指定を使えます。
+      "branch" は、 "FriendlyName" や "CanonicalName" といったプロパティ名を繋げて使うことが出来ます。
+      これらは、 libgit2sharp の Branch クラスの定義に従います。
+      "author" と "committer" は、 "Name" や "Email" や "When" と言ったプロパティ名を使用出来ます。
+      "buildIdentifier" は、 MSBuild の PropertyGroup で定義された "RelaxVersionerBuildIdentifier" 又は "BuildIdentifier" に相当します。
+      これは、 GitHub Actions などの CI 環境で、ビルド毎に適用されるビルド番号を埋め込むのに使います。
+      "generated" は RelaxVersioner が定義を生成した日時です。
+      対象のプロパティが文字列ではない場合は、string.Format() と同様に、書式指定を加えることが出来ます。
+    -->
+    <Rule name="AssemblyMetadata" key="Date">{committer.When:R}</Rule>
+    <Rule name="AssemblyMetadata" key="Branch">{branch.FriendlyName}</Rule>
+    <Rule name="AssemblyMetadata" key="Tags">{tags}</Rule>
+    <Rule name="AssemblyMetadata" key="Author">{author}</Rule>
+    <Rule name="AssemblyMetadata" key="Committer">{committer}</Rule>
+    <Rule name="AssemblyMetadata" key="Message">{commit.MessageShort}</Rule>
+    <Rule name="AssemblyMetadata" key="Build">{buildIdentifier}</Rule>
+    <Rule name="AssemblyMetadata" key="Generated">{generated:R}</Rule>
+    
+    <!-- 以下の定義はデフォルトでは含まれていませんが、有効にすることで使用出来ます。
+    <Rule name="AssemblyMetadata" key="TargetFrameworkIdentity">{tfid}</Rule>
+    <Rule name="AssemblyMetadata" key="TargetFrameworkVersion">{tfv}</Rule>
+    <Rule name="AssemblyMetadata" key="TargetFrameworkProfile">{tfp}</Rule>
+    -->
+    
+    <!--
+      "Platform" は、 MSBuild の PropertyGroup で定義されている値です。
+      その他の PropertyGroup のキー名や、環境変数から取り込まれた値を、そのまま使用することが出来ます。
+      例えば、 "RootNamespace" や "Prefer32Bit" や "NETCoreSdkVersion" や "PATH" などです。
+      これらの値は、全て文字列として参照されます。従って、フォーマットの書式指定は無視されます。
+    -->
+    <Rule name="AssemblyMetadata" key="Platform">{Platform}</Rule>
+    <Rule name="AssemblyMetadata" key="BuildOn">{OS}</Rule>
+    <Rule name="AssemblyMetadata" key="SdkVersion">{NETCoreSdkVersion}</Rule>
+
+    <!-- 以下の定義はデフォルトでは含まれていませんが、有効にすることで使用出来ます。
+    <Rule name="AssemblyMetadata" key="Language">{Language}</Rule>
+    <Rule name="AssemblyMetadata" key="HostName">{COMPUTERNAME}</Rule>
+    -->
+  </WriterRules>
+</RelaxVersioner>
+```
+
+----
+
 ## TODO:
 
 * 除外ルールのサポート
@@ -511,6 +513,9 @@ nuspecファイルを使ってパッケージを生成する場合は、デフ�
 
 ## 履歴
 
+* 2.13.0:
+  * 古いプロジェクトフォーマットでの擬似 tfm をサポートしました。
+  * より使いやすいアセンブリ構成メタデータを追加しました。
 * 2.12.1:
   * バージョンの結果テキストファイルを拡充しました。
     `RelaxVersioner_SafeVersion.txt`, `RelaxVersioner_Branch.txt`, `RelaxVersioner_Tags.txt`に関する結果を使用できます。

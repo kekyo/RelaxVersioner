@@ -254,84 +254,6 @@ public:
 
 ----
 
-## Sample custom rule set file (RelaxVersioner.rules):
-
-``` xml
-<?xml version="1.0" encoding="utf-8"?>
-<RelaxVersioner version="1.0">
-  <WriterRules>
-    <!-- Target languages -->
-    <Language>C#</Language>
-    <Language>F#</Language>
-    <Language>VB</Language>
-    <Language>C++/CLI</Language>
-    
-    <Import>System.Reflection</Import>
-    
-    <!--
-      "versionLabel" extracts numerical-notate version string [1.2.3.4] or [v1.2.3.4] from git repository tags traverse start HEAD.
-      If not found, use [0.0.1].
-    -->
-    <Rule name="AssemblyVersion">{versionLabel}</Rule>
-    
-    <!--
-      "safeVersion" is extracts committed date (from commmiter) from git repository HEAD.
-      "safeVersion" specialized from "committer.When".
-      (The format is safe-numerical-notate version string [2016.2.14.12345]. (Last number is 2sec prec.))
-    -->
-    <Rule name="AssemblyFileVersion">{safeVersion}</Rule>
-    
-    <!--
-      "commitId" is extracts commit id from git repository HEAD.
-      "commitId" alias to "commit.Sha".
-    -->
-    <Rule name="AssemblyInformationalVersion">{versionLabel}-{commitId}</Rule>
-    
-    <!--
-      "key" attribute can only use with "AssemblyMetadataAttribute".
-      "committer.When" or you can use another choice "author.When".
-      "branch" can use property "FriendlyName" and "CanonicalName". (Derived from libgit2sharp)
-      "author" and "committer" can use property "Name", "Email", and "When". (Derived from libgit2sharp)
-      "buildIdentifier" is passing from MSBuild property named "RelaxVersionerBuildIdentifier" or "BuildIdentifier". We can use in CI building.
-      "generated" is generated date by RelaxVersioner.
-      You can apply format directives same as string.Format().
-    -->
-    <Rule name="AssemblyMetadata" key="Date">{committer.When:R}</Rule>
-    <Rule name="AssemblyMetadata" key="Branch">{branch.FriendlyName}</Rule>
-    <Rule name="AssemblyMetadata" key="Tags">{tags}</Rule>
-    <Rule name="AssemblyMetadata" key="Author">{author}</Rule>
-    <Rule name="AssemblyMetadata" key="Committer">{committer}</Rule>
-    <Rule name="AssemblyMetadata" key="Message">{commit.MessageShort}</Rule>
-    <Rule name="AssemblyMetadata" key="Build">{buildIdentifier}</Rule>
-    <Rule name="AssemblyMetadata" key="Generated">{generated:R}</Rule>
-    <Rule name="AssemblyMetadata" key="TargetFramework">{tfm}</Rule>
-    
-    <!-- These definitions are not included by defaults.
-    <Rule name="AssemblyMetadata" key="TargetFrameworkIdentity">{tfid}</Rule>
-    <Rule name="AssemblyMetadata" key="TargetFrameworkVersion">{tfv}</Rule>
-    <Rule name="AssemblyMetadata" key="TargetFrameworkProfile">{tfp}</Rule>
-    -->
-
-    <!--
-      The "Platform" identity is a MSBuild property name.
-      You can use "Platform" and another identities come from PropertyGroup definitions
-      and process environments such as "RootNamespace", "Prefer32Bit", "NETCoreSdkVersion", "PATH" and etc.
-      Each results are strictly string type, so format directives will be ignored.
-    -->
-    <Rule name="AssemblyMetadata" key="Platform">{Platform}</Rule>
-    <Rule name="AssemblyMetadata" key="BuildOn">{OS}</Rule>
-    <Rule name="AssemblyMetadata" key="SdkVersion">{NETCoreSdkVersion}</Rule>
-
-    <!-- These definitions are not included by defaults.
-    <Rule name="AssemblyMetadata" key="Language">{Language}</Rule>
-    <Rule name="AssemblyMetadata" key="HostName">{COMPUTERNAME}</Rule>
-    -->
-  </WriterRules>
-</RelaxVersioner>
-```
-
-----
-
 ## Hints and Tips
 
 ### How to use version numbers after building process
@@ -473,6 +395,81 @@ When you are using a nuspec file to generate a NuGet package, there are addition
 
 * RelaxVersioner supported on Visual Studio 2012/2013 only installed .NET Framework 4.6 or upper. Because it requires uses compatibility for net461 MSBuild.Framework assembly.
 
+----
+
+## Sample custom rule set file (RelaxVersioner.rules):
+
+``` xml
+<?xml version="1.0" encoding="utf-8"?>
+<RelaxVersioner version="1.0">
+    <WriterRules>
+        <!-- Target languages -->
+        <Language>C#</Language>
+        <Language>F#</Language>
+        <Language>VB</Language>
+        <Language>C++/CLI</Language>
+
+        <Import>System.Reflection</Import>
+
+        <!--
+            "versionLabel" extracts numerical-notate version string [1.2.3.4] or [v1.2.3.4] from git repository tags traverse start HEAD.
+            If not found, use [0.0.1].
+        -->
+        <Rule name="AssemblyVersion">{versionLabel}</Rule>
+
+        <!--
+            "safeVersion" extracts committed date (from commmiter) from git repository HEAD.
+            "safeVersion" specialized from "committer.When".
+            (The format is safe-numerical-notate version string [2016.2.14.12345]. (Last number is 2sec prec.))
+        -->
+        <Rule name="AssemblyFileVersion">{safeVersion}</Rule>
+
+        <!--
+            "commitId" extracts commit id from git repository HEAD.
+            "commitId" alias to "commit.Sha".
+        -->
+        <Rule name="AssemblyInformationalVersion">{versionLabel}-{commitId}</Rule>
+
+        <Rule name="AssemblyConfigurationAttribute">{Configuration}</Rule>
+
+        <!--
+            "key" attribute can only use with "AssemblyMetadataAttribute".
+            "committer.When" or you can use another choice "author.When".
+            "branch" can use property "FriendlyName" and "CanonicalName". (Derived from libgit2sharp)
+            "author" and "committer" can use property "Name", "Email", and "When". (Derived from libgit2sharp)
+            "buildIdentifier" is passing from MSBuild property named "RelaxVersionerBuildIdentifier" or "BuildIdentifier". We can use in CI building.
+            "generated" is generated date by RelaxVersioner.
+            You can apply format directives same as string.Format().
+        -->
+        <Rule name="AssemblyMetadata" key="CommitId">{commitId}</Rule>
+        <Rule name="AssemblyMetadata" key="Date">{committer.When:R}</Rule>
+        <Rule name="AssemblyMetadata" key="Branch">{branch.FriendlyName}</Rule>
+        <Rule name="AssemblyMetadata" key="Tags">{tags}</Rule>
+        <Rule name="AssemblyMetadata" key="Author">{author}</Rule>
+        <Rule name="AssemblyMetadata" key="Committer">{committer}</Rule>
+        <Rule name="AssemblyMetadata" key="Message">{commit.MessageShort}</Rule>
+        <Rule name="AssemblyMetadata" key="Build">{buildIdentifier}</Rule>
+        <Rule name="AssemblyMetadata" key="Generated">{generated:R}</Rule>
+        <Rule name="AssemblyMetadata" key="TargetFramework">{tfm}</Rule>
+
+        <!--
+            The "Platform" identity is a MSBuild property name.
+            You can use "Platform" and another identities come from PropertyGroup definitions
+            and process environments such as "RootNamespace", "Prefer32Bit", "NETCoreSdkVersion", "PATH" and etc.
+            Each results are strictly string type, so format directives will be ignored.
+        -->
+        <Rule name="AssemblyMetadata" key="AssemblyName">{AssemblyName}</Rule>
+        <Rule name="AssemblyMetadata" key="PlatformTarget">{PlatformTarget}</Rule>
+        <Rule name="AssemblyMetadata" key="Platform">{Platform}</Rule>
+        <Rule name="AssemblyMetadata" key="RuntimeIdentifier">{RuntimeIdentifier}</Rule>
+        <Rule name="AssemblyMetadata" key="BuildOn">{OS}</Rule>
+        <Rule name="AssemblyMetadata" key="SdkVersion">{NETCoreSdkVersion}</Rule>
+    </WriterRules>
+</RelaxVersioner>
+```
+
+----
+
 ## TODO:
 
 * Support exclude rule set.
@@ -489,6 +486,9 @@ When you are using a nuspec file to generate a NuGet package, there are addition
 
 ## History
 
+* 2.13.0:
+  * Supported pseudo tfm on older project format.
+  * Added more usable assembly configuration metadata.
 * 2.12.1:
   * Expanded version result text files.
     Results for `RelaxVersioner_SafeVersion.txt`, `RelaxVersioner_Branch.txt`, and `RelaxVersioner_Tags.txt` are available.
