@@ -8,6 +8,7 @@
 ////////////////////////////////////////////////////////////////////////////////////////
 
 using System;
+using System.Diagnostics;
 using System.Runtime.InteropServices;
 using Mono.Options;
 
@@ -32,6 +33,7 @@ namespace RelaxVersioner
                 };
 
                 string? resultPath = null;
+                var launchDebugger = false;
                 var help = false;
 
                 var options = new OptionSet
@@ -47,10 +49,17 @@ namespace RelaxVersioner
                     { "propertiesPath=", $"properties file", v => context.PropertiesPath = v },
                     { "outputPath=", $"output source file", v => context.OutputPath = v },
                     { "resultPath=", $"output result via xml file", v => resultPath = v },
+                    { "launchDebugger", "Launch debugger", _ => launchDebugger = true },
                     { "help", "help", v => help = v != null },
                 };
 
                 var trails = options.Parse(args);
+
+                if (launchDebugger)
+                {
+                    Debugger.Launch();
+                }
+
                 if (help || (trails.Count < 1))
                 {
                     logger.Error("Usage: rv [options...] <projectDirectory>");
