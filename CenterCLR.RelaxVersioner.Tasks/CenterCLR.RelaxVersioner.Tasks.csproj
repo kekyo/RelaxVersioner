@@ -26,9 +26,8 @@
     <PackageReference Include="Microsoft.Build.Tasks.Core" Version="15.9.20" />
   </ItemGroup>
 
-  <ItemGroup Condition="'$(Configuration)' == 'Release'">
-    <PackageReference Include="RelaxVersioner" Version="2.11.0" PrivateAssets="all" />
-    <PackageReference Include="Microsoft.SourceLink.GitHub" Version="1.1.1" PrivateAssets="All" />
+  <ItemGroup>
+    <PackageReference Include="RelaxVersioner" Version="2.13.0" PrivateAssets="all" />
   </ItemGroup>
 
 </Project>

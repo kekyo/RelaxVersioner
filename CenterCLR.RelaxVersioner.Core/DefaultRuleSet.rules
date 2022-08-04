@@ -41,7 +41,7 @@
         -->
         <Rule name="AssemblyInformationalVersion">{versionLabel}-{commitId}</Rule>
         
-        <Rule name="AssemblyConfigurationAttribute">{Configuration}</Rule>
+        <Rule name="AssemblyConfiguration">{Configuration}</Rule>
 
         <!--
             "key" attribute can only use with "AssemblyMetadataAttribute".
