@@ -9,7 +9,8 @@
 
   <PropertyGroup>
     <OutputType>Exe</OutputType>
-    <TargetFramework>net6.0</TargetFramework>
+    <TargetFrameworks>net48;net6.0</TargetFrameworks>
+    <PlatformTarget>x86</PlatformTarget>
 
     <RelaxVersionerLaunchDebugger>false</RelaxVersionerLaunchDebugger>
   </PropertyGroup>

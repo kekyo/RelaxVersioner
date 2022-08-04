@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <!--
     RelaxVersioner - Easy-usage, Git-based, auto-generate version informations toolset.
     Copyright (c) Kouji Matsui (@kozy_kekyo, @kekyo@mastodon.cloud)
@@ -40,7 +40,7 @@
             "commitId" alias to "commit.Sha".
         -->
         <Rule name="AssemblyInformationalVersion">{versionLabel}-{commitId}</Rule>
-
+        
         <Rule name="AssemblyConfigurationAttribute">{Configuration}</Rule>
 
         <!--
@@ -69,7 +69,10 @@
             and process environments such as "RootNamespace", "Prefer32Bit", "NETCoreSdkVersion", "PATH" and etc.
             Each results are strictly string type, so format directives will be ignored.
         -->
+        <Rule name="AssemblyMetadata" key="AssemblyName">{AssemblyName}</Rule>
+        <Rule name="AssemblyMetadata" key="PlatformTarget">{PlatformTarget}</Rule>
         <Rule name="AssemblyMetadata" key="Platform">{Platform}</Rule>
+        <Rule name="AssemblyMetadata" key="RuntimeIdentifier">{RuntimeIdentifier}</Rule>
         <Rule name="AssemblyMetadata" key="BuildOn">{OS}</Rule>
         <Rule name="AssemblyMetadata" key="SdkVersion">{NETCoreSdkVersion}</Rule>
     </WriterRules>
