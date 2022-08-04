@@ -136,91 +136,6 @@ namespace global
   do()
 ```
 
-### For VB.NET:
-
-``` visualbasic
-<Assembly: AssemblyVersion("1.0.21")>
-<Assembly: AssemblyFileVersion("2020.12.20.33529")>
-<Assembly: AssemblyInformationalVersion("1.0.21-561387e2f6dc90046f56ef4c3ac501aad0d5ec0a")>
-<Assembly: AssemblyMetadata("Date","Sun, 20 Dec 2020 09:37:39 GMT")>
-<Assembly: AssemblyMetadata("Branch","master")>
-<Assembly: AssemblyMetadata("Tags","")>
-<Assembly: AssemblyMetadata("Author","Kouji Matsui <k@kekyo.net>")>
-<Assembly: AssemblyMetadata("Committer","Kouji Matsui <k@kekyo.net>")>
-<Assembly: AssemblyMetadata("Message","Merge branch 'devel'")>
-<Assembly: AssemblyMetadata("Build","")>
-<Assembly: AssemblyMetadata("Generated","Sun, 20 Dec 2020 09:38:33 GMT")>
-<Assembly: AssemblyMetadata("TargetFramework","")>
-<Assembly: AssemblyMetadata("Platform","x64")>
-<Assembly: AssemblyMetadata("BuildOn","Windows_NT")>
-<Assembly: AssemblyMetadata("SdkVersion","5.0.101")>
-
-Namespace global.YourApp
-  Module ThisAssembly
-    Public Const AssemblyVersion As String = "1.0.21"
-    Public Const AssemblyFileVersion As String = "2020.12.20.33529"
-    Public Const AssemblyInformationalVersion As String = "1.0.21-561387e2f6dc90046f56ef4c3ac501aad0d5ec0a"
-    Public NotInheritable Class AssemblyMetadata
-      Public Const Date As String = "Sun, 20 Dec 2020 09:37:39 GMT"
-      Public Const Branch As String = "master"
-      Public Const Tags As String = ""
-      Public Const Author As String = "Kouji Matsui <k@kekyo.net>"
-      Public Const Committer As String = "Kouji Matsui <k@kekyo.net>"
-      Public Const Message As String = "Merge branch 'devel'"
-      Public Const Build As String = ""
-      Public Const Generated As String = "Sun, 20 Dec 2020 09:38:33 GMT"
-      Public Const Platform As String = "AnyCPU"
-      Public Const BuildOn As String = "Windows_NT"
-      Public Const SdkVersion As String = "5.0.101"
-    End Class
-  End Module
-End Namespace
-```
-
-### For C++/CLI:
-
-``` cpp
-using namespace System::Reflection;
-[assembly: AssemblyVersion("1.0.44")];
-[assembly: AssemblyFileVersion("2020.12.20.33300")];
-[assembly: AssemblyInformationalVersion("1.0.21-7faf4071fdc2f169ecc58d705ea3304dd91af414")];
-[assembly: AssemblyMetadata("Date","Sun, 20 Dec 2020 09:30:00 GMT")];
-[assembly: AssemblyMetadata("Branch","devel")];
-[assembly: AssemblyMetadata("Tags","")];
-[assembly: AssemblyMetadata("Author","Kouji Matsui <k@kekyo.net>")];
-[assembly: AssemblyMetadata("Committer","Kouji Matsui <k@kekyo.net>")];
-[assembly: AssemblyMetadata("Message","Fixed generating path in C++.")];
-[assembly: AssemblyMetadata("Build","")];
-[assembly: AssemblyMetadata("Generated","Sun, 20 Dec 2020 09:34:03 GMT")];
-[assembly: AssemblyMetadata("Platform","x64")];
-[assembly: AssemblyMetadata("BuildOn","Windows_NT")];
-[assembly: AssemblyMetadata("SdkVersion","5.0.101")];
-
-private ref class ThisAssembly abstract sealed
-{
-public:
-    literal System::String^ AssemblyVersion = "1.0.44";
-    literal System::String^ AssemblyFileVersion = "2020.12.20.33300";
-    literal System::String^ AssemblyInformationalVersion = "1.0.21-7faf4071fdc2f169ecc58d705ea3304dd91af414";
-    ref class AssemblyMetadata abstract sealed
-    {
-        literal System::String^ Date = "Sun, 20 Dec 2020 09:30:00 GMT";
-        literal System::String^ Branch = "devel";
-        literal System::String^ Tags = "";
-        literal System::String^ Author = "Kouji Matsui <k@kekyo.net>";
-        literal System::String^ Committer = "Kouji Matsui <k@kekyo.net>";
-        literal System::String^ Message = "Fixed generating path in C++.";
-        literal System::String^ Build = "";
-        literal System::String^ Generated = "Sun, 20 Dec 2020 09:34:03 GMT";
-        literal System::String^ Platform = "x64";
-        literal System::String^ BuildOn = "Windows_NT";
-        literal System::String^ SdkVersion = "5.0.101";
-    };
-};
-```
-
-----
-
 ## RelaxVersionerの使い方
 
 ### 解説動画があります (YouTube):
@@ -513,6 +428,9 @@ nuspecファイルを使ってパッケージを生成する場合は、デフ�
 
 ## 履歴
 
+* 2.13.1:
+  * `AssemblyConfiguration`のスタティック定義名に`Attribute`が含まれていたのを修正。
+  * (RelaxVersioner自身の)SourceLinkの基底位置が誤っていたのを修正。RelaxVersionerを使って生成したプロジェクトに影響はありません。
 * 2.13.0:
   * 古いプロジェクトフォーマットでの擬似 tfm をサポートしました。
   * より使いやすいアセンブリ構成メタデータを追加しました。
