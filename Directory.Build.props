@@ -39,4 +39,9 @@
     <ContinuousIntegrationBuild>true</ContinuousIntegrationBuild>
   </PropertyGroup>
 
+  <ItemGroup Condition="'$(Configuration)' == 'Release'">
+    <SourceRoot Include="$(MSBuildThisFileDirectory)/"/>
+    <PackageReference Include="Microsoft.SourceLink.GitHub" Version="1.1.1" PrivateAssets="All" />
+  </ItemGroup>
+
 </Project>
