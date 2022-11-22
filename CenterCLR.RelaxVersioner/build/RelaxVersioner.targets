@@ -195,6 +195,7 @@
       <RelaxVersionerResolvedBranch>$(_RVB_DetectedBranch)</RelaxVersionerResolvedBranch>
       <RelaxVersionerResolvedTags>$(_RVB_DetectedTags)</RelaxVersionerResolvedTags>
       <Version>$(_RVB_DetectedShortVersion)</Version>
+      <ApplicationDisplayVersion>$(_RVB_DetectedShortVersion)</ApplicationDisplayVersion>
       <PackageVersion>$(_RVB_DetectedShortVersion)</PackageVersion>
       <SourceRevisionId>$(_RVB_DetectedCommitId)</SourceRevisionId>   <!-- Sourcelink symbol, same as RepositoryCommit -->
       <RepositoryCommit>$(_RVB_DetectedCommitId)</RepositoryCommit>
@@ -353,6 +354,7 @@
       <RelaxVersionerResolvedBranch>$(_RVB_DetectedBranch)</RelaxVersionerResolvedBranch>
       <RelaxVersionerResolvedTags>$(_RVB_DetectedTags)</RelaxVersionerResolvedTags>
       <Version>$(_RVB_DetectedShortVersion)</Version>
+      <ApplicationDisplayVersion>$(_RVB_DetectedShortVersion)</ApplicationDisplayVersion>
       <PackageVersion>$(_RVB_DetectedShortVersion)</PackageVersion>
       <SourceRevisionId>$(_RVB_DetectedCommitId)</SourceRevisionId>   <!-- Sourcelink symbol, same as RepositoryCommit -->
       <RepositoryCommit>$(_RVB_DetectedCommitId)</RepositoryCommit>
