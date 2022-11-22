@@ -22,7 +22,7 @@
     <Authors>Kouji Matsui (@kozy_kekyo, @kekyo@mastodon.cloud)</Authors>
     <PackageLicenseExpression>Apache-2.0</PackageLicenseExpression>
     <AllowedOutputExtensionsInPackageBuildOutputFolder>.pdb</AllowedOutputExtensionsInPackageBuildOutputFolder>
-    <NoWarn>$(NoWarn);NU1605;NU1701</NoWarn>
+    <NoWarn>$(NoWarn);NU1605;NU1701;NU1803</NoWarn>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)' != 'Release'">
