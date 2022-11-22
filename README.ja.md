@@ -57,6 +57,8 @@ using System.Reflection;
 [assembly: AssemblyMetadata("Platform","AnyCPU")]
 [assembly: AssemblyMetadata("BuildOn","Unix")]
 [assembly: AssemblyMetadata("SdkVersion","5.0.101")]
+[assembly: AssemblyMetadata("ApplicationDisplayVersion","1.0.21")]
+[assembly: AssemblyMetadata("ApplicationVersion","12345678901")]
 
 namespace YourApp
 {
@@ -80,6 +82,8 @@ namespace YourApp
       public const string Platform = "AnyCPU";
       public const string BuildOn = "Unix";
       public const string SdkVersion = "5.0.101";
+      public const string ApplicationVersion = "1.0.21";
+      public const string ApplicationVersion = "12345678901";
     }
   }
 }
@@ -106,6 +110,8 @@ namespace global
   [<assembly: AssemblyMetadata("Platform","AnyCPU")>]
   [<assembly: AssemblyMetadata("BuildOn","Unix")>]
   [<assembly: AssemblyMetadata("SdkVersion","5.0.101")>]
+  [<assembly: AssemblyMetadata("ApplicationVersion","12345678901")>]
+  [<assembly: AssemblyMetadata("ApplicationDisplayVersion","1.0.21")>]
   do()
 
 namespace global
@@ -143,6 +149,10 @@ namespace global
       let BuildOn = "Unix";
       [<Literal>]
       let SdkVersion = "5.0.101";
+      [<Literal>]
+      let ApplicationVersion = "12345678901";
+      [<Literal>]
+      let ApplicationDisplayVersion = "1.0.21";
   do()
 ```
 
@@ -225,6 +235,8 @@ RelaxVersionerは、ビルド後に、以下の位置にファイルを保存し
     <Message Importance="High" Text="ResolvedVersion: $(RelaxVersionerResolvedVersion)" />
     <Message Importance="High" Text="ResolvedShortVersion: $(RelaxVersionerResolvedShortVersion)" />
     <Message Importance="High" Text="ResolvedSafeVersion: $(RelaxVersionerResolvedSafeVersion)" />
+    <Message Importance="High" Text="ResolvedIntDateVersion: $(RelaxVersionerResolvedIntDateVersion)" />
+    <Message Importance="High" Text="ResolvedEpochIntDateVersion: $(RelaxVersionerResolvedEpochIntDateVersion)" />
     <Message Importance="High" Text="ResolvedCommitId: $(RelaxVersionerResolvedCommitId)" />
     <Message Importance="High" Text="ResolvedBranch: $(RelaxVersionerResolvedBranch)" />
     <Message Importance="High" Text="ResolvedTags: $(RelaxVersionerResolvedTags)" />
@@ -399,7 +411,14 @@ nuspecファイルを使ってパッケージを生成する場合は、デフ�
     <Rule name="AssemblyMetadata" key="Build">{buildIdentifier}</Rule>
     <Rule name="AssemblyMetadata" key="Generated">{generated:R}</Rule>
     <Rule name="AssemblyMetadata" key="TargetFramework">{tfm}</Rule>
-    
+            
+    <!--
+      "ApplicationVersion" と "ApplicationDisplayVersion" は、.NET MAUIのバージョン管理のために使用されます。
+      "ApplicationVersion" には、`committer.When`のエポック日付（1970/1/1）からの秒数です。
+    -->
+    <Rule name="AssemblyMetadata" key="ApplicationDisplayVersion">{shortVersion}</Rule>
+    <Rule name="AssemblyMetadata" key="ApplicationVersion">{epochIntDateVersion}</Rule>
+
     <!--
       "Platform" は、 MSBuild の PropertyGroup で定義されている値です。
       その他の PropertyGroup のキー名や、環境変数から取り込まれた値を、そのまま使用することが出来ます。
@@ -434,6 +453,9 @@ nuspecファイルを使ってパッケージを生成する場合は、デフ�
 
 ## 履歴
 
+* 2.14.0:
+  * .NET MAUIで使用されるアプリケーションバージョン情報(`ApplicationDisplayVersion`, `ApplicationVersion`)に対応しました。
+    後者はデフォルトではエポックからの秒数です。
 * 2.13.1:
   * `AssemblyConfiguration`のスタティック定義名に`Attribute`が含まれていたのを修正。
   * (RelaxVersioner自身の)SourceLinkの基底位置が誤っていたのを修正。RelaxVersionerを使って生成したプロジェクトに影響はありません。

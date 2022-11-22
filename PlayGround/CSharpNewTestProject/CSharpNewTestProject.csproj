@@ -26,6 +26,8 @@
     <Message Importance="High" Text="ResolvedVersion: $(RelaxVersionerResolvedVersion)" />
     <Message Importance="High" Text="ResolvedShortVersion: $(RelaxVersionerResolvedShortVersion)" />
     <Message Importance="High" Text="ResolvedSafeVersion: $(RelaxVersionerResolvedSafeVersion)" />
+    <Message Importance="High" Text="ResolvedIntDateVersion: $(RelaxVersionerResolvedIntDateVersion)" />
+    <Message Importance="High" Text="ResolvedEpochIntDateVersion: $(RelaxVersionerResolvedEpochIntDateVersion)" />
     <Message Importance="High" Text="ResolvedCommitId: $(RelaxVersionerResolvedCommitId)" />
     <Message Importance="High" Text="ResolvedBranch: $(RelaxVersionerResolvedBranch)" />
     <Message Importance="High" Text="ResolvedTags: $(RelaxVersionerResolvedTags)" />

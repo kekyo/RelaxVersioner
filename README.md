@@ -57,6 +57,8 @@ using System.Reflection;
 [assembly: AssemblyMetadata("Platform","AnyCPU")]
 [assembly: AssemblyMetadata("BuildOn","Unix")]
 [assembly: AssemblyMetadata("SdkVersion","5.0.101")]
+[assembly: AssemblyMetadata("ApplicationDisplayVersion","1.0.21")]
+[assembly: AssemblyMetadata("ApplicationVersion","12345678901")]
 
 namespace YourApp
 {
@@ -80,6 +82,8 @@ namespace YourApp
       public const string Platform = "AnyCPU";
       public const string BuildOn = "Unix";
       public const string SdkVersion = "5.0.101";
+      public const string ApplicationVersion = "1.0.21";
+      public const string ApplicationVersion = "12345678901";
     }
   }
 }
@@ -106,6 +110,8 @@ namespace global
   [<assembly: AssemblyMetadata("Platform","AnyCPU")>]
   [<assembly: AssemblyMetadata("BuildOn","Unix")>]
   [<assembly: AssemblyMetadata("SdkVersion","5.0.101")>]
+  [<assembly: AssemblyMetadata("ApplicationVersion","12345678901")>]
+  [<assembly: AssemblyMetadata("ApplicationDisplayVersion","1.0.21")>]
   do()
 
 namespace global
@@ -143,6 +149,10 @@ namespace global
       let BuildOn = "Unix";
       [<Literal>]
       let SdkVersion = "5.0.101";
+      [<Literal>]
+      let ApplicationVersion = "12345678901";
+      [<Literal>]
+      let ApplicationDisplayVersion = "1.0.21";
   do()
 ```
 
@@ -216,6 +226,8 @@ If you want to reference this information from within the MSBuild target, you ca
     <Message Importance="High" Text="ResolvedVersion: $(RelaxVersionerResolvedVersion)" />
     <Message Importance="High" Text="ResolvedShortVersion: $(RelaxVersionerResolvedShortVersion)" />
     <Message Importance="High" Text="ResolvedSafeVersion: $(RelaxVersionerResolvedSafeVersion)" />
+    <Message Importance="High" Text="ResolvedIntDateVersion: $(RelaxVersionerResolvedIntDateVersion)" />
+    <Message Importance="High" Text="ResolvedEpochIntDateVersion: $(RelaxVersionerResolvedEpochIntDateVersion)" />
     <Message Importance="High" Text="ResolvedCommitId: $(RelaxVersionerResolvedCommitId)" />
     <Message Importance="High" Text="ResolvedBranch: $(RelaxVersionerResolvedBranch)" />
     <Message Importance="High" Text="ResolvedTags: $(RelaxVersionerResolvedTags)" />
@@ -327,69 +339,76 @@ When you are using a nuspec file to generate a NuGet package, there are addition
 ``` xml
 <?xml version="1.0" encoding="utf-8"?>
 <RelaxVersioner version="1.0">
-    <WriterRules>
-        <!-- Target languages -->
-        <Language>C#</Language>
-        <Language>F#</Language>
-        <Language>VB</Language>
-        <Language>C++/CLI</Language>
+  <WriterRules>
+    <!-- Target languages -->
+    <Language>C#</Language>
+    <Language>F#</Language>
+    <Language>VB</Language>
+    <Language>C++/CLI</Language>
 
-        <Import>System.Reflection</Import>
+    <Import>System.Reflection</Import>
 
-        <!--
-            "versionLabel" extracts numerical-notate version string [1.2.3.4] or [v1.2.3.4] from git repository tags traverse start HEAD.
-            If not found, use [0.0.1].
-        -->
-        <Rule name="AssemblyVersion">{versionLabel}</Rule>
+    <!--
+      "versionLabel" extracts numerical-notate version string [1.2.3.4] or [v1.2.3.4] from git repository tags traverse start HEAD.
+      If not found, use [0.0.1].
+    -->
+    <Rule name="AssemblyVersion">{versionLabel}</Rule>
 
-        <!--
-            "safeVersion" extracts committed date (from commmiter) from git repository HEAD.
-            "safeVersion" specialized from "committer.When".
-            (The format is safe-numerical-notate version string [2016.2.14.12345]. (Last number is 2sec prec.))
-        -->
-        <Rule name="AssemblyFileVersion">{safeVersion}</Rule>
+    <!--
+      "safeVersion" extracts committed date (from commmiter) from git repository HEAD.
+      "safeVersion" specialized from "committer.When".
+      (The format is safe-numerical-notate version string [2016.2.14.12345]. (Last number is 2sec prec.))
+    -->
+    <Rule name="AssemblyFileVersion">{safeVersion}</Rule>
 
-        <!--
-            "commitId" extracts commit id from git repository HEAD.
-            "commitId" alias to "commit.Sha".
-        -->
-        <Rule name="AssemblyInformationalVersion">{versionLabel}-{commitId}</Rule>
+    <!--
+      "commitId" extracts commit id from git repository HEAD.
+      "commitId" alias to "commit.Sha".
+    -->
+    <Rule name="AssemblyInformationalVersion">{versionLabel}-{commitId}</Rule>
 
-        <Rule name="AssemblyConfiguration">{Configuration}</Rule>
+    <Rule name="AssemblyConfiguration">{Configuration}</Rule>
 
-        <!--
-            "key" attribute can only use with "AssemblyMetadataAttribute".
-            "committer.When" or you can use another choice "author.When".
-            "branch" can use property "FriendlyName" and "CanonicalName". (Derived from libgit2sharp)
-            "author" and "committer" can use property "Name", "Email", and "When". (Derived from libgit2sharp)
-            "buildIdentifier" is passing from MSBuild property named "RelaxVersionerBuildIdentifier" or "BuildIdentifier". We can use in CI building.
-            "generated" is generated date by RelaxVersioner.
-            You can apply format directives same as string.Format().
-        -->
-        <Rule name="AssemblyMetadata" key="CommitId">{commitId}</Rule>
-        <Rule name="AssemblyMetadata" key="Date">{committer.When:R}</Rule>
-        <Rule name="AssemblyMetadata" key="Branch">{branch.FriendlyName}</Rule>
-        <Rule name="AssemblyMetadata" key="Tags">{tags}</Rule>
-        <Rule name="AssemblyMetadata" key="Author">{author}</Rule>
-        <Rule name="AssemblyMetadata" key="Committer">{committer}</Rule>
-        <Rule name="AssemblyMetadata" key="Message">{commit.MessageShort}</Rule>
-        <Rule name="AssemblyMetadata" key="Build">{buildIdentifier}</Rule>
-        <Rule name="AssemblyMetadata" key="Generated">{generated:R}</Rule>
-        <Rule name="AssemblyMetadata" key="TargetFramework">{tfm}</Rule>
+    <!--
+      "key" attribute can only use with "AssemblyMetadataAttribute".
+      "committer.When" or you can use another choice "author.When".
+      "branch" can use property "FriendlyName" and "CanonicalName". (Derived from libgit2sharp)
+      "author" and "committer" can use property "Name", "Email", and "When". (Derived from libgit2sharp)
+      "buildIdentifier" is passing from MSBuild property named "RelaxVersionerBuildIdentifier" or "BuildIdentifier". We can use in CI building.
+      "generated" is generated date by RelaxVersioner.
+      You can apply format directives same as string.Format().
+    -->
+    <Rule name="AssemblyMetadata" key="CommitId">{commitId}</Rule>
+    <Rule name="AssemblyMetadata" key="Date">{committer.When:R}</Rule>
+    <Rule name="AssemblyMetadata" key="Branch">{branch.FriendlyName}</Rule>
+    <Rule name="AssemblyMetadata" key="Tags">{tags}</Rule>
+    <Rule name="AssemblyMetadata" key="Author">{author}</Rule>
+    <Rule name="AssemblyMetadata" key="Committer">{committer}</Rule>
+    <Rule name="AssemblyMetadata" key="Message">{commit.MessageShort}</Rule>
+    <Rule name="AssemblyMetadata" key="Build">{buildIdentifier}</Rule>
+    <Rule name="AssemblyMetadata" key="Generated">{generated:R}</Rule>
+    <Rule name="AssemblyMetadata" key="TargetFramework">{tfm}</Rule>
+    
+    <!--
+      Both "ApplicationVersion" and "ApplicationDisplayVersion" are used for .NET MAUI versioning.
+      "ApplicationVersion" contains a integer value of seconds since epoch date (1970/1/1) from `committer.When`.
+    -->
+    <Rule name="AssemblyMetadata" key="ApplicationDisplayVersion">{shortVersion}</Rule>
+    <Rule name="AssemblyMetadata" key="ApplicationVersion">{epochIntDateVersion}</Rule>
 
-        <!--
-            The "Platform" identity is a MSBuild property name.
-            You can use "Platform" and another identities come from PropertyGroup definitions
-            and process environments such as "RootNamespace", "Prefer32Bit", "NETCoreSdkVersion", "PATH" and etc.
-            Each results are strictly string type, so format directives will be ignored.
-        -->
-        <Rule name="AssemblyMetadata" key="AssemblyName">{AssemblyName}</Rule>
-        <Rule name="AssemblyMetadata" key="PlatformTarget">{PlatformTarget}</Rule>
-        <Rule name="AssemblyMetadata" key="Platform">{Platform}</Rule>
-        <Rule name="AssemblyMetadata" key="RuntimeIdentifier">{RuntimeIdentifier}</Rule>
-        <Rule name="AssemblyMetadata" key="BuildOn">{OS}</Rule>
-        <Rule name="AssemblyMetadata" key="SdkVersion">{NETCoreSdkVersion}</Rule>
-    </WriterRules>
+    <!--
+      The "Platform" identity is a MSBuild property name.
+      You can use "Platform" and another identities come from PropertyGroup definitions
+      and process environments such as "RootNamespace", "Prefer32Bit", "NETCoreSdkVersion", "PATH" and etc.
+      Each results are strictly string type, so format directives will be ignored.
+    -->
+    <Rule name="AssemblyMetadata" key="AssemblyName">{AssemblyName}</Rule>
+    <Rule name="AssemblyMetadata" key="PlatformTarget">{PlatformTarget}</Rule>
+    <Rule name="AssemblyMetadata" key="Platform">{Platform}</Rule>
+    <Rule name="AssemblyMetadata" key="RuntimeIdentifier">{RuntimeIdentifier}</Rule>
+    <Rule name="AssemblyMetadata" key="BuildOn">{OS}</Rule>
+    <Rule name="AssemblyMetadata" key="SdkVersion">{NETCoreSdkVersion}</Rule>
+  </WriterRules>
 </RelaxVersioner>
 ```
 
@@ -411,6 +430,9 @@ When you are using a nuspec file to generate a NuGet package, there are addition
 
 ## History
 
+* 2.14.0:
+  * Application version information (`ApplicationDisplayVersion`, `ApplicationVersion`) used in .NET MAUI is now supported.
+    The latter is seconds from epoch by default.
 * 2.13.1:
   * Fixed `Attribute` in `AssemblyConfiguration` static definition name.
   * Fixed incorrect base position of SourceLink (in RelaxVersioner itself);

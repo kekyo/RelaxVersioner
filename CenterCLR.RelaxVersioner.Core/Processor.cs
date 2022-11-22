@@ -192,6 +192,8 @@ namespace RelaxVersioner
             var tagsString = string.Join(",", tags);
 
             var safeVersion = Utilities.GetSafeVersionFromDate(committer.When);
+            var intDateVersion = Utilities.GetIntDateVersionFromDate(committer.When);
+            var epochIntDateVersion = Utilities.GetEpochIntDateVersionFromDate(committer.When);
 
             Version versionLabel = default;
             Dictionary<string, object> keyValues = default;
@@ -207,6 +209,8 @@ namespace RelaxVersioner
 
             Debug.Assert(keyValues != null);
 
+            var shortVersion = versionLabel.ToString(3);
+
             foreach (var entry in new (string key, object value)[]
             {
                 ("generated", generated),
@@ -218,7 +222,10 @@ namespace RelaxVersioner
                 ("committer", committer),
                 ("commitId", commitId),
                 ("versionLabel", versionLabel),
+                ("shortVersion", shortVersion),
                 ("safeVersion", safeVersion),
+                ("intDateVersion", intDateVersion),
+                ("epochIntDateVersion", epochIntDateVersion),
                 ("buildIdentifier", context.BuildIdentifier),
                 ("namespace", context.Namespace),
                 ("tfm", context.TargetFramework),
@@ -238,7 +245,10 @@ namespace RelaxVersioner
 
             return new Result(
                 versionLabel,
+                shortVersion,
                 safeVersion,
+                intDateVersion,
+                epochIntDateVersion,
                 commitId,
                 targetBranch.GetFriendlyName(),
                 tags,
