@@ -18,6 +18,8 @@ namespace RelaxVersioner
         public readonly Version Version;
         public readonly string ShortVersion;
         public readonly Version SafeVersion;
+        public readonly string IntDateVersion;
+        public readonly string EpochIntDateVersion;
         public readonly string CommitId;
         public readonly string[] Tags;
         public readonly string Branch;
@@ -26,14 +28,18 @@ namespace RelaxVersioner
         public readonly string Committer;
         public readonly string Message;
 
-        public Result(Version version, Version safeVersion, string commitId,
+        public Result(Version version, string shortVersion, Version safeVersion,
+            string intDateVersion, string epochIntDateVersion,
+            string commitId,
             string branch, string[] tags, DateTimeOffset date,
             string author, string committer,
             string message)
         {
             this.Version = version;
-            this.ShortVersion = version.ToString(3);
+            this.ShortVersion = shortVersion;
             this.SafeVersion = safeVersion;
+            this.IntDateVersion = intDateVersion;
+            this.EpochIntDateVersion = epochIntDateVersion;
             this.CommitId = commitId;
             this.Branch = branch;
             this.Tags = tags;

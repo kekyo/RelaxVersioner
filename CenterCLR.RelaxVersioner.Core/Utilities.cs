@@ -10,6 +10,7 @@
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Xml.Linq;
@@ -135,6 +136,16 @@ namespace RelaxVersioner
                 date.Month,
                 date.Day,
                 (int)(date.TimeOfDay.TotalSeconds / 2));
+        }
+
+        public static string GetIntDateVersionFromDate(DateTimeOffset date)
+        {
+            return date.ToString("yyyyMMddHHmmss", CultureInfo.InvariantCulture);
+        }
+
+        public static string GetEpochIntDateVersionFromDate(DateTimeOffset date)
+        {
+            return date.ToUnixTimeSeconds().ToString(CultureInfo.InvariantCulture);
         }
 
         public static IEnumerable<XElement> LoadRuleSets(string candidatePath)

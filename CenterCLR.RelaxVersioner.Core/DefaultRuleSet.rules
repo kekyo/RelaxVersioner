@@ -62,6 +62,13 @@
         <Rule name="AssemblyMetadata" key="Build">{buildIdentifier}</Rule>
         <Rule name="AssemblyMetadata" key="Generated">{generated:R}</Rule>
         <Rule name="AssemblyMetadata" key="TargetFramework">{tfm}</Rule>
+        
+        <!--
+            Both "ApplicationVersion" and "ApplicationDisplayVersion" are used for .NET MAUI versioning.
+            "ApplicationVersion" contains a integer value of seconds since epoch date (1970/1/1) from `committer.When`.
+        -->
+        <Rule name="AssemblyMetadata" key="ApplicationDisplayVersion">{shortVersion}</Rule>
+        <Rule name="AssemblyMetadata" key="ApplicationVersion">{epochIntDateVersion}</Rule>
 
         <!--
             The "Platform" identity is a MSBuild property name.

@@ -171,6 +171,12 @@
     <XmlPeek XmlInputPath="$(RelaxVersionerResultPath)" Query="/Result/SafeVersion/text()">
       <Output TaskParameter="Result" PropertyName="_RVB_DetectedSafeVersion" />
     </XmlPeek>
+    <XmlPeek XmlInputPath="$(RelaxVersionerResultPath)" Query="/Result/IntDateVersion/text()">
+      <Output TaskParameter="Result" PropertyName="_RVB_DetectedIntDateVersion" />
+    </XmlPeek>
+    <XmlPeek XmlInputPath="$(RelaxVersionerResultPath)" Query="/Result/EpochIntDateVersion/text()">
+      <Output TaskParameter="Result" PropertyName="_RVB_DetectedEpochIntDateVersion" />
+    </XmlPeek>
     <XmlPeek XmlInputPath="$(RelaxVersionerResultPath)" Query="/Result/CommitId/text()">
       <Output TaskParameter="Result" PropertyName="_RVB_DetectedCommitId" />
     </XmlPeek>
@@ -191,10 +197,14 @@
       <RelaxVersionerResolvedVersion>$(_RVB_DetectedVersion)</RelaxVersionerResolvedVersion>
       <RelaxVersionerResolvedShortVersion>$(_RVB_DetectedShortVersion)</RelaxVersionerResolvedShortVersion>
       <RelaxVersionerResolvedSafeVersion>$(_RVB_DetectedSafeVersion)</RelaxVersionerResolvedSafeVersion>
+      <RelaxVersionerResolvedIntDateVersion>$(_RVB_DetectedIntDateVersion)</RelaxVersionerResolvedIntDateVersion>
+      <RelaxVersionerResolvedEpochIntDateVersion>$(_RVB_DetectedEpochIntDateVersion)</RelaxVersionerResolvedEpochIntDateVersion>
       <RelaxVersionerResolvedCommitId>$(_RVB_DetectedCommitId)</RelaxVersionerResolvedCommitId>
       <RelaxVersionerResolvedBranch>$(_RVB_DetectedBranch)</RelaxVersionerResolvedBranch>
       <RelaxVersionerResolvedTags>$(_RVB_DetectedTags)</RelaxVersionerResolvedTags>
       <Version>$(_RVB_DetectedShortVersion)</Version>
+      <ApplicationDisplayVersion>$(_RVB_DetectedShortVersion)</ApplicationDisplayVersion>
+      <ApplicationVersion>$(_RVB_DetectedEpochIntDateVersion)</ApplicationVersion>
       <PackageVersion>$(_RVB_DetectedShortVersion)</PackageVersion>
       <SourceRevisionId>$(_RVB_DetectedCommitId)</SourceRevisionId>   <!-- Sourcelink symbol, same as RepositoryCommit -->
       <RepositoryCommit>$(_RVB_DetectedCommitId)</RepositoryCommit>
@@ -329,6 +339,12 @@
     <XmlPeek XmlInputPath="$(RelaxVersionerResultPath)" Query="/Result/SafeVersion/text()">
       <Output TaskParameter="Result" PropertyName="_RVB_DetectedSafeVersion" />
     </XmlPeek>
+    <XmlPeek XmlInputPath="$(RelaxVersionerResultPath)" Query="/Result/IntDateVersion/text()">
+      <Output TaskParameter="Result" PropertyName="_RVB_DetectedIntDateVersion" />
+    </XmlPeek>
+    <XmlPeek XmlInputPath="$(RelaxVersionerResultPath)" Query="/Result/EpochIntDateVersion/text()">
+      <Output TaskParameter="Result" PropertyName="_RVB_DetectedEpochIntDateVersion" />
+    </XmlPeek>
     <XmlPeek XmlInputPath="$(RelaxVersionerResultPath)" Query="/Result/CommitId/text()">
       <Output TaskParameter="Result" PropertyName="_RVB_DetectedCommitId" />
     </XmlPeek>
@@ -349,10 +365,14 @@
       <RelaxVersionerResolvedVersion>$(_RVB_DetectedVersion)</RelaxVersionerResolvedVersion>
       <RelaxVersionerResolvedShortVersion>$(_RVB_DetectedShortVersion)</RelaxVersionerResolvedShortVersion>
       <RelaxVersionerResolvedSafeVersion>$(_RVB_DetectedSafeVersion)</RelaxVersionerResolvedSafeVersion>
+      <RelaxVersionerResolvedIntDateVersion>$(_RVB_DetectedIntDateVersion)</RelaxVersionerResolvedIntDateVersion>
+      <RelaxVersionerResolvedEpochIntDateVersion>$(_RVB_DetectedEpochIntDateVersion)</RelaxVersionerResolvedEpochIntDateVersion>
       <RelaxVersionerResolvedCommitId>$(_RVB_DetectedCommitId)</RelaxVersionerResolvedCommitId>
       <RelaxVersionerResolvedBranch>$(_RVB_DetectedBranch)</RelaxVersionerResolvedBranch>
       <RelaxVersionerResolvedTags>$(_RVB_DetectedTags)</RelaxVersionerResolvedTags>
       <Version>$(_RVB_DetectedShortVersion)</Version>
+      <ApplicationDisplayVersion>$(_RVB_DetectedShortVersion)</ApplicationDisplayVersion>
+      <ApplicationVersion>$(_RVB_DetectedEpochIntDateVersion)</ApplicationVersion>
       <PackageVersion>$(_RVB_DetectedShortVersion)</PackageVersion>
       <SourceRevisionId>$(_RVB_DetectedCommitId)</SourceRevisionId>   <!-- Sourcelink symbol, same as RepositoryCommit -->
       <RepositoryCommit>$(_RVB_DetectedCommitId)</RepositoryCommit>
