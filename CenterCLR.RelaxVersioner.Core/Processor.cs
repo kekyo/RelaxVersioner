@@ -70,90 +70,6 @@ public sealed class Processor
             $"StartDepth={this.StartDepth}, {this.Commit}";
     }
 
-    private static Version LookupVersionLabel(
-        Branch targetBranch,
-        Dictionary<string, Tag[]> tagsDictionary)
-    {
-        Debug.Assert(tagsDictionary != null);
-
-        var topCommit = targetBranch?.Commits?.FirstOrDefault();
-        if (topCommit == null)
-        {
-            return Version.Default;
-        }
-
-        var reached = new HashSet<string>();
-        var scheduled = new Stack<TargetCommit>();
-        scheduled.Push(new TargetCommit(0, topCommit));
-
-        var mainDepth = 0;
-
-        while (scheduled.Count >= 1)
-        {
-            // Extract an analysis commit.
-            var entry = scheduled.Pop();
-            
-            var currentCommit = entry.Commit;
-            var currentDepth = entry.StartDepth;
-
-            while (true)
-            {
-                // Rejoined parent branch.
-                if (!reached.Add(currentCommit.Sha))
-                {
-                    break;
-                }
-
-                // If found be applied tags at this commit:
-                if (tagsDictionary.TryGetValue(currentCommit.Sha, out var tags))
-                {
-                    var filteredTags = tags.
-                        Select(tag => Version.TryParse(tag.GetFriendlyName(), out var version) ? (Version?)version : null).
-                        Where(version => version.HasValue).
-                        Select(version => Utilities.IncrementLastVersionComponent(version.Value, currentDepth)).
-                        ToArray();
-
-                    // Found first valid tag.
-                    if (filteredTags.Length >= 1)
-                    {
-                        return filteredTags[0];
-                    }
-                }
-
-                // Found parents.
-                if ((currentCommit.Parents?.ToArray() is { Length: >= 1 } parents))
-                {
-                    // Dive parent commit.
-                    currentDepth++;
-
-                    // Next commit is a primary parent.
-                    currentCommit = parents[0];
-
-                    // Enqueue analysis scheduling if it has multiple parents.
-                    foreach (var parentCommit in parents.Skip(1))
-                    {
-                        scheduled.Push(new TargetCommit(currentDepth, parentCommit));
-                    }
-                }
-                // Bottom of branch.
-                else
-                {
-                    // Save depth if it's on boarding the main branch.
-                    if (mainDepth == 0)
-                    {
-                        mainDepth = currentDepth;
-                    }
-                    
-                    // Goes to next scheduled commit.
-                    break;
-                }
-            }
-        }
-
-        // Finally got the main branch depth.
-        return Utilities.IncrementLastVersionComponent(Version.Default, mainDepth);
-    }
-
     private static Result WriteVersionSourceFile(
         Logger logger,
         WriterBase writer,
@@ -198,7 +114,7 @@ public sealed class Processor
         Version versionLabel = default;
         Dictionary<string, object> keyValues = default;
         Parallel.Invoke(
-            () => versionLabel = LookupVersionLabel(targetBranch, tagsDictionary),
+            () => versionLabel = Analyzer.LookupVersionLabel(targetBranch, tagsDictionary),
             () => keyValues =
                 (!string.IsNullOrWhiteSpace(context.PropertiesPath) &&
                  File.Exists(context.PropertiesPath)) ?
