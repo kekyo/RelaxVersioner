@@ -15,63 +15,62 @@ using Microsoft.Build.Execution;
 using Microsoft.Build.Framework;
 using Microsoft.Build.Utilities;
 
-namespace RelaxVersioner
+namespace RelaxVersioner;
+
+public sealed class DumpPropertiesTask : Task
 {
-    public sealed class DumpPropertiesTask : Task
+    [Required]
+    public string? OutputPath
     {
-        [Required]
-        public string? OutputPath
+        get;
+        set;
+    }
+
+    public override bool Execute()
+    {
+        if (string.IsNullOrWhiteSpace(OutputPath))
         {
-            get;
-            set;
+            this.Log.LogError("RelaxVersioner.DumpPropertiesTask: Required output path.");
+            return false;
         }
 
-        public override bool Execute()
+        // Yes, it's a HACK:
+        var buildRequestEntry = this.BuildEngine?.GetField("_requestEntry");
+
+        var requestConfiguration = buildRequestEntry?.GetProperty("RequestConfiguration");
+        var project = (ProjectInstance?)requestConfiguration?.GetProperty("Project");
+
+        if (project != null)
         {
-            if (string.IsNullOrWhiteSpace(OutputPath))
+            var basePath = Path.GetDirectoryName(OutputPath);
+            if (!Directory.Exists(basePath))
             {
-                this.Log.LogError("RelaxVersioner.DumpPropertiesTask: Required output path.");
-                return false;
-            }
-
-            // Yes, it's a HACK:
-            var buildRequestEntry = this.BuildEngine?.GetField("_requestEntry");
-
-            var requestConfiguration = buildRequestEntry?.GetProperty("RequestConfiguration");
-            var project = (ProjectInstance?)requestConfiguration?.GetProperty("Project");
-
-            if (project != null)
-            {
-                var basePath = Path.GetDirectoryName(OutputPath);
-                if (!Directory.Exists(basePath))
+                try
                 {
-                    try
-                    {
-                        Directory.CreateDirectory(basePath);
-                    }
-                    catch
-                    {
-                    }
+                    Directory.CreateDirectory(basePath);
                 }
-
-                using (var fs = File.Create(OutputPath))
+                catch
                 {
-                    var root = new XElement("Properties",
-                        project.Properties.
-                        Cast<ProjectPropertyInstance>().
-                        Select(p => new XElement(p.Name, p.EvaluatedValue ?? "")));
-                    root.Save(fs);
-                    fs.Flush();
                 }
+            }
 
-                this.Log.LogMessage($"RelaxVersioner.DumpPropertiesTask: Dump properties from build engine, Path={OutputPath}");
-                return true;
-            }
-            else
+            using (var fs = File.Create(OutputPath))
             {
-                this.Log.LogError("RelaxVersioner.DumpPropertiesTask: Unable contact build engine.");
-                return false;
+                var root = new XElement("Properties",
+                    project.Properties.
+                    Cast<ProjectPropertyInstance>().
+                    Select(p => new XElement(p.Name, p.EvaluatedValue ?? "")));
+                root.Save(fs);
+                fs.Flush();
             }
+
+            this.Log.LogMessage($"RelaxVersioner.DumpPropertiesTask: Dump properties from build engine, Path={OutputPath}");
+            return true;
+        }
+        else
+        {
+            this.Log.LogError("RelaxVersioner.DumpPropertiesTask: Unable contact build engine.");
+            return false;
         }
     }
 }

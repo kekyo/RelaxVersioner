@@ -12,45 +12,44 @@
 using System.Diagnostics;
 using System.IO;
 
-namespace RelaxVersioner.Writers
+namespace RelaxVersioner.Writers;
+
+internal sealed class SourceCodeWriter
 {
-    internal sealed class SourceCodeWriter
+    private readonly TextWriter tw;
+    private int indentLevel;
+    private string indent = string.Empty;
+
+    public readonly ProcessorContext Context;
+
+    public SourceCodeWriter(TextWriter tw, ProcessorContext context)
     {
-        private readonly TextWriter tw;
-        private int indentLevel;
-        private string indent = string.Empty;
+        this.Context = context;
+        this.tw = tw;
+    }
 
-        public readonly ProcessorContext Context;
+    public void WriteLine() =>
+        this.tw.WriteLine();
 
-        public SourceCodeWriter(TextWriter tw, ProcessorContext context)
-        {
-            this.Context = context;
-            this.tw = tw;
-        }
+    public void WriteLine(string code) =>
+        this.tw.WriteLine(indent + code);
 
-        public void WriteLine() =>
-            this.tw.WriteLine();
+    public void WriteLine(string code, params object?[] args) =>
+        this.tw.WriteLine(indent + code, args);
 
-        public void WriteLine(string code) =>
-            this.tw.WriteLine(indent + code);
+    public void Flush() =>
+        this.tw.Flush();
 
-        public void WriteLine(string code, params object?[] args) =>
-            this.tw.WriteLine(indent + code, args);
+    public void Shift()
+    {
+        this.indentLevel++;
+        this.indent = new string(' ', this.indentLevel * 4);
+    }
 
-        public void Flush() =>
-            this.tw.Flush();
-
-        public void Shift()
-        {
-            this.indentLevel++;
-            this.indent = new string(' ', this.indentLevel * 4);
-        }
-
-        public void UnShift()
-        {
-            Debug.Assert(this.indentLevel >= 1);
-            this.indentLevel--;
-            this.indent = new string(' ', this.indentLevel * 4);
-        }
+    public void UnShift()
+    {
+        Debug.Assert(this.indentLevel >= 1);
+        this.indentLevel--;
+        this.indent = new string(' ', this.indentLevel * 4);
     }
 }

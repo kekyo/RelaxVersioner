@@ -9,22 +9,21 @@
 
 using System.Reflection;
 
-namespace RelaxVersioner
-{
-    internal static class Utilities
-    {
-        public static object? GetField(this object instance, string name)
-        {
-            var type = instance.GetType();
-            var fi = type.GetField(name, BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance);
-            return fi?.GetValue(instance);
-        }
+namespace RelaxVersioner;
 
-        public static object? GetProperty(this object instance, string name)
-        {
-            var type = instance.GetType();
-            var pi = type.GetProperty(name, BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance);
-            return pi?.GetValue(instance, new object[0]); 
-        }
+internal static class Utilities
+{
+    public static object? GetField(this object instance, string name)
+    {
+        var type = instance.GetType();
+        var fi = type.GetField(name, BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance);
+        return fi?.GetValue(instance);
+    }
+
+    public static object? GetProperty(this object instance, string name)
+    {
+        var type = instance.GetType();
+        var pi = type.GetProperty(name, BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance);
+        return pi?.GetValue(instance, new object[0]); 
     }
 }

@@ -9,19 +9,18 @@
 
 #nullable enable
 
-namespace RelaxVersioner
-{
-    internal sealed class Rule
-    {
-        public readonly string Name;
-        public readonly string Key;
-        public readonly string Format;
+namespace RelaxVersioner;
 
-        public Rule(string name, string key, string format)
-        {
-            this.Name = name;
-            this.Key = key;
-            this.Format = format;
-        }
+internal sealed class Rule
+{
+    public readonly string Name;
+    public readonly string Key;
+    public readonly string Format;
+
+    public Rule(string name, string key, string format)
+    {
+        this.Name = name;
+        this.Key = key;
+        this.Format = format;
     }
 }
