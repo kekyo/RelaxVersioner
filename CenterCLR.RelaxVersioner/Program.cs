@@ -10,13 +10,14 @@
 using System;
 using System.Diagnostics;
 using System.Runtime.InteropServices;
+using System.Threading.Tasks;
 using Mono.Options;
 
 namespace RelaxVersioner;
 
 public static class Program
 {
-    public static int Main(string[] args)
+    public static async Task<int> Main(string[] args)
     {
         var relaxVersionerVersion = ThisAssembly.AssemblyVersion;
         var logger = Logger.Create($"RelaxVersioner [{relaxVersionerVersion}]", LogImportance.Normal, Console.Out, Console.Error, Console.Error);
@@ -69,7 +70,7 @@ public static class Program
 
             context.ProjectDirectory = trails[0];
 
-            var result = processor.Run(context);
+            var result = await processor.RunAsync(context);
 
             var dryrunDisplay = string.IsNullOrWhiteSpace(context.OutputPath) ?
                 " (dryrun)" : string.Empty;
