@@ -6,6 +6,7 @@
     <Nullable>enable</Nullable>
     <CopyLocalLockFileAssemblies>true</CopyLocalLockFileAssemblies>
     <NoWarn>$(NoWarn);NU5104</NoWarn>
+    <IsPackable>true</IsPackable>
 
     <AssemblyName>rv</AssemblyName>
 

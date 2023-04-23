@@ -10,6 +10,5 @@ echo "==========================================================="
 echo "Build RelaxVersioner"
 echo.
 
-msbuild -t:restore -p:Configuration=Release CenterCLR.RelaxVersioner.build.sln
-msbuild -t:build -p:Configuration=Release CenterCLR.RelaxVersioner.build.sln
-msbuild -t:pack -p:Configuration=Release -p:PackageOutputPath=..\artifacts CenterCLR.RelaxVersioner\CenterCLR.RelaxVersioner.csproj
+dotnet build -p:Configuration=Release -p:Platform="Any CPU" CenterCLR.RelaxVersioner.sln
+dotnet pack -p:Configuration=Release -p:Platform="Any CPU" -o artifacts CenterCLR.RelaxVersioner.sln
