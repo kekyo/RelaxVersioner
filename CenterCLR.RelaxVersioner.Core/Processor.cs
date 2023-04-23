@@ -15,6 +15,7 @@ using System.IO;
 using System.Threading.Tasks;
 using System.Xml.Linq;
 
+using GitReader;
 using GitReader.Structures;
 
 using RelaxVersioner.Writers;
@@ -82,27 +83,29 @@ public sealed class Processor
         Debug.Assert(ruleSet != null);
         Debug.Assert(importSet != null);
 
-        var commit = targetBranch.Head;
+        var commit = targetBranch?.Head;
 
-        var commitId = commit.Hash;
-        var author = commit.Author;
-        var committer = commit.Committer;
+        var commitId = commit?.Hash.ToString() ?? string.Empty;
+        var author = commit?.Author ?? Signature.Create("(Unknown)", generated);
+        var committer = commit?.Committer ?? Signature.Create("(Unknown)", generated);
 
-        var branches = commit.Branches.
+        var branches = commit?.Branches.
             Select(b => b.Name).
-            ToArray();
+            ToArray() ?? Array.Empty<string>();
         var branchesString = string.Join(",", branches);
 
         var tags = commit.Tags.
             Select(b => b.Name).
-            ToArray();
+            ToArray() ?? Array.Empty<string>();
         var tagsString = string.Join(",", tags);
 
         var safeVersion = Utilities.GetSafeVersionFromDate(committer.Date);
         var intDateVersion = Utilities.GetIntDateVersionFromDate(committer.Date);
         var epochIntDateVersion = Utilities.GetEpochIntDateVersionFromDate(committer.Date);
 
-        var versionLabelTask = Analyzer.LookupVersionLabelAsync(targetBranch);
+        var versionLabelTask = targetBranch is { } ?
+            Analyzer.LookupVersionLabelAsync(targetBranch) :
+            Task.FromResult(Version.Default);
         var keyValues =
             (!string.IsNullOrWhiteSpace(context.PropertiesPath) &&
              File.Exists(context.PropertiesPath)) ?
@@ -175,7 +178,7 @@ public sealed class Processor
         var ruleSet = Utilities.AggregateRules(elementSet);
 
         // Traverse git repository between projectDirectory and the root.
-        var repository = await Utilities.OpenRepositoryAsync(
+        using var repository = await Utilities.OpenRepositoryAsync(
             logger, context.ProjectDirectory);
 
         try
@@ -184,7 +187,7 @@ public sealed class Processor
                 logger,
                 writer,
                 context,
-                repository.Head,
+                repository.GetHead(),
                 DateTimeOffset.Now,
                 ruleSet,
                 importSet);
