@@ -19,7 +19,6 @@
 * サポートしている言語と環境は、以下の通りです（恐らく、現在のほとんどの.NET開発環境に適合します）:
   * C#・F#・VB.NET・C++/CLI、そしてNuGetパッケージング (dotnet cli packコマンド)
   * Visual Studio 2022/2019/2017/2015, Rider, dotnet SDK cli, `net7.0`, `net6.0`, `net5.0`, `netcoreapp3.1`, `netcoreapp2.2` 及び `net461` 以上の元で動作するMSBuild環境 (注: MSBuildの動作プラットフォームの事です、あなたがターゲットにしたいプロジェクトの事ではありません)、及びこれらを使用する任意のIDE。
-  * Linux(x64)及びWindows(x86/x64)  （検証している環境は先のとおりですが、[libgit2sharp](https://github.com/libgit2/libgit2sharp)の動作要件に準じて動作する可能性があります）
 * ローカルのGitリポジトリから、自動的にタグ・ブランチの名称を取得し、アセンブリ属性に適用することが出来ます。
 * AssemblyInfo.csファイルを直接変更しません。RelaxVersionerはテンポラリファイルに定義を出力し、それをコンパイルさせます。
 * Visual Studio/MSBuildの中間出力フォルダーを自動的に使用するため、Gitリポジトリ内を汚すことがありません。
@@ -286,7 +285,7 @@ RelaxVersionerはすでにSourcelink統合をサポートしています。
 
 <ItemGroup>
   <!-- RelaxVersioner -->
-  <PackageReference Include="RelaxVersioner" Version="2.12.0" PrivateAssets="All" />
+  <PackageReference Include="RelaxVersioner" Version="2.14.0" PrivateAssets="All" />
 
   <!-- ソリューションファイルが存在する場合の、ルートディレクトリ位置 -->
   <!-- 参照: https://github.com/dotnet/roslyn/issues/37379 -->
@@ -377,14 +376,13 @@ nuspecファイルを使ってパッケージを生成する場合は、デフ�
     
     <!--
       "safeVersion" は、現在のコミットの日時（コミットした人）を埋め込みます。
-      "safeVersion" は、 "committer.When" と書くのと同じです。
       （日時のフォーマットは、バージョン番号として許容される形式に従い、 [2016.2.14.12345] のような、最小2秒精度の一意な文字列となります。）
     -->
     <Rule name="AssemblyFileVersion">{safeVersion}</Rule>
     
     <!--
       "commitId" は、現在のコミットのID（gitのコミットID、つまりはハッシュ値）を埋め込みます。
-      "commitId" は、 "commit.Sha" と書くのと同じです。
+      "commitId" は、 "commit.Hash" と書くのと同じです。
     -->
     <Rule name="AssemblyInformationalVersion">{versionLabel}-{commitId}</Rule>
     
@@ -392,22 +390,20 @@ nuspecファイルを使ってパッケージを生成する場合は、デフ�
 
     <!--
       "key" 属性は、通常は、 "AssemblyMetadataAttribute" 属性にのみ適用出来ます。
-      日付を埋め込みたい場合は、 "committer.When" や "author.When" と言った指定を使えます。
-      "branch" は、 "FriendlyName" や "CanonicalName" といったプロパティ名を繋げて使うことが出来ます。
-      これらは、 libgit2sharp の Branch クラスの定義に従います。
-      "author" と "committer" は、 "Name" や "Email" や "When" と言ったプロパティ名を使用出来ます。
+      "branch" は、 "Name" といったフィールド名を繋げて使うことが出来ます。 (Derived from GitReader)
+      "author" と "committer" は、 "Name" や "MailAddress" や "Date" と言ったフィールド名を使用出来ます。 (Derived from GitReader)
       "buildIdentifier" は、 MSBuild の PropertyGroup で定義された "RelaxVersionerBuildIdentifier" 又は "BuildIdentifier" に相当します。
       これは、 GitHub Actions などの CI 環境で、ビルド毎に適用されるビルド番号を埋め込むのに使います。
       "generated" は RelaxVersioner が定義を生成した日時です。
       対象のプロパティが文字列ではない場合は、string.Format() と同様に、書式指定を加えることが出来ます。
     -->
     <Rule name="AssemblyMetadata" key="CommitId">{commitId}</Rule>
-    <Rule name="AssemblyMetadata" key="Date">{committer.When:R}</Rule>
-    <Rule name="AssemblyMetadata" key="Branch">{branch.FriendlyName}</Rule>
+    <Rule name="AssemblyMetadata" key="Date">{commitDate:F} {commitDate.Offset:hhmm}</Rule>
+    <Rule name="AssemblyMetadata" key="Branch">{branch.Name}</Rule>
     <Rule name="AssemblyMetadata" key="Tags">{tags}</Rule>
     <Rule name="AssemblyMetadata" key="Author">{author}</Rule>
     <Rule name="AssemblyMetadata" key="Committer">{committer}</Rule>
-    <Rule name="AssemblyMetadata" key="Message">{commit.MessageShort}</Rule>
+    <Rule name="AssemblyMetadata" key="Message">{commit.Message}</Rule>
     <Rule name="AssemblyMetadata" key="Build">{buildIdentifier}</Rule>
     <Rule name="AssemblyMetadata" key="Generated">{generated:R}</Rule>
     <Rule name="AssemblyMetadata" key="TargetFramework">{tfm}</Rule>
@@ -453,6 +449,10 @@ nuspecファイルを使ってパッケージを生成する場合は、デフ�
 
 ## 履歴
 
+* 2.15.0:
+  * Gitリポジトリの読み取りを、libgit2sharp から [GitReader](https://github.com/kekyo/GitReader) に変更しました。
+    ネイティブライブラリに依存しなくなったため、動作環境の制限が緩和されます。
+  * ルールファイルのフォーマットが一部変更されています。差分を参照して下さい。
 * 2.14.0:
   * .NET 7 SDKに対応しました。
   * .NET MAUIで使用されるアプリケーションバージョン情報(`ApplicationDisplayVersion`, `ApplicationVersion`)に対応しました。

@@ -19,7 +19,6 @@
 * Target language/environments (Probably fits most current .NET development environments):
   * C#, F#, VB.NET, C++/CLI and NuGet packaging (dotnet cli packer).
   * Visual Studio 2022/2019/2017/2015, Rider, dotnet SDK cli, MSBuild on `net7.0`, `net6.0`, `net5.0`, `netcoreapp3.1`, `netcoreapp2.2` and `net461` environment (NOT your project platform) and related IDEs.
-  * Linux(x64) and Windows(x86/x64).  (The project validates only them, but maybe can run at same as [libgit2sharp](https://github.com/libgit2/libgit2sharp) required environment)
 * Auto collect version information from local Git repository tags/branch name.
 * Independent AssemblyInfo.cs file, generated code will output into a temporary file. (Not manipulate directly AssemblyInfo.cs file).
 * Place source code location which isn't obstructive for Git. (ex: obj/Debug)
@@ -349,58 +348,57 @@ When you are using a nuspec file to generate a NuGet package, there are addition
     <Import>System.Reflection</Import>
 
     <!--
-      "versionLabel" extracts numerical-notate version string [1.2.3.4] or [v1.2.3.4] from git repository tags traverse start HEAD.
-      If not found, use [0.0.1].
+        "versionLabel" extracts numerical-notate version string [1.2.3.4] or [v1.2.3.4] from git repository tags traverse start HEAD.
+        If not found, use [0.0.1].
     -->
     <Rule name="AssemblyVersion">{versionLabel}</Rule>
 
     <!--
-      "safeVersion" extracts committed date (from commmiter) from git repository HEAD.
-      "safeVersion" specialized from "committer.When".
-      (The format is safe-numerical-notate version string [2016.2.14.12345]. (Last number is 2sec prec.))
+        "safeVersion" extracts committed date (from commmiter) from git repository HEAD.
+        (The format is safe-numerical-notate version string [2016.2.14.12345]. (Last number is 2sec prec.))
     -->
     <Rule name="AssemblyFileVersion">{safeVersion}</Rule>
 
     <!--
-      "commitId" extracts commit id from git repository HEAD.
-      "commitId" alias to "commit.Sha".
+        "commitId" extracts commit id from git repository HEAD.
+        "commitId" alias to "commit.Hash".
     -->
     <Rule name="AssemblyInformationalVersion">{versionLabel}-{commitId}</Rule>
 
     <Rule name="AssemblyConfiguration">{Configuration}</Rule>
 
     <!--
-      "key" attribute can only use with "AssemblyMetadataAttribute".
-      "committer.When" or you can use another choice "author.When".
-      "branch" can use property "FriendlyName" and "CanonicalName". (Derived from libgit2sharp)
-      "author" and "committer" can use property "Name", "Email", and "When". (Derived from libgit2sharp)
-      "buildIdentifier" is passing from MSBuild property named "RelaxVersionerBuildIdentifier" or "BuildIdentifier". We can use in CI building.
-      "generated" is generated date by RelaxVersioner.
-      You can apply format directives same as string.Format().
+        "key" attribute can only use with "AssemblyMetadataAttribute".
+        "branch" can use field "Name". (Derived from GitReader)
+        "author" and "committer" can use field "Name", "MailAddress", and "Date". (Derived from GitReader)
+        "buildIdentifier" is passing from MSBuild property named "RelaxVersionerBuildIdentifier" or "BuildIdentifier".
+        We can use in CI building.
+        "generated" is generated date by RelaxVersioner.
+        You can apply format directives same as string.Format().
     -->
     <Rule name="AssemblyMetadata" key="CommitId">{commitId}</Rule>
-    <Rule name="AssemblyMetadata" key="Date">{committer.When:R}</Rule>
-    <Rule name="AssemblyMetadata" key="Branch">{branch.FriendlyName}</Rule>
+    <Rule name="AssemblyMetadata" key="Date">{commitDate:F} {commitDate.Offset:hhmm}</Rule>
+    <Rule name="AssemblyMetadata" key="Branch">{branch.Name}</Rule>
     <Rule name="AssemblyMetadata" key="Tags">{tags}</Rule>
     <Rule name="AssemblyMetadata" key="Author">{author}</Rule>
     <Rule name="AssemblyMetadata" key="Committer">{committer}</Rule>
-    <Rule name="AssemblyMetadata" key="Message">{commit.MessageShort}</Rule>
+    <Rule name="AssemblyMetadata" key="Message">{commit.Message}</Rule>
     <Rule name="AssemblyMetadata" key="Build">{buildIdentifier}</Rule>
     <Rule name="AssemblyMetadata" key="Generated">{generated:R}</Rule>
     <Rule name="AssemblyMetadata" key="TargetFramework">{tfm}</Rule>
-    
+
     <!--
-      Both "ApplicationVersion" and "ApplicationDisplayVersion" are used for .NET MAUI versioning.
-      "ApplicationVersion" contains a integer value of seconds since epoch date (1970/1/1) from `committer.When`.
+        Both "ApplicationVersion" and "ApplicationDisplayVersion" are used for .NET MAUI versioning.
+        "ApplicationVersion" contains a integer value of seconds since epoch date (1970/1/1) from `committer.When`.
     -->
     <Rule name="AssemblyMetadata" key="ApplicationDisplayVersion">{shortVersion}</Rule>
     <Rule name="AssemblyMetadata" key="ApplicationVersion">{epochIntDateVersion}</Rule>
 
     <!--
-      The "Platform" identity is a MSBuild property name.
-      You can use "Platform" and another identities come from PropertyGroup definitions
-      and process environments such as "RootNamespace", "Prefer32Bit", "NETCoreSdkVersion", "PATH" and etc.
-      Each results are strictly string type, so format directives will be ignored.
+        The "Platform" identity is a MSBuild property name.
+        You can use "Platform" and another identities come from PropertyGroup definitions
+        and process environments such as "RootNamespace", "Prefer32Bit", "NETCoreSdkVersion", "PATH" and etc.
+        Each results are strictly string type, so format directives will be ignored.
     -->
     <Rule name="AssemblyMetadata" key="AssemblyName">{AssemblyName}</Rule>
     <Rule name="AssemblyMetadata" key="PlatformTarget">{PlatformTarget}</Rule>
@@ -430,6 +428,10 @@ When you are using a nuspec file to generate a NuGet package, there are addition
 
 ## History
 
+* 2.15.0:
+  * Changed reading of Git repositories using [GitReader](https://github.com/kekyo/GitReader) instead of libgit2sharp.
+    The native library no longer depends on it, which eases the limitation of the operating environment.
+  * The format of some rule files has been changed. See the diff.
 * 2.14.0:
   * Supported .NET 7 SDK.
   * Application version information (`ApplicationDisplayVersion`, `ApplicationVersion`) used in .NET MAUI is now supported.

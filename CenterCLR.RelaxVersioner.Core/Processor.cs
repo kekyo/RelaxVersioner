@@ -86,22 +86,28 @@ public sealed class Processor
         var commit = targetBranch?.Head;
 
         var commitId = commit?.Hash.ToString() ?? string.Empty;
-        var author = commit?.Author ?? Signature.Create("(Unknown)", generated);
-        var committer = commit?.Committer ?? Signature.Create("(Unknown)", generated);
+
+        static string FormatSignature(Signature? sig) => sig is { } s ?
+            (s.MailAddress is { } ma ? $"{s.Name} <{ma}>" : s.Name) :
+            "(Unknown)";
+
+        var author = FormatSignature(commit?.Author);
+        var committer = FormatSignature(commit?.Committer);
+        var commitDate = commit?.Committer.Date ?? generated;
 
         var branches = commit?.Branches.
             Select(b => b.Name).
             ToArray() ?? Array.Empty<string>();
         var branchesString = string.Join(",", branches);
 
-        var tags = commit.Tags.
+        var tags = commit?.Tags.
             Select(b => b.Name).
             ToArray() ?? Array.Empty<string>();
         var tagsString = string.Join(",", tags);
 
-        var safeVersion = Utilities.GetSafeVersionFromDate(committer.Date);
-        var intDateVersion = Utilities.GetIntDateVersionFromDate(committer.Date);
-        var epochIntDateVersion = Utilities.GetEpochIntDateVersionFromDate(committer.Date);
+        var safeVersion = Utilities.GetSafeVersionFromDate(commitDate);
+        var intDateVersion = Utilities.GetIntDateVersionFromDate(commitDate);
+        var epochIntDateVersion = Utilities.GetEpochIntDateVersionFromDate(commitDate);
 
         var versionLabelTask = targetBranch is { } ?
             Analyzer.LookupVersionLabelAsync(targetBranch) :
@@ -121,13 +127,14 @@ public sealed class Processor
         foreach (var entry in new (string key, object value)[]
         {
             ("generated", generated),
-            ("branch", targetBranch.Name),
+            ("branch", targetBranch),
             ("branches", branchesString),
             ("tags", tagsString),
             ("commit", commit),
             ("author", author),
             ("committer", committer),
             ("commitId", commitId),
+            ("commitDate", commitDate),
             ("versionLabel", versionLabel),
             ("shortVersion", shortVersion),
             ("safeVersion", safeVersion),
@@ -159,7 +166,7 @@ public sealed class Processor
             commitId.ToString(),
             targetBranch.Name,
             tags,
-            committer.Date,
+            commitDate,
             author.ToString(),
             committer.ToString(),
             commit.Message);

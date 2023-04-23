@@ -30,14 +30,13 @@
 
         <!--
             "safeVersion" extracts committed date (from commmiter) from git repository HEAD.
-            "safeVersion" specialized from "committer.When".
             (The format is safe-numerical-notate version string [2016.2.14.12345]. (Last number is 2sec prec.))
         -->
         <Rule name="AssemblyFileVersion">{safeVersion}</Rule>
 
         <!--
             "commitId" extracts commit id from git repository HEAD.
-            "commitId" alias to "commit.Sha".
+            "commitId" alias to "commit.Hash".
         -->
         <Rule name="AssemblyInformationalVersion">{versionLabel}-{commitId}</Rule>
 
@@ -45,23 +44,30 @@
 
         <!--
             "key" attribute can only use with "AssemblyMetadataAttribute".
-            "committer.When" or you can use another choice "author.When".
-            "branch" can use property "FriendlyName" and "CanonicalName". (Derived from libgit2sharp)
-            "author" and "committer" can use property "Name", "Email", and "When". (Derived from libgit2sharp)
-            "buildIdentifier" is passing from MSBuild property named "RelaxVersionerBuildIdentifier" or "BuildIdentifier". We can use in CI building.
+            "branch" can use field "Name". (Derived from GitReader)
+            "author" and "committer" can use field "Name", "MailAddress", and "Date". (Derived from GitReader)
+            "buildIdentifier" is passing from MSBuild property named "RelaxVersionerBuildIdentifier" or "BuildIdentifier".
+            We can use in CI building.
             "generated" is generated date by RelaxVersioner.
             You can apply format directives same as string.Format().
         -->
         <Rule name="AssemblyMetadata" key="CommitId">{commitId}</Rule>
-        <Rule name="AssemblyMetadata" key="Date">{committer.When:R}</Rule>
-        <Rule name="AssemblyMetadata" key="Branch">{branch.FriendlyName}</Rule>
+        <Rule name="AssemblyMetadata" key="Date">{commitDate:F} {commitDate.Offset:hhmm}</Rule>
+        <Rule name="AssemblyMetadata" key="Branch">{branch.Name}</Rule>
         <Rule name="AssemblyMetadata" key="Tags">{tags}</Rule>
         <Rule name="AssemblyMetadata" key="Author">{author}</Rule>
         <Rule name="AssemblyMetadata" key="Committer">{committer}</Rule>
-        <Rule name="AssemblyMetadata" key="Message">{commit.MessageShort}</Rule>
+        <Rule name="AssemblyMetadata" key="Message">{commit.Message}</Rule>
         <Rule name="AssemblyMetadata" key="Build">{buildIdentifier}</Rule>
         <Rule name="AssemblyMetadata" key="Generated">{generated:R}</Rule>
         <Rule name="AssemblyMetadata" key="TargetFramework">{tfm}</Rule>
+
+        <!--
+            Both "ApplicationVersion" and "ApplicationDisplayVersion" are used for .NET MAUI versioning.
+            "ApplicationVersion" contains a integer value of seconds since epoch date (1970/1/1) from `committer.When`.
+        -->
+        <Rule name="AssemblyMetadata" key="ApplicationDisplayVersion">{shortVersion}</Rule>
+        <Rule name="AssemblyMetadata" key="ApplicationVersion">{epochIntDateVersion}</Rule>
 
         <!--
             The "Platform" identity is a MSBuild property name.
