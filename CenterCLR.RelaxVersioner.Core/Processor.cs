@@ -163,13 +163,14 @@ public sealed class Processor
             safeVersion,
             intDateVersion,
             epochIntDateVersion,
-            commitId.ToString(),
+            commitId,
             targetBranch.Name,
             tags,
             commitDate,
-            author.ToString(),
-            committer.ToString(),
-            commit.Message);
+            author,
+            committer,
+            commit.Subject,
+            commit.Body);
     }
 
     public async Task<Result> RunAsync(ProcessorContext context)
