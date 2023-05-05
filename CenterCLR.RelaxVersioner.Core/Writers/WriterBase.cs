@@ -13,6 +13,7 @@ using NamingFormatter;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Globalization;
 using System.IO;
 using System.Linq;
 
@@ -52,7 +53,7 @@ internal abstract class WriterBase
             this.WriteComment(tw,
                 $"This is auto-generated version information attributes by RelaxVersioner [{ThisAssembly.AssemblyVersion}], Do not edit.");
             this.WriteComment(tw,
-                $"Generated date: {generated:R}");
+                $"Generated date: {generated:F}");
             tw.WriteLine();
 
             this.WriteBeforeBody(tw);
@@ -65,7 +66,11 @@ internal abstract class WriterBase
 
             foreach (var rule in ruleSet)
             {
-                var formattedValue = Named.Format(rule.Format, keyValues, key => string.Empty);
+                var formattedValue = Named.Format(
+                    CultureInfo.InvariantCulture,
+                    rule.Format,
+                    keyValues,
+                    key => string.Empty);
                 if (!string.IsNullOrWhiteSpace(rule.Key))
                 {
                     this.WriteAttributeWithArguments(tw, rule.Name, rule.Key, formattedValue);
@@ -92,7 +97,11 @@ internal abstract class WriterBase
 
                     foreach (var rule in rules)
                     {
-                        var formattedValue = Named.Format(rule.Format, keyValues, key => string.Empty);
+                        var formattedValue = Named.Format(
+                            CultureInfo.InvariantCulture,
+                            rule.Format,
+                            keyValues,
+                            key => string.Empty);
                         if (!string.IsNullOrWhiteSpace(rule.Key))
                         {
                             this.WriteLiteralWithArgument(tw, rule.Key, formattedValue);
