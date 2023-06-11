@@ -1,6 +1,6 @@
 ﻿////////////////////////////////////////////////////////////////////////////////////////
 //
-// RelaxVersioner - Easy-usage, Git-based, auto-generate version informations toolset.
+// RelaxVersioner - Git tag/branch based, full-automatic version information inserter.
 // Copyright (c) Kouji Matsui (@kozy_kekyo, @kekyo@mastodon.cloud)
 //
 // Licensed under Apache-v2: https://opensource.org/licenses/Apache-2.0
@@ -13,157 +13,165 @@ using NamingFormatter;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Globalization;
 using System.IO;
 using System.Linq;
 
-namespace RelaxVersioner.Writers
+namespace RelaxVersioner.Writers;
+
+internal abstract class WriterBase
 {
-    internal abstract class WriterBase
+    public abstract string Language { get; }
+
+    public void Write(
+        ProcessorContext context,
+        Dictionary<string, object?> keyValues,
+        DateTimeOffset generated,
+        IEnumerable<Rule> ruleSet,
+        IEnumerable<string> importSet)
     {
-        public abstract string Language { get; }
+        Debug.Assert(string.IsNullOrWhiteSpace(context.OutputPath) == false);
 
-        public void Write(
-            ProcessorContext context,
-            Dictionary<string, object?> keyValues,
-            DateTimeOffset generated,
-            IEnumerable<Rule> ruleSet,
-            IEnumerable<string> importSet)
+        var targetFolder = Path.GetDirectoryName(context.OutputPath);
+        if (!string.IsNullOrWhiteSpace(targetFolder) && !Directory.Exists(targetFolder))
         {
-            Debug.Assert(string.IsNullOrWhiteSpace(context.OutputPath) == false);
-
-            var targetFolder = Path.GetDirectoryName(context.OutputPath);
-            if (!string.IsNullOrWhiteSpace(targetFolder) && !Directory.Exists(targetFolder))
+            try
             {
-                try
-                {
-                    // Construct sub folders (ex: obj\Debug).
-                    // May fail if parallel-building on MSBuild, ignoring exceptions.
-                    Directory.CreateDirectory(targetFolder);
-                }
-                catch
-                {
-                }
+                // Construct sub folders (ex: obj\Debug).
+                // May fail if parallel-building on MSBuild, ignoring exceptions.
+                Directory.CreateDirectory(targetFolder);
             }
-
-            using (var ftw = File.CreateText(context.OutputPath))
+            catch
             {
-                var tw = new SourceCodeWriter(ftw, context);
-
-                this.WriteComment(tw,
-                    $"This is auto-generated version information attributes by RelaxVersioner [{ThisAssembly.AssemblyVersion}], Do not edit.");
-                this.WriteComment(tw,
-                    $"Generated date: {generated:R}");
-                tw.WriteLine();
-
-                this.WriteBeforeBody(tw);
-
-                foreach (var importNamespace in importSet)
-                {
-                    this.WriteImport(tw, importNamespace);
-                }
-                tw.WriteLine();
-
-                foreach (var rule in ruleSet)
-                {
-                    var formattedValue = Named.Format(rule.Format, keyValues, key => string.Empty);
-                    if (!string.IsNullOrWhiteSpace(rule.Key))
-                    {
-                        this.WriteAttributeWithArguments(tw, rule.Name, rule.Key, formattedValue);
-                    }
-                    else
-                    {
-                        this.WriteAttributeWithArguments(tw, rule.Name, formattedValue);
-                    }
-                }
-                tw.WriteLine();
-                
-                if (context.GenerateStatic)
-                {
-                    this.WriteBeforeLiteralBody(tw);
-
-                    foreach (var g in ruleSet.GroupBy(rule => rule.Name))
-                    {
-                        var rules = g.ToArray();
-
-                        if (rules.Length >= 2)
-                        {
-                            this.WriteBeforeNestedLiteralBody(tw, rules[0].Name);
-                        }
-
-                        foreach (var rule in rules)
-                        {
-                            var formattedValue = Named.Format(rule.Format, keyValues, key => string.Empty);
-                            if (!string.IsNullOrWhiteSpace(rule.Key))
-                            {
-                                this.WriteLiteralWithArgument(tw, rule.Key, formattedValue);
-                            }
-                            else
-                            {
-                                this.WriteLiteralWithArgument(tw, rule.Name, formattedValue);
-                            }
-                        }
-
-                        if (rules.Length >= 2)
-                        {
-                            this.WriteAfterNestedLiteralBody(tw);
-                        }
-                    }
-
-                    this.WriteAfterLiteralBody(tw);
-                    tw.WriteLine();
-                }
-
-                this.WriteAfterBody(tw);
-
-                tw.Flush();
             }
         }
 
-        protected static bool IsRequiredSelfHostingMetadataAttribute(ProcessorContext context) =>
-            (context.TargetFrameworkIdentity == ".NETFramework") &&
-            context.TargetFrameworkVersion is { } tfv &&
-            tfv.StartsWith("v") &&
-            tfv.Substring(1) is { } vs &&
-            Version.TryParse(vs, out var version) &&
-            ((version.Major < 4) ||
-             (version.Major == 4) && (version.Minor == 0));
-
-        protected virtual void WriteComment(SourceCodeWriter tw, string format, params object?[] args) =>
-            tw.WriteLine("// " + format, args);
-
-        protected virtual void WriteBeforeBody(SourceCodeWriter tw)
+        using (var ftw = File.CreateText(context.OutputPath))
         {
+            var tw = new SourceCodeWriter(ftw, context);
+
+            this.WriteComment(tw,
+                $"This is auto-generated version information attributes by RelaxVersioner [{ThisAssembly.AssemblyVersion}], Do not edit.");
+            this.WriteComment(tw,
+                $"Generated date: {generated:F}");
+            tw.WriteLine();
+
+            this.WriteBeforeBody(tw);
+
+            foreach (var importNamespace in importSet)
+            {
+                this.WriteImport(tw, importNamespace);
+            }
+            tw.WriteLine();
+
+            foreach (var rule in ruleSet)
+            {
+                var formattedValue = Named.Format(
+                    CultureInfo.InvariantCulture,
+                    rule.Format,
+                    keyValues,
+                    key => string.Empty);
+                if (!string.IsNullOrWhiteSpace(rule.Key))
+                {
+                    this.WriteAttributeWithArguments(tw, rule.Name, rule.Key, formattedValue);
+                }
+                else
+                {
+                    this.WriteAttributeWithArguments(tw, rule.Name, formattedValue);
+                }
+            }
+            tw.WriteLine();
+            
+            if (context.GenerateStatic)
+            {
+                this.WriteBeforeLiteralBody(tw);
+
+                foreach (var g in ruleSet.GroupBy(rule => rule.Name))
+                {
+                    var rules = g.ToArray();
+
+                    if (rules.Length >= 2)
+                    {
+                        this.WriteBeforeNestedLiteralBody(tw, rules[0].Name);
+                    }
+
+                    foreach (var rule in rules)
+                    {
+                        var formattedValue = Named.Format(
+                            CultureInfo.InvariantCulture,
+                            rule.Format,
+                            keyValues,
+                            key => string.Empty);
+                        if (!string.IsNullOrWhiteSpace(rule.Key))
+                        {
+                            this.WriteLiteralWithArgument(tw, rule.Key, formattedValue);
+                        }
+                        else
+                        {
+                            this.WriteLiteralWithArgument(tw, rule.Name, formattedValue);
+                        }
+                    }
+
+                    if (rules.Length >= 2)
+                    {
+                        this.WriteAfterNestedLiteralBody(tw);
+                    }
+                }
+
+                this.WriteAfterLiteralBody(tw);
+                tw.WriteLine();
+            }
+
+            this.WriteAfterBody(tw);
+
+            tw.Flush();
         }
+    }
 
-        protected abstract void WriteAttribute(SourceCodeWriter tw, string name, string args);
-        protected abstract void WriteLiteral(SourceCodeWriter tw, string name, string value);
+    protected static bool IsRequiredSelfHostingMetadataAttribute(ProcessorContext context) =>
+        (context.TargetFrameworkIdentity == ".NETFramework") &&
+        context.TargetFrameworkVersion is { } tfv &&
+        tfv.StartsWith("v") &&
+        tfv.Substring(1) is { } vs &&
+        Version.TryParse(vs, out var version) &&
+        ((version.Major < 4) ||
+         (version.Major == 4) && (version.Minor == 0));
 
-        protected virtual string GetArgumentString(string argumentValue) =>
-            string.Format("\"{0}\"", argumentValue.Replace("\"", "\"\""));
+    protected virtual void WriteComment(SourceCodeWriter tw, string format, params object?[] args) =>
+        tw.WriteLine("// " + format, args);
 
-        protected abstract void WriteBeforeLiteralBody(SourceCodeWriter tw);
-        protected abstract void WriteBeforeNestedLiteralBody(SourceCodeWriter tw, string name);
-        protected abstract void WriteAfterNestedLiteralBody(SourceCodeWriter tw);
-        protected abstract void WriteAfterLiteralBody(SourceCodeWriter tw);
+    protected virtual void WriteBeforeBody(SourceCodeWriter tw)
+    {
+    }
 
-        private void WriteAttributeWithArguments(SourceCodeWriter tw, string name, params object?[] args) =>
-            this.WriteAttribute(
-                tw,
-                name,
-                string.Join(",", args.Select(arg => this.GetArgumentString(arg?.ToString() ?? string.Empty))));
+    protected abstract void WriteAttribute(SourceCodeWriter tw, string name, string args);
+    protected abstract void WriteLiteral(SourceCodeWriter tw, string name, string value);
 
-        private void WriteLiteralWithArgument(SourceCodeWriter tw, string name, object? arg) =>
-            this.WriteLiteral(
-                tw,
-                name,
-                this.GetArgumentString(arg?.ToString() ?? string.Empty));
+    protected virtual string GetArgumentString(string argumentValue) =>
+        string.Format("\"{0}\"", argumentValue.Replace("\"", "\"\""));
 
-        protected virtual void WriteImport(SourceCodeWriter tw, string namespaceName)
-        {
-        }
+    protected abstract void WriteBeforeLiteralBody(SourceCodeWriter tw);
+    protected abstract void WriteBeforeNestedLiteralBody(SourceCodeWriter tw, string name);
+    protected abstract void WriteAfterNestedLiteralBody(SourceCodeWriter tw);
+    protected abstract void WriteAfterLiteralBody(SourceCodeWriter tw);
 
-        protected virtual void WriteAfterBody(SourceCodeWriter tw)
-        {
-        }
+    private void WriteAttributeWithArguments(SourceCodeWriter tw, string name, params object?[] args) =>
+        this.WriteAttribute(
+            tw,
+            name,
+            string.Join(",", args.Select(arg => this.GetArgumentString(arg?.ToString() ?? string.Empty))));
+
+    private void WriteLiteralWithArgument(SourceCodeWriter tw, string name, object? arg) =>
+        this.WriteLiteral(
+            tw,
+            name,
+            this.GetArgumentString(arg?.ToString() ?? string.Empty));
+
+    protected virtual void WriteImport(SourceCodeWriter tw, string namespaceName)
+    {
+    }
+
+    protected virtual void WriteAfterBody(SourceCodeWriter tw)
+    {
     }
 }

@@ -1,6 +1,6 @@
 ﻿////////////////////////////////////////////////////////////////////////////////////////
 //
-// RelaxVersioner - Easy-usage, Git-based, auto-generate version informations toolset.
+// RelaxVersioner - Git tag/branch based, full-automatic version information inserter.
 // Copyright (c) Kouji Matsui (@kozy_kekyo, @kekyo@mastodon.cloud)
 //
 // Licensed under Apache-v2: https://opensource.org/licenses/Apache-2.0
@@ -12,28 +12,27 @@ using System.IO;
 using System.Linq;
 using System.Xml.Linq;
 
-namespace RelaxVersioner
+namespace RelaxVersioner;
+
+internal static class ResultWriter
 {
-    internal static class ResultWriter
+    private static string ToString(object? value) =>
+        (value is Array array) ?
+            string.Join(",", array.Cast<object>().Select(ToString)):
+            value?.ToString() ?? string.Empty;
+
+    public static void Write(string path, object result)
     {
-        private static string ToString(object? value) =>
-            (value is Array array) ?
-                string.Join(",", array.Cast<object>().Select(ToString)):
-                value?.ToString() ?? string.Empty;
+        var type = result.GetType();
+        var document = new XElement(
+            type.Name,
+            type.GetFields().
+                Select(field => new XElement(field.Name, ToString(field.GetValue(result)))));
 
-        public static void Write(string path, object result)
+        using (var fs = new FileStream(path, FileMode.Create, FileAccess.ReadWrite, FileShare.None))
         {
-            var type = result.GetType();
-            var document = new XElement(
-                type.Name,
-                type.GetFields().
-                    Select(field => new XElement(field.Name, ToString(field.GetValue(result)))));
-
-            using (var fs = new FileStream(path, FileMode.Create, FileAccess.ReadWrite, FileShare.None))
-            {
-                document.Save(fs);
-                fs.Flush();
-            }
+            document.Save(fs);
+            fs.Flush();
         }
     }
 }
