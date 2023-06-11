@@ -6,9 +6,9 @@
     <title>RelaxVersioner</title>
     <authors>Kouji Matsui</authors>
     <owners>Kouji Matsui</owners>
-    <description>Easy-usage, Git-based, auto-generate version informations toolset.</description>
+    <description>Git tag/branch based, full-automatic version information inserter.</description>
     <developmentDependency>true</developmentDependency>
-    <summary>Easy-usage, Git-based, auto-generate version informations toolset.</summary>
+    <summary>Git tag/branch based, full-automatic version information inserter.</summary>
     <copyright>Copyright (c) Kouji Matsui</copyright>
     <license type="expression">Apache-2.0</license>
     <projectUrl>https://github.com/kekyo/CenterCLR.RelaxVersioner</projectUrl>

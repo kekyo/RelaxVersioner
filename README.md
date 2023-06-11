@@ -14,7 +14,8 @@
 
 ## What is this?
 
-* RelaxVersioner is a easy, full-automatic, git based version inserter for .NET 7,6,5/.NET Core/.NET Framework.
+Git tag/branch based, full-automatic version information inserter.
+
 * If you use RelaxVersioner, version handling ONLY use with Git tags/branches/commit messages. Of course you don't need more tooling knowledge, and easy integrates continuous-integration environments.
 * Target language/environments (Probably fits most current .NET development environments):
   * C#, F#, VB.NET, C++/CLI and NuGet packaging (dotnet cli packer).

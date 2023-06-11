@@ -16,7 +16,7 @@
     <Product>RelaxVersioner</Product>
     <Trademark>RelaxVersioner</Trademark>
     <Copyright>Copyright (c) Kouji Matsui</Copyright>
-    <Description>Easy-usage, Git-based, auto-generate version informations toolset.</Description>
+    <Description>Git tag/branch based, full-automatic version information inserter.</Description>
 
     <Company>Kouji Matsui (@kozy_kekyo, @kekyo@mastodon.cloud)</Company>
     <Authors>Kouji Matsui (@kozy_kekyo, @kekyo@mastodon.cloud)</Authors>

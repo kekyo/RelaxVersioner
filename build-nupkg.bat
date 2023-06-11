@@ -1,6 +1,6 @@
 @echo off
 
-rem RelaxVersioner - Easy-usage, Git-based, auto-generate version informations toolset.
+rem RelaxVersioner - Git tag/branch based, full-automatic version information inserter.
 rem Copyright (c) Kouji Matsui (@kozy_kekyo, @kekyo@mastodon.cloud)
 rem
 rem Licensed under Apache-v2: https://opensource.org/licenses/Apache-2.0
