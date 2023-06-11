@@ -70,7 +70,7 @@ public static class Program
 
             context.ProjectDirectory = trails[0];
 
-            var result = await processor.RunAsync(context);
+            var result = await processor.RunAsync(context, default);
 
             var dryrunDisplay = string.IsNullOrWhiteSpace(context.OutputPath) ?
                 " (dryrun)" : string.Empty;

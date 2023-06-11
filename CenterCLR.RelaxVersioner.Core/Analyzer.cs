@@ -11,6 +11,7 @@
 
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
 
 using GitReader.Structures;
@@ -35,9 +36,9 @@ internal static class Analyzer
     }
 
     public static async Task<Version> LookupVersionLabelAsync(
-        Branch targetBranch)
+        Branch targetBranch, CancellationToken ct)
     {
-        var topCommit = targetBranch.Head;
+        var topCommit = await targetBranch.GetHeadCommitAsync(ct);
 
         var reached = new HashSet<Commit>();
         var scheduled = new Stack<TargetCommit>();
@@ -62,7 +63,7 @@ internal static class Analyzer
                 }
 
                 // If found be applied tags at this commit:
-                if (currentCommit.Tags.Length >= 1)
+                if (currentCommit.Tags.Count >= 1)
                 {
                     var filteredTags = currentCommit.Tags.
                         Select(tag => Version.TryParse(tag.Name, out var version) ? (Version?)version : null).
@@ -78,7 +79,7 @@ internal static class Analyzer
                 }
 
                 // Found parents.
-                if (await currentCommit.GetParentCommitsAsync() is { Length: >= 1 } parents)
+                if (await currentCommit.GetParentCommitsAsync(ct) is { Length: >= 1 } parents)
                 {
                     // Dive parent commit.
                     currentDepth++;

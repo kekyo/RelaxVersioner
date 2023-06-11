@@ -19,6 +19,7 @@ using GitReader;
 using GitReader.Structures;
 
 using RelaxVersioner.Writers;
+using System.Threading;
 
 namespace RelaxVersioner;
 
@@ -78,12 +79,15 @@ public sealed class Processor
         Branch targetBranch,
         DateTimeOffset generated,
         IEnumerable<Rule> ruleSet,
-        IEnumerable<string> importSet)
+        IEnumerable<string> importSet,
+        CancellationToken ct)
     {
         Debug.Assert(ruleSet != null);
         Debug.Assert(importSet != null);
 
-        var commit = targetBranch?.Head;
+        var commit = targetBranch != null ?
+            await targetBranch.GetHeadCommitAsync(ct) :
+            null;
 
         var commitId = commit?.Hash.ToString() ?? string.Empty;
 
@@ -110,7 +114,7 @@ public sealed class Processor
         var epochIntDateVersion = Utilities.GetEpochIntDateVersionFromDate(commitDate);
 
         var versionLabelTask = targetBranch is { } ?
-            Analyzer.LookupVersionLabelAsync(targetBranch) :
+            Analyzer.LookupVersionLabelAsync(targetBranch, ct) :
             Task.FromResult(Version.Default);
         var keyValues =
             (!string.IsNullOrWhiteSpace(context.PropertiesPath) &&
@@ -173,7 +177,8 @@ public sealed class Processor
             commit.Body);
     }
 
-    public async Task<Result> RunAsync(ProcessorContext context)
+    public async Task<Result> RunAsync(
+        ProcessorContext context, CancellationToken ct)
     {
         var writer = writers[context.Language];
 
@@ -195,10 +200,11 @@ public sealed class Processor
                 logger,
                 writer,
                 context,
-                repository.GetHead(),
+                repository.Head,
                 DateTimeOffset.Now,
                 ruleSet,
-                importSet);
+                importSet,
+                ct);
         }
         finally
         {
