@@ -1,6 +1,6 @@
 ﻿////////////////////////////////////////////////////////////////////////////////////////
 //
-// RelaxVersioner - Easy-usage, Git-based, auto-generate version informations toolset.
+// RelaxVersioner - Git tag/branch based, full-automatic version information inserter.
 // Copyright (c) Kouji Matsui (@kozy_kekyo, @kekyo@mastodon.cloud)
 //
 // Licensed under Apache-v2: https://opensource.org/licenses/Apache-2.0
@@ -13,9 +13,10 @@ using System.Diagnostics;
 using System.Globalization;
 using System.IO;
 using System.Linq;
+using System.Threading.Tasks;
 using System.Xml.Linq;
-
-using LibGit2Sharp;
+using GitReader;
+using GitReader.Structures;
 
 using RelaxVersioner.Writers;
 
@@ -35,7 +36,8 @@ internal static class Utilities
             ToDictionary(writer => writer.Language, StringComparer.InvariantCultureIgnoreCase);
     }
 
-    private static T TraversePathToRoot<T>(string candidatePath, Func<string, T> action)
+    private static async Task<T> TraversePathToRootAsync<T>(
+        string candidatePath, Func<string, Task<T>> action)
         where T : class
     {
         var path = Path.GetFullPath(candidatePath).
@@ -43,7 +45,7 @@ internal static class Utilities
 
         while (true)
         {
-            var result = action(path);
+            var result = await action(path);
             if (result != null)
             {
                 return result;
@@ -65,36 +67,16 @@ internal static class Utilities
     public static string GetDirectoryNameWithTrailingSeparator(string path) =>
         GetDirectoryNameWithoutTrailingSeparator(path) + Path.DirectorySeparatorChar;
 
-    public static Repository OpenRepository(Logger logger, string candidatePath)
+    public static async Task<StructuredRepository> OpenRepositoryAsync(
+        Logger logger, string candidatePath)
     {
-        var repository = TraversePathToRoot(candidatePath, path =>
+        var repository = await TraversePathToRootAsync(candidatePath, async path =>
         {
             if (Directory.Exists(Path.Combine(path, ".git")))
             {
-                string GetNativeLibraryPath()
-                {
-                    try
-                    {
-                        return GlobalSettings.NativeLibraryPath ?? "(null)";
-                    }
-                    catch
-                    {
-                        return "(unspecified)";
-                    }
-                }
-                
-                logger.Message(LogImportance.Low, "libgit2sharp.NativeLibraryPath, Path={0}", GetNativeLibraryPath());
-
-                try
-                {
-                    var r = new Repository(GetDirectoryNameWithTrailingSeparator(path));
-                    logger.Message(LogImportance.Low, "Repository opened, Path={0}", path);
-                    return r;
-                }
-                catch (RepositoryNotFoundException ex)
-                {
-                    logger.Message(LogImportance.Low, ex, "Cannot open repository, Path={0}", path);
-                }
+                var r = await Repository.Factory.OpenStructureAsync(path);
+                logger.Message(LogImportance.Low, "Repository opened, Path={0}", path);
+                return r;
             }
             else
             {
@@ -230,12 +212,6 @@ internal static class Utilities
             return XElement.Load(stream);
         }
     }
-
-    public static string GetFriendlyName<TObject>(this ReferenceWrapper<TObject> refer)
-        where TObject : GitObject =>
-        (refer.CanonicalName == "(no branch)") ?
-            "HEAD" :
-            string.IsNullOrWhiteSpace(refer.FriendlyName) ? refer.CanonicalName : refer.FriendlyName;
 
     public static Version IncrementLastVersionComponent(Version version, int value)
     {

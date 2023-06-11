@@ -1,6 +1,6 @@
 ﻿////////////////////////////////////////////////////////////////////////////////////////
 //
-// RelaxVersioner - Easy-usage, Git-based, auto-generate version informations toolset.
+// RelaxVersioner - Git tag/branch based, full-automatic version information inserter.
 // Copyright (c) Kouji Matsui (@kozy_kekyo, @kekyo@mastodon.cloud)
 //
 // Licensed under Apache-v2: https://opensource.org/licenses/Apache-2.0
@@ -26,14 +26,15 @@ public readonly struct Result
     public readonly DateTimeOffset Date;
     public readonly string Author;
     public readonly string Committer;
-    public readonly string Message;
+    public readonly string Subject;
+    public readonly string Body;
 
     public Result(Version version, string shortVersion, Version safeVersion,
         string intDateVersion, string epochIntDateVersion,
         string commitId,
         string branch, string[] tags, DateTimeOffset date,
         string author, string committer,
-        string message)
+        string subject, string body)
     {
         this.Version = version;
         this.ShortVersion = shortVersion;
@@ -46,6 +47,7 @@ public readonly struct Result
         this.Date = date;
         this.Author = author;
         this.Committer = committer;
-        this.Message = message;
+        this.Subject = subject;
+        this.Body = body;
     }
 }

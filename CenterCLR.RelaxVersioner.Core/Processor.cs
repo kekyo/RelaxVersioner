@@ -1,6 +1,6 @@
 ﻿////////////////////////////////////////////////////////////////////////////////////////
 //
-// RelaxVersioner - Easy-usage, Git-based, auto-generate version informations toolset.
+// RelaxVersioner - Git tag/branch based, full-automatic version information inserter.
 // Copyright (c) Kouji Matsui (@kozy_kekyo, @kekyo@mastodon.cloud)
 //
 // Licensed under Apache-v2: https://opensource.org/licenses/Apache-2.0
@@ -15,9 +15,11 @@ using System.IO;
 using System.Threading.Tasks;
 using System.Xml.Linq;
 
-using LibGit2Sharp;
+using GitReader;
+using GitReader.Structures;
 
 using RelaxVersioner.Writers;
+using System.Threading;
 
 namespace RelaxVersioner;
 
@@ -70,60 +72,59 @@ public sealed class Processor
             $"StartDepth={this.StartDepth}, {this.Commit}";
     }
 
-    private static Result WriteVersionSourceFile(
+    private static async Task<Result> WriteVersionSourceFileAsync(
         Logger logger,
         WriterBase writer,
         ProcessorContext context,
-        Branch branchHint,
-        Dictionary<string, Tag[]> tagsDictionary,
-        Dictionary<string, Branch[]> branchesDictionary,
+        Branch targetBranch,
         DateTimeOffset generated,
         IEnumerable<Rule> ruleSet,
-        IEnumerable<string> importSet)
+        IEnumerable<string> importSet,
+        CancellationToken ct)
     {
-        Debug.Assert(tagsDictionary != null);
-        Debug.Assert(branchesDictionary != null);
         Debug.Assert(ruleSet != null);
         Debug.Assert(importSet != null);
 
-        var unknownBranch = new UnknownBranch(generated);
+        var commit = targetBranch != null ?
+            await targetBranch.GetHeadCommitAsync(ct) :
+            null;
 
-        var targetBranch = branchHint ?? unknownBranch;
-        var commit = targetBranch.Commits.FirstOrDefault() ?? unknownBranch.Commits.First();
+        var commitId = commit?.Hash.ToString() ?? string.Empty;
 
-        var commitId = commit.Sha;
-        var author = commit.Author;
-        var committer = commit.Committer;
+        static string FormatSignature(Signature? sig) => sig is { } s ?
+            (s.MailAddress is { } ma ? $"{s.Name} <{ma}>" : s.Name) :
+            "(Unknown)";
 
-        var branches = branchesDictionary.
-            GetValue(commitId, emptyBranches).
-            Select(b => b.GetFriendlyName()).
-            ToArray();
+        var author = FormatSignature(commit?.Author);
+        var committer = FormatSignature(commit?.Committer);
+        var commitDate = commit?.Committer.Date ?? generated;
+
+        var branches = commit?.Branches.
+            Select(b => b.Name).
+            ToArray() ?? Array.Empty<string>();
         var branchesString = string.Join(",", branches);
 
-        var tags = tagsDictionary.
-            GetValue(commitId, emptyTags).
-            Select(b => b.GetFriendlyName()).
-            ToArray();
+        var tags = commit?.Tags.
+            Select(b => b.Name).
+            ToArray() ?? Array.Empty<string>();
         var tagsString = string.Join(",", tags);
 
-        var safeVersion = Utilities.GetSafeVersionFromDate(committer.When);
-        var intDateVersion = Utilities.GetIntDateVersionFromDate(committer.When);
-        var epochIntDateVersion = Utilities.GetEpochIntDateVersionFromDate(committer.When);
+        var safeVersion = Utilities.GetSafeVersionFromDate(commitDate);
+        var intDateVersion = Utilities.GetIntDateVersionFromDate(commitDate);
+        var epochIntDateVersion = Utilities.GetEpochIntDateVersionFromDate(commitDate);
 
-        Version versionLabel = default;
-        Dictionary<string, object> keyValues = default;
-        Parallel.Invoke(
-            () => versionLabel = Analyzer.LookupVersionLabel(targetBranch, tagsDictionary),
-            () => keyValues =
-                (!string.IsNullOrWhiteSpace(context.PropertiesPath) &&
-                 File.Exists(context.PropertiesPath)) ?
-                    XDocument.Load(context.PropertiesPath).
-                    Root.Elements().
-                    ToDictionary(e => e.Name.LocalName, e => (object)e.Value) :
-                 new Dictionary<string, object>());
+        var versionLabelTask = targetBranch is { } ?
+            Analyzer.LookupVersionLabelAsync(targetBranch, ct) :
+            Task.FromResult(Version.Default);
+        var keyValues =
+            (!string.IsNullOrWhiteSpace(context.PropertiesPath) &&
+             File.Exists(context.PropertiesPath)) ?
+             XDocument.Load(context.PropertiesPath).
+             Root.Elements().
+             ToDictionary(e => e.Name.LocalName, e => (object)e.Value) :
+             new Dictionary<string, object>();
 
-        Debug.Assert(keyValues != null);
+        var versionLabel = await versionLabelTask;
 
         var shortVersion = versionLabel.ToString(3);
 
@@ -137,6 +138,7 @@ public sealed class Processor
             ("author", author),
             ("committer", committer),
             ("commitId", commitId),
+            ("commitDate", commitDate),
             ("versionLabel", versionLabel),
             ("shortVersion", shortVersion),
             ("safeVersion", safeVersion),
@@ -166,15 +168,17 @@ public sealed class Processor
             intDateVersion,
             epochIntDateVersion,
             commitId,
-            targetBranch.GetFriendlyName(),
+            targetBranch.Name,
             tags,
-            committer.When,
-            author.ToString(),
-            committer.ToString(),
-            commit.Message);
+            commitDate,
+            author,
+            committer,
+            commit.Subject,
+            commit.Body);
     }
 
-    public Result Run(ProcessorContext context)
+    public async Task<Result> RunAsync(
+        ProcessorContext context, CancellationToken ct)
     {
         var writer = writers[context.Language];
 
@@ -187,40 +191,20 @@ public sealed class Processor
         var ruleSet = Utilities.AggregateRules(elementSet);
 
         // Traverse git repository between projectDirectory and the root.
-        var repository = Utilities.OpenRepository(logger, context.ProjectDirectory);
+        using var repository = await Utilities.OpenRepositoryAsync(
+            logger, context.ProjectDirectory);
 
         try
         {
-            var tags = repository?.Tags.
-                Where(tag => tag.Target is Commit).
-                GroupBy(tag => tag.Target.Sha).
-                ToDictionary(
-                    g => g.Key,
-                    g => g.ToArray(),
-                    StringComparer.InvariantCultureIgnoreCase) ??
-                new Dictionary<string, Tag[]>();
-
-            var branches = (repository != null) ?
-                (from branch in repository.Branches
-                 where !branch.IsRemote
-                 from commit in branch.Commits
-                 group branch by commit.Sha).
-                ToDictionary(
-                    g => g.Key,
-                    g => g.ToArray(),
-                    StringComparer.InvariantCultureIgnoreCase) :
-                new Dictionary<string, Branch[]>();
-
-            return WriteVersionSourceFile(
+            return await WriteVersionSourceFileAsync(
                 logger,
                 writer,
                 context,
-                repository?.Head,
-                tags,
-                branches,
+                repository.Head,
                 DateTimeOffset.Now,
                 ruleSet,
-                importSet);
+                importSet,
+                ct);
         }
         finally
         {
