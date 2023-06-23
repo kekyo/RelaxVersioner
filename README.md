@@ -435,6 +435,8 @@ When you are using a nuspec file to generate a NuGet package, there are addition
 
 ## History
 
+* 2.16.0:
+  * Fixed causing NRE on uninitialized git repository.
 * 2.15.0:
   * Changed reading of Git repositories using [GitReader](https://github.com/kekyo/GitReader) instead of libgit2sharp.
     The native library no longer depends on it, which eases the limitation of the operating environment.

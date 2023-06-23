@@ -89,7 +89,8 @@ public sealed class Processor
             await targetBranch.GetHeadCommitAsync(ct) :
             null;
 
-        var commitId = commit?.Hash.ToString() ?? string.Empty;
+        var commitId = commit?.Hash.ToString() ??
+            "unknown";
 
         static string FormatSignature(Signature? sig) => sig is { } s ?
             (s.MailAddress is { } ma ? $"{s.Name} <{ma}>" : s.Name) :
@@ -168,13 +169,13 @@ public sealed class Processor
             intDateVersion,
             epochIntDateVersion,
             commitId,
-            targetBranch.Name,
+            targetBranch?.Name,
             tags,
             commitDate,
             author,
             committer,
-            commit.Subject,
-            commit.Body);
+            commit?.Subject,
+            commit?.Body);
     }
 
     public async Task<Result> RunAsync(
@@ -200,7 +201,7 @@ public sealed class Processor
                 logger,
                 writer,
                 context,
-                repository.Head,
+                repository?.Head,
                 DateTimeOffset.Now,
                 ruleSet,
                 importSet,
