@@ -61,16 +61,16 @@ public struct Version
     private IEnumerable<int> GetComponents()
     {
         yield return this.Major;
-        if (this.Minor.HasValue)
+
+        // HACK: The version number format is valid on 2 or more components.
+        yield return this.Minor.HasValue ? this.Minor.Value : 0;
+
+        if (this.Build.HasValue)
         {
-            yield return this.Minor.Value;
-            if (this.Build.HasValue)
+            yield return this.Build.Value;
+            if (this.Revision.HasValue)
             {
-                yield return this.Build.Value;
-                if (this.Revision.HasValue)
-                {
-                    yield return this.Revision.Value;
-                }
+                yield return this.Revision.Value;
             }
         }
     }
