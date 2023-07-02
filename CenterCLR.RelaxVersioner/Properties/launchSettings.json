@@ -2,7 +2,7 @@
   "profiles": {
     "RelaxVersioner": {
         "commandName": "Project",
-        "commandLineArgs": "-buildIdentifier=abcde . output.cs"
+        "commandLineArgs": "-buildIdentifier=abcde D:\\Projects\\git output.cs"
     }
   }
 }

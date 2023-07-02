@@ -10,8 +10,9 @@
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
-using System.Linq;
 using System.IO;
+using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Xml.Linq;
 
@@ -19,7 +20,6 @@ using GitReader;
 using GitReader.Structures;
 
 using RelaxVersioner.Writers;
-using System.Threading;
 
 namespace RelaxVersioner;
 
@@ -40,9 +40,6 @@ public sealed class ProcessorContext
 
 public sealed class Processor
 {
-    private static readonly Branch[] emptyBranches = Array.Empty<Branch>();
-    private static readonly Tag[] emptyTags = Array.Empty<Tag>();
-
     private readonly Logger logger;
     private readonly Dictionary<string, WriterBase> writers;
 

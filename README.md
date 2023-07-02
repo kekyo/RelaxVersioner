@@ -435,6 +435,13 @@ When you are using a nuspec file to generate a NuGet package, there are addition
 
 ## History
 
+* 3.0.0:
+  * A multi-branch tracking analyzer has been implemented.
+    Previously, it searched past commits in order from the primary branch and determined the version number based on the first version number found.
+    Now automatically find the largest version number in all branches involved.
+    It will automatically determine the correct version without having to manually search for the last largest version number.
+    (No special action is required for this change.)
+  * GitReader has been raised to 1.1.0.
 * 2.16.0:
   * Fixed causing NRE on uninitialized git repository.
 * 2.15.0:

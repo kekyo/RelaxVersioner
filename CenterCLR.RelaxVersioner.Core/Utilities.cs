@@ -212,34 +212,4 @@ internal static class Utilities
             return XElement.Load(stream);
         }
     }
-
-    public static Version IncrementLastVersionComponent(Version version, int value)
-    {
-        if (version.Revision.HasValue)
-        {
-            return new Version(
-                version.Major,
-                version.Minor.Value,
-                version.Build.Value,
-                version.Revision.Value + value);
-        }
-        else if (version.Build.HasValue)
-        {
-            return new Version(
-                version.Major,
-                version.Minor.Value,
-                version.Build.Value + value);
-        }
-        else if(version.Minor.HasValue)
-        {
-            return new Version(
-                version.Major,
-                version.Minor.Value + value);
-        }
-        else
-        {
-            return new Version(
-                version.Major + value);
-        }
-    }
 }

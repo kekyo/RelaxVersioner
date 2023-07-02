@@ -12,10 +12,10 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="GitReader" Version="0.13.0" />
+    <PackageReference Include="GitReader" Version="1.1.0" />
     <PackageReference Include="NamingFormatter" Version="2.2.0" />
     <PackageReference Include="Microsoft.NETFramework.ReferenceAssemblies" Version="1.0.3" PrivateAssets="All" />
-    <PackageReference Include="RelaxVersioner" Version="2.15.0" PrivateAssets="all" />
+    <PackageReference Include="RelaxVersioner" Version="2.16.0" PrivateAssets="all" />
   </ItemGroup>
 
   <ItemGroup>

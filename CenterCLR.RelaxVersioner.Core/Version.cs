@@ -15,7 +15,8 @@ using System.Linq;
 
 namespace RelaxVersioner;
 
-public struct Version
+public sealed class Version :
+    IEquatable<Version>, IComparable<Version>
 {
     private static readonly char[] separators = new[] { '.', ',', '/', '-', '_' };
 
@@ -58,19 +59,64 @@ public struct Version
         this.Revision = revision;
     }
 
+    public override int GetHashCode() =>
+        this.Major.GetHashCode() ^
+        this.Minor.GetHashCode() ^
+        this.Build.GetHashCode() ^
+        this.Revision.GetHashCode();
+
+    public bool Equals(Version? rhs) =>
+        rhs is { } &&
+        this.Major.Equals(rhs.Major) &&
+        this.Minor.Equals(rhs.Minor) &&
+        this.Build.Equals(rhs.Build) &&
+        this.Revision.Equals(rhs.Revision);
+
+    public override bool Equals(object? obj) =>
+        obj is Version rhs && this.Equals(rhs);
+
+    public int CompareTo(Version? rhs)
+    {
+        var major = this.Major.CompareTo(rhs!.Major);
+        if (major != 0)
+        {
+            return major;
+        }
+
+        static int Compare(int? lhs, int? rhs)
+        {
+            var l = lhs is { } lv ? lv : 0;
+            var r = rhs is { } rv ? rv : 0;
+            return l.CompareTo(r);
+        }
+
+        var minor = Compare(this.Minor, rhs.Minor);
+        if (minor != 0)
+        {
+            return minor;
+        }
+        var build = Compare(this.Build, rhs.Build);
+        if (build != 0)
+        {
+            return build;
+        }
+        var revision = Compare(this.Revision, rhs.Revision);
+        return revision;
+    }
+
     private IEnumerable<int> GetComponents()
     {
         yield return this.Major;
-        if (this.Minor.HasValue)
+
+        // HACK: The version number format is valid on 2 or more components.
+        yield return this.Minor.HasValue ? this.Minor.Value : 0;
+
+        if (this.Build.HasValue)
         {
-            yield return this.Minor.Value;
-            if (this.Build.HasValue)
+            yield return this.Build.Value;
+            if (this.Revision.HasValue)
             {
-                yield return this.Build.Value;
-                if (this.Revision.HasValue)
-                {
-                    yield return this.Revision.Value;
-                }
+                yield return this.Revision.Value;
             }
         }
     }
@@ -101,7 +147,7 @@ public struct Version
         switch (numberComponents.Length)
         {
             case 0:
-                version = new Version();
+                version = null!;
                 return false;
             case 1:
                 version = new Version(
