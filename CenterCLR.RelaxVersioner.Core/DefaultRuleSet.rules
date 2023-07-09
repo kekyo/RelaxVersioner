@@ -21,7 +21,7 @@
         <Language>C++/CLI</Language>
 
         <Import>System.Reflection</Import>
-
+        
         <!--
             "versionLabel" extracts numerical-notate version string [1.2.3.4] or [v1.2.3.4] from git repository tags traverse start HEAD.
             If not found, use [0.0.1].
@@ -77,6 +77,7 @@
             Each results are strictly string type, so format directives will be ignored.
         -->
         <Rule name="AssemblyMetadata" key="AssemblyName">{AssemblyName}</Rule>
+        <Rule name="AssemblyMetadata" key="RootNamespace">{RootNamespace}</Rule>
         <Rule name="AssemblyMetadata" key="PlatformTarget">{PlatformTarget}</Rule>
         <Rule name="AssemblyMetadata" key="Platform">{Platform}</Rule>
         <Rule name="AssemblyMetadata" key="RuntimeIdentifier">{RuntimeIdentifier}</Rule>
