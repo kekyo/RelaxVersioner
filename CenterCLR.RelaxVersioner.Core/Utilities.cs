@@ -127,7 +127,9 @@ internal static class Utilities
 
     public static string GetEpochIntDateVersionFromDate(DateTimeOffset date)
     {
-        return date.ToUnixTimeSeconds().ToString(CultureInfo.InvariantCulture);
+        // Second range: 0..43200 (2sec prec.)
+        return ((int)(date.TimeOfDay.TotalSeconds / 2)).
+            ToString(CultureInfo.InvariantCulture);
     }
 
     public static IEnumerable<XElement> LoadRuleSets(string candidatePath)
