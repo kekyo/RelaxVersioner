@@ -415,7 +415,7 @@ nuspecファイルを使ってパッケージを生成する場合は、デフ�
             
     <!--
       "ApplicationVersion" と "ApplicationDisplayVersion" は、.NET MAUIのバージョン管理のために使用されます。
-      "ApplicationVersion" には、`committer.When`のエポック日付（1970/1/1）からの秒数です。
+      "epochIntDateVersion" には、`safeVersion`と同じ方法で計算された値です。
     -->
     <Rule name="AssemblyMetadata" key="ApplicationDisplayVersion">{shortVersion}</Rule>
     <Rule name="AssemblyMetadata" key="ApplicationVersion">{epochIntDateVersion}</Rule>
@@ -427,6 +427,7 @@ nuspecファイルを使ってパッケージを生成する場合は、デフ�
       これらの値は、全て文字列として参照されます。従って、フォーマットの書式指定は無視されます。
     -->
     <Rule name="AssemblyMetadata" key="AssemblyName">{AssemblyName}</Rule>
+    <Rule name="AssemblyMetadata" key="RootNamespace">{RootNamespace}</Rule>
     <Rule name="AssemblyMetadata" key="PlatformTarget">{PlatformTarget}</Rule>
     <Rule name="AssemblyMetadata" key="Platform">{Platform}</Rule>
     <Rule name="AssemblyMetadata" key="RuntimeIdentifier">{RuntimeIdentifier}</Rule>
@@ -454,6 +455,10 @@ nuspecファイルを使ってパッケージを生成する場合は、デフ�
 
 ## 履歴
 
+* 3.1.0:
+  * デフォルトルールの `AssemblyMetadata.TargetFramework` を `AssemblyMetadata.TargetFrameworkMoniker` に変更しました。
+  * `AssemblyMetadata.ApplicationVersion` が65535を超えていたのを修正。
+  * `AssemblyMetadata.RootNamespace` を追加。
 * 3.0.0:
   * マルチブランチ追跡アナライザーを実装しました。
     これまでは、プライマリブランチから順に過去のコミットを検索して、最初に見つかったバージョン番号を元に決定していましたが、

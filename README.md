@@ -396,7 +396,7 @@ When you are using a nuspec file to generate a NuGet package, there are addition
 
     <!--
         Both "ApplicationVersion" and "ApplicationDisplayVersion" are used for .NET MAUI versioning.
-        "ApplicationVersion" contains a integer value of seconds since epoch date (1970/1/1) from `committer.When`.
+        "epochIntDateVersion" is a value calculated in the same way as `safeVersion`.
     -->
     <Rule name="AssemblyMetadata" key="ApplicationDisplayVersion">{shortVersion}</Rule>
     <Rule name="AssemblyMetadata" key="ApplicationVersion">{epochIntDateVersion}</Rule>
@@ -408,6 +408,7 @@ When you are using a nuspec file to generate a NuGet package, there are addition
         Each results are strictly string type, so format directives will be ignored.
     -->
     <Rule name="AssemblyMetadata" key="AssemblyName">{AssemblyName}</Rule>
+    <Rule name="AssemblyMetadata" key="RootNamespace">{RootNamespace}</Rule>
     <Rule name="AssemblyMetadata" key="PlatformTarget">{PlatformTarget}</Rule>
     <Rule name="AssemblyMetadata" key="Platform">{Platform}</Rule>
     <Rule name="AssemblyMetadata" key="RuntimeIdentifier">{RuntimeIdentifier}</Rule>
@@ -435,6 +436,10 @@ When you are using a nuspec file to generate a NuGet package, there are addition
 
 ## History
 
+* 3.1.0:.
+  * Changed default rule `AssemblyMetadata.TargetFramework` to `AssemblyMetadata.TargetFrameworkMoniker`.
+  * Fixed `AssemblyMetadata.ApplicationVersion` exceeding 65535.
+  * Add `AssemblyMetadata.RootNamespace`.
 * 3.0.0:
   * A multi-branch tracking analyzer has been implemented.
     Previously, it searched past commits in order from the primary branch and determined the version number based on the first version number found.
