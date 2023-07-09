@@ -61,7 +61,7 @@
         <Rule name="AssemblyMetadata" key="Body">{commit.Body}</Rule>
         <Rule name="AssemblyMetadata" key="Build">{buildIdentifier}</Rule>
         <Rule name="AssemblyMetadata" key="Generated">{generated:F}</Rule>
-        <Rule name="AssemblyMetadata" key="TargetFramework">{tfm}</Rule>
+        <Rule name="AssemblyMetadata" key="TargetFrameworkMoniker">{tfm}</Rule>
 
         <!--
             Both "ApplicationVersion" and "ApplicationDisplayVersion" are used for .NET MAUI versioning.
