@@ -15,7 +15,7 @@
     <PackageReference Include="GitReader" Version="1.1.0" />
     <PackageReference Include="NamingFormatter" Version="2.2.0" />
     <PackageReference Include="Microsoft.NETFramework.ReferenceAssemblies" Version="1.0.3" PrivateAssets="All" />
-    <PackageReference Include="RelaxVersioner" Version="2.16.0" PrivateAssets="all" />
+    <PackageReference Include="RelaxVersioner" Version="3.0.4" PrivateAssets="all" />
   </ItemGroup>
 
   <ItemGroup>
