@@ -46,6 +46,7 @@ using System.Reflection;
 [assembly: AssemblyInformationalVersion("1.0.21-561387e2f6dc90046f56ef4c3ac501aad0d5ec0a")]
 [assembly: AssemblyConfiguration("Release")]
 [assembly: AssemblyMetadata("AssemblyName","YourApp")]
+[assembly: AssemblyMetadata("TargetFrameworkMoniker","net6.0")]
 [assembly: AssemblyMetadata("Date","Sunday, April 23, 2023 9:42:21 PM 0900")]
 [assembly: AssemblyMetadata("Branch","master")]
 [assembly: AssemblyMetadata("Tags","")]
@@ -57,9 +58,9 @@ using System.Reflection;
 [assembly: AssemblyMetadata("Generated","Sunday, April 23, 2023 9:42:21 PM 0900")]
 [assembly: AssemblyMetadata("Platform","AnyCPU")]
 [assembly: AssemblyMetadata("BuildOn","Unix")]
-[assembly: AssemblyMetadata("SdkVersion","5.0.101")]
+[assembly: AssemblyMetadata("SdkVersion","7.0.100")]
+[assembly: AssemblyMetadata("ApplicationVersion","33529")]
 [assembly: AssemblyMetadata("ApplicationDisplayVersion","1.0.21")]
-[assembly: AssemblyMetadata("ApplicationVersion","12345678901")]
 
 namespace YourApp
 {
@@ -72,6 +73,7 @@ namespace YourApp
     public static class AssemblyMetadata
     {
       public const string AssemblyName = "YourApp";
+      public const string TargetFrameworkMoniker = "net6.0";
       public const string Date = "Sunday, April 23, 2023 9:42:21 PM 0900";
       public const string Branch = "master";
       public const string Tags = "";
@@ -83,9 +85,9 @@ namespace YourApp
       public const string Generated = "Sunday, April 23, 2023 9:42:21 PM 0900";
       public const string Platform = "AnyCPU";
       public const string BuildOn = "Unix";
-      public const string SdkVersion = "5.0.101";
-      public const string ApplicationVersion = "1.0.21";
-      public const string ApplicationVersion = "12345678901";
+      public const string SdkVersion = "7.0.100";
+      public const string ApplicationVersion = "33529";
+      public const string ApplicationDisplayVersion = "1.0.21";
     }
   }
 }
@@ -101,6 +103,7 @@ namespace global
   [<assembly: AssemblyInformationalVersion("1.0.21-561387e2f6dc90046f56ef4c3ac501aad0d5ec0a")>]
   [<assembly: AssemblyConfiguration("Release")>]
   [<assembly: AssemblyMetadata("AssemblyName","YourApp")>]
+  [<assembly: AssemblyMetadata("TargetFrameworkMoniker","net6.0")>]
   [<assembly: AssemblyMetadata("Date","Sunday, April 23, 2023 9:42:21 PM 0900")>]
   [<assembly: AssemblyMetadata("Branch","master")>]
   [<assembly: AssemblyMetadata("Tags","")>]
@@ -112,8 +115,8 @@ namespace global
   [<assembly: AssemblyMetadata("Generated","Sunday, April 23, 2023 9:42:21 PM 0900")>]
   [<assembly: AssemblyMetadata("Platform","AnyCPU")>]
   [<assembly: AssemblyMetadata("BuildOn","Unix")>]
-  [<assembly: AssemblyMetadata("SdkVersion","5.0.101")>]
-  [<assembly: AssemblyMetadata("ApplicationVersion","12345678901")>]
+  [<assembly: AssemblyMetadata("SdkVersion","7.0.100")>]
+  [<assembly: AssemblyMetadata("ApplicationVersion","33529")>]
   [<assembly: AssemblyMetadata("ApplicationDisplayVersion","1.0.21")>]
   do()
 
@@ -130,6 +133,8 @@ namespace global
     module AssemblyMetadata =
       [<Literal>]
       let AssemblyName = "YourApp"
+      [<Literal>]
+      let TargetFrameworkMoniker = "net6.0"
       [<Literal>]
       let Date = "Sunday, April 23, 2023 9:42:21 PM 0900"
       [<Literal>]
@@ -153,9 +158,9 @@ namespace global
       [<Literal>]
       let BuildOn = "Unix"
       [<Literal>]
-      let SdkVersion = "5.0.101"
+      let SdkVersion = "7.0.100"
       [<Literal>]
-      let ApplicationVersion = "12345678901"
+      let ApplicationVersion = "33529"
       [<Literal>]
       let ApplicationDisplayVersion = "1.0.21"
   do()
