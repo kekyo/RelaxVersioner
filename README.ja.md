@@ -462,6 +462,8 @@ nuspecファイルを使ってパッケージを生成する場合は、デフ�
 
 ## 履歴
 
+* 3.2.0:
+  * GitReaderを1.4.0に上げました。
 * 3.1.0:
   * デフォルトルールの `AssemblyMetadata.TargetFramework` を `AssemblyMetadata.TargetFrameworkMoniker` に変更しました。
   * `AssemblyMetadata.ApplicationVersion` が65535を超えていたのを修正。

@@ -441,7 +441,9 @@ When you are using a nuspec file to generate a NuGet package, there are addition
 
 ## History
 
-* 3.1.0:.
+* 3.2.0:
+  * Updated GitReader to 1.4.0.
+* 3.1.0:
   * Changed default rule `AssemblyMetadata.TargetFramework` to `AssemblyMetadata.TargetFrameworkMoniker`.
   * Fixed `AssemblyMetadata.ApplicationVersion` exceeding 65535.
   * Add `AssemblyMetadata.RootNamespace`.
