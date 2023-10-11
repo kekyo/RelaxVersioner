@@ -19,7 +19,7 @@ Git tag/branch based, full-automatic version information inserter.
 * If you use RelaxVersioner, version handling ONLY use with Git tags/branches/commit messages. Of course you don't need more tooling knowledge, and easy integrates continuous-integration environments.
 * Target language/environments (Probably fits most current .NET development environments):
   * C#, F#, VB.NET, C++/CLI and NuGet packaging (dotnet cli packer).
-  * Visual Studio 2022/2019/2017/2015, Rider, dotnet SDK cli, MSBuild on `net7.0`, `net6.0`, `net5.0`, `netcoreapp3.1`, `netcoreapp2.2` and `net461` environment (NOT your project platform) and related IDEs.
+  * Visual Studio 2022/2019/2017/2015, Rider, dotnet SDK cli, MSBuild on .NET 8/7/6/5, .NET Core 3.1/2.2 and .NET Framework 4.6.1 environment (NOT your project platform) and related IDEs.
 * Auto collect version information from local Git repository tags/branch name.
 * Independent AssemblyInfo.cs file, generated code will output into a temporary file. (Not manipulate directly AssemblyInfo.cs file).
 * Place source code location which isn't obstructive for Git. (ex: obj/Debug)
@@ -441,6 +441,8 @@ When you are using a nuspec file to generate a NuGet package, there are addition
 
 ## History
 
+* 3.2.20:
+  * .NET 8.0 RC1 is now supported. Although it can probably be used for the .NET 8.0 release without any modification, but will release a rebuilt version after .NET 8.0 is released.
 * 3.2.0:
   * Updated GitReader to 1.4.0.
 * 3.1.0:
