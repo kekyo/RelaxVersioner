@@ -1,7 +1,7 @@
 # RelaxVersioner
-![RelaxVersioner](Images/CenterCLR.RelaxVersioner.128.png)
+![RelaxVersioner](Images/RelaxVersioner.128.png)
 
-[English language is here](https://github.com/kekyo/CenterCLR.RelaxVersioner)
+[English language is here](https://github.com/kekyo/RelaxVersioner)
 
 # Status
 
@@ -10,7 +10,7 @@
 | | master | devel |
 |:---|:---|:---|
 | Packages | [![NuGet RelaxVersioner (master)](https://img.shields.io/nuget/v/RelaxVersioner.svg?style=flat)](https://www.nuget.org/packages/RelaxVersioner) | [![MyGet RelaxVersioner (devel)](https://img.shields.io/myget/kekyo/v/RelaxVersioner.svg?style=flat&label=myget)](https://www.myget.org/feed/kekyo/package/nuget/RelaxVersioner)
-| Continuous integration | [![RelaxVersioner CI build (master)](https://github.com/kekyo/CenterCLR.RelaxVersioner/workflows/.NET/badge.svg?branch=master)](https://github.com/kekyo/CenterCLR.RelaxVersioner/actions) | [![RelaxVersioner CI build (devel)](https://github.com/kekyo/CenterCLR.RelaxVersioner/workflows/.NET/badge.svg?branch=devel)](https://github.com/kekyo/CenterCLR.RelaxVersioner/actions)
+| Continuous integration | [![RelaxVersioner CI build (master)](https://github.com/kekyo/RelaxVersioner/workflows/.NET/badge.svg?branch=master)](https://github.com/kekyo/RelaxVersioner/actions) | [![RelaxVersioner CI build (devel)](https://github.com/kekyo/RelaxVersioner/workflows/.NET/badge.svg?branch=devel)](https://github.com/kekyo/RelaxVersioner/actions)
 
 ## これは何？
 
@@ -19,7 +19,7 @@ Git タグ・ブランチベースの、全自動バージョン情報挿入パ�
 * RelaxVersionerのNuGetパッケージをインストールするだけで、Gitのタグ・ブランチ・コミットメッセージだけを使って、バージョン管理が出来ます。つまり、追加のツール操作が不要なため、Gitさえ知っていれば学習コストがほとんどなく、CI環境にも容易に対応できます。
 * サポートしている言語と環境は、以下の通りです（恐らく、現在のほとんどの.NET開発環境に適合します）:
   * C#・F#・VB.NET・C++/CLI、そしてNuGetパッケージング (dotnet cli packコマンド)
-  * Visual Studio 2022/2019/2017/2015, Rider, dotnet SDK cli, `net7.0`, `net6.0`, `net5.0`, `netcoreapp3.1`, `netcoreapp2.2` 及び `net461` 以上の元で動作するMSBuild環境 (注: MSBuildの動作プラットフォームの事です、あなたがターゲットにしたいプロジェクトの事ではありません)、及びこれらを使用する任意のIDE。
+  * Visual Studio 2022/2019/2017/2015, Rider, dotnet SDK cli, .NET 8/7/6/5, .NET Core 3.1/2.2 及び .NET Framework 4.6.1 以上の元で動作するMSBuild環境 (注: MSBuildの動作プラットフォームの事です、あなたがターゲットにしたいプロジェクトの事ではありません)、及びこれらを使用する任意のIDE。
 * ローカルのGitリポジトリから、自動的にタグ・ブランチの名称を取得し、アセンブリ属性に適用することが出来ます。
 * AssemblyInfo.csファイルを直接変更しません。RelaxVersionerはテンポラリファイルに定義を出力し、それをコンパイルさせます。
 * Visual Studio/MSBuildの中間出力フォルダーを自動的に使用するため、Gitリポジトリ内を汚すことがありません。
@@ -333,7 +333,7 @@ RelaxVersioner (や、その他の自動バージョニングツール) は、
 
 そのため、build.yml (GitHub Actionsのスクリプト) に、
 `fetch-depth: 0` を追加して下さい。
-[このリポジトリで実際に使用している例を参照できます。](https://github.com/kekyo/CenterCLR.RelaxVersioner/blob/master/.github/workflows/build.yml#L11)
+[このリポジトリで実際に使用している例を参照できます。](https://github.com/kekyo/RelaxVersioner/blob/master/.github/workflows/build.yml#L11)
 
 ### NuGetパッケージ生成にnuspecファイルを使用する
 
@@ -462,6 +462,9 @@ nuspecファイルを使ってパッケージを生成する場合は、デフ�
 
 ## 履歴
 
+* 3.2.20:
+  * .NET 8.0 RC1に対応しました。恐らくそのまま正式な.NET 8.0バージョンにも使用できますが、
+    .NET 8.0がリリースされたのちに再ビルドしたバージョンをリリースします。
 * 3.2.0:
   * GitReaderを1.4.0に上げました。
 * 3.1.0:
@@ -545,7 +548,7 @@ nuspecファイルを使ってパッケージを生成する場合は、デフ�
   * リテラルシンボル定義の追加。"ThisAssembly"クラス(モジュール)内に定義されたシンボルを参照することで、リフレクションAPIを使用しないで各定義を使用することが出来ます。出力されるコードの例を参照。
   * "TargetFramework" (tfm), "TargetFrameworkIdentity" (tfid), "TargetFrameworkVersion" (tfv), "TargetFrameworkProfile" (tfp) のそれぞれのキーをサポート。デフォルトのルールではtfmが出力されます。カスタムルールファイルの例を参照。
   * パッケージサイズが小さくなりました。
-  * 破壊的変更: パッケージ名が"CenterCLR.RelaxVersioner"から"RelaxVersioner"に変更されました。古いパッケージを参照することは出来ますが、NuGetのリストには表示されなくなります。
+  * 破壊的変更: パッケージ名が"RelaxVersioner"から"RelaxVersioner"に変更されました。古いパッケージを参照することは出来ますが、NuGetのリストには表示されなくなります。
 * 1.0.10:
   * プロジェクト参照先のパッケージバージョンを誤って解釈する問題を修正 (NuGetの内部実装の変更による)
 * 1.0.5:

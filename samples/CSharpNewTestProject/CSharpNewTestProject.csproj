@@ -8,15 +8,15 @@
     <RuntimeFrameworkVersion>2.1.0</RuntimeFrameworkVersion>
     <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
 
-    <Product>CenterCLR.RelaxVersioner</Product>
-    <Trademark>CenterCLR.RelaxVersioner</Trademark>
+    <Product>RelaxVersioner</Product>
+    <Trademark>RelaxVersioner</Trademark>
     <Copyright>Copyright (c) 2016-2019 Kouji Matsui</Copyright>
-    <Description>CSharpNewTestProject (Part of CenterCLR.RelaxVersioner)</Description>
+    <Description>CSharpNewTestProject (Part of RelaxVersioner)</Description>
     <Authors>Kouji Matsui (@kozy_kekyo, @kekyo2)</Authors>
     <RepositoryType>git</RepositoryType>
     <PackageId>CSharpNewTestProject</PackageId>
     <PackageLicenseExpression>Apache-2.0</PackageLicenseExpression>
-    <PackageIconUrl>https://github.com/kekyo/CenterCLR.RelaxVersioner/raw/master/Images/CenterCLR.RelaxVersioner.100.png</PackageIconUrl>
+    <PackageIconUrl>https://github.com/kekyo/RelaxVersioner/raw/master/Images/RelaxVersioner.100.png</PackageIconUrl>
   </PropertyGroup>
 
   <ItemGroup>

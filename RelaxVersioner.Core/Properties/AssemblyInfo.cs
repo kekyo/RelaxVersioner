@@ -9,4 +9,4 @@
 
 using System.Runtime.CompilerServices;
 
-[assembly: InternalsVisibleTo("CenterCLR.RelaxVersioner.Core.Tests")]
+[assembly: InternalsVisibleTo("RelaxVersioner.Core.Tests")]

@@ -1,13 +1,13 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFrameworks>net461;netstandard2.0;netstandard2.1;net5.0;net6.0;net7.0</TargetFrameworks>
+    <TargetFrameworks>net461;netstandard2.0;netstandard2.1;net5.0;net6.0;net7.0;net8.0</TargetFrameworks>
     <NoWarn>$(NoWarn);NU5104</NoWarn>
 
     <AssemblyName>RelaxVersioner.Core</AssemblyName>
     <AssemblyTitle>RelaxVersioner.Core</AssemblyTitle>
 
-    <PackageIcon>CenterCLR.RelaxVersioner.100.png</PackageIcon>
+    <PackageIcon>RelaxVersioner.100.png</PackageIcon>
     <PackageTags>version;generator;git;auto;easy;generate;versioning;continuous;integration;delivery;tag;branch;assemblyinfo;msbuild</PackageTags>
   </PropertyGroup>
 
@@ -15,7 +15,8 @@
     <PackageReference Include="GitReader" Version="1.4.0" />
     <PackageReference Include="NamingFormatter" Version="2.2.0" />
     <PackageReference Include="Microsoft.NETFramework.ReferenceAssemblies" Version="1.0.3" PrivateAssets="All" />
-    <PackageReference Include="RelaxVersioner" Version="3.1.0" PrivateAssets="all" />
+    <PackageReference Condition="'$(RV_BOOTSTRAP)' != 'True'"
+                      Include="RelaxVersioner" Version="*" PrivateAssets="all" />
   </ItemGroup>
 
   <ItemGroup>
@@ -24,7 +25,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <None Include="..\Images\CenterCLR.RelaxVersioner.100.png" Link="Images\CenterCLR.RelaxVersioner.100.png" Pack="true" PackagePath="\" />
+    <None Include="..\Images\RelaxVersioner.100.png" Link="Images\RelaxVersioner.100.png" Pack="true" PackagePath="\" />
   </ItemGroup>
 
 </Project>

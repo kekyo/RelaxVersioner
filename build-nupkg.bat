@@ -10,5 +10,5 @@ echo "==========================================================="
 echo "Build RelaxVersioner"
 echo.
 
-dotnet build -p:Configuration=Release -p:Platform="Any CPU" CenterCLR.RelaxVersioner.sln
-dotnet pack -p:Configuration=Release -p:Platform="Any CPU" -o artifacts CenterCLR.RelaxVersioner.sln
+dotnet build -p:Configuration=Release -p:Platform="Any CPU" --no-cache RelaxVersioner.sln
+dotnet pack -p:Configuration=Release -p:Platform="Any CPU" -o artifacts RelaxVersioner.sln

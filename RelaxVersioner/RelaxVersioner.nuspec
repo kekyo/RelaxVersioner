@@ -11,25 +11,26 @@
     <summary>Git tag/branch based, full-automatic version information inserter.</summary>
     <copyright>Copyright (c) Kouji Matsui</copyright>
     <license type="expression">Apache-2.0</license>
-    <projectUrl>https://github.com/kekyo/CenterCLR.RelaxVersioner</projectUrl>
-    <repository type="git" url="https://github.com/kekyo/CenterCLR.RelaxVersioner.git" branch="$RepositoryBranch$" commit="$RepositoryCommit$" />
-    <icon>CenterCLR.RelaxVersioner.100.png</icon>
+    <projectUrl>https://github.com/kekyo/RelaxVersioner</projectUrl>
+    <repository type="git" url="https://github.com/kekyo/RelaxVersioner.git" branch="$RepositoryBranch$" commit="$RepositoryCommit$" />
+    <icon>RelaxVersioner.100.png</icon>
     <requireLicenseAcceptance>false</requireLicenseAcceptance>
     <releaseNotes>$PackageReleaseNotes$</releaseNotes>
     <tags>version;generator;git;auto;easy;generate;versioning;continuous;integration;delivery;tag;branch;assemblyinfo;msbuild;tool</tags>
   </metadata>
   <files>
-    <file src="..\Images\CenterCLR.RelaxVersioner.100.png" target="/" />
+    <file src="..\Images\RelaxVersioner.100.png" target="/" />
     <file src="build\*.*" target="build" />
     <file src="buildMultiTargeting\*.*" target="buildMultiTargeting" />
-    <file src="..\CenterCLR.RelaxVersioner.Tasks\bin\$Configuration$\net40\*.*" target="build/net40" />
-    <file src="..\CenterCLR.RelaxVersioner.Tasks\bin\$Configuration$\net46\*.*" target="build/net46" />
-    <file src="..\CenterCLR.RelaxVersioner.Tasks\bin\$Configuration$\netstandard2.0\*.*" target="build/netstandard2.0" />
+    <file src="..\RelaxVersioner.Tasks\bin\$Configuration$\net40\*.*" target="build/net40" />
+    <file src="..\RelaxVersioner.Tasks\bin\$Configuration$\net46\*.*" target="build/net46" />
+    <file src="..\RelaxVersioner.Tasks\bin\$Configuration$\netstandard2.0\*.*" target="build/netstandard2.0" />
     <file src="bin\$Configuration$\net461\**\*.*" target="tools/net461" />
     <file src="bin\$Configuration$\netcoreapp2.2\**\*.*" target="tools/netcoreapp2.2" />
     <file src="bin\$Configuration$\netcoreapp3.1\**\*.*" target="tools/netcoreapp3.1" />
     <file src="bin\$Configuration$\net5.0\**\*.*" target="tools/net5.0" />
     <file src="bin\$Configuration$\net6.0\**\*.*" target="tools/net6.0" />
     <file src="bin\$Configuration$\net7.0\**\*.*" target="tools/net7.0" />
+    <file src="bin\$Configuration$\net8.0\**\*.*" target="tools/net8.0" />
   </files>
 </package>
