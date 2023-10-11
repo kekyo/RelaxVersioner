@@ -10,7 +10,7 @@
     <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
     <PublishRepositoryUrl>true</PublishRepositoryUrl>
     <RepositoryType>git</RepositoryType>
-    <RepositoryUrl>https://github.com/kekyo/CenterCLR.RelaxVersioner.git</RepositoryUrl>
+    <RepositoryUrl>https://github.com/kekyo/RelaxVersioner.git</RepositoryUrl>
       
     <RootNamespace>RelaxVersioner</RootNamespace>
     <Product>RelaxVersioner</Product>

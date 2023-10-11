@@ -57,19 +57,19 @@ jobs:
     # Build
     
     - name: NuGet restore
-      run: dotnet restore -p:Configuration=Release CenterCLR.RelaxVersioner.sln
+      run: dotnet restore -p:Configuration=Release RelaxVersioner.sln
 
     - name: Build
-      run: dotnet build -p:Configuration=Release -p:BuildIdentifier=${GITHUB_RUN_NUMBER} CenterCLR.RelaxVersioner.sln
+      run: dotnet build -p:Configuration=Release -p:BuildIdentifier=${GITHUB_RUN_NUMBER} RelaxVersioner.sln
 
     - name: Build NuGet packages
-      run: dotnet pack -p:Configuration=Release -p:BuildIdentifier=${GITHUB_RUN_NUMBER} -o artifacts CenterCLR.RelaxVersioner.sln
+      run: dotnet pack -p:Configuration=Release -p:BuildIdentifier=${GITHUB_RUN_NUMBER} -o artifacts RelaxVersioner.sln
 
     #-----------------------------------------------------------------------
     # Test
 
     - name: Test
-      run: dotnet test --no-restore --verbosity normal -p:CITest=True CenterCLR.RelaxVersioner.sln
+      run: dotnet test --no-restore --verbosity normal -p:CITest=True RelaxVersioner.sln
       timeout-minutes: 2
 
     #-----------------------------------------------------------------------

@@ -14,7 +14,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\CenterCLR.RelaxVersioner.Core\CenterCLR.RelaxVersioner.Core.csproj" />
+    <ProjectReference Include="..\RelaxVersioner.Core\RelaxVersioner.Core.csproj" />
   </ItemGroup>
 
   <ItemGroup>

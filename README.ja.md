@@ -1,7 +1,7 @@
 # RelaxVersioner
-![RelaxVersioner](Images/CenterCLR.RelaxVersioner.128.png)
+![RelaxVersioner](Images/RelaxVersioner.128.png)
 
-[English language is here](https://github.com/kekyo/CenterCLR.RelaxVersioner)
+[English language is here](https://github.com/kekyo/RelaxVersioner)
 
 # Status
 
@@ -10,7 +10,7 @@
 | | master | devel |
 |:---|:---|:---|
 | Packages | [![NuGet RelaxVersioner (master)](https://img.shields.io/nuget/v/RelaxVersioner.svg?style=flat)](https://www.nuget.org/packages/RelaxVersioner) | [![MyGet RelaxVersioner (devel)](https://img.shields.io/myget/kekyo/v/RelaxVersioner.svg?style=flat&label=myget)](https://www.myget.org/feed/kekyo/package/nuget/RelaxVersioner)
-| Continuous integration | [![RelaxVersioner CI build (master)](https://github.com/kekyo/CenterCLR.RelaxVersioner/workflows/.NET/badge.svg?branch=master)](https://github.com/kekyo/CenterCLR.RelaxVersioner/actions) | [![RelaxVersioner CI build (devel)](https://github.com/kekyo/CenterCLR.RelaxVersioner/workflows/.NET/badge.svg?branch=devel)](https://github.com/kekyo/CenterCLR.RelaxVersioner/actions)
+| Continuous integration | [![RelaxVersioner CI build (master)](https://github.com/kekyo/RelaxVersioner/workflows/.NET/badge.svg?branch=master)](https://github.com/kekyo/RelaxVersioner/actions) | [![RelaxVersioner CI build (devel)](https://github.com/kekyo/RelaxVersioner/workflows/.NET/badge.svg?branch=devel)](https://github.com/kekyo/RelaxVersioner/actions)
 
 ## これは何？
 
@@ -333,7 +333,7 @@ RelaxVersioner (や、その他の自動バージョニングツール) は、
 
 そのため、build.yml (GitHub Actionsのスクリプト) に、
 `fetch-depth: 0` を追加して下さい。
-[このリポジトリで実際に使用している例を参照できます。](https://github.com/kekyo/CenterCLR.RelaxVersioner/blob/master/.github/workflows/build.yml#L11)
+[このリポジトリで実際に使用している例を参照できます。](https://github.com/kekyo/RelaxVersioner/blob/master/.github/workflows/build.yml#L11)
 
 ### NuGetパッケージ生成にnuspecファイルを使用する
 
@@ -545,7 +545,7 @@ nuspecファイルを使ってパッケージを生成する場合は、デフ�
   * リテラルシンボル定義の追加。"ThisAssembly"クラス(モジュール)内に定義されたシンボルを参照することで、リフレクションAPIを使用しないで各定義を使用することが出来ます。出力されるコードの例を参照。
   * "TargetFramework" (tfm), "TargetFrameworkIdentity" (tfid), "TargetFrameworkVersion" (tfv), "TargetFrameworkProfile" (tfp) のそれぞれのキーをサポート。デフォルトのルールではtfmが出力されます。カスタムルールファイルの例を参照。
   * パッケージサイズが小さくなりました。
-  * 破壊的変更: パッケージ名が"CenterCLR.RelaxVersioner"から"RelaxVersioner"に変更されました。古いパッケージを参照することは出来ますが、NuGetのリストには表示されなくなります。
+  * 破壊的変更: パッケージ名が"RelaxVersioner"から"RelaxVersioner"に変更されました。古いパッケージを参照することは出来ますが、NuGetのリストには表示されなくなります。
 * 1.0.10:
   * プロジェクト参照先のパッケージバージョンを誤って解釈する問題を修正 (NuGetの内部実装の変更による)
 * 1.0.5:

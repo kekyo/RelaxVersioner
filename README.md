@@ -1,7 +1,7 @@
 # RelaxVersioner
-![RelaxVersioner](Images/CenterCLR.RelaxVersioner.128.png)
+![RelaxVersioner](Images/RelaxVersioner.128.png)
 
-[![Japanese language](Images/Japanese.256.png)](https://github.com/kekyo/CenterCLR.RelaxVersioner/blob/master/README.ja.md)
+[![Japanese language](Images/Japanese.256.png)](https://github.com/kekyo/RelaxVersioner/blob/master/README.ja.md)
 
 # Status
 
@@ -10,7 +10,7 @@
 | | master | devel |
 |:---|:---|:---|
 | Packages | [![NuGet RelaxVersioner (master)](https://img.shields.io/nuget/v/RelaxVersioner.svg?style=flat)](https://www.nuget.org/packages/RelaxVersioner) | [![MyGet RelaxVersioner (devel)](https://img.shields.io/myget/kekyo/v/RelaxVersioner.svg?style=flat&label=myget)](https://www.myget.org/feed/kekyo/package/nuget/RelaxVersioner)
-| Continuous integration | [![RelaxVersioner CI build (master)](https://github.com/kekyo/CenterCLR.RelaxVersioner/workflows/.NET/badge.svg?branch=master)](https://github.com/kekyo/CenterCLR.RelaxVersioner/actions) | [![RelaxVersioner CI build (devel)](https://github.com/kekyo/CenterCLR.RelaxVersioner/workflows/.NET/badge.svg?branch=devel)](https://github.com/kekyo/CenterCLR.RelaxVersioner/actions)
+| Continuous integration | [![RelaxVersioner CI build (master)](https://github.com/kekyo/RelaxVersioner/workflows/.NET/badge.svg?branch=master)](https://github.com/kekyo/RelaxVersioner/actions) | [![RelaxVersioner CI build (devel)](https://github.com/kekyo/RelaxVersioner/workflows/.NET/badge.svg?branch=devel)](https://github.com/kekyo/RelaxVersioner/actions)
 
 ## What is this?
 
@@ -313,7 +313,7 @@ Because it makes better fast cloning.
 
 RelaxVersioner (and other automated versioning tool) requires all commits for calculating version depth.
 Apply `fetch-depth: 0` predication into your build.yml script.
-[You can understand with this real script.](https://github.com/kekyo/CenterCLR.RelaxVersioner/blob/master/.github/workflows/build.yml#L11)
+[You can understand with this real script.](https://github.com/kekyo/RelaxVersioner/blob/master/.github/workflows/build.yml#L11)
 
 ### Use nuspec file to generate NuGet package
 
@@ -525,7 +525,7 @@ When you are using a nuspec file to generate a NuGet package, there are addition
   * Added static literals. You can refer all symbols inside of "ThisAssembly" class/module, doesn't require using any reflection API.
   * Added support keys "TargetFramework" (tfm), "TargetFrameworkIdentity" (tfid), "TargetFrameworkVersion" (tfv) and "TargetFrameworkProfile" (tfp). Only includes tfm by defaults. See also rule set file section.
   * Reduced package size.
-  * Breaking change: Changed package naming from "CenterCLR.RelaxVersioner" to "RelaxVersioner". Old packages will make unlisting.
+  * Breaking change: Changed package naming from "RelaxVersioner" to "RelaxVersioner". Old packages will make unlisting.
 * 1.0.10:
   * Fixed failure aggregating referenced package versions (related changing nuget impls).
 * 1.0.5:

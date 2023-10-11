@@ -7,7 +7,7 @@
     <AssemblyName>RelaxVersioner.Core</AssemblyName>
     <AssemblyTitle>RelaxVersioner.Core</AssemblyTitle>
 
-    <PackageIcon>CenterCLR.RelaxVersioner.100.png</PackageIcon>
+    <PackageIcon>RelaxVersioner.100.png</PackageIcon>
     <PackageTags>version;generator;git;auto;easy;generate;versioning;continuous;integration;delivery;tag;branch;assemblyinfo;msbuild</PackageTags>
   </PropertyGroup>
 
@@ -25,7 +25,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <None Include="..\Images\CenterCLR.RelaxVersioner.100.png" Link="Images\CenterCLR.RelaxVersioner.100.png" Pack="true" PackagePath="\" />
+    <None Include="..\Images\RelaxVersioner.100.png" Link="Images\RelaxVersioner.100.png" Pack="true" PackagePath="\" />
   </ItemGroup>
 
 </Project>

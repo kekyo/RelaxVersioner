@@ -1,8 +1,8 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
-  <Import Project="..\..\CenterCLR.RelaxVersioner\build\RelaxVersioner.props" />
+  <Import Project="..\..\RelaxVersioner\build\RelaxVersioner.props" />
   <PropertyGroup>
-    <_RVB_MSBuildTaskPath>$([System.IO.Path]::Combine('$(MSBuildThisFileDirectory)','..','..','CenterCLR.RelaxVersioner.Tasks','bin','$(Configuration)','$(_RVB_TaskPlatformName)','RelaxVersioner.Tasks.dll'))</_RVB_MSBuildTaskPath>
+    <_RVB_MSBuildTaskPath>$([System.IO.Path]::Combine('$(MSBuildThisFileDirectory)','..','..','RelaxVersioner.Tasks','bin','$(Configuration)','$(_RVB_TaskPlatformName)','RelaxVersioner.Tasks.dll'))</_RVB_MSBuildTaskPath>
   </PropertyGroup>
 
   <!-- ====================================================== -->
@@ -18,9 +18,9 @@
 
   <!-- ====================================================== -->
 
-  <Import Project="..\..\CenterCLR.RelaxVersioner\build\RelaxVersioner.targets" />
+  <Import Project="..\..\RelaxVersioner\build\RelaxVersioner.targets" />
   <PropertyGroup>
-    <_RVB_ToolingDir>$([System.IO.Path]::Combine('$(MSBuildThisFileDirectory)','..','..','CenterCLR.RelaxVersioner','bin','$(Configuration)','$(_RVB_PlatformName)'))</_RVB_ToolingDir>
+    <_RVB_ToolingDir>$([System.IO.Path]::Combine('$(MSBuildThisFileDirectory)','..','..','RelaxVersioner','bin','$(Configuration)','$(_RVB_PlatformName)'))</_RVB_ToolingDir>
   </PropertyGroup>
     
   <Target Name="AB" AfterTargets="Compile">

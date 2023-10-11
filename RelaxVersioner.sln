@@ -9,10 +9,10 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 		build-nupkg-bootstrap.bat = build-nupkg-bootstrap.bat
 		build-nupkg.bat = build-nupkg.bat
 		.github\workflows\build.yml = .github\workflows\build.yml
-		Images\CenterCLR.RelaxVersioner.100.png = Images\CenterCLR.RelaxVersioner.100.png
-		Images\CenterCLR.RelaxVersioner.128.png = Images\CenterCLR.RelaxVersioner.128.png
-		Images\CenterCLR.RelaxVersioner.256.png = Images\CenterCLR.RelaxVersioner.256.png
-		CenterCLR.RelaxVersioner.sln.licenseheader = CenterCLR.RelaxVersioner.sln.licenseheader
+		Images\RelaxVersioner.100.png = Images\RelaxVersioner.100.png
+		Images\RelaxVersioner.128.png = Images\RelaxVersioner.128.png
+		Images\RelaxVersioner.256.png = Images\RelaxVersioner.256.png
+		RelaxVersioner.sln.licenseheader = RelaxVersioner.sln.licenseheader
 		Directory.Build.props = Directory.Build.props
 		NuGet.Config = NuGet.Config
 		README.ja.md = README.ja.md
@@ -22,16 +22,16 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Images", "Images", "{98ADE163-2FFB-47B0-AA7A-1A294DD7276F}"
 	ProjectSection(SolutionItems) = preProject
-		Images\CenterCLR.RelaxVersioner.256.png = Images\CenterCLR.RelaxVersioner.256.png
-		Images\CenterCLR.RelaxVersioner.design = Images\CenterCLR.RelaxVersioner.design
+		Images\RelaxVersioner.256.png = Images\RelaxVersioner.256.png
+		Images\RelaxVersioner.design = Images\RelaxVersioner.design
 		Images\Explorer.png = Images\Explorer.png
 		Images\ILSpy.png = Images\ILSpy.png
 		Images\Japanese.256.png = Images\Japanese.256.png
 	EndProjectSection
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CenterCLR.RelaxVersioner.Core", "CenterCLR.RelaxVersioner.Core\CenterCLR.RelaxVersioner.Core.csproj", "{AD40D6E7-1B5F-4734-919A-3C55F5A40CB9}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RelaxVersioner.Core", "RelaxVersioner.Core\RelaxVersioner.Core.csproj", "{AD40D6E7-1B5F-4734-919A-3C55F5A40CB9}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CenterCLR.RelaxVersioner", "CenterCLR.RelaxVersioner\CenterCLR.RelaxVersioner.csproj", "{F8E532DE-24B0-49BA-A667-6447CA4BAA89}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RelaxVersioner", "RelaxVersioner\RelaxVersioner.csproj", "{F8E532DE-24B0-49BA-A667-6447CA4BAA89}"
 	ProjectSection(ProjectDependencies) = postProject
 		{52B2423C-846D-4D9B-AB10-D5C593D3FB1D} = {52B2423C-846D-4D9B-AB10-D5C593D3FB1D}
 	EndProjectSection
@@ -43,7 +43,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "docs", "docs", "{A8639232-7
 		docs\More-On-Rules.md = docs\More-On-Rules.md
 	EndProjectSection
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CenterCLR.RelaxVersioner.Tasks", "CenterCLR.RelaxVersioner.Tasks\CenterCLR.RelaxVersioner.Tasks.csproj", "{52B2423C-846D-4D9B-AB10-D5C593D3FB1D}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RelaxVersioner.Tasks", "RelaxVersioner.Tasks\RelaxVersioner.Tasks.csproj", "{52B2423C-846D-4D9B-AB10-D5C593D3FB1D}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "PlayGround", "PlayGround", "{3494B361-3FEC-41FF-AD57-40BF94D57CDD}"
 EndProject
@@ -54,7 +54,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CSharpNewTestProject", "Pla
 		{F8E532DE-24B0-49BA-A667-6447CA4BAA89} = {F8E532DE-24B0-49BA-A667-6447CA4BAA89}
 	EndProjectSection
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CenterCLR.RelaxVersioner.Core.Tests", "CenterCLR.RelaxVersioner.Core.Tests\CenterCLR.RelaxVersioner.Core.Tests.csproj", "{05E2B482-70C7-4A36-B90B-BC87BE0E1ADF}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RelaxVersioner.Core.Tests", "RelaxVersioner.Core.Tests\RelaxVersioner.Core.Tests.csproj", "{05E2B482-70C7-4A36-B90B-BC87BE0E1ADF}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
