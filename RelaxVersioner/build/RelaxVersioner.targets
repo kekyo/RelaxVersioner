@@ -64,7 +64,7 @@
     <!-- For C++ (or C++/CLI) -->
     <PropertyGroup Condition="'$(Language)' == 'C++'">
       <RelaxVersionerOutputDir Condition="'$(RelaxVersionerOutputDir)' == ''">$([System.IO.Path]::Combine('$(MSBuildProjectDirectory)','$(IntDir)'))</RelaxVersionerOutputDir>
-      <RelaxVersionerOutputPath Condition="'$(RelaxVersionerOutputPath)' == ''">$([System.IO.Path]::Combine('$(RelaxVersionerOutputDir)','RelaxVersioner$(DefaultLanguageSourceExtension)'))</RelaxVersionerOutputPath>
+      <RelaxVersionerOutputPath Condition="'$(RelaxVersionerOutputPath)' == ''">$([System.IO.Path]::Combine('$(RelaxVersionerOutputDir)','RelaxVersioner_Metadata$(DefaultLanguageSourceExtension)'))</RelaxVersionerOutputPath>
       <RelaxVersionerLanguage Condition="('$(RelaxVersionerLanguage)' == '') AND ('$(CLRSupport)' == 'true')">C++/CLI</RelaxVersionerLanguage>
       <RelaxVersionerLanguage Condition="'$(RelaxVersionerLanguage)' == ''">C++</RelaxVersionerLanguage>
       <RelaxVersionerNamespace Condition="'$(RelaxVersionerNamespace)' == ''"></RelaxVersionerNamespace>
@@ -74,7 +74,7 @@
     <!-- For all languages except C++ -->
     <PropertyGroup Condition="'$(Language)' != 'C++'">
       <RelaxVersionerOutputDir Condition="'$(RelaxVersionerOutputDir)' == ''">$([System.IO.Path]::Combine('$(MSBuildProjectDirectory)','$(IntermediateOutputPath)'))</RelaxVersionerOutputDir>
-      <RelaxVersionerOutputPath Condition="'$(RelaxVersionerOutputPath)' == ''">$([System.IO.Path]::Combine('$(RelaxVersionerOutputDir)','RelaxVersioner$(DefaultLanguageSourceExtension)'))</RelaxVersionerOutputPath>
+      <RelaxVersionerOutputPath Condition="'$(RelaxVersionerOutputPath)' == ''">$([System.IO.Path]::Combine('$(RelaxVersionerOutputDir)','RelaxVersioner_Metadata$(DefaultLanguageSourceExtension)'))</RelaxVersionerOutputPath>
       <RelaxVersionerLanguage Condition="'$(RelaxVersionerLanguage)' == ''">$(Language)</RelaxVersionerLanguage>
     </PropertyGroup>
   
