@@ -5,12 +5,8 @@
 
 # Status
 
-[![Project Status: Active – The project has reached a stable, usable state and is being actively developed.](https://www.repostatus.org/badges/latest/active.svg)](https://www.repostatus.org/#active)
-
-| | master | devel |
-|:---|:---|:---|
-| Packages | [![NuGet RelaxVersioner (master)](https://img.shields.io/nuget/v/RelaxVersioner.svg?style=flat)](https://www.nuget.org/packages/RelaxVersioner) | [![MyGet RelaxVersioner (devel)](https://img.shields.io/myget/kekyo/v/RelaxVersioner.svg?style=flat&label=myget)](https://www.myget.org/feed/kekyo/package/nuget/RelaxVersioner)
-| Continuous integration | [![RelaxVersioner CI build (master)](https://github.com/kekyo/RelaxVersioner/workflows/.NET/badge.svg?branch=master)](https://github.com/kekyo/RelaxVersioner/actions) | [![RelaxVersioner CI build (devel)](https://github.com/kekyo/RelaxVersioner/workflows/.NET/badge.svg?branch=devel)](https://github.com/kekyo/RelaxVersioner/actions)
+[![Project Status: Active – The project has reached a stable, usable state and is being actively developed.](https://www.repostatus.org/badges/latest/active.svg)](https://www.repostatus.org/#active) 
+[![NuGet RelaxVersioner (master)](https://img.shields.io/nuget/v/RelaxVersioner.svg?style=flat)](https://www.nuget.org/packages/RelaxVersioner)
 
 ## What is this?
 
