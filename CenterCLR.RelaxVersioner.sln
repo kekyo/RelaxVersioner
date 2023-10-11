@@ -6,6 +6,7 @@ MinimumVisualStudioVersion = 10.0.40219.1
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{C3592BB3-F62F-499E-B1E8-2B497161C389}"
 	ProjectSection(SolutionItems) = preProject
 		.gitignore = .gitignore
+		build-nupkg-bootstrap.bat = build-nupkg-bootstrap.bat
 		build-nupkg.bat = build-nupkg.bat
 		.github\workflows\build.yml = .github\workflows\build.yml
 		Images\CenterCLR.RelaxVersioner.100.png = Images\CenterCLR.RelaxVersioner.100.png
@@ -53,7 +54,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CSharpNewTestProject", "Pla
 		{F8E532DE-24B0-49BA-A667-6447CA4BAA89} = {F8E532DE-24B0-49BA-A667-6447CA4BAA89}
 	EndProjectSection
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CenterCLR.RelaxVersioner.Core.Tests", "CenterCLR.RelaxVersioner.Core.Tests\CenterCLR.RelaxVersioner.Core.Tests.csproj", "{05E2B482-70C7-4A36-B90B-BC87BE0E1ADF}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CenterCLR.RelaxVersioner.Core.Tests", "CenterCLR.RelaxVersioner.Core.Tests\CenterCLR.RelaxVersioner.Core.Tests.csproj", "{05E2B482-70C7-4A36-B90B-BC87BE0E1ADF}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

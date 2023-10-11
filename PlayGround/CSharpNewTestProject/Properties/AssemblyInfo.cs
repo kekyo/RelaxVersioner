@@ -8,7 +8,7 @@ using System.Runtime.InteropServices;
 //[assembly: AssemblyCompany("")]
 //[assembly: AssemblyProduct("CSharpTestProject")]
 //[assembly: AssemblyCopyright("Copyright ©  2016")]
-[assembly: AssemblyTrademark("")]
+//[assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 
 [assembly: ComVisible(false)]
