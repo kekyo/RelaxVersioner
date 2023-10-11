@@ -18,5 +18,5 @@ echo "==========================================================="
 echo "Build RelaxVersioner (Bootstrap)"
 echo.
 
-dotnet build -p:Configuration=Release -p:Platform="Any CPU" -p:BOOTSTRAP=True -p:PackageVersion=3.2.10 CenterCLR.RelaxVersioner.sln
+dotnet build -p:Configuration=Release -p:Platform="Any CPU" -p:BOOTSTRAP=True -p:PackageVersion=3.2.10 --no-cache CenterCLR.RelaxVersioner.sln
 dotnet pack -p:Configuration=Release -p:Platform="Any CPU" -p:BOOTSTRAP=True -p:PackageVersion=3.2.10 -o artifacts CenterCLR.RelaxVersioner.sln
