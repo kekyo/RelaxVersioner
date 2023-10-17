@@ -16,7 +16,7 @@
     <icon>RelaxVersioner.100.png</icon>
     <requireLicenseAcceptance>false</requireLicenseAcceptance>
     <releaseNotes>$PackageReleaseNotes$</releaseNotes>
-    <tags>version;generator;git;auto;easy;generate;versioning;continuous;integration;delivery;tag;branch;assemblyinfo;msbuild;tool</tags>
+    <tags>versioning;generator;git;automatic;tag;branch;assemblyinfo;msbuild;tool</tags>
   </metadata>
   <files>
     <file src="..\Images\RelaxVersioner.100.png" target="/" />
