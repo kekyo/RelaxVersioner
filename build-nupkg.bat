@@ -10,5 +10,8 @@ echo "==========================================================="
 echo "Build RelaxVersioner"
 echo.
 
+rem https://github.com/dotnet/msbuild/issues/1709
+set MSBUILDDISABLENODEREUSE=1
+
 dotnet build -p:Configuration=Release -p:Platform="Any CPU" --no-cache RelaxVersioner.sln
 dotnet pack -p:Configuration=Release -p:Platform="Any CPU" -o artifacts RelaxVersioner.sln
