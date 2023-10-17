@@ -214,7 +214,7 @@ To be precise:
 
 For example, `FooBarProject/obj/Debug/net6.0/` directory hierarchy. Here are the files to save:
 
-* `RelaxVersioner.cs` : Source code including version attributes and `ThisAssembly` class definition, which is the core feature of RelaxVersioner.
+* `RelaxVersioner_Metadata.cs` : Source code including version attributes and `ThisAssembly` class definition, which is the core feature of RelaxVersioner.
 * `RelaxVersioner_Properties.xml` : A dump of all MSBuild properties in XML format, just before RelaxVersioner calculates the version.
 * `RelaxVersioner_Result.xml` : An XML dump of the main version information after RelaxVersioner has calculated the version.
 * `RelaxVersioner_Version.txt` : A text file containing only the version number after RelaxVersioner has calculated the version.

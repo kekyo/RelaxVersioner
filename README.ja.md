@@ -219,7 +219,7 @@ RelaxVersionerは、ビルド後に、以下の位置にファイルを保存し
 
 例えば、`FooBarProject/obj/Debug/net6.0/` のようなディレクトリ階層です。以下に保存するファイルを示します:
 
-* `RelaxVersioner.cs` : バージョン属性や`ThisAssembly`クラスの定義を含む、ソースコードです。RelaxVersionerの中心的な役割を果たします。
+* `RelaxVersioner_Metadata.cs` : バージョン属性や`ThisAssembly`クラスの定義を含む、ソースコードです。RelaxVersionerの中心的な役割を果たします。
 * `RelaxVersioner_Properties.xml` : RelaxVersionerがバージョン計算を行う直前の、MSBuildの全てのプロパティを、XML形式でダンプしたものです。
 * `RelaxVersioner_Result.xml` : RelaxVersionerがバージョン計算を行った後の、主要なバージョン情報をXML形式でダンプしたものです。
 * `RelaxVersioner_Version.txt` : RelaxVersionerがバージョン計算を行った後の、バージョン番号のみをテキスト形式で保存したものです。
