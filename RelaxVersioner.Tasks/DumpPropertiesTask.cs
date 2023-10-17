@@ -17,12 +17,7 @@ using Microsoft.Build.Utilities;
 
 namespace RelaxVersioner;
 
-public sealed class DumpPropertiesTask :
-#if NETFRAMEWORK
-    AppDomainIsolatedTask
-#else
-    Task
-#endif
+public sealed class DumpPropertiesTask : Task
 {
     [Required]
     public string? OutputPath
