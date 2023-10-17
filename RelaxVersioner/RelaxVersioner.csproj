@@ -24,6 +24,10 @@
     <NuspecProperties>$(NuspecProperties);Configuration=$(Configuration);PackageVersion=$(PackageVersion)</NuspecProperties>
   </PropertyGroup>
 
+  <PropertyGroup Condition="('$(TargetFramework)' == 'netcoreapp3.1') OR ('$(TargetFramework)' == 'net5.0') OR ('$(TargetFramework)' == 'net6.0') OR ('$(TargetFramework)' == 'net7.0') OR ('$(TargetFramework)' == 'net8.0')">
+    <RollForward>Minor</RollForward>
+  </PropertyGroup>
+
   <ItemGroup>
     <Content Include="buildMultiTargeting\*.*" />
     <Content Include="build\*.*" />
