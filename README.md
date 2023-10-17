@@ -1,4 +1,5 @@
 # RelaxVersioner
+
 ![RelaxVersioner](Images/RelaxVersioner.128.png)
 
 [![Japanese language](Images/Japanese.256.png)](https://github.com/kekyo/RelaxVersioner/blob/master/README.ja.md)
@@ -10,12 +11,13 @@
 
 ## What is this?
 
-Git tag/branch based, full-automatic version information inserter.
+Git tag/branch based, full-automatic version generator.
 
-* If you use RelaxVersioner, version handling ONLY use with Git tags/branches/commit messages. Of course you don't need more tooling knowledge, and easy integrates continuous-integration environments.
+* If you use RelaxVersioner, version handling only use with Git tags/branches/commit messages. Of course you only need to install NuGet package and don't need more tooling knowledge, and easy integrates continuous-integration environments.
 * Target language/environments (Probably fits most current .NET development environments):
   * C#, F#, VB.NET, C++/CLI and NuGet packaging (dotnet cli packer).
-  * Visual Studio 2022/2019/2017/2015, Rider, dotnet SDK cli, MSBuild on .NET 8/7/6/5, .NET Core 3.1/2.2 and .NET Framework 4.6.1 environment (NOT your project platform) and related IDEs.
+  * All target frameworks (ALL: `net8.0`, `netcoreapp3.1`, `net48`, `net20` and others).
+  * Visual Studio 2022/2019/2017/2015, Rider, dotnet SDK cli, MSBuild on .NET 8/7/6/5, .NET Core 3.1/2.2 and .NET Framework 4.6.1 environment (NOT your project target frameworks) and related IDEs.
 * Auto collect version information from local Git repository tags/branch name.
 * Independent AssemblyInfo.cs file, generated code will output into a temporary file. (Not manipulate directly AssemblyInfo.cs file).
 * Place source code location which isn't obstructive for Git. (ex: obj/Debug)
@@ -182,16 +184,16 @@ namespace global
 2. Install "RelaxVersioner" from NuGet.
 3. (Optional): Comment outs default "AssemblyVersion" and "AssemblyFileVersion" declarations in AssemblyInfo.cs.
 4. Let's build now! Output binary applied version informations.
-  * Default declaration of AssemblyVersion="0.0.1.0", AssemblyFileVersion="(Build date on 2sec prec.)" (ex:"2016.05.12.11523"）
-  * Applied AssemblyVersionMetadata from local Git repository (Author, Branch, Tags）. But this example git repository not created , so there declarations containing "Unknown".
+   * Default declaration of AssemblyVersion="0.0.1.0", AssemblyFileVersion="(Build date on 2sec prec.)" (ex:"2016.05.12.11523"）
+   * Applied AssemblyVersionMetadata from local Git repository (Author, Branch, Tags）. But this example git repository not created , so there declarations containing "Unknown".
 5. Create Git local repository (command: git init). And commit with message.
 6. Build retry. Output binary applied Author, Branch, Tags now.
 7. You are tagging current commit. For example "0.5.4" or "v0.5.4". Rebuild, then contains AssemblyVersion is "0.5.4" now.
-  * The auto increment feature: If your current commit doesn't apply any tags, RelaxVersioner will traverse committing history and auto increment commit depth for tail of version component. For example, tagged "0.5.4' at 2 older commit. The auto incrementer will calculate version "0.5.6".
-  * RelaxVersioner will traverse first priority for primary parent and then next others. Therefore, if you're using branch strategy, you can apply auto increment  with different version each branch when tagged different version each branch at bottom commit. For example: The tick-tock model for the master branch tagged "1.0.0" and devel branch tagged "1.1.0".
+   * The auto increment feature: If your current commit doesn't apply any tags, RelaxVersioner will traverse committing history and auto increment commit depth for tail of version component. For example, tagged "0.5.4' at 2 older commit. The auto incrementer will calculate version "0.5.6".
+   * RelaxVersioner will traverse first priority for primary parent and then next others. Therefore, if you're using branch strategy, you can apply auto increment  with different version each branch when tagged different version each branch at bottom commit. For example: The tick-tock model for the master branch tagged "1.0.0" and devel branch tagged "1.1.0".
 8. All rights codes, tags. Push to remote repository, all done.
 9. Development cycles: next codes change and ready to release, you are tagging new version and then build, output binary auto tagged in AssemblyVersion and store informations.
-  * We can apply with automated version number when "dotnet cli" for generate NuGet package (`PackageVersion` and `PackageReleaseNotes` attributes). You can use only `dotnet pack` command.
+   * We can apply with automated version number when "dotnet cli" for generate NuGet package (`PackageVersion` and `PackageReleaseNotes` attributes). You can use only `dotnet pack` command.
 
 ----
 
