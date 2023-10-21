@@ -27,6 +27,15 @@ internal static class Utilities
     private static readonly char[] directorySeparatorChar_ =
         { Path.DirectorySeparatorChar, Path.AltDirectorySeparatorChar };
 
+    public static string GetDirectoryPath(string path) =>
+        Path.GetDirectoryName(path) switch
+        {
+            // Not accurate in Windows, but a compromise...
+            null => Path.DirectorySeparatorChar.ToString(),
+            "" => string.Empty,
+            var dp => dp,
+        };
+
     public static Dictionary<string, WriterBase> GetWriters()
     {
         return typeof(Utilities).Assembly.

@@ -209,4 +209,83 @@ public sealed class Processor
             repository?.Dispose();
         }
     }
+
+    public static void WriteSafeTransacted(
+        string path, Action<Stream> action)
+    {
+        var directoryPath = Utilities.GetDirectoryPath(path);
+        if (!Directory.Exists(directoryPath))
+        {
+            try
+            {
+                Directory.CreateDirectory(directoryPath);
+            }
+            catch
+            {
+            }
+        }
+
+        var temporaryPath = Path.Combine(
+            directoryPath, Path.GetTempFileName());
+        try
+        {
+            using (var stream = new FileStream(
+                temporaryPath, FileMode.Create, FileAccess.ReadWrite, FileShare.None))
+            {
+                action(stream);
+                stream.Flush();
+            }
+
+            var originExists = false;
+            var originPath = Path.Combine(
+                directoryPath, Path.GetTempFileName());
+            if (File.Exists(path))
+            {
+                try
+                {
+                    File.Move(path, originPath);
+                    originExists = true;
+                }
+                catch
+                {
+                }
+            }
+
+            try
+            {
+                File.Move(temporaryPath, path);
+            }
+            catch
+            {
+                if (originExists)
+                {
+                    try
+                    {
+                        File.Move(originPath, path);
+                        originExists = false;
+                    }
+                    catch
+                    {
+                    }
+                }
+                throw;
+            }
+
+            if (originExists)
+            {
+                originExists = false;
+                try
+                {
+                    File.Delete(originPath);
+                }
+                catch
+                {
+                }
+            }
+        }
+        catch
+        {
+            File.Delete(temporaryPath);
+        }
+    }
 }

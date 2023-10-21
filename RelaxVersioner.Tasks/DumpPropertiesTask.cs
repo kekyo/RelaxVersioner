@@ -28,7 +28,7 @@ public sealed class DumpPropertiesTask : Task
 
     public override bool Execute()
     {
-        if (string.IsNullOrWhiteSpace(OutputPath))
+        if (string.IsNullOrWhiteSpace(this.OutputPath))
         {
             this.Log.LogError("RelaxVersioner.DumpPropertiesTask: Required output path.");
             return false;
@@ -42,7 +42,7 @@ public sealed class DumpPropertiesTask : Task
 
         if (project != null)
         {
-            var basePath = Path.GetDirectoryName(OutputPath);
+            var basePath = Utilities.GetDirectoryPath(this.OutputPath!);
             if (!Directory.Exists(basePath))
             {
                 try
@@ -54,7 +54,7 @@ public sealed class DumpPropertiesTask : Task
                 }
             }
 
-            using (var fs = File.Create(OutputPath))
+            using (var fs = File.Create(this.OutputPath))
             {
                 var root = new XElement("Properties",
                     project.Properties.
@@ -64,7 +64,7 @@ public sealed class DumpPropertiesTask : Task
                 fs.Flush();
             }
 
-            this.Log.LogMessage($"RelaxVersioner.DumpPropertiesTask: Dump properties from build engine, Path={OutputPath}");
+            this.Log.LogMessage($"RelaxVersioner.DumpPropertiesTask: Dump properties from build engine, Path={this.OutputPath}");
             return true;
         }
         else

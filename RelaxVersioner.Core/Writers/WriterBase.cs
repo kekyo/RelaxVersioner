@@ -32,7 +32,7 @@ internal abstract class WriterBase
     {
         Debug.Assert(string.IsNullOrWhiteSpace(context.OutputPath) == false);
 
-        var targetFolder = Path.GetDirectoryName(context.OutputPath);
+        var targetFolder = Utilities.GetDirectoryPath(context.OutputPath);
         if (!string.IsNullOrWhiteSpace(targetFolder) && !Directory.Exists(targetFolder))
         {
             try
@@ -46,86 +46,88 @@ internal abstract class WriterBase
             }
         }
 
-        using (var ftw = File.CreateText(context.OutputPath))
-        {
-            var tw = new SourceCodeWriter(ftw, context);
-
-            this.WriteComment(tw,
-                $"This is auto-generated version information attributes by RelaxVersioner [{ThisAssembly.AssemblyVersion}], Do not edit.");
-            this.WriteComment(tw,
-                $"Generated date: {generated:F}");
-            tw.WriteLine();
-
-            this.WriteBeforeBody(tw);
-
-            foreach (var importNamespace in importSet)
+        Processor.WriteSafeTransacted(
+            context.OutputPath,
+            stream =>
             {
-                this.WriteImport(tw, importNamespace);
-            }
-            tw.WriteLine();
+                var tw = new SourceCodeWriter(new StreamWriter(stream), context);
 
-            foreach (var rule in ruleSet)
-            {
-                var formattedValue = Named.Format(
-                    CultureInfo.InvariantCulture,
-                    rule.Format,
-                    keyValues,
-                    key => string.Empty);
-                if (!string.IsNullOrWhiteSpace(rule.Key))
-                {
-                    this.WriteAttributeWithArguments(tw, rule.Name, rule.Key, formattedValue);
-                }
-                else
-                {
-                    this.WriteAttributeWithArguments(tw, rule.Name, formattedValue);
-                }
-            }
-            tw.WriteLine();
-            
-            if (context.GenerateStatic)
-            {
-                this.WriteBeforeLiteralBody(tw);
-
-                foreach (var g in ruleSet.GroupBy(rule => rule.Name))
-                {
-                    var rules = g.ToArray();
-
-                    if (rules.Length >= 2)
-                    {
-                        this.WriteBeforeNestedLiteralBody(tw, rules[0].Name);
-                    }
-
-                    foreach (var rule in rules)
-                    {
-                        var formattedValue = Named.Format(
-                            CultureInfo.InvariantCulture,
-                            rule.Format,
-                            keyValues,
-                            key => string.Empty);
-                        if (!string.IsNullOrWhiteSpace(rule.Key))
-                        {
-                            this.WriteLiteralWithArgument(tw, rule.Key, formattedValue);
-                        }
-                        else
-                        {
-                            this.WriteLiteralWithArgument(tw, rule.Name, formattedValue);
-                        }
-                    }
-
-                    if (rules.Length >= 2)
-                    {
-                        this.WriteAfterNestedLiteralBody(tw);
-                    }
-                }
-
-                this.WriteAfterLiteralBody(tw);
+                this.WriteComment(tw,
+                    $"This is auto-generated version information attributes by RelaxVersioner [{ThisAssembly.AssemblyVersion}], Do not edit.");
+                this.WriteComment(tw,
+                    $"Generated date: {generated:F}");
                 tw.WriteLine();
-            }
 
-            this.WriteAfterBody(tw);
+                this.WriteBeforeBody(tw);
 
-            tw.Flush();
-        }
+                foreach (var importNamespace in importSet)
+                {
+                    this.WriteImport(tw, importNamespace);
+                }
+                tw.WriteLine();
+
+                foreach (var rule in ruleSet)
+                {
+                    var formattedValue = Named.Format(
+                        CultureInfo.InvariantCulture,
+                        rule.Format,
+                        keyValues,
+                        key => string.Empty);
+                    if (!string.IsNullOrWhiteSpace(rule.Key))
+                    {
+                        this.WriteAttributeWithArguments(tw, rule.Name, rule.Key, formattedValue);
+                    }
+                    else
+                    {
+                        this.WriteAttributeWithArguments(tw, rule.Name, formattedValue);
+                    }
+                }
+                tw.WriteLine();
+
+                if (context.GenerateStatic)
+                {
+                    this.WriteBeforeLiteralBody(tw);
+
+                    foreach (var g in ruleSet.GroupBy(rule => rule.Name))
+                    {
+                        var rules = g.ToArray();
+
+                        if (rules.Length >= 2)
+                        {
+                            this.WriteBeforeNestedLiteralBody(tw, rules[0].Name);
+                        }
+
+                        foreach (var rule in rules)
+                        {
+                            var formattedValue = Named.Format(
+                                CultureInfo.InvariantCulture,
+                                rule.Format,
+                                keyValues,
+                                key => string.Empty);
+                            if (!string.IsNullOrWhiteSpace(rule.Key))
+                            {
+                                this.WriteLiteralWithArgument(tw, rule.Key, formattedValue);
+                            }
+                            else
+                            {
+                                this.WriteLiteralWithArgument(tw, rule.Name, formattedValue);
+                            }
+                        }
+
+                        if (rules.Length >= 2)
+                        {
+                            this.WriteAfterNestedLiteralBody(tw);
+                        }
+                    }
+
+                    this.WriteAfterLiteralBody(tw);
+                    tw.WriteLine();
+                }
+
+                this.WriteAfterBody(tw);
+
+                tw.Flush();
+            });
     }
 
     protected static bool IsRequiredSelfHostingMetadataAttribute(ProcessorContext context) =>
