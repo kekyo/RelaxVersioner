@@ -13,7 +13,7 @@
 
   <ItemGroup>
     <PackageReference Include="GitReader" Version="1.5.0" />
-    <PackageReference Include="NamingFormatter" Version="2.2.0" />
+    <PackageReference Include="NamingFormatter" Version="2.3.0" />
     <PackageReference Include="Microsoft.NETFramework.ReferenceAssemblies" Version="1.0.3" PrivateAssets="All" />
     <PackageReference Condition="'$(RV_BOOTSTRAP)' != 'True'"
                       Include="RelaxVersioner" Version="*" PrivateAssets="all" />
