@@ -8,12 +8,12 @@
     <AssemblyTitle>RelaxVersioner.Core</AssemblyTitle>
 
     <PackageIcon>RelaxVersioner.100.png</PackageIcon>
-    <PackageTags>version;generator;git;auto;easy;generate;versioning;continuous;integration;delivery;tag;branch;assemblyinfo;msbuild</PackageTags>
+    <PackageTags>versioning;generator;git;automatic;tag;branch;sourcelink</PackageTags>
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="GitReader" Version="1.4.0" />
-    <PackageReference Include="NamingFormatter" Version="2.2.0" />
+    <PackageReference Include="GitReader" Version="1.5.0" />
+    <PackageReference Include="NamingFormatter" Version="2.3.0" />
     <PackageReference Include="Microsoft.NETFramework.ReferenceAssemblies" Version="1.0.3" PrivateAssets="All" />
     <PackageReference Condition="'$(RV_BOOTSTRAP)' != 'True'"
                       Include="RelaxVersioner" Version="*" PrivateAssets="all" />

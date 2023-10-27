@@ -7,12 +7,22 @@
 //
 ////////////////////////////////////////////////////////////////////////////////////////
 
+using System.IO;
 using System.Reflection;
 
 namespace RelaxVersioner;
 
 internal static class Utilities
 {
+    public static string GetDirectoryPath(string path) =>
+        Path.GetDirectoryName(path) switch
+        {
+            // Not accurate in Windows, but a compromise...
+            null => Path.DirectorySeparatorChar.ToString(),
+            "" => string.Empty,
+            var dp => dp,
+        };
+
     public static object? GetField(this object instance, string name)
     {
         var type = instance.GetType();

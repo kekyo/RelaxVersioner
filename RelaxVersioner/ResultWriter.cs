@@ -29,10 +29,6 @@ internal static class ResultWriter
             type.GetFields().
                 Select(field => new XElement(field.Name, ToString(field.GetValue(result)))));
 
-        using (var fs = new FileStream(path, FileMode.Create, FileAccess.ReadWrite, FileShare.None))
-        {
-            document.Save(fs);
-            fs.Flush();
-        }
+        Processor.WriteSafeTransacted(path, document.Save);
     }
 }
