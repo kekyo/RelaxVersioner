@@ -92,7 +92,8 @@ internal static class Analyzer
 
             // Detected mostly larger version tag.
             var candidates = commit.Tags.
-                Collect(tag => Version.TryParse(tag.Name, out var v) ? v : null!).
+                Select(tag => Version.TryParse(tag.Name, out var v) ? v : null!).
+                Where(v => v != null).
                 OrderByDescending(v => v).
                 ToArray();
             if (candidates.Length >= 1)
@@ -102,7 +103,6 @@ internal static class Analyzer
                 break;
             }
 
-            // Traverse next commits.
             var parents = await commit.GetParentCommitsAsync(ct);
             if (parents.Length == 0)
             {

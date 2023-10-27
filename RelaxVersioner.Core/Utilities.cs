@@ -7,8 +7,6 @@
 //
 ////////////////////////////////////////////////////////////////////////////////////////
 
-#nullable enable
-
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -43,12 +41,12 @@ internal static class Utilities
         return typeof(Utilities).Assembly.
             GetTypes().
             Where(type => type.IsSealed && type.IsClass && typeof(WriterBase).IsAssignableFrom(type)).
-            Select(type => (WriterBase)Activator.CreateInstance(type)!).
+            Select(type => (WriterBase)Activator.CreateInstance(type)).
             ToDictionary(writer => writer.Language, StringComparer.InvariantCultureIgnoreCase);
     }
 
-    private static async Task<T?> TraversePathToRootAsync<T>(
-        string candidatePath, Func<string, Task<T?>> action)
+    private static async Task<T> TraversePathToRootAsync<T>(
+        string candidatePath, Func<string, Task<T>> action)
         where T : class
     {
         var path = Path.GetFullPath(candidatePath).
@@ -78,7 +76,7 @@ internal static class Utilities
     public static string GetDirectoryNameWithTrailingSeparator(string path) =>
         GetDirectoryNameWithoutTrailingSeparator(path) + Path.DirectorySeparatorChar;
 
-    public static async Task<StructuredRepository?> OpenRepositoryAsync(
+    public static async Task<StructuredRepository> OpenRepositoryAsync(
         Logger logger, string candidatePath)
     {
         var repository = await TraversePathToRootAsync(candidatePath, async path =>
@@ -105,30 +103,15 @@ internal static class Utilities
         return repository;
     }
 
-    public static IEnumerable<U> Collect<T, U>(
-        this IEnumerable<T> enumerable,
-        Func<T, U?> selector)
-        where U : class
-    {
-        foreach (var item in enumerable)
-        {
-            if (selector(item) is { } value)
-            {
-                yield return value;
-            }
-        }
-    }
-
     public static TValue GetValue<TKey, TValue>(
         this Dictionary<TKey, TValue> dictionary,
         TKey key,
         TValue defaultValue)
-        where TKey : notnull
     {
         Debug.Assert(dictionary != null);
         Debug.Assert(key != null);
 
-        if (dictionary!.TryGetValue(key!, out var value) == false)
+        if (dictionary.TryGetValue(key, out TValue value) == false)
         {
             value = defaultValue;
         }
@@ -170,7 +153,7 @@ internal static class Utilities
             var rulePath = Path.Combine(path, "RelaxVersioner.rules");
             if (File.Exists(rulePath))
             {
-                XElement? element = null;
+                XElement element = null;
                 try
                 {
                     element = XElement.Load(rulePath);
@@ -227,15 +210,15 @@ internal static class Utilities
         return (from rule in wrules.Elements("Rule")
                 let name = rule.Attribute("name")
                 let key = rule.Attribute("key")
-                where !string.IsNullOrWhiteSpace(name?.Value) && !string.IsNullOrWhiteSpace(key?.Value)
-                select new Rule(name.Value.Trim(), key.Value.Trim(), rule.Value.Trim()));
+                where !string.IsNullOrWhiteSpace(name?.Value)
+                select new Rule(name.Value.Trim(), key?.Value.Trim(), rule.Value.Trim()));
     }
 
     public static XElement GetDefaultRuleSet()
     {
         var type = typeof(Utilities);
         using (var stream = type.Assembly.GetManifestResourceStream(
-            type, "DefaultRuleSet.rules")!)
+            type, "DefaultRuleSet.rules"))
         {
             return XElement.Load(stream);
         }

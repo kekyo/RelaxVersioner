@@ -439,6 +439,8 @@ When you are using a nuspec file to generate a NuGet package, there are addition
 
 ## History
 
+* 3.2.60:
+  * Fixed the `ThisAssembly` symbol could not be referenced at build time.
 * 3.2.50:
   * Improved to use the highest version number when multiple version tags are included in the same commit.
 * 3.2.40:
