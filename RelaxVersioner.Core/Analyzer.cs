@@ -10,7 +10,6 @@
 #nullable enable
 
 using System.Collections.Generic;
-using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -90,19 +89,22 @@ internal static class Analyzer
                 break;
             }
 
-            // Detected mostly larger version tag.
-            var candidates = commit.Tags.
-                Collect(tag => Version.TryParse(tag.Name, out var v) ? v : null!).
-                OrderByDescending(v => v).
-                ToArray();
-            if (candidates.Length >= 1)
+            var found = false;
+            foreach (var tag in commit.Tags)
             {
-                version = candidates[0];
-                reached.Add(commit, version);
+                if (Version.TryParse(tag.Name, out var v2))
+                {
+                    version = v2;
+                    reached.Add(commit, version);
+                    found = true;
+                    break;
+                }
+            }
+            if (found)
+            {
                 break;
             }
 
-            // Traverse next commits.
             var parents = await commit.GetParentCommitsAsync(ct);
             if (parents.Length == 0)
             {
