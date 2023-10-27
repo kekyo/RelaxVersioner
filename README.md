@@ -439,6 +439,10 @@ When you are using a nuspec file to generate a NuGet package, there are addition
 
 ## History
 
+* 3.2.60:
+  * Fixed the `ThisAssembly` symbol could not be referenced at build time.
+* 3.2.50:
+  * Improved to use the highest version number when multiple version tags are included in the same commit.
 * 3.2.40:
   * .NET 8.0 RC2 is now supported. Although it can probably be used for the .NET 8.0 release without any modification, but will release a rebuilt version after .NET 8.0 is released.
 * 3.2.20:
