@@ -439,6 +439,9 @@ When you are using a nuspec file to generate a NuGet package, there are addition
 
 ## History
 
+* 3.3.0:.
+  * Added support for .NET 8.0 SDK.
+  * Updated GitReader to 1.7.0.
 * 3.2.60:
   * Fixed the `ThisAssembly` symbol could not be referenced at build time.
 * 3.2.50:
