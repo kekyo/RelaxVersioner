@@ -99,5 +99,31 @@
       </Code>
     </Task>
   </UsingTask>
-    
+
+  <UsingTask
+    TaskName="_RVB_CandidateToolingDir"
+    TaskFactory="$(_RVB_TaskFactory)"
+    AssemblyFile="$(MSBuildToolsPath)\Microsoft.Build.Tasks.Core.dll" >
+    <ParameterGroup>
+      <ToolingDir ParameterType="Microsoft.Build.Framework.ITaskItem" Required="true" />
+      <CandidateDir Output="true" />
+    </ParameterGroup>
+    <Task>
+      <Using Namespace="System"/>
+      <Using Namespace="System.IO"/>
+      <Using Namespace="Microsoft.Build.Framework"/>
+      <Code Type="Fragment" Language="cs">
+<![CDATA[
+        string path = Path.GetFullPath(ToolingDir.ItemSpec);
+        if (!Directory.Exists(path))
+        {
+            string basePath = Path.GetDirectoryName(path);
+            path = Path.Combine(basePath, "net8.0");
+        }
+        CandidateDir = path;
+]]>
+      </Code>
+    </Task>
+  </UsingTask>
+
 </Project>
