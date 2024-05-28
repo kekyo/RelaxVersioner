@@ -81,7 +81,9 @@ internal static class Utilities
     {
         var repository = await TraversePathToRootAsync(candidatePath, async path =>
         {
-            if (Directory.Exists(Path.Combine(path, ".git")))
+            var gitPath = Path.Combine(path, ".git");
+            if (Directory.Exists(gitPath) ||
+                File.Exists(gitPath))  // submodule
             {
                 var r = await Repository.Factory.OpenStructureAsync(path);
                 logger.Message(LogImportance.Low, "Repository opened, Path={0}", path);

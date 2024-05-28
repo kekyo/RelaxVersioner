@@ -53,6 +53,11 @@
   </Target>
 
   <Target Name="RelaxVersionerPrepare">
+
+    <_RVB_CandidateToolingDir ToolingDir="$(_RVB_ToolingDir)">
+      <Output TaskParameter="CandidateDir" PropertyName="_RVB_ToolingCandidateDir" />
+    </_RVB_CandidateToolingDir>
+
     <!-- For F# -->
     <PropertyGroup Condition="'$(Language)' == 'F#'">
       <!-- HACK: https://github.com/fsharp/fsharp/issues/289 -->
@@ -110,7 +115,7 @@
     
     <PropertyGroup>
       <RelaxVersionerToolingRuntimeName Condition="'$(RelaxVersionerToolingRuntimeName)' == ''">$(_RVB_RuntimeName)</RelaxVersionerToolingRuntimeName>
-      <RelaxVersionerToolingDir Condition="'$(RelaxVersionerToolingDir)' == ''">$([System.IO.Path]::GetFullPath('$(_RVB_ToolingDir)'))</RelaxVersionerToolingDir>
+      <RelaxVersionerToolingDir Condition="'$(RelaxVersionerToolingDir)' == ''">$(_RVB_ToolingCandidateDir)</RelaxVersionerToolingDir>
       <RelaxVersionerToolingPath Condition="'$(RelaxVersionerToolingPath)' == ''">$([System.IO.Path]::Combine('$(RelaxVersionerToolingDir)','$(_RVB_ExecutableName)'))</RelaxVersionerToolingPath>
     </PropertyGroup>
 
@@ -282,9 +287,13 @@
 
   <Target Name="RelaxVersionerPackPrepare">
 
+    <_RVB_CandidateToolingDir ToolingDir="$(_RVB_ToolingDir)">
+      <Output TaskParameter="CandidateDir" PropertyName="_RVB_ToolingCandidateDir" />
+    </_RVB_CandidateToolingDir>
+
     <PropertyGroup>
       <RelaxVersionerToolingRuntimeName Condition="'$(RelaxVersionerToolingRuntimeName)' == ''">$(_RVB_RuntimeName)</RelaxVersionerToolingRuntimeName>
-      <RelaxVersionerToolingDir Condition="'$(RelaxVersionerToolingDir)' == ''">$([System.IO.Path]::GetFullPath('$(_RVB_ToolingDir)'))</RelaxVersionerToolingDir>
+      <RelaxVersionerToolingDir Condition="'$(RelaxVersionerToolingDir)' == ''">$(_RVB_ToolingCandidateDir)</RelaxVersionerToolingDir>
       <RelaxVersionerToolingPath Condition="'$(RelaxVersionerToolingPath)' == ''">$([System.IO.Path]::Combine('$(RelaxVersionerToolingDir)','$(_RVB_ExecutableName)'))</RelaxVersionerToolingPath>
 
       <RelaxVersionerOutputDir Condition="'$(RelaxVersionerOutputDir)' == ''">$([System.IO.Path]::Combine('$(MSBuildProjectDirectory)','$(NuspecOutputPath)'))</RelaxVersionerOutputDir>

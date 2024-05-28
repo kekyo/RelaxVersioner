@@ -439,7 +439,10 @@ When you are using a nuspec file to generate a NuGet package, there are addition
 
 ## History
 
-* 3.3.0:.
+* 3.4.0:
+  * Fixed a problem with getting correct information when a project is placed inside a Git submodule.
+  * Updated GitReader to 1.8.0.
+* 3.3.0:
   * Added support for .NET 8.0 SDK.
   * Updated GitReader to 1.7.0.
 * 3.2.60:

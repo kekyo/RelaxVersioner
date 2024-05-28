@@ -34,6 +34,6 @@ public sealed class AnalyzerTests
 
         var actual = await Analyzer.LookupVersionLabelAsync(repository.Head!, default);
 
-        Assert.AreEqual(expectedString, actual.ToString());
+        Assert.That(expectedString, Is.EqualTo(actual.ToString()));
     }
 }
