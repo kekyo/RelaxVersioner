@@ -15,7 +15,7 @@ Git tag/branch based, full-automatic version generator.
 
 * If you use RelaxVersioner, version handling only use with Git tags/branches/commit messages. Of course you only need to install NuGet package and don't need more tooling knowledge, and easy integrates continuous-integration environments.
 * Target language/environments (Probably fits most current .NET development environments):
-  * C#, F#, VB.NET, C++/CLI and NuGet packaging (dotnet cli packer).
+  * C#, F#, VB.NET, C++/CLI, NuGet packaging (dotnet cli packer) and plain text forms. 
   * All target frameworks (ALL: `net8.0`, `netcoreapp3.1`, `net48`, `net20` and others).
   * Visual Studio 2022/2019/2017/2015, Rider, dotnet SDK cli, MSBuild on .NET 8/7/6/5, .NET Core 3.1/2.2 and .NET Framework 4.6.1 environment (NOT your project target frameworks) and related IDEs.
 * Auto collect version information from local Git repository tags/branch name.
@@ -199,6 +199,23 @@ namespace global
 
 ## Hints and Tips
 
+### Output in plain text format
+
+RelaxVersioner supports the dotnet CLI tool.
+You can output in plain text format by using the following CLI command:
+
+```bash
+$ rv --outputPath=version.txt .
+```
+
+The `rv` command can be installed with `dotnet tool install -g rv-cli`.
+
+The default format of the command is plain text format, so the file output by the above command is a text file containing only the version, such as `1.2.3`.
+You can add an option like `--language=C#` to output stand-alone source code.
+
+With this CLI, you can use a combination of RelaxVersioner for different targets than .NET.
+For example, you can apply versioning to NPM package generation in a CI/CD environment such as GitHub Actions.
+
 ### How to use version numbers after building process
 
 RelaxVersioner saves the files in the following location after build:
@@ -349,6 +366,12 @@ When you are using a nuspec file to generate a NuGet package, there are addition
 <RelaxVersioner version="1.0">
   <WriterRules>
     <!-- Target languages -->
+    <Language>Text</Language>
+    <!-- The rule name will not use in text format. -->
+    <Rule name="Text">{versionLabel}</Rule>
+  </WriterRules>
+  <WriterRules>
+    <!-- Target languages -->
     <Language>C#</Language>
     <Language>F#</Language>
     <Language>VB</Language>
@@ -439,6 +462,9 @@ When you are using a nuspec file to generate a NuGet package, there are addition
 
 ## History
 
+* 3.5.0:
+  * Plain text formatting is now supported. This can be used to apply to different environments than .NET.
+  * dotnet CLI tool is now supported. It can be installed with `dotnet tool install -g rv-cli`.
 * 3.4.0:
   * Fixed a problem with getting correct information when a project is placed inside a Git submodule.
   * Updated GitReader to 1.8.0.
