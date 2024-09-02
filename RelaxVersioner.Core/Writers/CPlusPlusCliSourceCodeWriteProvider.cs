@@ -11,7 +11,7 @@
 
 namespace RelaxVersioner.Writers;
 
-internal sealed class CPlusPlusCLIWriter : WriterBase
+internal sealed class CPlusPlusCliSourceCodeWriteProvider : SourceCodeWriteProviderBase
 {
     public override string Language => "C++/CLI";
 

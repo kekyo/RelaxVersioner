@@ -7,7 +7,11 @@
 # Status
 
 [![Project Status: Active – The project has reached a stable, usable state and is being actively developed.](https://www.repostatus.org/badges/latest/active.svg)](https://www.repostatus.org/#active) 
-[![NuGet RelaxVersioner (master)](https://img.shields.io/nuget/v/RelaxVersioner.svg?style=flat)](https://www.nuget.org/packages/RelaxVersioner)
+
+|Package|Link|
+|:----|:----|
+|RelaxVersioner (MSBuild)|[![NuGet RelaxVersioner (MSBuild)](https://img.shields.io/nuget/v/RelaxVersioner.svg?style=flat)](https://www.nuget.org/packages/RelaxVersioner)|
+|rv-cli (CLI)|[![NuGet RelaxVersioner (CLI)](https://img.shields.io/nuget/v/rv-cli.svg?style=flat)](https://www.nuget.org/packages/rv-cli)|
 
 ## これは何？
 
@@ -15,7 +19,7 @@ Git タグ・ブランチベースの、全自動バージョン情報挿入パ�
 
 * RelaxVersionerのNuGetパッケージをインストールするだけで、Gitのタグ・ブランチ・コミットメッセージだけを使って、バージョン管理が出来ます。つまり、追加のツール操作が不要なため、Gitさえ知っていれば学習コストがほとんどなく、CI環境にも容易に対応できます。
 * サポートしている言語と環境は、以下の通りです（恐らく、現在のほとんどの.NET開発環境に適合します）:
-  * C#・F#・VB.NET・C++/CLI、そしてNuGetパッケージング (dotnet cli packコマンド)
+  * C#・F#・VB.NET・C++/CLI、そしてNuGetパッケージング (dotnet cli packコマンド) とプレーンテキスト
   * 全てのターゲットフレームワーク (`net8.0`, `netcoreapp3.1`, `net48`, `net20` や他の全て).
   * Visual Studio 2022/2019/2017/2015, Rider, dotnet SDK cli, .NET 8/7/6/5, .NET Core 3.1/2.2 及び .NET Framework 4.6.1 以上の元で動作するMSBuild環境 (注: MSBuildの動作プラットフォームの事です、適用するターゲットフレームワークの事ではありません)、及びこれらを使用する任意のIDE。
 * ローカルのGitリポジトリから、自動的にタグ・ブランチの名称を取得し、アセンブリ属性に適用することが出来ます。
@@ -204,6 +208,23 @@ namespace global
 
 ## ヒントや参考情報
 
+### プレーンテキストフォーマットの出力
+
+RelaxVersionerは、dotnet CLI toolに対応しています。
+以下のようにCLIコマンドを使用することで、プレーンテキストフォーマットで出力することが出来ます:
+
+```bash
+$ rv --outputPath=version.txt .
+```
+
+`rv`コマンドは、 `dotnet tool install -g rv-cli` でインストールすることが出来ます。
+
+コマンドのデフォルトのフォーマットはプレーンテキストフォーマットなので、上記のコマンドで出力されるファイルは `1.2.3` のようなバージョンのみ含まれたテキストファイルです。
+`--language=C#` のようにオプションを追加すれば、単体のソースコード出力も可能です。
+
+このCLIを使用すれば、.NETとは異なる対象に対してRelaxVersionerを組み合わせて使用できます。
+例えば、GitHub ActionsのようなCI/CD環境で、NPMパッケージ生成にバージョンを適用することが出来ます。
+
 ### ビルド後にバージョン番号を使用する方法
 
 RelaxVersionerは、ビルド後に、以下の位置にファイルを保存します:
@@ -369,6 +390,12 @@ nuspecファイルを使ってパッケージを生成する場合は、デフ�
 <RelaxVersioner version="1.0">
   <WriterRules>
     <!-- この定義を適用する言語です。 -->
+    <Language>Text</Language>
+    <!-- テキストフォーマットでは、ルール名は出力されません。 -->
+    <Rule name="Text">{versionLabel}</Rule>
+  </WriterRules>
+  <WriterRules>
+    <!-- この定義を適用する言語です。 -->
     <Language>C#</Language>
     <Language>F#</Language>
     <Language>VB</Language>
@@ -460,6 +487,9 @@ nuspecファイルを使ってパッケージを生成する場合は、デフ�
 
 ## 履歴
 
+* 3.5.0:
+  * プレーンテキストフォーマットをサポートしました。これを使用して、.NETとは異なる環境に適用できます。
+  * dotnet CLI toolに対応しました。 `dotnet tool install -g rv-cli` でインストールできます。
 * 3.4.0:
   * Gitサブモジュール内にプロジェクトが配置されている場合に正しい情報を取得できない問題を修正。
   * GitReaderを1.8.0に上げました。

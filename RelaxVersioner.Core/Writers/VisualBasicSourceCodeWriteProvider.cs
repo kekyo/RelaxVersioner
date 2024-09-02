@@ -9,69 +9,62 @@
 
 #nullable enable
 
+using System.IO;
+
 namespace RelaxVersioner.Writers;
 
-internal sealed class CSharpWriter : WriterBase
+internal sealed class VisualBasicSourceCodeWriteProvider : SourceCodeWriteProviderBase
 {
-    public override string Language => "C#";
+    public override string Language => "VB";
 
-    protected override void WriteImport(SourceCodeWriter tw, string namespaceName)
-    {
-        var required = IsRequiredSelfHostingMetadataAttribute(tw.Context);
-        if (required)
-        {
-            tw.WriteLine("#pragma warning disable 436");
-            tw.WriteLine();
-        }
-        
-        tw.WriteLine("using {0};", namespaceName);
-    }
-    
+    protected override void WriteComment(SourceCodeWriter tw, string format, params object?[] args) =>
+        tw.WriteLine("' " + format, args);
+
+    protected override void WriteImport(SourceCodeWriter tw, string namespaceName) =>
+        tw.WriteLine("Imports {0}", namespaceName);
+
     protected override string GetArgumentString(string argumentValue) =>
-        string.Format("@\"{0}\"", argumentValue.Replace("\"", "\"\""));
+        string.Format("\"{0}\"", argumentValue.Replace("\"", "\"\""));
 
     protected override void WriteAttribute(SourceCodeWriter tw, string name, string args) =>
-        tw.WriteLine("[assembly: {0}({1})]", name, args);
+        tw.WriteLine("<Assembly: {0}({1})>", name, args);
 
     protected override void WriteBeforeLiteralBody(SourceCodeWriter tw)
     {
         if (!string.IsNullOrWhiteSpace(tw.Context.Namespace))
         {
-            tw.WriteLine("namespace {0}", tw.Context.Namespace);
-            tw.WriteLine("{");
+            tw.WriteLine("Namespace global.[{0}]", tw.Context.Namespace);
             tw.Shift();
         }
-
-        tw.WriteLine("internal static class ThisAssembly");
-        tw.WriteLine("{");
+        tw.WriteLine("Module ThisAssembly");
         tw.Shift();
     }
 
     protected override void WriteBeforeNestedLiteralBody(SourceCodeWriter tw, string name)
     {
-        tw.WriteLine("public static class {0}", name);
-        tw.WriteLine("{");
+        tw.WriteLine("Public NotInheritable Class {0}", name);
         tw.Shift();
     }
 
     protected override void WriteLiteral(SourceCodeWriter tw, string name, string value) =>
-        tw.WriteLine("public const string @{0} = {1};", name, value);
+        tw.WriteLine("Public Const [{0}] As String = {1}", name, value);
 
     protected override void WriteAfterNestedLiteralBody(SourceCodeWriter tw)
     {
         tw.UnShift();
-        tw.WriteLine("}");
+        tw.WriteLine("End Class");
     }
 
     protected override void WriteAfterLiteralBody(SourceCodeWriter tw)
     {
+        tw.UnShift();
+        tw.WriteLine("End Module");
+
         if (!string.IsNullOrWhiteSpace(tw.Context.Namespace))
         {
             tw.UnShift();
-            tw.WriteLine("}");
+            tw.WriteLine("End Namespace");
         }
-        tw.UnShift();
-        tw.WriteLine("}");
     }
 
     protected override void WriteAfterBody(SourceCodeWriter tw)
@@ -83,26 +76,24 @@ internal sealed class CSharpWriter : WriterBase
             tw.WriteLine();
         }
 
-        tw.WriteLine("namespace System.Reflection");
-        tw.WriteLine("{");
+        tw.WriteLine("Namespace global.System.Reflection");
         tw.Shift();
-        tw.WriteLine("[AttributeUsage(AttributeTargets.Assembly, AllowMultiple = true, Inherited = false)]");
-        tw.WriteLine("internal sealed class AssemblyMetadataAttribute : Attribute");
-        tw.WriteLine("{");
+        tw.WriteLine("<AttributeUsage(AttributeTargets.Assembly, AllowMultiple := True, Inherited := False)>");
+        tw.WriteLine("Friend NotInheritable Class AssemblyMetadataAttribute");
         tw.Shift();
-        tw.WriteLine("public AssemblyMetadataAttribute(string key, string value)");
-        tw.WriteLine("{");
+        tw.WriteLine("Inherits Attribute");
+        tw.WriteLine("Public Sub New(key As String, value As String)");
         tw.Shift();
-        tw.WriteLine("this.Key = key;");
-        tw.WriteLine("this.Value = value;");
+        tw.WriteLine("Me.Key = key");
+        tw.WriteLine("Me.Value = value");
         tw.UnShift();
-        tw.WriteLine("}");
-        tw.WriteLine("public string Key { get; private set; }");
-        tw.WriteLine("public string Value { get; private set; }");
+        tw.WriteLine("End Sub");
+        tw.WriteLine("Public ReadOnly Property Key As String");
+        tw.WriteLine("Public ReadOnly Property Value As String");
         tw.UnShift();
-        tw.WriteLine("}");
+        tw.WriteLine("End Class");
         tw.UnShift();
-        tw.WriteLine("}");
+        tw.WriteLine("End Namespace");
 
         if (!required)
         {

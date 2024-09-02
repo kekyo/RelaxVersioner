@@ -9,6 +9,7 @@
 
 using System;
 using System.Diagnostics;
+using System.Linq;
 using System.Runtime.InteropServices;
 using System.Threading.Tasks;
 using Mono.Options;
@@ -29,7 +30,7 @@ public static class Program
 
             var context = new ProcessorContext
             {
-                Language = "C#",
+                Language = "Text",
                 GenerateStatic = true,
             };
 
@@ -63,8 +64,12 @@ public static class Program
 
             if (help || (trails.Count < 1))
             {
+                logger.Error($"RelaxVersioner [{relaxVersionerVersion}] [{ThisAssembly.AssemblyInformationalVersion}]");
                 logger.Error("Usage: rv [options...] <projectDirectory>");
                 options.WriteOptionDescriptions(Console.Error);
+                logger.Error("");
+                logger.Error($"Supported languages: {string.Join(", ", processor.Languages.OrderBy(l => l, StringComparer.Ordinal))}");
+                logger.Error("");
                 return 1;
             }
 

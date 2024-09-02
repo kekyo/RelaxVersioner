@@ -1,23 +1,19 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFrameworks>net461;netcoreapp2.2;netcoreapp3.1;net5.0;net6.0;net7.0;net8.0</TargetFrameworks>
+    <TargetFrameworks>netcoreapp2.2;netcoreapp3.1;net5.0;net6.0;net7.0;net8.0</TargetFrameworks>
     <OutputType>Exe</OutputType>
     <Nullable>enable</Nullable>
     <CopyLocalLockFileAssemblies>true</CopyLocalLockFileAssemblies>
     <NoWarn>$(NoWarn);NU5104</NoWarn>
     <IsPackable>true</IsPackable>
-
-    <AssemblyName>rv</AssemblyName>
-
-    <!-- https://github.com/dotnet/msbuild/issues/4303 -->
-    <AddSyntheticProjectReferencesForSolutionDependencies>false</AddSyntheticProjectReferencesForSolutionDependencies>
-
-    <NuspecFile>RelaxVersioner.nuspec</NuspecFile>
-
-    <DevelopmentDependency>true</DevelopmentDependency>
+    <PackageId>rv-cli</PackageId>
+    <PackAsTool>true</PackAsTool>
+    <RollForward>Major</RollForward>
     <NoPackageAnalysis>true</NoPackageAnalysis>
     <IncludeBuildOutput>false</IncludeBuildOutput>
+
+    <AssemblyName>rv</AssemblyName>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(RV_BOOTSTRAP)' == 'True'">
@@ -29,12 +25,6 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Content Include="buildMultiTargeting\*.*" />
-    <Content Include="build\*.*" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <PackageReference Include="Microsoft.NETFramework.ReferenceAssemblies" Version="1.0.3" PrivateAssets="All" />
     <PackageReference Include="Mono.Options" Version="6.12.0.148" />
     <PackageReference Condition="'$(RV_BOOTSTRAP)' != 'True'"
                       Include="RelaxVersioner" Version="3.4.0" PrivateAssets="all" />
@@ -42,6 +32,11 @@
 
   <ItemGroup>
     <ProjectReference Include="..\RelaxVersioner.Core\RelaxVersioner.Core.csproj" />
+  </ItemGroup>
+  
+  <ItemGroup>
+    <Compile Include="..\RelaxVersioner\*.cs" />
+    <Compile Include="..\RelaxVersioner\Properties\*.cs" LinkBase="Properties\" />
   </ItemGroup>
 
 </Project>

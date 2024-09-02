@@ -36,12 +36,12 @@ internal static class Utilities
             var dp => dp,
         };
 
-    public static Dictionary<string, WriterBase> GetWriters()
+    public static Dictionary<string, WriteProviderBase> GetWriteProviders()
     {
         return typeof(Utilities).Assembly.
             GetTypes().
-            Where(type => type.IsSealed && type.IsClass && typeof(WriterBase).IsAssignableFrom(type)).
-            Select(type => (WriterBase)Activator.CreateInstance(type)).
+            Where(type => type.IsSealed && type.IsClass && typeof(WriteProviderBase).IsAssignableFrom(type)).
+            Select(type => (WriteProviderBase)Activator.CreateInstance(type)).
             ToDictionary(writer => writer.Language, StringComparer.InvariantCultureIgnoreCase);
     }
 
