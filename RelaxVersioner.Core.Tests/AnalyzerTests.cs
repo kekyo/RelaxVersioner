@@ -15,6 +15,7 @@ using System.Threading.Tasks;
 
 namespace RelaxVersioner;
 
+[Parallelizable(ParallelScope.All)]
 public sealed class AnalyzerTests
 {
     [TestCase("NothingAnyTags1", "0.0.4")]
