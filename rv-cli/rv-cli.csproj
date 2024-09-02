@@ -1,0 +1,42 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFrameworks>netcoreapp2.2;netcoreapp3.1;net5.0;net6.0;net7.0;net8.0</TargetFrameworks>
+    <OutputType>Exe</OutputType>
+    <Nullable>enable</Nullable>
+    <CopyLocalLockFileAssemblies>true</CopyLocalLockFileAssemblies>
+    <NoWarn>$(NoWarn);NU5104</NoWarn>
+    <IsPackable>true</IsPackable>
+    <PackageId>rv-cli</PackageId>
+    <PackAsTool>true</PackAsTool>
+    <RollForward>Major</RollForward>
+    <NoPackageAnalysis>true</NoPackageAnalysis>
+    <IncludeBuildOutput>false</IncludeBuildOutput>
+
+    <AssemblyName>rv</AssemblyName>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(RV_BOOTSTRAP)' == 'True'">
+    <NuspecProperties>$(NuspecProperties);Configuration=$(Configuration);PackageVersion=$(PackageVersion)</NuspecProperties>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="('$(TargetFramework)' == 'netcoreapp3.1') OR ('$(TargetFramework)' == 'net5.0') OR ('$(TargetFramework)' == 'net6.0') OR ('$(TargetFramework)' == 'net7.0') OR ('$(TargetFramework)' == 'net8.0')">
+    <RollForward>LatestMajor</RollForward>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Mono.Options" Version="6.12.0.148" />
+    <PackageReference Condition="'$(RV_BOOTSTRAP)' != 'True'"
+                      Include="RelaxVersioner" Version="3.4.0" PrivateAssets="all" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\RelaxVersioner.Core\RelaxVersioner.Core.csproj" />
+  </ItemGroup>
+  
+  <ItemGroup>
+    <Compile Include="..\RelaxVersioner\*.cs" />
+    <Compile Include="..\RelaxVersioner\Properties\*.cs" LinkBase="Properties\" />
+  </ItemGroup>
+
+</Project>
