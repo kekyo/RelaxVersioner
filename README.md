@@ -7,7 +7,11 @@
 # Status
 
 [![Project Status: Active – The project has reached a stable, usable state and is being actively developed.](https://www.repostatus.org/badges/latest/active.svg)](https://www.repostatus.org/#active) 
-[![NuGet RelaxVersioner (master)](https://img.shields.io/nuget/v/RelaxVersioner.svg?style=flat)](https://www.nuget.org/packages/RelaxVersioner)
+
+|Package|Link|
+|:----|:----|
+|RelaxVersioner (MSBuild)|[![NuGet RelaxVersioner (MSBuild)](https://img.shields.io/nuget/v/RelaxVersioner.svg?style=flat)](https://www.nuget.org/packages/RelaxVersioner)|
+|rv-cli (CLI)|[![NuGet RelaxVersioner (CLI)](https://img.shields.io/nuget/v/rv-cli.svg?style=flat)](https://www.nuget.org/packages/rv-cli)|
 
 ## What is this?
 
