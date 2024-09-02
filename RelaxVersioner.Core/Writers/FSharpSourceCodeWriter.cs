@@ -11,7 +11,7 @@
 
 namespace RelaxVersioner.Writers;
 
-internal sealed class FSharpWriter : WriterBase
+internal sealed class FSharpSourceCodeWriter : SourceCodeWriteProviderBase
 {
     public override string Language => "F#";
 

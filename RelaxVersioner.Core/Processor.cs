@@ -41,13 +41,13 @@ public sealed class ProcessorContext
 public sealed class Processor
 {
     private readonly Logger logger;
-    private readonly Dictionary<string, WriterBase> writers;
+    private readonly Dictionary<string, WriteProviderBase> writeProviders;
 
     public Processor(Logger logger)
     {
         this.logger = logger;
-        this.writers = Utilities.GetWriters();
-        this.Languages = this.writers.Values.
+        this.writeProviders = Utilities.GetWriteProviders();
+        this.Languages = this.writeProviders.Values.
             Select(writer => writer.Language).
             ToArray();
     }
@@ -71,7 +71,7 @@ public sealed class Processor
 
     private static async Task<Result> WriteVersionSourceFileAsync(
         Logger logger,
-        WriterBase writer,
+        WriteProviderBase writeProvider,
         ProcessorContext context,
         Branch targetBranch,
         DateTimeOffset generated,
@@ -156,7 +156,7 @@ public sealed class Processor
 
         if (!string.IsNullOrWhiteSpace(context.OutputPath))
         {
-            writer.Write(context, keyValues, generated, ruleSet, importSet);
+            writeProvider.Write(context, keyValues, generated, ruleSet, importSet);
         }
 
         return new Result(
@@ -178,7 +178,7 @@ public sealed class Processor
     public async Task<Result> RunAsync(
         ProcessorContext context, CancellationToken ct)
     {
-        var writer = writers[context.Language];
+        var writeProvider = writeProviders[context.Language];
 
         var elementSets = Utilities.GetElementSets(
             Utilities.LoadRuleSets(context.ProjectDirectory).
@@ -196,7 +196,7 @@ public sealed class Processor
         {
             return await WriteVersionSourceFileAsync(
                 logger,
-                writer,
+                writeProvider,
                 context,
                 repository?.Head,
                 DateTimeOffset.Now,

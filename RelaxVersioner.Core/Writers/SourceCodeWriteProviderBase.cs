@@ -19,11 +19,9 @@ using System.Linq;
 
 namespace RelaxVersioner.Writers;
 
-internal abstract class WriterBase
+internal abstract class SourceCodeWriteProviderBase : WriteProviderBase
 {
-    public abstract string Language { get; }
-
-    public void Write(
+    public override void Write(
         ProcessorContext context,
         Dictionary<string, object?> keyValues,
         DateTimeOffset generated,

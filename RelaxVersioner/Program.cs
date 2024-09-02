@@ -63,6 +63,7 @@ public static class Program
 
             if (help || (trails.Count < 1))
             {
+                logger.Error($"RelaxVersioner [{relaxVersionerVersion}] [{ThisAssembly.AssemblyInformationalVersion}]");
                 logger.Error("Usage: rv [options...] <projectDirectory>");
                 options.WriteOptionDescriptions(Console.Error);
                 return 1;
