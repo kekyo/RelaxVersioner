@@ -11,7 +11,7 @@
 
 namespace RelaxVersioner.Writers;
 
-internal sealed class CSharpSourceCodeWriter : SourceCodeWriteProviderBase
+internal sealed class CSharpSourceCodeWriteProvider : SourceCodeWriteProviderBase
 {
     public override string Language => "C#";
 

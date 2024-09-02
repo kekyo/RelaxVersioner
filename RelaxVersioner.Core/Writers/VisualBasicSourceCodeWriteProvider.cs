@@ -13,7 +13,7 @@ using System.IO;
 
 namespace RelaxVersioner.Writers;
 
-internal sealed class VisualBasicSourceCodeWriter : SourceCodeWriteProviderBase
+internal sealed class VisualBasicSourceCodeWriteProvider : SourceCodeWriteProviderBase
 {
     public override string Language => "VB";
 
