@@ -206,19 +206,54 @@ namespace global
 ### Output in plain text format
 
 RelaxVersioner supports the dotnet CLI tool.
-You can output in plain text format by using the following CLI command:
-
-```bash
-$ rv --outputPath=version.txt .
-```
-
 The `rv` command can be installed with `dotnet tool install -g rv-cli`.
 
-The default format of the command is plain text format, so the file output by the above command is a text file containing only the version, such as `1.2.3`.
-You can add an option like `--language=C#` to output stand-alone source code.
+You can easily obtain the version string by using the CLI command as follows:
+
+```bash
+$ rv .
+1.2.3.4
+```
+
+You can use `-f` to get different output. For example:
+
+```bash
+# Standard version format
+$ rv -f "{versionLabel}" .
+1.2.3.4
+
+# Commit ID
+$ rv -f "{commitId}" .
+01234567899abc ...
+
+# Complex formats are also possible
+$ rv -f "{commitId}:{commitDate:yyyyMMdd}/{branches}" .
+0123456789 ...:20240123/develop,main
+
+# Output to the file
+$ rv -o version.txt .
+$ cat version.txt
+1.2.3.4
+```
+
+* Please refer to below section such as `versionLabel`, `commitId` and etc. that are specified as placeholders.
+  * Note: `tfm`, `tfid`, `tfv`, `tfp`, `namespace` and `buildIdentifier` cannot be recognized unless they are specified as command line options.
+* If you use `-o` to output, it will not include line breaks.
+
+If you use the `-r` or `-i` options, you will be in “replace mode”, which allows you to directly replace arbitrary text.
+Using this mode, you can perform bulk text replacements in a more direct way:
+
+```bash
+# Replace text on standard input
+$ echo "@@@{commitId}@@@" | rv -r .
+@@@0123456789abc ... @@@
+
+# Replace specified file text
+$ rv -i input.txt -o output.txt .
+```
 
 With this CLI, you can use a combination of RelaxVersioner for different targets than .NET.
-For example, you can apply versioning to NPM package generation in a CI/CD environment such as GitHub Actions.
+For example, in a CI/CD environment like GitHub Actions, you can apply versions to NPM package generation or embed versions in your text documentation.
 
 ### How to use version numbers after building process
 
@@ -370,12 +405,6 @@ When you are using a nuspec file to generate a NuGet package, there are addition
 <RelaxVersioner version="1.0">
   <WriterRules>
     <!-- Target languages -->
-    <Language>Text</Language>
-    <!-- The rule name will not use in text format. -->
-    <Rule name="Text">{versionLabel}</Rule>
-  </WriterRules>
-  <WriterRules>
-    <!-- Target languages -->
     <Language>C#</Language>
     <Language>F#</Language>
     <Language>VB</Language>
@@ -414,7 +443,7 @@ When you are using a nuspec file to generate a NuGet package, there are addition
     -->
     <Rule name="AssemblyMetadata" key="CommitId">{commitId}</Rule>
     <Rule name="AssemblyMetadata" key="Date">{commitDate:F} {commitDate.Offset:hhmm}</Rule>
-    <Rule name="AssemblyMetadata" key="Branch">{branch.Name}</Rule>
+    <Rule name="AssemblyMetadata" key="Branches">{branches}</Rule>
     <Rule name="AssemblyMetadata" key="Tags">{tags}</Rule>
     <Rule name="AssemblyMetadata" key="Author">{author}</Rule>
     <Rule name="AssemblyMetadata" key="Committer">{committer}</Rule>
@@ -467,8 +496,10 @@ When you are using a nuspec file to generate a NuGet package, there are addition
 ## History
 
 * 3.5.0:
-  * Plain text formatting is now supported. This can be used to apply to different environments than .NET.
-  * dotnet CLI tool is now supported. It can be installed with `dotnet tool install -g rv-cli`.
+  * Added for specify the format of plain text output.
+  * Plain text can now be output to standard output.
+  * Replace mode has been added.
+  * The CLI version options have been simplified to improve functionality with fewer specifications.
 * 3.4.0:
   * Fixed a problem with getting correct information when a project is placed inside a Git submodule.
   * Updated GitReader to 1.8.0.
