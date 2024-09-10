@@ -37,6 +37,9 @@ internal sealed class SourceCodeWriter
     public void WriteLine(string code, params object?[] args) =>
         this.tw.WriteLine(indent + code, args);
 
+    public void WriteRaw(string code) =>
+        this.tw.Write(code);
+
     public void Flush() =>
         this.tw.Flush();
 

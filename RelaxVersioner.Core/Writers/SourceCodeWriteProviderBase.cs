@@ -21,7 +21,7 @@ namespace RelaxVersioner.Writers;
 
 internal abstract class SourceCodeWriteProviderBase : WriteProviderBase
 {
-    public override void Write(
+    private void Write(
         ProcessorContext context,
         Dictionary<string, object?> keyValues,
         DateTimeOffset generated,
@@ -29,20 +29,6 @@ internal abstract class SourceCodeWriteProviderBase : WriteProviderBase
         IEnumerable<string> importSet)
     {
         Debug.Assert(string.IsNullOrWhiteSpace(context.OutputPath) == false);
-
-        var targetFolder = Utilities.GetDirectoryPath(context.OutputPath);
-        if (!string.IsNullOrWhiteSpace(targetFolder) && !Directory.Exists(targetFolder))
-        {
-            try
-            {
-                // Construct sub folders (ex: obj\Debug).
-                // May fail if parallel-building on MSBuild, ignoring exceptions.
-                Directory.CreateDirectory(targetFolder);
-            }
-            catch
-            {
-            }
-        }
 
         Processor.WriteSafeTransacted(
             context.OutputPath,
@@ -126,6 +112,32 @@ internal abstract class SourceCodeWriteProviderBase : WriteProviderBase
 
                 tw.Flush();
             });
+    }
+
+    public override sealed void Write(
+        ProcessorContext context,
+        Dictionary<string, object?> keyValues,
+        DateTimeOffset generated)
+    {
+        var elementSets = Utilities.GetElementSets(
+            Utilities.LoadRuleSets(context.ProjectDirectory).
+                Concat(new[] { Utilities.GetDefaultRuleSet() }));
+
+        var elementSet = elementSets[context.Language];
+        var importSet = Utilities.AggregateImports(elementSet);
+        var ruleSet = Utilities.AggregateRules(elementSet);
+
+        if (context.IsDryRun)
+        {
+            return;
+        }
+
+        if (string.IsNullOrWhiteSpace(context.OutputPath))
+        {
+            throw new ArgumentException("Output path required.");
+        }
+
+        this.Write(context, keyValues, generated, ruleSet, importSet);
     }
 
     protected static bool IsRequiredSelfHostingMetadataAttribute(ProcessorContext context) =>

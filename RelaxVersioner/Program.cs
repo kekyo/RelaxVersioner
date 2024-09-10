@@ -32,6 +32,7 @@ public static class Program
             {
                 Language = "Text",
                 GenerateStatic = true,
+                TextFormat = "{versionLabel}",
             };
 
             string? resultPath = null;
@@ -49,8 +50,27 @@ public static class Program
                 { "genStatic=", $"generate static informations", v => context.GenerateStatic = bool.TryParse(v, out var genStatic) ? genStatic : true },
                 { "buildIdentifier=", $"build identifier", v => context.BuildIdentifier = v },
                 { "propertiesPath=", $"properties file", v => context.PropertiesPath = v },
-                { "outputPath=", $"output source file", v => context.OutputPath = v },
+                { "o|outputPath=", $"output source file", v => context.OutputPath = v },
                 { "resultPath=", $"output result via xml file", v => resultPath = v },
+                { "f|format=", $"set text format", v =>
+                    {
+                         context.TextFormat = v;
+                         context.Language = "Text";
+                    }
+                },
+                { "r|replace", "replace standard input", _ =>
+                    {
+                        context.ReplaceInputPath = null;
+                        context.Language = "Replace";
+                    }
+                },
+                { "i|replaceInputPath=", "replace input source file", v =>
+                    {
+                        context.ReplaceInputPath = v;
+                        context.Language = "Replace";
+                    }
+                }, 
+                { "dryrun", "dryrun mode", _ => context.IsDryRun = true },
                 { "launchDebugger", "Launch debugger", _ => launchDebugger = true },
                 { "help", "help", v => help = v != null },
             };
@@ -64,7 +84,7 @@ public static class Program
 
             if (help || (trails.Count < 1))
             {
-                logger.Error($"RelaxVersioner [{relaxVersionerVersion}] [{ThisAssembly.AssemblyInformationalVersion}]");
+                logger.Error($"RelaxVersioner [{ThisAssembly.AssemblyInformationalVersion}] [{ThisAssembly.AssemblyFileVersion}]");
                 logger.Error("Usage: rv [options...] <projectDirectory>");
                 options.WriteOptionDescriptions(Console.Error);
                 logger.Error("");
@@ -77,25 +97,33 @@ public static class Program
 
             var result = await processor.RunAsync(context, default);
 
-            var dryrunDisplay = string.IsNullOrWhiteSpace(context.OutputPath) ?
-                " (dryrun)" : string.Empty;
-            var languageDisplay = string.IsNullOrWhiteSpace(context.OutputPath) ?
-                string.Empty : $"Language={context.Language}, ";
-            var tfmDisplay = string.IsNullOrWhiteSpace(context.TargetFramework) ?
-                string.Empty : $"TFM={context.TargetFramework}, ";
-
             if (!string.IsNullOrWhiteSpace(resultPath))
             {
                 ResultWriter.Write(resultPath!, result);
             }
+            
+            if (context.Language switch
+                {
+                    "Text" => context.IsDryRun,
+                    "Replace" => context.IsDryRun,
+                    _ => true,
+                })
+            {
+                var dryrunDisplay = context.IsDryRun ?
+                    " (dryrun)" : string.Empty;
+                var languageDisplay = context.IsDryRun ?
+                    string.Empty : $"Language={context.Language}, ";
+                var tfmDisplay = context.IsDryRun ?
+                    string.Empty : $"TFM={context.TargetFramework}, ";
 
-            logger.Message(
-                LogImportance.High,
-                "Generated versions code{0}: {1}{2}Version={3}",
-                dryrunDisplay,
-                languageDisplay,
-                tfmDisplay,
-                result.Version);
+                logger.Message(
+                    LogImportance.High,
+                    "Generated versions code{0}: {1}{2}Version={3}",
+                    dryrunDisplay,
+                    languageDisplay,
+                    tfmDisplay,
+                    result.Version);
+            }
         }
         catch (Exception ex)
         {

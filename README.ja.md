@@ -211,19 +211,54 @@ namespace global
 ### プレーンテキストフォーマットの出力
 
 RelaxVersionerは、dotnet CLI toolに対応しています。
-以下のようにCLIコマンドを使用することで、プレーンテキストフォーマットで出力することが出来ます:
-
-```bash
-$ rv --outputPath=version.txt .
-```
-
 `rv`コマンドは、 `dotnet tool install -g rv-cli` でインストールすることが出来ます。
 
-コマンドのデフォルトのフォーマットはプレーンテキストフォーマットなので、上記のコマンドで出力されるファイルは `1.2.3` のようなバージョンのみ含まれたテキストファイルです。
-`--language=C#` のようにオプションを追加すれば、単体のソースコード出力も可能です。
+以下のようにCLIコマンドを使用することで、簡単にバージョン文字列を取得出来ます:
+
+```bash
+$ rv .
+1.2.3.4
+```
+
+`-f`を使用して異なる出力を得ることが出来ます。例えば:
+
+```bash
+# 標準のバージョン形式
+$ rv -f "{versionLabel}" .
+1.2.3.4
+
+# コミットID
+$ rv -f "{commitId}" .
+01234567899abc ...
+
+# 複雑なフォーマットも可能
+$ rv -f "{commitId}:{commitDate:yyyyMMdd}/{branches}" .
+0123456789 ...:20240123/develop,main
+
+# ファイルに出力
+$ rv -o version.txt .
+$ cat version.txt
+1.2.3.4
+```
+
+* プレースホルダーに指定するシンボル `versionLabel`, `commitId` などは、後述の章を参照してください。
+  * 注意: `tfm`, `tfid`, `tfv`, `tfp`, `namespace` 及び `buildIdentifier` は、それぞれコマンドラインオプションに指定されないと認識できません。
+* `-o`を使用して出力した場合は、改行が含まれません。
+
+`-r`または`-i`オプションを使用すると、任意のテキストを直接置き換える「リプレースモード」となります。
+このモードを使用すれば、もっと直接的にファイルを一括置換できます:
+
+```bash
+# 標準入力のテキストを置き換える
+$ echo "@@@{commitId}@@@" | rv -r .
+@@@0123456789abc ... @@@
+
+# 指定されたファイルを置き換える
+$ rv -i input.txt -o output.txt .
+```
 
 このCLIを使用すれば、.NETとは異なる対象に対してRelaxVersionerを組み合わせて使用できます。
-例えば、GitHub ActionsのようなCI/CD環境で、NPMパッケージ生成にバージョンを適用することが出来ます。
+例えば、GitHub ActionsのようなCI/CD環境で、NPMパッケージ生成にバージョンを適用したり、テキストのドキュメントにバージョンを埋め込んだりすることが出来ます。
 
 ### ビルド後にバージョン番号を使用する方法
 
@@ -390,12 +425,6 @@ nuspecファイルを使ってパッケージを生成する場合は、デフ�
 <RelaxVersioner version="1.0">
   <WriterRules>
     <!-- この定義を適用する言語です。 -->
-    <Language>Text</Language>
-    <!-- テキストフォーマットでは、ルール名は出力されません。 -->
-    <Rule name="Text">{versionLabel}</Rule>
-  </WriterRules>
-  <WriterRules>
-    <!-- この定義を適用する言語です。 -->
     <Language>C#</Language>
     <Language>F#</Language>
     <Language>VB</Language>
@@ -435,7 +464,7 @@ nuspecファイルを使ってパッケージを生成する場合は、デフ�
     -->
     <Rule name="AssemblyMetadata" key="CommitId">{commitId}</Rule>
     <Rule name="AssemblyMetadata" key="Date">{commitDate:F} {commitDate.Offset:hhmm}</Rule>
-    <Rule name="AssemblyMetadata" key="Branch">{branch.Name}</Rule>
+    <Rule name="AssemblyMetadata" key="Branches">{branches}</Rule>
     <Rule name="AssemblyMetadata" key="Tags">{tags}</Rule>
     <Rule name="AssemblyMetadata" key="Author">{author}</Rule>
     <Rule name="AssemblyMetadata" key="Committer">{committer}</Rule>
@@ -487,6 +516,11 @@ nuspecファイルを使ってパッケージを生成する場合は、デフ�
 
 ## 履歴
 
+* 3.6.0:
+  * プレーンテキスト出力のフォーマットを指定可能にしました
+  * プレーンテキストを標準出力に出力できるようにしました。
+  * リプレースモードを追加しました。
+  * CLIバージョンのオプションを簡略化して、少ない指定で機能するように改善しました。
 * 3.5.0:
   * プレーンテキストフォーマットをサポートしました。これを使用して、.NETとは異なる環境に適用できます。
   * dotnet CLI toolに対応しました。 `dotnet tool install -g rv-cli` でインストールできます。
