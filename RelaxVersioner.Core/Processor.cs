@@ -36,6 +36,7 @@ public sealed class ProcessorContext
     public bool GenerateStatic;
     public string BuildIdentifier;
     public string PropertiesPath;
+    public string TextFormat;
 }
 
 public sealed class Processor
@@ -75,13 +76,8 @@ public sealed class Processor
         ProcessorContext context,
         Branch targetBranch,
         DateTimeOffset generated,
-        IEnumerable<Rule> ruleSet,
-        IEnumerable<string> importSet,
         CancellationToken ct)
     {
-        Debug.Assert(ruleSet != null);
-        Debug.Assert(importSet != null);
-
         var commit = targetBranch != null ?
             await targetBranch.GetHeadCommitAsync(ct) :
             null;
@@ -156,7 +152,7 @@ public sealed class Processor
 
         if (!string.IsNullOrWhiteSpace(context.OutputPath))
         {
-            writeProvider.Write(context, keyValues, generated, ruleSet, importSet);
+            writeProvider.Write(context, keyValues, generated);
         }
 
         return new Result(
@@ -180,14 +176,6 @@ public sealed class Processor
     {
         var writeProvider = writeProviders[context.Language];
 
-        var elementSets = Utilities.GetElementSets(
-            Utilities.LoadRuleSets(context.ProjectDirectory).
-                Concat(new[] { Utilities.GetDefaultRuleSet() }));
-
-        var elementSet = elementSets[context.Language];
-        var importSet = Utilities.AggregateImports(elementSet);
-        var ruleSet = Utilities.AggregateRules(elementSet);
-
         // Traverse git repository between projectDirectory and the root.
         using var repository = await Utilities.OpenRepositoryAsync(
             logger, context.ProjectDirectory);
@@ -200,8 +188,6 @@ public sealed class Processor
                 context,
                 repository?.Head,
                 DateTimeOffset.Now,
-                ruleSet,
-                importSet,
                 ct);
         }
         finally

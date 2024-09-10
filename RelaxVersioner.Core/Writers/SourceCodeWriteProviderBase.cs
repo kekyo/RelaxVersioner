@@ -21,7 +21,7 @@ namespace RelaxVersioner.Writers;
 
 internal abstract class SourceCodeWriteProviderBase : WriteProviderBase
 {
-    public override void Write(
+    public void Write(
         ProcessorContext context,
         Dictionary<string, object?> keyValues,
         DateTimeOffset generated,
@@ -126,6 +126,22 @@ internal abstract class SourceCodeWriteProviderBase : WriteProviderBase
 
                 tw.Flush();
             });
+    }
+
+    public override sealed void Write(
+        ProcessorContext context,
+        Dictionary<string, object?> keyValues,
+        DateTimeOffset generated)
+    {
+        var elementSets = Utilities.GetElementSets(
+            Utilities.LoadRuleSets(context.ProjectDirectory).
+                Concat(new[] { Utilities.GetDefaultRuleSet() }));
+
+        var elementSet = elementSets[context.Language];
+        var importSet = Utilities.AggregateImports(elementSet);
+        var ruleSet = Utilities.AggregateRules(elementSet);
+
+        this.Write(context, keyValues, generated, ruleSet, importSet);
     }
 
     protected static bool IsRequiredSelfHostingMetadataAttribute(ProcessorContext context) =>

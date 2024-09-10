@@ -21,7 +21,5 @@ internal abstract class WriteProviderBase
     public abstract void Write(
         ProcessorContext context,
         Dictionary<string, object?> keyValues,
-        DateTimeOffset generated,
-        IEnumerable<Rule> ruleSet,
-        IEnumerable<string> importSet);
+        DateTimeOffset generated);
 }

@@ -32,6 +32,7 @@ public static class Program
             {
                 Language = "Text",
                 GenerateStatic = true,
+                TextFormat = "{versionLabel}",
             };
 
             string? resultPath = null;
@@ -49,8 +50,14 @@ public static class Program
                 { "genStatic=", $"generate static informations", v => context.GenerateStatic = bool.TryParse(v, out var genStatic) ? genStatic : true },
                 { "buildIdentifier=", $"build identifier", v => context.BuildIdentifier = v },
                 { "propertiesPath=", $"properties file", v => context.PropertiesPath = v },
-                { "outputPath=", $"output source file", v => context.OutputPath = v },
+                { "o|outputPath=", $"output source file", v => context.OutputPath = v },
                 { "resultPath=", $"output result via xml file", v => resultPath = v },
+                { "f|format=", $"set text format", v =>
+                    {
+                         context.TextFormat = v;
+                         context.Language = "Text";
+                    }
+                },
                 { "launchDebugger", "Launch debugger", _ => launchDebugger = true },
                 { "help", "help", v => help = v != null },
             };
@@ -64,7 +71,7 @@ public static class Program
 
             if (help || (trails.Count < 1))
             {
-                logger.Error($"RelaxVersioner [{relaxVersionerVersion}] [{ThisAssembly.AssemblyInformationalVersion}]");
+                logger.Error($"RelaxVersioner [{ThisAssembly.AssemblyInformationalVersion}] [{ThisAssembly.AssemblyFileVersion}]");
                 logger.Error("Usage: rv [options...] <projectDirectory>");
                 options.WriteOptionDescriptions(Console.Error);
                 logger.Error("");

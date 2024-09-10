@@ -15,12 +15,6 @@
 <RelaxVersioner version="1.0">
     <WriterRules>
         <!-- Target languages -->
-        <Language>Text</Language>
-        <!-- The rule name will not use in text format. -->
-        <Rule name="Text">{versionLabel}</Rule>
-    </WriterRules>
-    <WriterRules>
-        <!-- Target languages -->
         <Language>C#</Language>
         <Language>F#</Language>
         <Language>VB</Language>

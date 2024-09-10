@@ -25,9 +25,7 @@ internal sealed class TextWriteProvider : WriteProviderBase
     public override void Write(
         ProcessorContext context,
         Dictionary<string, object?> keyValues,
-        DateTimeOffset generated,
-        IEnumerable<Rule> ruleSet,
-        IEnumerable<string> importSet)
+        DateTimeOffset generated)
     {
         Debug.Assert(string.IsNullOrWhiteSpace(context.OutputPath) == false);
 
@@ -51,15 +49,13 @@ internal sealed class TextWriteProvider : WriteProviderBase
             {
                 var tw = new SourceCodeWriter(new StreamWriter(stream), context);
 
-                foreach (var rule in ruleSet)
-                {
-                    var formattedValue = Named.Format(
-                        CultureInfo.InvariantCulture,
-                        rule.Format,
-                        keyValues,
-                        key => string.Empty);
-                    tw.WriteLine(formattedValue);
-                }
+                var formattedValue = Named.Format(
+                    CultureInfo.InvariantCulture,
+                    context.TextFormat,
+                    keyValues,
+                    key => string.Empty);
+                
+                tw.WriteLine(formattedValue);
 
                 tw.Flush();
             });
