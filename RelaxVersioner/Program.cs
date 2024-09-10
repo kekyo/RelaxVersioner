@@ -58,6 +58,19 @@ public static class Program
                          context.Language = "Text";
                     }
                 },
+                { "r|replace", "replace standard input", _ =>
+                    {
+                        context.ReplaceInputPath = null;
+                        context.Language = "Replace";
+                    }
+                },
+                { "i|replaceInputPath=", "replace input source file", v =>
+                    {
+                        context.ReplaceInputPath = v;
+                        context.Language = "Replace";
+                    }
+                }, 
+                { "dryrun", "dryrun mode", _ => context.IsDryRun = true },
                 { "launchDebugger", "Launch debugger", _ => launchDebugger = true },
                 { "help", "help", v => help = v != null },
             };
@@ -88,15 +101,19 @@ public static class Program
             {
                 ResultWriter.Write(resultPath!, result);
             }
-
-            if (context.Language != "Text" ||
-                !string.IsNullOrWhiteSpace(context.OutputPath))
+            
+            if (context.Language switch
+                {
+                    "Text" => context.IsDryRun,
+                    "Replace" => context.IsDryRun,
+                    _ => true,
+                })
             {
-                var dryrunDisplay = (context.Language != "Text" && string.IsNullOrWhiteSpace(context.OutputPath)) ?
+                var dryrunDisplay = context.IsDryRun ?
                     " (dryrun)" : string.Empty;
-                var languageDisplay = string.IsNullOrWhiteSpace(context.OutputPath) ?
+                var languageDisplay = context.IsDryRun ?
                     string.Empty : $"Language={context.Language}, ";
-                var tfmDisplay = string.IsNullOrWhiteSpace(context.TargetFramework) ?
+                var tfmDisplay = context.IsDryRun ?
                     string.Empty : $"TFM={context.TargetFramework}, ";
 
                 logger.Message(

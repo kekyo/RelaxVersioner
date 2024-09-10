@@ -37,6 +37,8 @@ public sealed class ProcessorContext
     public string BuildIdentifier;
     public string PropertiesPath;
     public string TextFormat;
+    public string ReplaceInputPath;
+    public bool IsDryRun;
 }
 
 public sealed class Processor
@@ -226,6 +228,7 @@ public sealed class Processor
             {
                 try
                 {
+                    File.Delete(originPath);
                     File.Move(path, originPath);
                     originExists = true;
                 }
@@ -236,6 +239,7 @@ public sealed class Processor
 
             try
             {
+                File.Delete(path);
                 File.Move(temporaryPath, path);
             }
             catch

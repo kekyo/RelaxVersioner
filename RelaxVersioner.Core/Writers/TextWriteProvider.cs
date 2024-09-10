@@ -52,18 +52,9 @@ internal sealed class TextWriteProvider : WriteProviderBase
         
         if (!string.IsNullOrWhiteSpace(context.OutputPath))
         {
-            var targetFolder = Utilities.GetDirectoryPath(context.OutputPath);
-            if (!string.IsNullOrWhiteSpace(targetFolder) && !Directory.Exists(targetFolder))
+            if (context.IsDryRun)
             {
-                try
-                {
-                    // Construct sub folders (ex: obj\Debug).
-                    // May fail if parallel-building on MSBuild, ignoring exceptions.
-                    Directory.CreateDirectory(targetFolder);
-                }
-                catch
-                {
-                }
+                return;
             }
 
             Processor.WriteSafeTransacted(
