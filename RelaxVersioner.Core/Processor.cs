@@ -150,10 +150,7 @@ public sealed class Processor
             keyValues[entry.key] = entry.value;
         }
 
-        if (!string.IsNullOrWhiteSpace(context.OutputPath))
-        {
-            writeProvider.Write(context, keyValues, generated);
-        }
+        writeProvider.Write(context, keyValues, generated);
 
         return new Result(
             versionLabel,

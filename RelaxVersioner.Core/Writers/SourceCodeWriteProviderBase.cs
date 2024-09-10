@@ -133,6 +133,11 @@ internal abstract class SourceCodeWriteProviderBase : WriteProviderBase
         Dictionary<string, object?> keyValues,
         DateTimeOffset generated)
     {
+        if (string.IsNullOrWhiteSpace(context.OutputPath))
+        {
+            return;
+        }
+
         var elementSets = Utilities.GetElementSets(
             Utilities.LoadRuleSets(context.ProjectDirectory).
                 Concat(new[] { Utilities.GetDefaultRuleSet() }));

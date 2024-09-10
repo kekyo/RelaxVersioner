@@ -14,6 +14,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Globalization;
 using System.IO;
+using System.Text;
 using NamingFormatter;
 
 namespace RelaxVersioner.Writers;
@@ -27,37 +28,52 @@ internal sealed class TextWriteProvider : WriteProviderBase
         Dictionary<string, object?> keyValues,
         DateTimeOffset generated)
     {
-        Debug.Assert(string.IsNullOrWhiteSpace(context.OutputPath) == false);
-
-        var targetFolder = Utilities.GetDirectoryPath(context.OutputPath);
-        if (!string.IsNullOrWhiteSpace(targetFolder) && !Directory.Exists(targetFolder))
+        void Write(TextWriter tw, bool emitEol)
         {
-            try
+            var scw = new SourceCodeWriter(tw, context);
+
+            var formattedValue = Named.Format(
+                CultureInfo.InvariantCulture,
+                context.TextFormat,
+                keyValues,
+                key => string.Empty);
+
+            if (emitEol)
             {
-                // Construct sub folders (ex: obj\Debug).
-                // May fail if parallel-building on MSBuild, ignoring exceptions.
-                Directory.CreateDirectory(targetFolder);
+                scw.WriteLine(formattedValue);
             }
-            catch
+            else
             {
+                scw.WriteRaw(formattedValue);
             }
+
+            scw.Flush();
         }
-
-        Processor.WriteSafeTransacted(
-            context.OutputPath,
-            stream =>
+        
+        if (!string.IsNullOrWhiteSpace(context.OutputPath))
+        {
+            var targetFolder = Utilities.GetDirectoryPath(context.OutputPath);
+            if (!string.IsNullOrWhiteSpace(targetFolder) && !Directory.Exists(targetFolder))
             {
-                var tw = new SourceCodeWriter(new StreamWriter(stream), context);
+                try
+                {
+                    // Construct sub folders (ex: obj\Debug).
+                    // May fail if parallel-building on MSBuild, ignoring exceptions.
+                    Directory.CreateDirectory(targetFolder);
+                }
+                catch
+                {
+                }
+            }
 
-                var formattedValue = Named.Format(
-                    CultureInfo.InvariantCulture,
-                    context.TextFormat,
-                    keyValues,
-                    key => string.Empty);
-                
-                tw.WriteLine(formattedValue);
-
-                tw.Flush();
-            });
+            Processor.WriteSafeTransacted(
+                context.OutputPath,
+                stream => Write(new StreamWriter(stream, Encoding.UTF8), false));
+        }
+        else
+        {
+            var tw = Console.Out;
+            Write(tw, true);
+        }
     }
 }

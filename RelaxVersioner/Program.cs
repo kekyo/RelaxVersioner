@@ -84,25 +84,29 @@ public static class Program
 
             var result = await processor.RunAsync(context, default);
 
-            var dryrunDisplay = string.IsNullOrWhiteSpace(context.OutputPath) ?
-                " (dryrun)" : string.Empty;
-            var languageDisplay = string.IsNullOrWhiteSpace(context.OutputPath) ?
-                string.Empty : $"Language={context.Language}, ";
-            var tfmDisplay = string.IsNullOrWhiteSpace(context.TargetFramework) ?
-                string.Empty : $"TFM={context.TargetFramework}, ";
-
             if (!string.IsNullOrWhiteSpace(resultPath))
             {
                 ResultWriter.Write(resultPath!, result);
             }
 
-            logger.Message(
-                LogImportance.High,
-                "Generated versions code{0}: {1}{2}Version={3}",
-                dryrunDisplay,
-                languageDisplay,
-                tfmDisplay,
-                result.Version);
+            if (context.Language != "Text" ||
+                !string.IsNullOrWhiteSpace(context.OutputPath))
+            {
+                var dryrunDisplay = (context.Language != "Text" && string.IsNullOrWhiteSpace(context.OutputPath)) ?
+                    " (dryrun)" : string.Empty;
+                var languageDisplay = string.IsNullOrWhiteSpace(context.OutputPath) ?
+                    string.Empty : $"Language={context.Language}, ";
+                var tfmDisplay = string.IsNullOrWhiteSpace(context.TargetFramework) ?
+                    string.Empty : $"TFM={context.TargetFramework}, ";
+
+                logger.Message(
+                    LogImportance.High,
+                    "Generated versions code{0}: {1}{2}Version={3}",
+                    dryrunDisplay,
+                    languageDisplay,
+                    tfmDisplay,
+                    result.Version);
+            }
         }
         catch (Exception ex)
         {

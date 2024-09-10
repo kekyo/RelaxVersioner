@@ -53,7 +53,7 @@
         -->
         <Rule name="AssemblyMetadata" key="CommitId">{commitId}</Rule>
         <Rule name="AssemblyMetadata" key="Date">{commitDate:F} {commitDate.Offset:hhmm}</Rule>
-        <Rule name="AssemblyMetadata" key="Branch">{branch.Name}</Rule>
+        <Rule name="AssemblyMetadata" key="Branch">{branches}</Rule>
         <Rule name="AssemblyMetadata" key="Tags">{tags}</Rule>
         <Rule name="AssemblyMetadata" key="Author">{author}</Rule>
         <Rule name="AssemblyMetadata" key="Committer">{committer}</Rule>
