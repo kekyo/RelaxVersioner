@@ -42,7 +42,8 @@ internal sealed class TextReplaceProvider : WriteProviderBase
                     CultureInfo.InvariantCulture,
                     line,
                     keyValues,
-                    key => string.Empty);
+                    key => string.Empty,
+                    new(context.BracketStart, context.BracketEnd));
 
                 tw.WriteLine(formattedLine);
             }

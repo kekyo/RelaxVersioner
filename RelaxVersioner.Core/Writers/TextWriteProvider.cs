@@ -36,7 +36,8 @@ internal sealed class TextWriteProvider : WriteProviderBase
                 CultureInfo.InvariantCulture,
                 context.TextFormat,
                 keyValues,
-                key => string.Empty);
+                key => string.Empty,
+                new(context.BracketStart, context.BracketEnd));
 
             if (emitEol)
             {

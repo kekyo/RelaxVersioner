@@ -199,11 +199,10 @@ namespace global
 9. Development cycles: next codes change and ready to release, you are tagging new version and then build, output binary auto tagged in AssemblyVersion and store informations.
    * We can apply with automated version number when "dotnet cli" for generate NuGet package (`PackageVersion` and `PackageReleaseNotes` attributes). You can use only `dotnet pack` command.
 
+
 ----
 
-## Hints and Tips
-
-### Output in plain text format
+## Command line interface (CLI)
 
 RelaxVersioner supports the dotnet CLI tool.
 The `rv` command can be installed with `dotnet tool install -g rv-cli`.
@@ -252,8 +251,24 @@ $ echo "@@@{commitId}@@@" | rv -r .
 $ rv -i input.txt -o output.txt .
 ```
 
+The standard bracket for the replacement keyword is in the form of braces '{ ... }', but different bracket characters can be used.
+For example, when applied to a document, braces can cause false positives, so a custom bracket is used to replace them:
+
+```bash
+# Replace with custom brackets
+# Separate left and right bracket definitions with commas
+$ echo "ABC#{commitId}#XYZ" | rv -r --bracket "#{,}#" .
+ABC0123456789abc ... XYZ
+```
+
+Translated with DeepL.com (free version)
 With this CLI, you can use a combination of RelaxVersioner for different targets than .NET.
 For example, in a CI/CD environment like GitHub Actions, you can apply versions to NPM package generation or embed versions in your text documentation.
+
+
+----
+
+## Hints and Tips
 
 ### How to use version numbers after building process
 
@@ -495,6 +510,13 @@ When you are using a nuspec file to generate a NuGet package, there are addition
 
 ## History
 
+* 3.7.0:
+  * CLI now supports custom bracket specification.
+* 3.6.0:
+  * Plain text output format on CLI can now be specified
+  * Plain text on CLI can now be output to standard output.
+  * Added replace mode on CLI.
+  * Simplified the CLI version options to work with fewer specifications.
 * 3.5.0:
   * Added for specify the format of plain text output.
   * Plain text can now be output to standard output.

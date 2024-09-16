@@ -56,7 +56,8 @@ internal abstract class SourceCodeWriteProviderBase : WriteProviderBase
                         CultureInfo.InvariantCulture,
                         rule.Format,
                         keyValues,
-                        key => string.Empty);
+                        key => string.Empty,
+                        new(context.BracketStart, context.BracketEnd));
                     if (!string.IsNullOrWhiteSpace(rule.Key))
                     {
                         this.WriteAttributeWithArguments(tw, rule.Name, rule.Key, formattedValue);
@@ -87,7 +88,8 @@ internal abstract class SourceCodeWriteProviderBase : WriteProviderBase
                                 CultureInfo.InvariantCulture,
                                 rule.Format,
                                 keyValues,
-                                key => string.Empty);
+                                key => string.Empty,
+                                new(context.BracketStart, context.BracketEnd));
                             if (!string.IsNullOrWhiteSpace(rule.Key))
                             {
                                 this.WriteLiteralWithArgument(tw, rule.Key, formattedValue);
