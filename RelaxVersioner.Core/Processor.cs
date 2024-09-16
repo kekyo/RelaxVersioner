@@ -38,6 +38,8 @@ public sealed class ProcessorContext
     public string PropertiesPath;
     public string TextFormat;
     public string ReplaceInputPath;
+    public string BracketStart;
+    public string BracketEnd;
     public bool IsDryRun;
 }
 

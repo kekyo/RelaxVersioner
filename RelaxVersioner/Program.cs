@@ -69,7 +69,16 @@ public static class Program
                         context.ReplaceInputPath = v;
                         context.Language = "Replace";
                     }
-                }, 
+                },
+                { "bracket=", "enable custom bracket", v =>
+                    {
+                        if (v.Split(',') is { Length: 2 } splitted)
+                        {
+                            context.BracketStart = splitted[0];
+                            context.BracketEnd = splitted[1];
+                        }
+                    }
+                },
                 { "dryrun", "dryrun mode", _ => context.IsDryRun = true },
                 { "launchDebugger", "Launch debugger", _ => launchDebugger = true },
                 { "help", "help", v => help = v != null },
