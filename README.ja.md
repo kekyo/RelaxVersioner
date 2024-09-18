@@ -15,34 +15,48 @@
 
 ## これは何？
 
-Git タグ・ブランチベースの、全自動バージョン情報挿入パッケージです。
+.NETやそのドキュメントなどに、現在のバージョンを埋め込みたいと考えたことはありませんか？
+更に、CIでそのようさ操作を自動化したいが、追加の作業があまりに不透明かつ多くて閉口したことはありませんか？
 
-* RelaxVersionerのNuGetパッケージをインストールするだけで、Gitのタグ・ブランチ・コミットメッセージだけを使って、バージョン管理が出来ます。つまり、追加のツール操作が不要なため、Gitさえ知っていれば学習コストがほとんどなく、CI環境にも容易に対応できます。
-* サポートしている言語と環境は、以下の通りです（恐らく、現在のほとんどの.NET開発環境に適合します）:
-  * C#・F#・VB.NET・C++/CLI、そしてNuGetパッケージング (dotnet cli packコマンド) とプレーンテキスト
-  * 全てのターゲットフレームワーク (`net8.0`, `netcoreapp3.1`, `net48`, `net20` や他の全て).
-  * Visual Studio 2022/2019/2017/2015, Rider, dotnet SDK cli, .NET 8/7/6/5, .NET Core 3.1/2.2 及び .NET Framework 4.6.1 以上の元で動作するMSBuild環境 (注: MSBuildの動作プラットフォームの事です、適用するターゲットフレームワークの事ではありません)、及びこれらを使用する任意のIDE。
-* ローカルのGitリポジトリから、自動的にタグ・ブランチの名称を取得し、アセンブリ属性に適用することが出来ます。
-* AssemblyInfo.csファイルを直接変更しません。RelaxVersionerはテンポラリファイルに定義を出力し、それをコンパイルさせます。
-* Visual Studio/MSBuildの中間出力フォルダーを自動的に使用するため、Gitリポジトリ内を汚すことがありません。
-* カスタムルールセットを定義することで、出力する属性と内容をカスタマイズすることが出来ます。
+C#ではこのような情報を、慣例で`AssemblyInfo.cs`ファイルに記述します:
 
-### バージョン情報が埋め込まれた、Explorerで見るアセンブリのプロパティ
+```csharp
+using System.Reflection;
+
+// アセンブリ属性でバージョン番号を埋め込む
+[assembly: AssemblyVersion("1.0.21")]
+```
+
+しかし、標準で行われることはここまでです。埋め込まれたバージョン番号を適切に更新するのは、開発者の責任でした。
+
+RelaxVersionerは、バージョンの適用をGitのタグ付けで行うことで、きわめてシンプルにバージョンの埋め込みを実現します。
+簡単に言えば、Gitタグに `1.0.21` と付ければ、自動的に上記のようなアセンブリ属性が生成されて埋め込まれると言う事です!
+
+バージョン番号が埋め込まれたアセンブリは、Explorerのプロパティページでその一部を確認できます:
 
 ![Assembly property at the explorer](Images/Explorer.png)
 
-### バージョン情報が埋め込まれた、ILSpyで見るアセンブリの属性群
+ILSpyで見れば、すべての情報も確認できるでしょう:
 
 ![Assembly wide attributes at ILSpy](Images/ILSpy.png)
 
-----
+* RelaxVersionerのNuGetパッケージを、あなたの.NETプロジェクトにインストールするだけで、ビルド時にGitのタグからバージョン番号を完全に自動で埋め込みます。
+  * タグが付いていないコミットでも心配ありません。過去にさかのぼってタグを見つけ、自動的にインクリメントされたバージョンを適用できます。
+* タグだけではありません。コミットID、ブランチ名、オーサー名や日付など、付随する情報も埋め込みます。フォーマットも自由に変更できます。
+* また、埋め込む対象の情報をカスタマイズする事もできます。例えば、MSBuildで使われる変数の値を埋め込むことで、ビルド時の詳細な情報も埋め込むことが出来ます。
+* バージョンの埋め込みは、完全にMSBuildに統合されます。つまり、NuGetパッケージをインストールするだけで、Visual Studio、Rider、Visual Studio CodeといったIDEや　、CIのビルドプロセスでそのままバージョン埋め込みを実現できます。
+  * RelaxVersionerには、環境に依存するコードは含まれていないので、ほぼすべての.NET環境で動作します。
+* CLIインターフェイスも存在します。テキストドキュメントにバージョン番号を埋め込んだり、.NETとは異なるプロジェクトシステム（例えばNPMの`project.json`、`Makefile`など）に対しても、同じバージョン表記を適用できます。
 
-## 出力されるコードの例:
+### 出力されるコードの例
 
-### For C#:
+以下はC#の例ですが、他にF#、VB.net、C++/CLIに対応しています。出力される属性は同じです。
+
+アセンブリ属性のほかに、 `ThisAssembly` シンボルも定義されます。これは、リフレクションを使って属性を探索しなくても、簡単に各種バージョン情報を取得できる利点があります:
 
 ``` csharp
 using System.Reflection;
+
 [assembly: AssemblyVersion("1.0.21")]
 [assembly: AssemblyFileVersion("2020.12.20.33529")]
 [assembly: AssemblyInformationalVersion("1.0.21-561387e2f6dc90046f56ef4c3ac501aad0d5ec0a")]
@@ -95,78 +109,7 @@ namespace YourApp
 }
 ```
 
-### For F#:
-
-``` fsharp
-namespace global
-  open System.Reflection
-  [<assembly: AssemblyVersion("1.0.21")>]
-  [<assembly: AssemblyFileVersion("2020.12.20.33529")>]
-  [<assembly: AssemblyInformationalVersion("1.0.21-561387e2f6dc90046f56ef4c3ac501aad0d5ec0a")>]
-  [<assembly: AssemblyConfiguration("Release")>]
-  [<assembly: AssemblyMetadata("AssemblyName","YourApp")>]
-  [<assembly: AssemblyMetadata("TargetFrameworkMoniker","net6.0")>]
-  [<assembly: AssemblyMetadata("Date","Sunday, April 23, 2023 9:42:21 PM 0900")>]
-  [<assembly: AssemblyMetadata("Branch","master")>]
-  [<assembly: AssemblyMetadata("Tags","")>]
-  [<assembly: AssemblyMetadata("Author","Kouji Matsui <k@kekyo.net>")>]
-  [<assembly: AssemblyMetadata("Committer","Kouji Matsui <k@kekyo.net>")>]
-  [<assembly: AssemblyMetadata("Subject","Merge branch 'devel'")>]
-  [<assembly: AssemblyMetadata("Body","")>]
-  [<assembly: AssemblyMetadata("Build","")>]
-  [<assembly: AssemblyMetadata("Generated","Sunday, April 23, 2023 9:42:21 PM 0900")>]
-  [<assembly: AssemblyMetadata("Platform","AnyCPU")>]
-  [<assembly: AssemblyMetadata("BuildOn","Unix")>]
-  [<assembly: AssemblyMetadata("SdkVersion","7.0.100")>]
-  [<assembly: AssemblyMetadata("ApplicationVersion","33529")>]
-  [<assembly: AssemblyMetadata("ApplicationDisplayVersion","1.0.21")>]
-  do()
-
-namespace global
-  module internal ThisAssembly =
-    [<Literal>]
-    let AssemblyVersion = "1.0.21"
-    [<Literal>]
-    let AssemblyFileVersion = "2020.12.20.33529"
-    [<Literal>]
-    let AssemblyInformationalVersion = "1.0.21-561387e2f6dc90046f56ef4c3ac501aad0d5ec0a"
-    [<Literal>]
-    let AssemblyConfiguration = "Release"
-    module AssemblyMetadata =
-      [<Literal>]
-      let AssemblyName = "YourApp"
-      [<Literal>]
-      let TargetFrameworkMoniker = "net6.0"
-      [<Literal>]
-      let Date = "Sunday, April 23, 2023 9:42:21 PM 0900"
-      [<Literal>]
-      let Branch = "master"
-      [<Literal>]
-      let Tags = ""
-      [<Literal>]
-      let Author = "Kouji Matsui <k@kekyo.net>"
-      [<Literal>]
-      let Committer = "Kouji Matsui <k@kekyo.net>"
-      [<Literal>]
-      let Subject = "Merge branch 'devel'"
-      [<Literal>]
-      let Body = ""
-      [<Literal>]
-      let Build = ""
-      [<Literal>]
-      let Generated = "Sunday, April 23, 2023 9:42:21 PM 0900"
-      [<Literal>]
-      let Platform = "AnyCPU"
-      [<Literal>]
-      let BuildOn = "Unix"
-      [<Literal>]
-      let SdkVersion = "7.0.100"
-      [<Literal>]
-      let ApplicationVersion = "33529"
-      [<Literal>]
-      let ApplicationDisplayVersion = "1.0.21"
-  do()
-```
+----
 
 ## RelaxVersionerの使い方
 
@@ -207,7 +150,7 @@ namespace global
 
 ----
 
-### コマンドラインインターフェイス (CLI)
+## コマンドラインインターフェイス (CLI)
 
 RelaxVersionerは、dotnet CLI toolに対応しています。
 `rv`コマンドは、 `dotnet tool install -g rv-cli` でインストールすることが出来ます。
@@ -233,16 +176,19 @@ $ rv -f "{commitId}" .
 # 複雑なフォーマットも可能
 $ rv -f "{commitId}:{commitDate:yyyyMMdd}/{branches}" .
 0123456789 ...:20240123/develop,main
+```
 
+* プレースホルダーに指定するシンボル `versionLabel`, `commitId` などは、後述の章を参照してください。
+  * 注意: `tfm`, `tfid`, `tfv`, `tfp`, `namespace` 及び `buildIdentifier` は、それぞれコマンドラインオプションに指定されないと認識できません。
+
+`-o`オプションを使用して、直接ファイルに出力できます。この場合は、終端に改行が含まれません:
+
+```bash
 # ファイルに出力
 $ rv -o version.txt .
 $ cat version.txt
 1.2.3.4
 ```
-
-* プレースホルダーに指定するシンボル `versionLabel`, `commitId` などは、後述の章を参照してください。
-  * 注意: `tfm`, `tfid`, `tfv`, `tfp`, `namespace` 及び `buildIdentifier` は、それぞれコマンドラインオプションに指定されないと認識できません。
-* `-o`を使用して出力した場合は、改行が含まれません。
 
 `-r`または`-i`オプションを使用すると、任意のテキストを直接置き換える「リプレースモード」となります。
 このモードを使用すれば、もっと直接的にファイルを一括置換できます:

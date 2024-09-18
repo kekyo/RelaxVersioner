@@ -15,34 +15,50 @@
 
 ## What is this?
 
-Git tag/branch based, full-automatic version generator.
+Have you ever wanted to embed the current version of .NET, its documentation, etc.?
+Furthermore, have you ever wanted to automate such an operation with CI, but found the additional work to be too opaque and numerous?
 
-* If you use RelaxVersioner, version handling only use with Git tags/branches/commit messages. Of course you only need to install NuGet package and don't need more tooling knowledge, and easy integrates continuous-integration environments.
-* Target language/environments (Probably fits most current .NET development environments):
-  * C#, F#, VB.NET, C++/CLI, NuGet packaging (dotnet cli packer) and plain text forms. 
-  * All target frameworks (ALL: `net8.0`, `netcoreapp3.1`, `net48`, `net20` and others).
-  * Visual Studio 2022/2019/2017/2015, Rider, dotnet SDK cli, MSBuild on .NET 8/7/6/5, .NET Core 3.1/2.2 and .NET Framework 4.6.1 environment (NOT your project target frameworks) and related IDEs.
-* Auto collect version information from local Git repository tags/branch name.
-* Independent AssemblyInfo.cs file, generated code will output into a temporary file. (Not manipulate directly AssemblyInfo.cs file).
-* Place source code location which isn't obstructive for Git. (ex: obj/Debug)
-* You can customize output attribute/values with custom rule set file.
+In C#, such information is conventionally described in the `AssemblyInfo.cs` file:
 
-### Result for assembly property at the explorer
+```csharp
+using System.Reflection;.
 
-![Result for assembly property at the explorer](Images/Explorer.png)
+// Embed version number in assembly attribute.
+[assembly: AssemblyVersion("1.0.21")]
+```
 
-### Result for assembly wide attributes at ILSpy
+However, this is as far as the standard goes.
+It was the developer's responsibility to properly update the embedded version number.
+
+RelaxVersioner makes version embedding extremely simple by applying versions via Git tagging.
+Simply put, you can tag a Git tag with `1.0.21` and it will automatically generate and embed an assembly attribute like the one shown above!
+
+The assembly with the embedded version number can be partially viewed in the Properties page of Explorer:
+
+![Assembly property at the explorer](Images/Explorer.png)
+
+If you look in ILSpy, you will also see all the information:
 
 ![Assembly wide attributes at ILSpy](Images/ILSpy.png)
 
-----
+* Simply install RelaxVersioner's NuGet package into your .NET project and it will embed the version number from your Git tags completely automatically at build time.
+  * Don't worry about untagged commits. It can go back in time, find the tag, and apply the automatically incremented version.
+* This is not just a tag. It also embeds additional information such as commit ID, branch name, author name, date and etc. The format can be freely changed.
+* You can also customize the information to be embedded. For example, by embedding the value of variables used in MSBuild, you can also embed detailed information at build time.
+* Version embedding is fully integrated into MSBuild. This means that you can simply install the NuGet package and embed versions directly in the build process of IDEs such as Visual Studio, Rider, Visual Studio Code or in the build process of CI.
+  * RelaxVersioner does not contain any environment-dependent code, so it works in almost any .NET environment.
+* A CLI interface also exists. You can embed version numbers in text documents and apply the same version notation to different project systems than .NET (e.g. NPM's `project.json`, `Makefile` and etc.).
 
 ## Sample output code
 
-### For C#:
+The following is a C# example, but F#, VB.net, and C++/CLI are also supported. The output attributes are the same.
+
+In addition to the assembly attributes, a `ThisAssembly` symbol is also defined.
+This has the advantage that you can easily retrieve various version information without having to use reflection to search for the attributes:
 
 ``` csharp
 using System.Reflection;
+
 [assembly: AssemblyVersion("1.0.21")]
 [assembly: AssemblyFileVersion("2020.12.20.33529")]
 [assembly: AssemblyInformationalVersion("1.0.21-561387e2f6dc90046f56ef4c3ac501aad0d5ec0a")]
@@ -95,78 +111,7 @@ namespace YourApp
 }
 ```
 
-### For F#:
-
-``` fsharp
-namespace global
-  open System.Reflection
-  [<assembly: AssemblyVersion("1.0.21")>]
-  [<assembly: AssemblyFileVersion("2020.12.20.33529")>]
-  [<assembly: AssemblyInformationalVersion("1.0.21-561387e2f6dc90046f56ef4c3ac501aad0d5ec0a")>]
-  [<assembly: AssemblyConfiguration("Release")>]
-  [<assembly: AssemblyMetadata("AssemblyName","YourApp")>]
-  [<assembly: AssemblyMetadata("TargetFrameworkMoniker","net6.0")>]
-  [<assembly: AssemblyMetadata("Date","Sunday, April 23, 2023 9:42:21 PM 0900")>]
-  [<assembly: AssemblyMetadata("Branch","master")>]
-  [<assembly: AssemblyMetadata("Tags","")>]
-  [<assembly: AssemblyMetadata("Author","Kouji Matsui <k@kekyo.net>")>]
-  [<assembly: AssemblyMetadata("Committer","Kouji Matsui <k@kekyo.net>")>]
-  [<assembly: AssemblyMetadata("Subject","Merge branch 'devel'")>]
-  [<assembly: AssemblyMetadata("Body","")>]
-  [<assembly: AssemblyMetadata("Build","")>]
-  [<assembly: AssemblyMetadata("Generated","Sunday, April 23, 2023 9:42:21 PM 0900")>]
-  [<assembly: AssemblyMetadata("Platform","AnyCPU")>]
-  [<assembly: AssemblyMetadata("BuildOn","Unix")>]
-  [<assembly: AssemblyMetadata("SdkVersion","7.0.100")>]
-  [<assembly: AssemblyMetadata("ApplicationVersion","33529")>]
-  [<assembly: AssemblyMetadata("ApplicationDisplayVersion","1.0.21")>]
-  do()
-
-namespace global
-  module internal ThisAssembly =
-    [<Literal>]
-    let AssemblyVersion = "1.0.21"
-    [<Literal>]
-    let AssemblyFileVersion = "2020.12.20.33529"
-    [<Literal>]
-    let AssemblyInformationalVersion = "1.0.21-561387e2f6dc90046f56ef4c3ac501aad0d5ec0a"
-    [<Literal>]
-    let AssemblyConfiguration = "Release"
-    module AssemblyMetadata =
-      [<Literal>]
-      let AssemblyName = "YourApp"
-      [<Literal>]
-      let TargetFrameworkMoniker = "net6.0"
-      [<Literal>]
-      let Date = "Sunday, April 23, 2023 9:42:21 PM 0900"
-      [<Literal>]
-      let Branch = "master"
-      [<Literal>]
-      let Tags = ""
-      [<Literal>]
-      let Author = "Kouji Matsui <k@kekyo.net>"
-      [<Literal>]
-      let Committer = "Kouji Matsui <k@kekyo.net>"
-      [<Literal>]
-      let Subject = "Merge branch 'devel'"
-      [<Literal>]
-      let Body = ""
-      [<Literal>]
-      let Build = ""
-      [<Literal>]
-      let Generated = "Sunday, April 23, 2023 9:42:21 PM 0900"
-      [<Literal>]
-      let Platform = "AnyCPU"
-      [<Literal>]
-      let BuildOn = "Unix"
-      [<Literal>]
-      let SdkVersion = "7.0.100"
-      [<Literal>]
-      let ApplicationVersion = "33529"
-      [<Literal>]
-      let ApplicationDisplayVersion = "1.0.21"
-  do()
-```
+----
 
 ## Getting started
 
@@ -228,16 +173,20 @@ $ rv -f "{commitId}" .
 # Complex formats are also possible
 $ rv -f "{commitId}:{commitDate:yyyyMMdd}/{branches}" .
 0123456789 ...:20240123/develop,main
+```
 
+* Please refer to below section such as `versionLabel`, `commitId` and etc. that are specified as placeholders.
+  * Note: `tfm`, `tfid`, `tfv`, `tfp`, `namespace` and `buildIdentifier` cannot be recognized unless they are specified as command line options.
+
+You can use the `-o` option to output directly to a file.
+In this case, no newlines are included at the end of the line:
+
+```bash
 # Output to the file
 $ rv -o version.txt .
 $ cat version.txt
 1.2.3.4
 ```
-
-* Please refer to below section such as `versionLabel`, `commitId` and etc. that are specified as placeholders.
-  * Note: `tfm`, `tfid`, `tfv`, `tfp`, `namespace` and `buildIdentifier` cannot be recognized unless they are specified as command line options.
-* If you use `-o` to output, it will not include line breaks.
 
 If you use the `-r` or `-i` options, you will be in “replace mode”, which allows you to directly replace arbitrary text.
 Using this mode, you can perform bulk text replacements in a more direct way:
@@ -261,7 +210,6 @@ $ echo "ABC#{commitId}#XYZ" | rv -r --bracket "#{,}#" .
 ABC0123456789abc ... XYZ
 ```
 
-Translated with DeepL.com (free version)
 With this CLI, you can use a combination of RelaxVersioner for different targets than .NET.
 For example, in a CI/CD environment like GitHub Actions, you can apply versions to NPM package generation or embed versions in your text documentation.
 
