@@ -150,9 +150,13 @@ namespace YourApp
 ## Command line interface (CLI)
 
 RelaxVersioner supports the dotnet CLI tool.
-The `rv` command can be installed with `dotnet tool install -g rv-cli`.
+The `rv` command can be installed with:
 
-You can easily obtain the version string by using the CLI command as follows:
+```bash
+$ dotnet tool install -g rv-cli
+```
+
+You can easily obtain the version string by using the `rv` command as follows:
 
 ```bash
 $ rv .
