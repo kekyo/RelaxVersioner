@@ -41,6 +41,7 @@ public sealed class ProcessorContext
     public string BracketStart;
     public string BracketEnd;
     public bool IsDryRun;
+    public bool IsQuietOnStandardOutput;
     public string[] NpmPrefixes;
 }
 
@@ -59,21 +60,6 @@ public sealed class Processor
     }
 
     public string[] Languages { get; }
-
-    private readonly struct TargetCommit
-    {
-        public readonly int StartDepth;
-        public readonly Commit Commit;
-
-        public TargetCommit(int startDepth, Commit commit)
-        {
-            this.StartDepth = startDepth;
-            this.Commit = commit;
-        }
-
-        public override string ToString() =>
-            $"StartDepth={this.StartDepth}, {this.Commit}";
-    }
 
     private static async Task<Result> WriteVersionSourceFileAsync(
         Logger logger,
@@ -155,10 +141,7 @@ public sealed class Processor
             keyValues[entry.key] = entry.value;
         }
 
-        if (!string.IsNullOrWhiteSpace(context.OutputPath))
-        {
-            writeProvider.Write(context, keyValues, generated);
-        }
+        writeProvider.Write(context, keyValues, generated);
 
         return new Result(
             versionLabel,

@@ -27,9 +27,11 @@ public static class Program
         {
             var processor = new Processor(logger);
             var languages = string.Join("|", processor.Languages);
+            var verbose = false;
 
             var context = new ProcessorContext
             {
+                IsDryRun = false,
                 Language = "Text",
                 GenerateStatic = true,
                 TextFormat = "{versionLabel}",
@@ -42,7 +44,12 @@ public static class Program
 
             var options = new OptionSet
             {
-                { "language=", $"target language [{languages}]", v => context.Language = v },
+                { "l|language=", $"target language [{languages}]", v =>
+                    {
+                        context.Language = v;
+                        verbose = true;
+                    }
+                },
                 { "namespace=", "applying namespace", v => context.Namespace = v },
                 { "tfm=", "target framework moniker definition (TargetFramework)", v => context.TargetFramework = v },
                 { "tfid=", "target framework identity definition (TargetFrameworkIdentifier)", v => context.TargetFrameworkIdentity = v },
@@ -90,7 +97,9 @@ public static class Program
                         context.OutputPath = "package.json";
                     }
                 },
+                { "quiet", "quiet on stdout", _ => context.IsQuietOnStandardOutput = true },
                 { "dryrun", "dryrun mode", _ => context.IsDryRun = true },
+                { "verbose", "verbose mode", _ => verbose = true },
                 { "launchDebugger", "Launch debugger", _ => launchDebugger = true },
                 { "help", "help", v => help = v != null },
             };
@@ -112,6 +121,11 @@ public static class Program
                 logger.Error("");
                 return 1;
             }
+            
+            if (!verbose)
+            {
+                logger.SetImportance(LogImportance.Ignore);
+            }
 
             context.ProjectDirectory = trails[0];
 
@@ -122,29 +136,20 @@ public static class Program
                 ResultWriter.Write(resultPath!, result);
             }
             
-            if (context.Language switch
-                {
-                    "Text" => context.IsDryRun,
-                    "Replace" => context.IsDryRun,
-                    "NPM" => context.IsDryRun,
-                    _ => true,
-                })
-            {
-                var dryrunDisplay = context.IsDryRun ?
-                    " (dryrun)" : string.Empty;
-                var languageDisplay = context.IsDryRun ?
-                    string.Empty : $"Language={context.Language}, ";
-                var tfmDisplay = context.IsDryRun ?
-                    string.Empty : $"TFM={context.TargetFramework}, ";
+            var dryrunDisplay = context.IsDryRun ?
+                " (dryrun)" : string.Empty;
+            var languageDisplay = context.IsDryRun ?
+                string.Empty : $"Language={context.Language}, ";
+            var tfmDisplay = (context.IsDryRun || string.IsNullOrWhiteSpace(context.TargetFramework)) ?
+                string.Empty : $"TFM={context.TargetFramework}, ";
 
-                logger.Message(
-                    LogImportance.High,
-                    "Generated versions code{0}: {1}{2}Version={3}",
-                    dryrunDisplay,
-                    languageDisplay,
-                    tfmDisplay,
-                    result.Version);
-            }
+            logger.Message(
+                LogImportance.High,
+                "Generated versions code{0}: {1}{2}Version={3}",
+                dryrunDisplay,
+                languageDisplay,
+                tfmDisplay,
+                result.Version);
         }
         catch (Exception ex)
         {

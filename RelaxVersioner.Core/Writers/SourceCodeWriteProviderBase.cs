@@ -129,14 +129,10 @@ internal abstract class SourceCodeWriteProviderBase : WriteProviderBase
         var importSet = Utilities.AggregateImports(elementSet);
         var ruleSet = Utilities.AggregateRules(elementSet);
 
-        if (context.IsDryRun)
+        if (context.IsDryRun ||
+            string.IsNullOrWhiteSpace(context.OutputPath))
         {
             return;
-        }
-
-        if (string.IsNullOrWhiteSpace(context.OutputPath))
-        {
-            throw new ArgumentException("Output path required.");
         }
 
         this.Write(context, keyValues, generated, ruleSet, importSet);

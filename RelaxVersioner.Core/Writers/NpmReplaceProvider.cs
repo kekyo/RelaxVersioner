@@ -102,6 +102,11 @@ internal sealed class NpmReplaceProvider : WriteProviderBase
         }
         else
         {
+            if (context.IsQuietOnStandardOutput)
+            {
+                return;
+            }
+
             using var tr = context.ReplaceInputPath is { } rip ?
                 new StreamReader(rip, Encoding.UTF8, true) :
                 Console.In;
