@@ -41,6 +41,7 @@ public sealed class ProcessorContext
     public string BracketStart;
     public string BracketEnd;
     public bool IsDryRun;
+    public string[] NpmPrefixes;
 }
 
 public sealed class Processor

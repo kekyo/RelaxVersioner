@@ -33,6 +33,7 @@ public static class Program
                 Language = "Text",
                 GenerateStatic = true,
                 TextFormat = "{versionLabel}",
+                NpmPrefixes = Array.Empty<string>(),
             };
 
             string? resultPath = null;
@@ -52,12 +53,7 @@ public static class Program
                 { "propertiesPath=", $"properties file", v => context.PropertiesPath = v },
                 { "o|outputPath=", $"output source file", v => context.OutputPath = v },
                 { "resultPath=", $"output result via xml file", v => resultPath = v },
-                { "f|format=", $"set text format", v =>
-                    {
-                         context.TextFormat = v;
-                         context.Language = "Text";
-                    }
-                },
+                { "f|format=", $"set text format", v => context.TextFormat = v },
                 { "r|replace", "replace standard input", _ =>
                     {
                         context.ReplaceInputPath = null;
@@ -77,6 +73,23 @@ public static class Program
                             context.BracketStart = splitted[0];
                             context.BracketEnd = splitted[1];
                         }
+                    }
+                },
+                { "n|npm", "replace NPM package.json", v =>
+                    {
+                        context.Language = "NPM";
+                        context.ReplaceInputPath = "package.json";
+                        context.OutputPath = "package.json";
+                        context.TextFormat = "^{versionLabel}";
+                    }
+                },
+                { "npmpn=", "NPM dependency prefix namespaces", v =>
+                    {
+                        context.NpmPrefixes = v.Split(',').Select(n => n.Trim()).ToArray();
+                        context.Language = "NPM";
+                        context.ReplaceInputPath = "package.json";
+                        context.OutputPath = "package.json";
+                        context.TextFormat = "^{versionLabel}";
                     }
                 },
                 { "dryrun", "dryrun mode", _ => context.IsDryRun = true },
