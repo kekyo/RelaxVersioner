@@ -34,7 +34,11 @@ internal sealed class NpmReplaceProvider : WriteProviderBase
         void Replace(TextReader tr, TextWriter tw)
         {
             var jr = new JsonTextReader(tr);
-            var jt = JToken.ReadFrom(jr);
+            var jt = JToken.ReadFrom(jr, new JsonLoadSettings
+                {
+                    CommentHandling = CommentHandling.Load,
+                    LineInfoHandling = LineInfoHandling.Load,
+                });
             
             var formattedVersion = Named.Format(
                 CultureInfo.InvariantCulture,
@@ -55,7 +59,7 @@ internal sealed class NpmReplaceProvider : WriteProviderBase
                         {
                             if (context.NpmPrefixes.Any(jp.Name.StartsWith))
                             {
-                                jp.Value = JValue.CreateString(formattedVersion);
+                                jp.Value = JValue.CreateString($"^{formattedVersion}");
                             }
                         }
                     }
@@ -67,7 +71,11 @@ internal sealed class NpmReplaceProvider : WriteProviderBase
             }
             
             var jw = new JsonTextWriter(tw);
-            jt.WriteTo(jw);
+            var s = new JsonSerializer()
+            {
+                Formatting = Formatting.Indented,
+            };
+            s.Serialize(jw, jt);
 
             jw.Flush();
             tw.Flush();

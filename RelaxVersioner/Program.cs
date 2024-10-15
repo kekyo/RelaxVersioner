@@ -80,16 +80,14 @@ public static class Program
                         context.Language = "NPM";
                         context.ReplaceInputPath = "package.json";
                         context.OutputPath = "package.json";
-                        context.TextFormat = "^{versionLabel}";
                     }
                 },
-                { "npmpn=", "NPM dependency prefix namespaces", v =>
+                { "npmns=", "NPM dependency prefix namespaces", v =>
                     {
                         context.NpmPrefixes = v.Split(',').Select(n => n.Trim()).ToArray();
                         context.Language = "NPM";
                         context.ReplaceInputPath = "package.json";
                         context.OutputPath = "package.json";
-                        context.TextFormat = "^{versionLabel}";
                     }
                 },
                 { "dryrun", "dryrun mode", _ => context.IsDryRun = true },
