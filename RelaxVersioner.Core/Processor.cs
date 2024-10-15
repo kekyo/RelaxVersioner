@@ -155,7 +155,10 @@ public sealed class Processor
             keyValues[entry.key] = entry.value;
         }
 
-        writeProvider.Write(context, keyValues, generated);
+        if (!string.IsNullOrWhiteSpace(context.OutputPath))
+        {
+            writeProvider.Write(context, keyValues, generated);
+        }
 
         return new Result(
             versionLabel,
@@ -182,20 +185,13 @@ public sealed class Processor
         using var repository = await Utilities.OpenRepositoryAsync(
             logger, context.ProjectDirectory);
 
-        try
-        {
-            return await WriteVersionSourceFileAsync(
-                logger,
-                writeProvider,
-                context,
-                repository?.Head,
-                DateTimeOffset.Now,
-                ct);
-        }
-        finally
-        {
-            repository?.Dispose();
-        }
+        return await WriteVersionSourceFileAsync(
+            logger,
+            writeProvider,
+            context,
+            repository?.Head,
+            DateTimeOffset.Now,
+            ct);
     }
 
     public static void WriteSafeTransacted(

@@ -128,6 +128,7 @@ public static class Program
                 {
                     "Text" => context.IsDryRun,
                     "Replace" => context.IsDryRun,
+                    "NPM" => context.IsDryRun,
                     _ => true,
                 })
             {
