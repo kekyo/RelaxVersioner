@@ -27,12 +27,15 @@ public static class Program
         {
             var processor = new Processor(logger);
             var languages = string.Join("|", processor.Languages);
+            var verbose = false;
 
             var context = new ProcessorContext
             {
+                IsDryRun = false,
                 Language = "Text",
                 GenerateStatic = true,
                 TextFormat = "{versionLabel}",
+                NpmPrefixes = Array.Empty<string>(),
             };
 
             string? resultPath = null;
@@ -41,7 +44,12 @@ public static class Program
 
             var options = new OptionSet
             {
-                { "language=", $"target language [{languages}]", v => context.Language = v },
+                { "l|language=", $"target language [{languages}]", v =>
+                    {
+                        context.Language = v;
+                        verbose = true;
+                    }
+                },
                 { "namespace=", "applying namespace", v => context.Namespace = v },
                 { "tfm=", "target framework moniker definition (TargetFramework)", v => context.TargetFramework = v },
                 { "tfid=", "target framework identity definition (TargetFrameworkIdentifier)", v => context.TargetFrameworkIdentity = v },
@@ -52,12 +60,7 @@ public static class Program
                 { "propertiesPath=", $"properties file", v => context.PropertiesPath = v },
                 { "o|outputPath=", $"output source file", v => context.OutputPath = v },
                 { "resultPath=", $"output result via xml file", v => resultPath = v },
-                { "f|format=", $"set text format", v =>
-                    {
-                         context.TextFormat = v;
-                         context.Language = "Text";
-                    }
-                },
+                { "f|format=", $"set text format", v => context.TextFormat = v },
                 { "r|replace", "replace standard input", _ =>
                     {
                         context.ReplaceInputPath = null;
@@ -79,7 +82,26 @@ public static class Program
                         }
                     }
                 },
+                { "n|npm", "replace NPM package.json", v =>
+                    {
+                        context.Language = "NPM";
+                        context.ReplaceInputPath = "package.json";
+                        context.OutputPath = "package.json";
+                        verbose = true;
+                    }
+                },
+                { "npmns=", "NPM dependency prefix namespaces", v =>
+                    {
+                        context.NpmPrefixes = v.Split(',').Select(n => n.Trim()).ToArray();
+                        context.Language = "NPM";
+                        context.ReplaceInputPath = "package.json";
+                        context.OutputPath = "package.json";
+                        verbose = true;
+                    }
+                },
+                { "quiet", "quiet on stdout", _ => context.IsQuietOnStandardOutput = true },
                 { "dryrun", "dryrun mode", _ => context.IsDryRun = true },
+                { "verbose", "verbose mode", _ => verbose = true },
                 { "launchDebugger", "Launch debugger", _ => launchDebugger = true },
                 { "help", "help", v => help = v != null },
             };
@@ -101,6 +123,11 @@ public static class Program
                 logger.Error("");
                 return 1;
             }
+            
+            if (!verbose)
+            {
+                logger.SetImportance(LogImportance.Ignore);
+            }
 
             context.ProjectDirectory = trails[0];
 
@@ -111,28 +138,20 @@ public static class Program
                 ResultWriter.Write(resultPath!, result);
             }
             
-            if (context.Language switch
-                {
-                    "Text" => context.IsDryRun,
-                    "Replace" => context.IsDryRun,
-                    _ => true,
-                })
-            {
-                var dryrunDisplay = context.IsDryRun ?
-                    " (dryrun)" : string.Empty;
-                var languageDisplay = context.IsDryRun ?
-                    string.Empty : $"Language={context.Language}, ";
-                var tfmDisplay = context.IsDryRun ?
-                    string.Empty : $"TFM={context.TargetFramework}, ";
+            var dryrunDisplay = context.IsDryRun ?
+                " (dryrun)" : string.Empty;
+            var languageDisplay = context.IsDryRun ?
+                string.Empty : $"Language={context.Language}, ";
+            var tfmDisplay = (context.IsDryRun || string.IsNullOrWhiteSpace(context.TargetFramework)) ?
+                string.Empty : $"TFM={context.TargetFramework}, ";
 
-                logger.Message(
-                    LogImportance.High,
-                    "Generated versions code{0}: {1}{2}Version={3}",
-                    dryrunDisplay,
-                    languageDisplay,
-                    tfmDisplay,
-                    result.Version);
-            }
+            logger.Message(
+                LogImportance.High,
+                "Generated versions code{0}: {1}{2}Version={3}",
+                dryrunDisplay,
+                languageDisplay,
+                tfmDisplay,
+                result.Version);
         }
         catch (Exception ex)
         {

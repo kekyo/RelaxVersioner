@@ -14,14 +14,17 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Globalization;
 using System.IO;
+using System.Linq;
 using System.Text;
 using NamingFormatter;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 
 namespace RelaxVersioner.Writers;
 
-internal sealed class TextReplaceProvider : WriteProviderBase
+internal sealed class NpmReplaceProvider : WriteProviderBase
 {
-    public override string Language => "Replace";
+    public override string Language => "NPM";
 
     public override void Write(
         ProcessorContext context,
@@ -30,27 +33,54 @@ internal sealed class TextReplaceProvider : WriteProviderBase
     {
         void Replace(TextReader tr, TextWriter tw)
         {
-            while (true)
-            {
-                var line = tr.ReadLine();
-                if (line == null)
+            var jr = new JsonTextReader(tr);
+            var jt = JToken.ReadFrom(jr, new JsonLoadSettings
                 {
-                    break;
+                    CommentHandling = CommentHandling.Load,
+                    LineInfoHandling = LineInfoHandling.Load,
+                });
+            
+            var formattedVersion = Named.Format(
+                CultureInfo.InvariantCulture,
+                context.TextFormat,
+                keyValues,
+                key => string.Empty,
+                new(context.BracketStart, context.BracketEnd));
+            
+            jt["version"] = formattedVersion;
+
+            if (context.NpmPrefixes.Length >= 1)
+            {
+                void ReplaceSubKey(string key)
+                {
+                    if (jt[key] is JObject jo)
+                    {
+                        foreach (var jp in jo.Properties())
+                        {
+                            if (context.NpmPrefixes.Any(jp.Name.StartsWith))
+                            {
+                                jp.Value = JValue.CreateString($"^{formattedVersion}");
+                            }
+                        }
+                    }
                 }
-
-                var formattedLine = Named.Format(
-                    CultureInfo.InvariantCulture,
-                    line,
-                    keyValues,
-                    key => string.Empty,
-                    new(context.BracketStart, context.BracketEnd));
-
-                tw.WriteLine(formattedLine);
+            
+                ReplaceSubKey("dependencies");
+                ReplaceSubKey("peerDependencies");
+                ReplaceSubKey("devDependencies");
             }
+            
+            var jw = new JsonTextWriter(tw);
+            var s = new JsonSerializer()
+            {
+                Formatting = Formatting.Indented,
+            };
+            s.Serialize(jw, jt);
 
+            jw.Flush();
             tw.Flush();
         }
-        
+
         if (!string.IsNullOrWhiteSpace(context.OutputPath))
         {
             if (context.IsDryRun)

@@ -64,6 +64,11 @@ internal sealed class TextWriteProvider : WriteProviderBase
         }
         else
         {
+            if (context.IsQuietOnStandardOutput)
+            {
+                return;
+            }
+
             var tw = Console.Out;
             Write(tw, true);
         }

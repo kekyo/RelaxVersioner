@@ -47,7 +47,8 @@ If you look in ILSpy, you will also see all the information:
 * You can also customize the information to be embedded. For example, by embedding the value of variables used in MSBuild, you can also embed detailed information at build time.
 * Version embedding is fully integrated into MSBuild. This means that you can simply install the NuGet package and embed versions directly in the build process of IDEs such as Visual Studio, Rider, Visual Studio Code or in the build process of CI.
   * RelaxVersioner does not contain any environment-dependent code, so it works in almost any .NET environment.
-* A CLI interface also exists. You can embed version numbers in text documents and apply the same version notation to different project systems than .NET (e.g. NPM's `project.json`, `Makefile` and etc.).
+* A CLI interface also exists. You can embed version numbers in text documents and apply the same version notation to different project systems than .NET (e.g. `Makefile` and etc.).
+  * CLI has a dedicated NPM (Node.js package manager) mode, which allows you to easily centralize NPM project and version operations.
 
 ## Sample output code
 
@@ -216,6 +217,69 @@ ABC0123456789abc ... XYZ
 
 With this CLI, you can use a combination of RelaxVersioner for different targets than .NET.
 For example, in a CI/CD environment like GitHub Actions, you can apply versions to NPM package generation or embed versions in your text documentation.
+
+
+----
+
+## Using with Node.js projects
+
+The CLI interface has special options for NPM (Node.js package manager).
+Change to the directory where the `package.json` file is located and run the CLI as follows:
+
+```bash
+$ rv --npm .
+RelaxVersioner [3.8.0]: Generated versions code: Language=NPM, Version=12.34.56
+```
+
+The value of the `version` key in `package.json` will then be replaced with the correct version value.
+
+* This function is similar to the standard NPM `npm version` command.
+* The version search algorithm is based on RelaxVersioner, so it is useful if you want to share the same version with .NET projects.
+
+Furthermore, if you use the `--npmns` option, you can also change the package versions that the package depends on at the same time.
+For example, if you are managing multiple packages and there are dependencies between the packages:
+
+```json
+{
+  "name": "webapi-interaction",
+  "version": "0.0.1",             // <-- The version of this package (before updating)
+  "dependencies": {
+    "@foobar/helpers": "^1.4.0",  // <-- Version of the managed package that is a dependency
+    "@foobar/common": "^1.7.2",   // <-- Version of the managed package that is a dependency
+    "dayjs": "^1.2.3"
+  }
+}
+```
+
+Run the CLI specifying the namespace of the package name (`@foobar`) that is a dependency:
+
+```bash
+$ rv --npmns @foobar .
+```
+
+This will unify all the version numbers:
+
+```json
+{
+  "name": "webapi-interaction",
+  "version": "13.24.5",             // <-- Automatically updated
+  "dependencies": {
+    "@foobar/helpers": "^13.24.5",  // <-- automatically updated (dependency)
+    "@foobar/common": "^13.24.5",   // <-- automatically updated (dependency)
+    "dayjs": "^1.2.3"               // <-- not updated
+  }
+}
+```
+
+* Dependency checks are performed on the `dependencies`, `peerDependencies` and `devDependencies` keys.
+* Please use a consistent package namespace to identify dependent packages.
+  * In practice, this is a simple prefix match, so any name that can be identified is fine.
+  * If you are targeting multiple namespaces, specify them separated by commas.
+* The version of a dependent package is automatically prefixed with `^`.
+
+This function is intended to be used with [NPM workspaces](https://docs.npmjs.com/cli/v7/using-npm/workspaces) and inside the CI process.
+In that case, please follow the NPM workspaces handling, such as using `*` as the version number of the referenced package.
+After updating the version of each package, run `npm install` in the workspace root directory to update the correct version numbers in `package-lock.json`.
 
 
 ----
@@ -462,6 +526,9 @@ When you are using a nuspec file to generate a NuGet package, there are addition
 
 ## History
 
+* 3.8.0:
+  * Added NPM mode, which automatically inserts the version of NPM `package.json`.
+  * Fixed version number print garbage in the build log when building NuGet packages.
 * 3.7.0:
   * CLI now supports custom bracket specification.
 * 3.6.0:

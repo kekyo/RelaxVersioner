@@ -14,9 +14,10 @@
   <ItemGroup>
     <PackageReference Include="GitReader" Version="1.8.0" />
     <PackageReference Include="NamingFormatter" Version="2.4.0" />
+    <PackageReference Include="Newtonsoft.Json" Version="13.0.1" />
     <PackageReference Include="Microsoft.NETFramework.ReferenceAssemblies" Version="1.0.3" PrivateAssets="All" />
     <PackageReference Condition="'$(RV_BOOTSTRAP)' != 'True'"
-                      Include="RelaxVersioner" Version="3.6.0" PrivateAssets="all" />
+                      Include="RelaxVersioner" Version="3.7.0" PrivateAssets="all" />
   </ItemGroup>
 
   <ItemGroup>

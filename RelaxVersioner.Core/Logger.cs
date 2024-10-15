@@ -10,6 +10,7 @@
 #nullable enable
 
 using System;
+using System.ComponentModel;
 using System.IO;
 
 namespace RelaxVersioner;
@@ -18,7 +19,9 @@ public enum LogImportance
 {
     Low = 1,
     Normal = 2,
-    High =3
+    High = 3,
+    [EditorBrowsable(EditorBrowsableState.Never)]
+    Ignore = 100,
 }
 
 public abstract class Logger
@@ -27,6 +30,8 @@ public abstract class Logger
 
     protected Logger(string header) =>
         this.Header = header;
+
+    public abstract void SetImportance(LogImportance lowerImportance);
 
     public abstract void Message(LogImportance importance, string message);
 
@@ -55,10 +60,11 @@ public abstract class Logger
 
 internal sealed class TextWriterLogger : Logger
 {
-    private readonly LogImportance lowerImportance;
     private readonly TextWriter @out;
     private readonly TextWriter warning;
     private readonly TextWriter error;
+
+    private LogImportance lowerImportance;
 
     public TextWriterLogger(string header, LogImportance lowerImportance, TextWriter @out, TextWriter warning, TextWriter error) :
         base(header)
@@ -69,9 +75,12 @@ internal sealed class TextWriterLogger : Logger
         this.error = error;
     }
 
+    public override void SetImportance(LogImportance lowerImportance) =>
+        this.lowerImportance = lowerImportance;
+
     public override void Message(LogImportance importance, string message)
     {
-        if (importance >= lowerImportance)
+        if (importance >= this.lowerImportance)
         {
             @out.WriteLine(message);
         }
