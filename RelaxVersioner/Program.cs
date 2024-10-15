@@ -87,6 +87,7 @@ public static class Program
                         context.Language = "NPM";
                         context.ReplaceInputPath = "package.json";
                         context.OutputPath = "package.json";
+                        verbose = true;
                     }
                 },
                 { "npmns=", "NPM dependency prefix namespaces", v =>
@@ -95,6 +96,7 @@ public static class Program
                         context.Language = "NPM";
                         context.ReplaceInputPath = "package.json";
                         context.OutputPath = "package.json";
+                        verbose = true;
                     }
                 },
                 { "quiet", "quiet on stdout", _ => context.IsQuietOnStandardOutput = true },
