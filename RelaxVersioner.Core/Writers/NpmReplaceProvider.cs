@@ -93,9 +93,9 @@ internal sealed class NpmReplaceProvider : WriteProviderBase
                 stream =>
                 {
                     using var tr = context.ReplaceInputPath is { } rip ?
-                        new StreamReader(rip, Encoding.UTF8, true) :
+                        new StreamReader(rip, Utilities.UTF8, true) :
                         Console.In;
-                    var tw = new StreamWriter(stream, Encoding.UTF8);
+                    var tw = new StreamWriter(stream, Utilities.UTF8);
 
                     Replace(tr, tw);
                 });
@@ -108,7 +108,7 @@ internal sealed class NpmReplaceProvider : WriteProviderBase
             }
 
             using var tr = context.ReplaceInputPath is { } rip ?
-                new StreamReader(rip, Encoding.UTF8, true) :
+                new StreamReader(rip, Utilities.UTF8, true) :
                 Console.In;
             Replace(tr, Console.Out);
         }

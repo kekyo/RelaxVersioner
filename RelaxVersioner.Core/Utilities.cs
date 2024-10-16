@@ -13,6 +13,7 @@ using System.Diagnostics;
 using System.Globalization;
 using System.IO;
 using System.Linq;
+using System.Text;
 using System.Threading.Tasks;
 using System.Xml.Linq;
 using GitReader;
@@ -26,6 +27,8 @@ internal static class Utilities
 {
     private static readonly char[] directorySeparatorChar_ =
         { Path.DirectorySeparatorChar, Path.AltDirectorySeparatorChar };
+        
+    public static readonly Encoding UTF8 = new UTF8Encoding(false);
 
     public static string GetDirectoryPath(string path) =>
         Path.GetDirectoryName(path) switch
