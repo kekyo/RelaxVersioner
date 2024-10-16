@@ -60,7 +60,7 @@ internal sealed class TextWriteProvider : WriteProviderBase
 
             Processor.WriteSafeTransacted(
                 context.OutputPath,
-                stream => Write(new StreamWriter(stream, Encoding.UTF8), false));
+                stream => Write(new StreamWriter(stream, Utilities.UTF8), false));
         }
         else
         {

@@ -82,7 +82,7 @@
         string path = Path.GetFullPath(File.ItemSpec);
         using (Stream fs = new FileStream(path, FileMode.Create, FileAccess.ReadWrite, FileShare.Read))
         {
-            TextWriter tw = new StreamWriter(fs, Encoding.UTF8);
+            TextWriter tw = new StreamWriter(fs, new UTF8Encoding(false));
             string text = Text;
             if (text != null)
             {
