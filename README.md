@@ -526,6 +526,8 @@ When you are using a nuspec file to generate a NuGet package, there are addition
 
 ## History
 
+* 3.9.0:
+  * Changed UTF8 text file output to no BOM.
 * 3.8.0:
   * Added NPM mode, which automatically inserts the version of NPM `package.json`.
   * Fixed version number print garbage in the build log when building NuGet packages.
