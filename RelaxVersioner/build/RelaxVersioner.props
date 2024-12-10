@@ -118,7 +118,7 @@
         if (!Directory.Exists(path))
         {
             string basePath = Path.GetDirectoryName(path);
-            path = Path.Combine(basePath, "net8.0");
+            path = Path.Combine(basePath, "net9.0");
         }
         CandidateDir = path;
 ]]>
