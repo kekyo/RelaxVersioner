@@ -510,13 +510,6 @@ When you are using a nuspec file to generate a NuGet package, there are addition
 
 ----
 
-## TODO:
-
-* Support exclude rule set.
-* Support native C++ project.
-* Support templated output.
-* Support fallback rule set.
-
 ## License
 
 * Copyright (c) Kouji Matsui (@kozy_kekyo, @kekyo@mastodon.cloud)
@@ -526,6 +519,8 @@ When you are using a nuspec file to generate a NuGet package, there are addition
 
 ## History
 
+* 3.10.0:
+  * Fixed a bug that prevented building on .NET 9.0 SDK or upper, depending on the environment.
 * 3.9.0:
   * Changed UTF8 text file output to no BOM.
 * 3.8.0:
