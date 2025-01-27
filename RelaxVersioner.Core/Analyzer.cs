@@ -49,25 +49,25 @@ internal static class Analyzer
                 version.Major,
                 version.Minor!.Value,
                 version.Build!.Value,
-                version.Revision.Value + 1);
+                (ushort)(version.Revision.Value + 1));
         }
         else if (version.Build.HasValue)
         {
             return new(
                 version.Major,
                 version.Minor!.Value,
-                version.Build.Value + 1);
+                (ushort)(version.Build.Value + 1));
         }
         else if (version.Minor.HasValue)
         {
             return new(
                 version.Major,
-                version.Minor.Value + 1);
+                (ushort)(version.Minor.Value + 1));
         }
         else
         {
             return new(
-                version.Major + 1);
+                (ushort)(version.Major + 1));
         }
     }
 

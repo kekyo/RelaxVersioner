@@ -128,10 +128,10 @@ internal static class Utilities
     {
         // Second range: 0..43200 (2sec prec.)
         return new Version(
-            date.Year,
-            date.Month,
-            date.Day,
-            (int)(date.TimeOfDay.TotalSeconds / 2));
+            (ushort)date.Year,
+            (ushort)date.Month,
+            (ushort)date.Day,
+            (ushort)(date.TimeOfDay.TotalSeconds / 2));
     }
 
     public static string GetIntDateVersionFromDate(DateTimeOffset date)
@@ -142,7 +142,7 @@ internal static class Utilities
     public static string GetEpochIntDateVersionFromDate(DateTimeOffset date)
     {
         // Second range: 0..43200 (2sec prec.)
-        return ((int)(date.TimeOfDay.TotalSeconds / 2)).
+        return ((ushort)(date.TimeOfDay.TotalSeconds / 2)).
             ToString(CultureInfo.InvariantCulture);
     }
 
