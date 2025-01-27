@@ -103,6 +103,29 @@ public sealed class Version :
         var revision = Compare(this.Revision, rhs.Revision);
         return revision;
     }
+    
+    public int ComponentCount
+    {
+        get
+        {
+            if (this.Revision.HasValue)
+            {
+                return 4;
+            }
+            if (this.Build.HasValue)
+            {
+                return 3;
+            }
+            if (this.Minor.HasValue)
+            {
+                return 2;
+            }
+            else
+            {
+                return 1;
+            }
+        }
+    }
 
     private IEnumerable<ushort> GetComponents()
     {

@@ -93,7 +93,7 @@ internal static class Analyzer
             // Detected mostly larger version tag.
             var candidates = commit.Tags.
                 Select(tag => Version.TryParse(tag.Name, out var v) ? v : null!).
-                Where(v => v != null).
+                Where(v => v?.ComponentCount >= 2).     // "1.2" or more.
                 OrderByDescending(v => v).
                 ToArray();
             if (candidates.Length >= 1)
