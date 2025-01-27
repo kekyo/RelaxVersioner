@@ -512,7 +512,7 @@ When you are using a nuspec file to generate a NuGet package, there are addition
 
 ## License
 
-* Copyright (c) Kouji Matsui (@kozy_kekyo, @kekyo@mastodon.cloud)
+* Copyright (c) Kouji Matsui (@kozy_kekyo, @kekyo@mi.kekyo.net)
 * Under Apache v2
 
 ----
