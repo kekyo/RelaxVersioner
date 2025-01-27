@@ -519,6 +519,8 @@ When you are using a nuspec file to generate a NuGet package, there are addition
 
 ## History
 
+* 3.11.0:
+  * Updated GitReader to 1.9.0.
 * 3.10.0:
   * Fixed a bug that prevented building on .NET 9.0 SDK or upper, depending on the environment.
 * 3.9.0:
