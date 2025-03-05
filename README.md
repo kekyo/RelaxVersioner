@@ -512,13 +512,17 @@ When you are using a nuspec file to generate a NuGet package, there are addition
 
 ## License
 
-* Copyright (c) Kouji Matsui (@kozy_kekyo, @kekyo@mastodon.cloud)
+* Copyright (c) Kouji Matsui (@kozy_kekyo, @kekyo@mi.kekyo.net)
 * Under Apache v2
 
 ----
 
 ## History
 
+* 3.12.0:
+  * Changed to strictly parse the version number range as a 16-bit value.
+  * Changed to allow more than one version notation (i.e., `1.2` or `1.2.3`).
+  * Updated GitReader to 1.10.0 (Git worktree support).
 * 3.11.0:
   * Updated GitReader to 1.9.0.
 * 3.10.0:

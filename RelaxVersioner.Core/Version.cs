@@ -1,7 +1,7 @@
 ﻿////////////////////////////////////////////////////////////////////////////////////////
 //
 // RelaxVersioner - Git tag/branch based, full-automatic version generator.
-// Copyright (c) Kouji Matsui (@kozy_kekyo, @kekyo@mastodon.cloud)
+// Copyright (c) Kouji Matsui (@kozy_kekyo, @kekyo@mi.kekyo.net)
 //
 // Licensed under Apache-v2: https://opensource.org/licenses/Apache-2.0
 //
@@ -22,12 +22,12 @@ public sealed class Version :
 
     public static readonly Version Default = new Version(0, 0, 1);
 
-    public readonly int Major;
-    public readonly int? Minor;
-    public readonly int? Build;
-    public readonly int? Revision;
+    public readonly ushort Major;
+    public readonly ushort? Minor;
+    public readonly ushort? Build;
+    public readonly ushort? Revision;
 
-    public Version(int major)
+    public Version(ushort major)
     {
         this.Major = major;
         this.Minor = null;
@@ -35,7 +35,7 @@ public sealed class Version :
         this.Revision = null;
     }
 
-    public Version(int major, int minor)
+    public Version(ushort major, ushort minor)
     {
         this.Major = major;
         this.Minor = minor;
@@ -43,7 +43,7 @@ public sealed class Version :
         this.Revision = null;
     }
 
-    public Version(int major, int minor, int build)
+    public Version(ushort major, ushort minor, ushort build)
     {
         this.Major = major;
         this.Minor = minor;
@@ -51,7 +51,7 @@ public sealed class Version :
         this.Revision = null;
     }
 
-    public Version(int major, int minor, int build, int revision)
+    public Version(ushort major, ushort minor, ushort build, ushort revision)
     {
         this.Major = major;
         this.Minor = minor;
@@ -83,7 +83,7 @@ public sealed class Version :
             return major;
         }
 
-        static int Compare(int? lhs, int? rhs)
+        static int Compare(ushort? lhs, ushort? rhs)
         {
             var l = lhs is { } lv ? lv : 0;
             var r = rhs is { } rv ? rv : 0;
@@ -103,13 +103,36 @@ public sealed class Version :
         var revision = Compare(this.Revision, rhs.Revision);
         return revision;
     }
+    
+    public int ComponentCount
+    {
+        get
+        {
+            if (this.Revision.HasValue)
+            {
+                return 4;
+            }
+            if (this.Build.HasValue)
+            {
+                return 3;
+            }
+            if (this.Minor.HasValue)
+            {
+                return 2;
+            }
+            else
+            {
+                return 1;
+            }
+        }
+    }
 
-    private IEnumerable<int> GetComponents()
+    private IEnumerable<ushort> GetComponents()
     {
         yield return this.Major;
 
         // HACK: The version number format is valid on 2 or more components.
-        yield return this.Minor.HasValue ? this.Minor.Value : 0;
+        yield return this.Minor ?? 0;
 
         if (this.Build.HasValue)
         {
@@ -140,7 +163,7 @@ public sealed class Version :
             TrimStart('v').     // v1.2.3
             Split(separators, StringSplitOptions.RemoveEmptyEntries);
         var numberComponents = components.
-            Select(numberString => int.TryParse(numberString, out var number) ? (int?)number : null).
+            Select(numberString => ushort.TryParse(numberString, out var number) ? (ushort?)number : null).
             TakeWhile(number => number.HasValue).
             Select(number => number!.Value).
             ToArray();

@@ -531,13 +531,17 @@ nuspecファイルを使ってパッケージを生成する場合は、デフ�
 
 ## License
 
-* Copyright (c) Kouji Matsui (@kozy_kekyo, @kekyo@mastodon.cloud)
+* Copyright (c) Kouji Matsui (@kozy_kekyo, @kekyo@mi.kekyo.net)
 * Under Apache v2
 
 ----
 
 ## 履歴
 
+* 3.12.0:
+  * バージョン数値範囲を16ビット値として厳密に判定するように変更。
+  * バージョンノーテーションを2個以上（つまり、`1.2` や `1.2.3` のような）とするように変更。
+  * GitReaderを1.10.0に上げました（Git worktree対応）。
 * 3.11.0:
   * GitReaderを1.9.0に上げました。
 * 3.10.0:

@@ -1,7 +1,7 @@
 ﻿////////////////////////////////////////////////////////////////////////////////////////
 //
 // RelaxVersioner - Git tag/branch based, full-automatic version generator.
-// Copyright (c) Kouji Matsui (@kozy_kekyo, @kekyo@mastodon.cloud)
+// Copyright (c) Kouji Matsui (@kozy_kekyo, @kekyo@mi.kekyo.net)
 //
 // Licensed under Apache-v2: https://opensource.org/licenses/Apache-2.0
 //
@@ -49,25 +49,25 @@ internal static class Analyzer
                 version.Major,
                 version.Minor!.Value,
                 version.Build!.Value,
-                version.Revision.Value + 1);
+                (ushort)(version.Revision.Value + 1));
         }
         else if (version.Build.HasValue)
         {
             return new(
                 version.Major,
                 version.Minor!.Value,
-                version.Build.Value + 1);
+                (ushort)(version.Build.Value + 1));
         }
         else if (version.Minor.HasValue)
         {
             return new(
                 version.Major,
-                version.Minor.Value + 1);
+                (ushort)(version.Minor.Value + 1));
         }
         else
         {
             return new(
-                version.Major + 1);
+                (ushort)(version.Major + 1));
         }
     }
 
@@ -93,7 +93,7 @@ internal static class Analyzer
             // Detected mostly larger version tag.
             var candidates = commit.Tags.
                 Select(tag => Version.TryParse(tag.Name, out var v) ? v : null!).
-                Where(v => v != null).
+                Where(v => v?.ComponentCount >= 2).     // "1.2" or more.
                 OrderByDescending(v => v).
                 ToArray();
             if (candidates.Length >= 1)
