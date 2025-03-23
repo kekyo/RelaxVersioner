@@ -57,9 +57,6 @@ internal sealed class CPlusPlusCliSourceCodeWriteProvider : SourceCodeWriteProvi
 
     protected override void WriteImport(SourceCodeWriter tw, string namespaceName) =>
         tw.WriteLine("using namespace {0};", namespaceName.Replace(".", "::"));
-    
-    protected override string GetArgumentString(string argumentValue) =>
-        string.Format("\"{0}\"", argumentValue.Replace("\\", "\\\\").Replace("\"", "\\\""));
 
     protected override void WriteAttribute(SourceCodeWriter tw, string name, string args) =>
         tw.WriteLine("[assembly: {0}({1})];", name.Replace(".", "::"), args);

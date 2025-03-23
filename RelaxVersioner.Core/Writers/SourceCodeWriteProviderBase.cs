@@ -157,8 +157,11 @@ internal abstract class SourceCodeWriteProviderBase : WriteProviderBase
     protected abstract void WriteAttribute(SourceCodeWriter tw, string name, string args);
     protected abstract void WriteLiteral(SourceCodeWriter tw, string name, string value);
 
+    protected virtual string NormalizeControlChars(string str) =>
+        Utilities.NormalizeControlCharsForCLike(str);
+
     protected virtual string GetArgumentString(string argumentValue) =>
-        string.Format("\"{0}\"", argumentValue.Replace("\"", "\"\""));
+        $"\"{NormalizeControlChars(argumentValue.Trim(' ', '\t', '\r', '\n', '\0'))}\"";
 
     protected abstract void WriteBeforeLiteralBody(SourceCodeWriter tw);
     protected abstract void WriteBeforeNestedLiteralBody(SourceCodeWriter tw, string name);
@@ -168,13 +171,13 @@ internal abstract class SourceCodeWriteProviderBase : WriteProviderBase
     private void WriteAttributeWithArguments(SourceCodeWriter tw, string name, params object?[] args) =>
         this.WriteAttribute(
             tw,
-            name,
+            Utilities.MakeSaferChars(name, "_"),
             string.Join(",", args.Select(arg => this.GetArgumentString(arg?.ToString() ?? string.Empty))));
 
     private void WriteLiteralWithArgument(SourceCodeWriter tw, string name, object? arg) =>
         this.WriteLiteral(
             tw,
-            name,
+            Utilities.MakeSaferChars(name, "_"),
             this.GetArgumentString(arg?.ToString() ?? string.Empty));
 
     protected virtual void WriteImport(SourceCodeWriter tw, string namespaceName)
