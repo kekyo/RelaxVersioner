@@ -519,6 +519,8 @@ When you are using a nuspec file to generate a NuGet package, there are addition
 
 ## History
 
+* 3.13.0:
+  * Fixed generate correct source code even when symbol names and literal strings contain control characters.
 * 3.12.0:
   * Changed to strictly parse the version number range as a 16-bit value.
   * Changed to allow more than one version notation (i.e., `1.2` or `1.2.3`).

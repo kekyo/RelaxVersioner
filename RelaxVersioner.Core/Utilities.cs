@@ -228,4 +228,49 @@ internal static class Utilities
             return XElement.Load(stream);
         }
     }
+
+    public static string MakeSaferChars(string str, string replacement)
+    {
+        var sb = new StringBuilder(str.Length);
+        foreach (var ch in str)
+        {
+            if (char.IsControl(ch) && char.IsPunctuation(ch) &&
+                char.IsSeparator(ch) && char.IsSymbol(ch) &&
+                char.IsWhiteSpace(ch))
+            {
+                sb.Append(replacement);
+            }
+            else
+            {
+                sb.Append(ch);
+            }
+        }
+        return sb.ToString();
+    }
+
+    public static string NormalizeControlCharsForCLike(string str)
+    {
+        var sb = new StringBuilder(str.Length + 20);
+        foreach (var ch in str)
+        {
+            if (char.IsControl(ch))
+            {
+                sb.Append("\\u");
+                sb.Append(((int)ch).ToString("x4", CultureInfo.InvariantCulture));
+            }
+            else if (ch == '\\')
+            {
+                sb.Append("\\\\");
+            }
+            else if (ch == '"')
+            {
+                sb.Append("\\\"");
+            }
+            else
+            {
+                sb.Append(ch);
+            }
+        }
+        return sb.ToString();
+    }
 }

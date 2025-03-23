@@ -9,7 +9,9 @@
 
 #nullable enable
 
+using System.Globalization;
 using System.IO;
+using System.Text;
 
 namespace RelaxVersioner.Writers;
 
@@ -23,8 +25,26 @@ internal sealed class VisualBasicSourceCodeWriteProvider : SourceCodeWriteProvid
     protected override void WriteImport(SourceCodeWriter tw, string namespaceName) =>
         tw.WriteLine("Imports {0}", namespaceName);
 
-    protected override string GetArgumentString(string argumentValue) =>
-        string.Format("\"{0}\"", argumentValue.Replace("\"", "\"\""));
+    protected override string NormalizeControlChars(string str)
+    {
+        var sb = new StringBuilder(str.Length + 20);
+        foreach (var ch in str)
+        {
+            if (char.IsControl(ch))
+            {
+                sb.Append($"\" & Chr({(int)ch}) & \"");
+            }
+            else if (ch == '"')
+            {
+                sb.Append("\"\"");
+            }
+            else
+            {
+                sb.Append(ch);
+            }
+        }
+        return sb.ToString();
+    }
 
     protected override void WriteAttribute(SourceCodeWriter tw, string name, string args) =>
         tw.WriteLine("<Assembly: {0}({1})>", name, args);
