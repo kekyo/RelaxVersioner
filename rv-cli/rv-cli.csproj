@@ -14,6 +14,7 @@
     <IncludeBuildOutput>false</IncludeBuildOutput>
 
     <AssemblyName>rv</AssemblyName>
+    <PackageIcon>RelaxVersioner.100.png</PackageIcon>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(RV_BOOTSTRAP)' == 'True'">
