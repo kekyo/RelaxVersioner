@@ -519,6 +519,8 @@ When you are using a nuspec file to generate a NuGet package, there are addition
 
 ## History
 
+* 3.14.0:
+  * Version number is incremented when there are files being modified in the working directory.
 * 3.13.0:
   * Fixed generate correct source code even when symbol names and literal strings contain control characters.
 * 3.12.0:
