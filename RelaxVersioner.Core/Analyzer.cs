@@ -141,16 +141,31 @@ internal static class Analyzer
         return version;
     }
 
-    public static Task<Version> LookupVersionLabelAsync(
-        Commit commit, CancellationToken ct) =>
-        LookupVersionLabelAsync(commit, new(), ct);
-
     public static async Task<Version> LookupVersionLabelAsync(
-        Branch branch, CancellationToken ct)
+        StructuredRepository repository, CancellationToken ct)
     {
-        // Get the head commit for the branch.
+        // Check if repository has any commits (to handle initial state)
+        if (repository.Head is not { } branch)
+        {
+            return Version.Default; // Return default version (0.0.1) if no HEAD
+        }
+
         var headCommit = await branch.GetHeadCommitAsync(ct);
 
-        return await LookupVersionLabelAsync(headCommit, new(), ct);
+        // Get the base version from commit tags
+        var baseVersion = await LookupVersionLabelAsync(headCommit, new(), ct);
+
+        // Check working directory status
+        var workingDirectoryStatus = await repository.GetWorkingDirectoryStatusAsync(ct);
+
+        // If there are modified files (exclude untracked files),
+        // increment the version
+        if (workingDirectoryStatus.StagedFiles.Count > 0 || 
+            workingDirectoryStatus.UnstagedFiles.Count > 0)
+        {
+            return IncrementLastVersionComponent(baseVersion);
+        }
+
+        return baseVersion;
     }
 }

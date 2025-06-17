@@ -65,6 +65,7 @@ public sealed class Processor
         Logger logger,
         WriteProviderBase writeProvider,
         ProcessorContext context,
+        StructuredRepository repository,
         Branch targetBranch,
         DateTimeOffset generated,
         CancellationToken ct)
@@ -98,8 +99,8 @@ public sealed class Processor
         var intDateVersion = Utilities.GetIntDateVersionFromDate(commitDate);
         var epochIntDateVersion = Utilities.GetEpochIntDateVersionFromDate(commitDate);
 
-        var versionLabelTask = targetBranch is { } ?
-            Analyzer.LookupVersionLabelAsync(targetBranch, ct) :
+        var versionLabelTask = repository is { } ?
+            Analyzer.LookupVersionLabelAsync(repository, ct) :
             Task.FromResult(Version.Default);
         var keyValues =
             (!string.IsNullOrWhiteSpace(context.PropertiesPath) &&
@@ -172,6 +173,7 @@ public sealed class Processor
             logger,
             writeProvider,
             context,
+            repository,
             repository?.Head,
             DateTimeOffset.Now,
             ct);
