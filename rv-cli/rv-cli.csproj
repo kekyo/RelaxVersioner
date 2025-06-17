@@ -28,7 +28,7 @@
   <ItemGroup>
     <PackageReference Include="Mono.Options" Version="6.12.0.148" />
     <PackageReference Condition="'$(RV_BOOTSTRAP)' != 'True'"
-                      Include="RelaxVersioner" Version="3.11.0" PrivateAssets="all" />
+                      Include="RelaxVersioner" Version="3.13.0" PrivateAssets="all" />
   </ItemGroup>
 
   <ItemGroup>
