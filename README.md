@@ -21,7 +21,7 @@ Furthermore, have you ever wanted to automate such an operation with CI, but fou
 In C#, such information is conventionally described in the `AssemblyInfo.cs` file:
 
 ```csharp
-using System.Reflection;.
+using System.Reflection;
 
 // Embed version number in assembly attribute.
 [assembly: AssemblyVersion("1.0.21")]
@@ -519,6 +519,9 @@ When you are using a nuspec file to generate a NuGet package, there are addition
 
 ## History
 
+* 3.15.0:
+  * Updated GitReader to 1.13.0 to improve working directory search performance (#20).
+  * Improved detection for invalid version tags format.
 * 3.14.0:
   * Version number is incremented when there are files being modified in the working directory.
 * 3.13.0:
