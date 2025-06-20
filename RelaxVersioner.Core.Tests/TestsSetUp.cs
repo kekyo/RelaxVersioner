@@ -10,7 +10,6 @@
 using System;
 using System.IO;
 using System.IO.Compression;
-using VerifyTests;
 
 namespace RelaxVersioner;
 
@@ -21,8 +20,6 @@ public sealed class TestsSetUp
 
     static TestsSetUp()
     {
-        VerifierSettings.DontScrubDateTimes();
-
         if (!Directory.Exists(BasePath))
         {
             foreach (var path in Directory.EnumerateFiles(

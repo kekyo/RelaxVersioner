@@ -21,7 +21,7 @@ Furthermore, have you ever wanted to automate such an operation with CI, but fou
 In C#, such information is conventionally described in the `AssemblyInfo.cs` file:
 
 ```csharp
-using System.Reflection;.
+using System.Reflection;
 
 // Embed version number in assembly attribute.
 [assembly: AssemblyVersion("1.0.21")]
