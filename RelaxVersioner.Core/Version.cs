@@ -159,19 +159,63 @@ public sealed class Version :
 
     public static bool TryParse(string versionString, out Version version)
     {
-        var components = versionString.
-            TrimStart('v').     // v1.2.3
-            Split(separators, StringSplitOptions.RemoveEmptyEntries);
-        var numberComponents = components.
-            Select(numberString => ushort.TryParse(numberString, out var number) ? (ushort?)number : null).
-            TakeWhile(number => number.HasValue).
-            Select(number => number!.Value).
-            ToArray();
-        switch (numberComponents.Length)
+        if (string.IsNullOrEmpty(versionString))
         {
-            case 0:
+            version = null!;
+            return false;
+        }
+        
+        var cleanString = versionString.TrimStart('v');     // v1.2.3
+        
+        // Fail immediately if starts with negative number
+        if (cleanString.StartsWith("-"))
+        {
+            version = null!;
+            return false;
+        }
+        
+        var components = cleanString.Split(separators, StringSplitOptions.RemoveEmptyEntries);
+        
+        // Version components should not exceed 4 (Major.Minor.Build.Revision)
+        if (components.Length > 4)
+        {
+            version = null!;
+            return false;
+        }
+        
+        // Check all components and fail immediately if any are invalid
+        var numberComponents = new List<ushort>();
+        foreach (var component in components)
+        {
+            // Check for whitespace or invalid characters
+            if (string.IsNullOrWhiteSpace(component))
+            {
                 version = null!;
                 return false;
+            }
+            
+            // Values exceeding ushort maximum (65535) are invalid
+            if (ushort.TryParse(component, out var number))
+            {
+                numberComponents.Add(number);
+            }
+            else
+            {
+                // Abort processing if parsing fails
+                version = null!;
+                return false;
+            }
+        }
+        
+        // Fail if no valid components found
+        if (numberComponents.Count == 0)
+        {
+            version = null!;
+            return false;
+        }
+        
+        switch (numberComponents.Count)
+        {
             case 1:
                 version = new Version(
                     numberComponents[0]);
