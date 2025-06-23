@@ -30,6 +30,11 @@ internal static class Utilities
         
     public static readonly Encoding UTF8 = new UTF8Encoding(false);
 
+    [DebuggerStepThrough]
+    public static async Task<(T0 v0, T1 v1)> Join<T0, T1>(
+        Task<T0> task0, Task<T1> task1) =>
+        new(await task0, await task1);
+
     public static string GetDirectoryPath(string path) =>
         Path.GetDirectoryName(path) switch
         {
