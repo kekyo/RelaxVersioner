@@ -149,7 +149,9 @@ internal static class Analyzer
     }
 
     public static async Task<Version> LookupVersionLabelAsync(
-        StructuredRepository repository, CancellationToken ct)
+        StructuredRepository repository,
+        bool checkWorkingDirectoryStatus,
+        CancellationToken ct)
     {
         // Check if repository has any commits (to handle initial state)
         if (repository.Head is not { } branch)
@@ -157,20 +159,27 @@ internal static class Analyzer
             return Version.Default; // Return default version (0.0.1) if no HEAD
         }
 
-        var (baseVersion, workingDirectoryStatus) = await Utilities.Join(
-            // Get the base version from commit tags
-            RunLookupVersionLabelAsync(branch, ct),
-            // Check working directory status
-            repository.GetWorkingDirectoryStatusAsync(ct));
-
-        // If there are modified files (exclude untracked files),
-        // increment the version
-        if (workingDirectoryStatus.StagedFiles.Count > 0 || 
-            workingDirectoryStatus.UnstagedFiles.Count > 0)
+        if (checkWorkingDirectoryStatus)
         {
-            return IncrementLastVersionComponent(baseVersion);
-        }
+            var (baseVersion, workingDirectoryStatus) = await Utilities.Join(
+                // Get the base version from commit tags
+                RunLookupVersionLabelAsync(branch, ct),
+                // Check working directory status
+                repository.GetWorkingDirectoryStatusAsync(ct));
 
-        return baseVersion;
+            // If there are modified files (exclude untracked files),
+            // increment the version
+            if (workingDirectoryStatus.StagedFiles.Count > 0 ||
+                workingDirectoryStatus.UnstagedFiles.Count > 0)
+            {
+                return IncrementLastVersionComponent(baseVersion);
+            }
+
+            return baseVersion;
+        }
+        else
+        {
+            return await RunLookupVersionLabelAsync(branch, ct);
+        }
     }
 }

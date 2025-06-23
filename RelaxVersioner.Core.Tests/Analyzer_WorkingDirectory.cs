@@ -43,7 +43,7 @@ public sealed class Analyzer_WorkingDirectory
             // Test 1: Clean working directory - should return tagged version
             using (var repository = await Repository.Factory.OpenStructureAsync(tempPath))
             {
-                var version = await Analyzer.LookupVersionLabelAsync(repository, default);
+                var version = await Analyzer.LookupVersionLabelAsync(repository, false, default);
                 Assert.That(version.ToString(), Is.EqualTo("1.2.3"));
             }
             
@@ -51,7 +51,7 @@ public sealed class Analyzer_WorkingDirectory
             File.WriteAllText(testFile, "modified content");
             using (var repository = await Repository.Factory.OpenStructureAsync(tempPath))
             {
-                var version = await Analyzer.LookupVersionLabelAsync(repository, default);
+                var version = await Analyzer.LookupVersionLabelAsync(repository, false, default);
                 Assert.That(version.ToString(), Is.EqualTo("1.2.4"));
             }
             
@@ -59,7 +59,7 @@ public sealed class Analyzer_WorkingDirectory
             await TestUtilities.RunGitCommand(tempPath, "add test.txt");
             using (var repository = await Repository.Factory.OpenStructureAsync(tempPath))
             {
-                var version = await Analyzer.LookupVersionLabelAsync(repository, default);
+                var version = await Analyzer.LookupVersionLabelAsync(repository, false, default);
                 Assert.That(version.ToString(), Is.EqualTo("1.2.4"));
             }
             
@@ -70,7 +70,7 @@ public sealed class Analyzer_WorkingDirectory
             File.WriteAllText(untrackedFile, "untracked content");
             using (var repository = await Repository.Factory.OpenStructureAsync(tempPath))
             {
-                var version = await Analyzer.LookupVersionLabelAsync(repository, default);
+                var version = await Analyzer.LookupVersionLabelAsync(repository, false, default);
                 Assert.That(version.ToString(), Is.EqualTo("1.2.3")); // Should not increment for untracked files
             }
         }
@@ -108,7 +108,7 @@ public sealed class Analyzer_WorkingDirectory
             // Test 1: Initial repository with no commits and no files - should return default version
             using (var repository = await Repository.Factory.OpenStructureAsync(tempPath))
             {
-                var version = await Analyzer.LookupVersionLabelAsync(repository, default);
+                var version = await Analyzer.LookupVersionLabelAsync(repository, false, default);
                 Assert.That(version.ToString(), Is.EqualTo("0.0.1"));
             }
             
@@ -117,7 +117,7 @@ public sealed class Analyzer_WorkingDirectory
             File.WriteAllText(testFile, "content");
             using (var repository = await Repository.Factory.OpenStructureAsync(tempPath))
             {
-                var version = await Analyzer.LookupVersionLabelAsync(repository, default);
+                var version = await Analyzer.LookupVersionLabelAsync(repository, false, default);
                 Assert.That(version.ToString(), Is.EqualTo("0.0.1"));
             }
             
@@ -125,7 +125,7 @@ public sealed class Analyzer_WorkingDirectory
             await TestUtilities.RunGitCommand(tempPath, "add test.txt");
             using (var repository = await Repository.Factory.OpenStructureAsync(tempPath))
             {
-                var version = await Analyzer.LookupVersionLabelAsync(repository, default);
+                var version = await Analyzer.LookupVersionLabelAsync(repository, false, default);
                 Assert.That(version.ToString(), Is.EqualTo("0.0.1"));
             }
             
@@ -134,7 +134,7 @@ public sealed class Analyzer_WorkingDirectory
             File.WriteAllText(testFile, "modified content");
             using (var repository = await Repository.Factory.OpenStructureAsync(tempPath))
             {
-                var version = await Analyzer.LookupVersionLabelAsync(repository, default);
+                var version = await Analyzer.LookupVersionLabelAsync(repository, false, default);
                 Assert.That(version.ToString(), Is.EqualTo("0.0.1"));
             }
             
@@ -144,7 +144,7 @@ public sealed class Analyzer_WorkingDirectory
             await TestUtilities.RunGitCommand(tempPath, "add test2.txt");
             using (var repository = await Repository.Factory.OpenStructureAsync(tempPath))
             {
-                var version = await Analyzer.LookupVersionLabelAsync(repository, default);
+                var version = await Analyzer.LookupVersionLabelAsync(repository, false, default);
                 Assert.That(version.ToString(), Is.EqualTo("0.0.1"));
             }
         }
