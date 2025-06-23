@@ -42,6 +42,7 @@ public sealed class ProcessorContext
     public string BracketEnd;
     public bool IsDryRun;
     public bool IsQuietOnStandardOutput;
+    public bool CheckWorkingDirectoryStatus;
     public string[] NpmPrefixes;
 }
 
@@ -100,7 +101,7 @@ public sealed class Processor
         var epochIntDateVersion = Utilities.GetEpochIntDateVersionFromDate(commitDate);
 
         var versionLabelTask = repository is { } ?
-            Analyzer.LookupVersionLabelAsync(repository, ct) :
+            Analyzer.LookupVersionLabelAsync(repository, context.CheckWorkingDirectoryStatus, ct) :
             Task.FromResult(Version.Default);
         var keyValues =
             (!string.IsNullOrWhiteSpace(context.PropertiesPath) &&

@@ -286,6 +286,18 @@ After updating the version of each package, run `npm install` in the workspace r
 
 ## Hints and Tips
 
+### Reflect the working directory status
+
+When using RelaxVersioner in a .NET project or with the option `--cwd` in the CLI, the version number increment will take into account whether or not changes have been made to the working directory.
+
+For example, if the version being determined is `1.2.3` and there are (uncommitted) changes made to the working directory, the version applied will be `1.2.4`.
+
+.NET projects, this behavior does not recursively affect Git changes, since the version number is never directly embedded in the source code. Therefore, it always considers the working directory status by default.
+
+It is disabled by default in the CLI interface. In particular, if you specify `--npm` and apply it to NPM's `package.json`, you will have a situation where the version number is reapplied by the RelaxVersioner, which causes the version change to occur again (causing a difference in Git).
+
+The `--cwd` option is still valid in this case, but care must be taken because the version number will not be reflected in `package-lock.json` unless you run `npm install` immediately afterwards.
+
 ### How to use version numbers after building process
 
 RelaxVersioner saves the files in the following location after build:
@@ -519,6 +531,9 @@ When you are using a nuspec file to generate a NuGet package, there are addition
 
 ## History
 
+* 3.16.0:
+  * Made working directory checks run in parallel.
+  * Made working directory checks optionally specifiable.
 * 3.15.0:
   * Updated GitReader to 1.13.0 to improve working directory search performance (#20).
   * Improved detection for invalid version tags format.

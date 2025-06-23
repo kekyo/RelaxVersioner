@@ -17,6 +17,7 @@
     <BuildIdentifier Condition="'$(BuildIdentifier)' == ''"></BuildIdentifier>
     <RelaxVersionerBuildIdentifier Condition="'$(RelaxVersionerBuildIdentifier)' == ''">$(BuildIdentifier)</RelaxVersionerBuildIdentifier>
     <RelaxVersionerGenerateStatic Condition="'$(RelaxVersionerGenerateStatic)' == ''">True</RelaxVersionerGenerateStatic>
+    <RelaxVersionerCheckWorkingDirectoryStatus Condition="'$(RelaxVersionerCheckWorkingDirectoryStatus)' == ''">True</RelaxVersionerCheckWorkingDirectoryStatus>
     <RelaxVersionerLaunchDebugger Condition="'$(RelaxVersionerLaunchDebugger)' == ''">False</RelaxVersionerLaunchDebugger>
   </PropertyGroup>
 
@@ -126,6 +127,7 @@
       <_RVB_TargetFrameworkVersion>$(TargetFrameworkVersion)</_RVB_TargetFrameworkVersion>
       <_RVB_TargetFrameworkProfile>$(TargetFrameworkProfile)</_RVB_TargetFrameworkProfile>
       <_RVB_LaunchDebuggerOption Condition="$(RelaxVersionerLaunchDebugger)">--launchDebugger</_RVB_LaunchDebuggerOption>
+      <_RVB_CheckWorkingDirectoryStatusOption Condition="$(RelaxVersionerCheckWorkingDirectoryStatus)">--cwd</_RVB_CheckWorkingDirectoryStatusOption>
     </PropertyGroup>
     
     <!-- ======================== -->
@@ -156,7 +158,7 @@
     </ItemGroup>
 
     <Exec WorkingDirectory="$(RelaxVersionerToolingDir)"
-          Command="$(RelaxVersionerToolingRuntimeName)&quot;$(RelaxVersionerToolingPath)&quot; $(_RVB_LaunchDebuggerOption) --verbose --language=&quot;$(RelaxVersionerLanguage)&quot; --namespace=&quot;$(RelaxVersionerNamespace)&quot; --tfm=&quot;$(_RVB_TargetFramework)&quot; --tfid=&quot;$(_RVB_TargetFrameworkIdentifier)&quot; --tfv=&quot;$(_RVB_TargetFrameworkVersion)&quot; --tfp=&quot;$(_RVB_TargetFrameworkProfile)&quot; --genStatic=&quot;$(RelaxVersionerGenerateStatic)&quot; --buildIdentifier=&quot;$(RelaxVersionerBuildIdentifier)&quot; --propertiesPath=&quot;$(RelaxVersionerPropertiesPath)&quot; --outputPath=@(_RVB_OutputPath->'&quot;%(FullPath)&quot;',' ') --resultPath=&quot;$(RelaxVersionerResultPath)&quot; &quot;$(MSBuildProjectFullPath)&quot;" />
+          Command="$(RelaxVersionerToolingRuntimeName)&quot;$(RelaxVersionerToolingPath)&quot; $(_RVB_LaunchDebuggerOption) $(_RVB_CheckWorkingDirectoryStatusOption) --verbose --language=&quot;$(RelaxVersionerLanguage)&quot; --namespace=&quot;$(RelaxVersionerNamespace)&quot; --tfm=&quot;$(_RVB_TargetFramework)&quot; --tfid=&quot;$(_RVB_TargetFrameworkIdentifier)&quot; --tfv=&quot;$(_RVB_TargetFrameworkVersion)&quot; --tfp=&quot;$(_RVB_TargetFrameworkProfile)&quot; --genStatic=&quot;$(RelaxVersionerGenerateStatic)&quot; --buildIdentifier=&quot;$(RelaxVersionerBuildIdentifier)&quot; --propertiesPath=&quot;$(RelaxVersionerPropertiesPath)&quot; --outputPath=@(_RVB_OutputPath->'&quot;%(FullPath)&quot;',' ') --resultPath=&quot;$(RelaxVersionerResultPath)&quot; &quot;$(MSBuildProjectFullPath)&quot;" />
 
     <ItemGroup>
       <FileWrites Include="$(RelaxVersionerResultPath)" />
@@ -314,6 +316,7 @@
       <RelaxVersionerTagsPath>$([System.IO.Path]::Combine('$(_RVB_DumpBasePath)','RelaxVersioner_Tags.txt'))</RelaxVersionerTagsPath>
 
       <_RVB_LaunchDebuggerOption Condition="$(RelaxVersionerLaunchDebugger)">--launchDebugger</_RVB_LaunchDebuggerOption>
+      <_RVB_CheckWorkingDirectoryStatusOption Condition="$(RelaxVersionerCheckWorkingDirectoryStatus)">--cwd</_RVB_CheckWorkingDirectoryStatusOption>
     </PropertyGroup>
 
   </Target>
@@ -328,7 +331,7 @@
     </ItemGroup>
 
     <Exec WorkingDirectory="$(RelaxVersionerToolingDir)"
-          Command="$(RelaxVersionerToolingRuntimeName)&quot;$(RelaxVersionerToolingPath)&quot; $(_RVB_LaunchDebuggerOption) --quiet --buildIdentifier=&quot;$(RelaxVersionerBuildIdentifier)&quot; --namespace=&quot;$(RelaxVersionerNamespace)&quot; --tfm=&quot;$(_RVB_TargetFramework)&quot; --tfid=&quot;$(_RVB_TargetFrameworkIdentifier)&quot; --tfv=&quot;$(_RVB_TargetFrameworkVersion)&quot; --tfp=&quot;$(_RVB_TargetFrameworkProfile)&quot; --genStatic=&quot;$(RelaxVersionerGenerateStatic)&quot; --propertiesPath=&quot;$(RelaxVersionerPropertiesPath)&quot; --resultPath=&quot;$(RelaxVersionerResultPath)&quot; &quot;$(MSBuildProjectFullPath)&quot;" />
+          Command="$(RelaxVersionerToolingRuntimeName)&quot;$(RelaxVersionerToolingPath)&quot; $(_RVB_LaunchDebuggerOption) $(_RVB_CheckWorkingDirectoryStatusOption) --quiet --buildIdentifier=&quot;$(RelaxVersionerBuildIdentifier)&quot; --namespace=&quot;$(RelaxVersionerNamespace)&quot; --tfm=&quot;$(_RVB_TargetFramework)&quot; --tfid=&quot;$(_RVB_TargetFrameworkIdentifier)&quot; --tfv=&quot;$(_RVB_TargetFrameworkVersion)&quot; --tfp=&quot;$(_RVB_TargetFrameworkProfile)&quot; --genStatic=&quot;$(RelaxVersionerGenerateStatic)&quot; --propertiesPath=&quot;$(RelaxVersionerPropertiesPath)&quot; --resultPath=&quot;$(RelaxVersionerResultPath)&quot; &quot;$(MSBuildProjectFullPath)&quot;" />
 
     <ItemGroup>
       <FileWrites Include="$(RelaxVersionerResultPath)" />

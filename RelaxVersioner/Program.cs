@@ -99,6 +99,7 @@ public static class Program
                         verbose = true;
                     }
                 },
+                { "w|cwd", "check working directory status", _ => context.CheckWorkingDirectoryStatus = true },
                 { "quiet", "quiet on stdout", _ => context.IsQuietOnStandardOutput = true },
                 { "dryrun", "dryrun mode", _ => context.IsDryRun = true },
                 { "verbose", "verbose mode", _ => verbose = true },

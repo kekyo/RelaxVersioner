@@ -71,7 +71,7 @@ internal static class Analyzer
         }
     }
 
-    private static async Task<Version> LookupVersionLabelAsync(
+    private static async Task<Version> LookupVersionLabelRecursiveAsync(
         Commit commit, Dictionary<Commit, Version> reached, CancellationToken ct)
     {
         var scheduledStack = new Stack<ScheduledCommit>();
@@ -126,7 +126,7 @@ internal static class Analyzer
             {
                 for (var index = 1; index < pcs.Length; index++)
                 {
-                    var v = await LookupVersionLabelAsync(pcs[index], reached, ct);
+                    var v = await LookupVersionLabelRecursiveAsync(pcs[index], reached, ct);
                     if (v.CompareTo(version) > 0)
                     {
                         version = v;
@@ -141,8 +141,17 @@ internal static class Analyzer
         return version;
     }
 
+    private static async Task<Version> RunLookupVersionLabelAsync(
+        Branch branch, CancellationToken ct)
+    {
+        var headCommit = await branch.GetHeadCommitAsync(ct);
+        return await LookupVersionLabelRecursiveAsync(headCommit, new(), ct);
+    }
+
     public static async Task<Version> LookupVersionLabelAsync(
-        StructuredRepository repository, CancellationToken ct)
+        StructuredRepository repository,
+        bool checkWorkingDirectoryStatus,
+        CancellationToken ct)
     {
         // Check if repository has any commits (to handle initial state)
         if (repository.Head is not { } branch)
@@ -150,22 +159,27 @@ internal static class Analyzer
             return Version.Default; // Return default version (0.0.1) if no HEAD
         }
 
-        var headCommit = await branch.GetHeadCommitAsync(ct);
-
-        // Get the base version from commit tags
-        var baseVersion = await LookupVersionLabelAsync(headCommit, new(), ct);
-
-        // Check working directory status
-        var workingDirectoryStatus = await repository.GetWorkingDirectoryStatusAsync(ct);
-
-        // If there are modified files (exclude untracked files),
-        // increment the version
-        if (workingDirectoryStatus.StagedFiles.Count > 0 || 
-            workingDirectoryStatus.UnstagedFiles.Count > 0)
+        if (checkWorkingDirectoryStatus)
         {
-            return IncrementLastVersionComponent(baseVersion);
-        }
+            var (baseVersion, workingDirectoryStatus) = await Utilities.Join(
+                // Get the base version from commit tags
+                RunLookupVersionLabelAsync(branch, ct),
+                // Check working directory status
+                repository.GetWorkingDirectoryStatusAsync(ct));
 
-        return baseVersion;
+            // If there are modified files (exclude untracked files),
+            // increment the version
+            if (workingDirectoryStatus.StagedFiles.Count > 0 ||
+                workingDirectoryStatus.UnstagedFiles.Count > 0)
+            {
+                return IncrementLastVersionComponent(baseVersion);
+            }
+
+            return baseVersion;
+        }
+        else
+        {
+            return await RunLookupVersionLabelAsync(branch, ct);
+        }
     }
 }

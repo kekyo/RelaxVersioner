@@ -33,7 +33,7 @@ public sealed class AnalyzerTests
         using var repository = await Repository.Factory.OpenStructureAsync(
             Path.Combine(TestsSetUp.BasePath, repositoryName));
 
-        var actual = await Analyzer.LookupVersionLabelAsync(repository, default);
+        var actual = await Analyzer.LookupVersionLabelAsync(repository, false, default);
 
         Assert.That(expectedString, Is.EqualTo(actual.ToString()));
     }
