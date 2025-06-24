@@ -167,10 +167,10 @@ internal static class Analyzer
                 // Check working directory status
                 repository.GetWorkingDirectoryStatusAsync(ct));
 
-            // If there are modified files (exclude untracked files),
-            // increment the version
+            // If there are modified files, increment the version
             if (workingDirectoryStatus.StagedFiles.Count > 0 ||
-                workingDirectoryStatus.UnstagedFiles.Count > 0)
+                workingDirectoryStatus.UnstagedFiles.Count > 0 ||
+                workingDirectoryStatus.UntrackedFiles.Count > 0)
             {
                 return IncrementLastVersionComponent(baseVersion);
             }
