@@ -531,6 +531,9 @@ When you are using a nuspec file to generate a NuGet package, there are addition
 
 ## History
 
+* 3.17.0:
+  * Included untracked files to cwd mode.
+  * Updated GitReader to 1.14.0.
 * 3.16.0:
   * Made working directory checks run in parallel.
   * Made working directory checks optionally specifiable.

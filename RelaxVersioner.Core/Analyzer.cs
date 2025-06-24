@@ -13,7 +13,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
-
+using GitReader.IO;
 using GitReader.Structures;
 
 namespace RelaxVersioner;
@@ -161,16 +161,16 @@ internal static class Analyzer
 
         if (checkWorkingDirectoryStatus)
         {
-            var (baseVersion, workingDirectoryStatus) = await Utilities.Join(
+            var (baseVersion, workingDirectoryStatus) = await LooseConcurrentScope.Default.Join(
                 // Get the base version from commit tags
                 RunLookupVersionLabelAsync(branch, ct),
                 // Check working directory status
                 repository.GetWorkingDirectoryStatusAsync(ct));
 
-            // If there are modified files (exclude untracked files),
-            // increment the version
+            // If there are modified files, increment the version
             if (workingDirectoryStatus.StagedFiles.Count > 0 ||
-                workingDirectoryStatus.UnstagedFiles.Count > 0)
+                workingDirectoryStatus.UnstagedFiles.Count > 0 ||
+                workingDirectoryStatus.UntrackedFiles.Count > 0)
             {
                 return IncrementLastVersionComponent(baseVersion);
             }
