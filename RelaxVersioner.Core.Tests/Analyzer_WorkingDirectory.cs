@@ -41,9 +41,12 @@ public sealed class Analyzer_WorkingDirectory
             await TestUtilities.RunGitCommand(tempPath, "tag v1.2.3");
             
             // Test 1: Clean working directory - should return tagged version
+            Hash root;
             using (var repository = await Repository.Factory.OpenStructureAsync(tempPath))
             {
-                var version = await Analyzer.LookupVersionLabelAsync(repository, false, default);
+                root = repository.Head!.Head;
+
+                var version = await Analyzer.LookupVersionLabelAsync(repository, true, default);
                 Assert.That(version.ToString(), Is.EqualTo("1.2.3"));
             }
             
@@ -51,7 +54,7 @@ public sealed class Analyzer_WorkingDirectory
             File.WriteAllText(testFile, "modified content");
             using (var repository = await Repository.Factory.OpenStructureAsync(tempPath))
             {
-                var version = await Analyzer.LookupVersionLabelAsync(repository, false, default);
+                var version = await Analyzer.LookupVersionLabelAsync(repository, true, default);
                 Assert.That(version.ToString(), Is.EqualTo("1.2.4"));
             }
             
@@ -59,19 +62,37 @@ public sealed class Analyzer_WorkingDirectory
             await TestUtilities.RunGitCommand(tempPath, "add test.txt");
             using (var repository = await Repository.Factory.OpenStructureAsync(tempPath))
             {
-                var version = await Analyzer.LookupVersionLabelAsync(repository, false, default);
+                var version = await Analyzer.LookupVersionLabelAsync(repository, true, default);
                 Assert.That(version.ToString(), Is.EqualTo("1.2.4"));
             }
             
-            // Test 4: Clean up staged file and test untracked file (should not increment)
-            await TestUtilities.RunGitCommand(tempPath, "reset HEAD test.txt");
-            await TestUtilities.RunGitCommand(tempPath, "checkout -- test.txt");
+            // Test 4: Commit staged file and test untracked file
+            await TestUtilities.RunGitCommand(tempPath, "commit -m \"Test\"");
+            using (var repository = await Repository.Factory.OpenStructureAsync(tempPath))
+            {
+                var version = await Analyzer.LookupVersionLabelAsync(repository, true, default);
+                Assert.That(version.ToString(), Is.EqualTo("1.2.4"));
+            }
             var untrackedFile = Path.Combine(tempPath, "untracked.txt");
             File.WriteAllText(untrackedFile, "untracked content");
             using (var repository = await Repository.Factory.OpenStructureAsync(tempPath))
             {
-                var version = await Analyzer.LookupVersionLabelAsync(repository, false, default);
-                Assert.That(version.ToString(), Is.EqualTo("1.2.3")); // Should not increment for untracked files
+                var version = await Analyzer.LookupVersionLabelAsync(repository, true, default);
+                Assert.That(version.ToString(), Is.EqualTo("1.2.5"));
+            }
+            
+            // Test 5: Reset
+            await TestUtilities.RunGitCommand(tempPath, $"reset --hard {root}");
+            using (var repository = await Repository.Factory.OpenStructureAsync(tempPath))
+            {
+                var version = await Analyzer.LookupVersionLabelAsync(repository, true, default);
+                Assert.That(version.ToString(), Is.EqualTo("1.2.4"));
+            }
+            await TestUtilities.RunGitCommand(tempPath, $"clean -xfd");   // Remove `untracked.txt`
+            using (var repository = await Repository.Factory.OpenStructureAsync(tempPath))
+            {
+                var version = await Analyzer.LookupVersionLabelAsync(repository, true, default);
+                Assert.That(version.ToString(), Is.EqualTo("1.2.3"));
             }
         }
         finally
