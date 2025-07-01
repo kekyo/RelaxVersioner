@@ -72,4 +72,32 @@ public static class TestUtilities
         
         return process.StandardOutput.ReadToEnd();
     }
+
+    public static async Task InitializeGitRepositoryWithMainBranch(string workingDirectory)
+    {
+        try
+        {
+            // Try modern Git init with initial branch specification
+            await RunGitCommand(workingDirectory, "init --initial-branch=main");
+        }
+        catch
+        {
+            // Fallback for older Git versions
+            await RunGitCommand(workingDirectory, "init");
+            await RunGitCommand(workingDirectory, "config init.defaultBranch main");
+            // Check if we need to rename the branch
+            try
+            {
+                var currentBranch = await RunGitCommandWithOutput(workingDirectory, "branch --show-current");
+                if (currentBranch.Trim() != "main")
+                {
+                    await RunGitCommand(workingDirectory, "branch -m main");
+                }
+            }
+            catch
+            {
+                // If no commits yet, the branch rename will happen after first commit
+            }
+        }
+    }
 } 

@@ -29,7 +29,7 @@ public sealed class AnalyzerEdgeCasesTests
             Directory.CreateDirectory(tempPath);
             
             // Initialize empty git repository
-            await TestUtilities.RunGitCommand(tempPath, "init");
+            await TestUtilities.InitializeGitRepositoryWithMainBranch(tempPath);
             await TestUtilities.RunGitCommand(tempPath, "config user.email \"test@example.com\"");
             await TestUtilities.RunGitCommand(tempPath, "config user.name \"Test User\"");
             
@@ -57,7 +57,7 @@ public sealed class AnalyzerEdgeCasesTests
             Directory.CreateDirectory(tempPath);
             
             // Initialize repository with commits and tag
-            await TestUtilities.RunGitCommand(tempPath, "init");
+            await TestUtilities.InitializeGitRepositoryWithMainBranch(tempPath);
             await TestUtilities.RunGitCommand(tempPath, "config user.email \"test@example.com\"");
             await TestUtilities.RunGitCommand(tempPath, "config user.name \"Test User\"");
             
@@ -98,7 +98,7 @@ public sealed class AnalyzerEdgeCasesTests
         {
             Directory.CreateDirectory(tempPath);
             
-            await TestUtilities.RunGitCommand(tempPath, "init");
+            await TestUtilities.InitializeGitRepositoryWithMainBranch(tempPath);
             await TestUtilities.RunGitCommand(tempPath, "config user.email \"test@example.com\"");
             await TestUtilities.RunGitCommand(tempPath, "config user.name \"Test User\"");
             
@@ -139,7 +139,7 @@ public sealed class AnalyzerEdgeCasesTests
         {
             Directory.CreateDirectory(tempPath);
             
-            await TestUtilities.RunGitCommand(tempPath, "init");
+            await TestUtilities.InitializeGitRepositoryWithMainBranch(tempPath);
             await TestUtilities.RunGitCommand(tempPath, "config user.email \"test@example.com\"");
             await TestUtilities.RunGitCommand(tempPath, "config user.name \"Test User\"");
             
@@ -183,7 +183,7 @@ public sealed class AnalyzerEdgeCasesTests
         {
             Directory.CreateDirectory(tempPath);
             
-            await TestUtilities.RunGitCommand(tempPath, "init");
+            await TestUtilities.InitializeGitRepositoryWithMainBranch(tempPath);
             await TestUtilities.RunGitCommand(tempPath, "config user.email \"test@example.com\"");
             await TestUtilities.RunGitCommand(tempPath, "config user.name \"Test User\"");
             
@@ -225,7 +225,7 @@ public sealed class AnalyzerEdgeCasesTests
         {
             Directory.CreateDirectory(tempPath);
             
-            await TestUtilities.RunGitCommand(tempPath, "init");
+            await TestUtilities.InitializeGitRepositoryWithMainBranch(tempPath);
             await TestUtilities.RunGitCommand(tempPath, "config user.email \"test@example.com\"");
             await TestUtilities.RunGitCommand(tempPath, "config user.name \"Test User\"");
             
@@ -264,7 +264,7 @@ public sealed class AnalyzerEdgeCasesTests
         {
             Directory.CreateDirectory(tempPath);
             
-            await TestUtilities.RunGitCommand(tempPath, "init");
+            await TestUtilities.InitializeGitRepositoryWithMainBranch(tempPath);
             await TestUtilities.RunGitCommand(tempPath, "config user.email \"test@example.com\"");
             await TestUtilities.RunGitCommand(tempPath, "config user.name \"Test User\"");
             
@@ -307,7 +307,7 @@ public sealed class AnalyzerEdgeCasesTests
         {
             Directory.CreateDirectory(tempPath);
             
-            await TestUtilities.RunGitCommand(tempPath, "init");
+            await TestUtilities.InitializeGitRepositoryWithMainBranch(tempPath);
             await TestUtilities.RunGitCommand(tempPath, "config user.email \"test@example.com\"");
             await TestUtilities.RunGitCommand(tempPath, "config user.name \"Test User\"");
             
