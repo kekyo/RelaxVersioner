@@ -1,4 +1,4 @@
-﻿////////////////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////////////
 //
 // RelaxVersioner - Git tag/branch based, full-automatic version generator.
 // Copyright (c) Kouji Matsui (@kozy_kekyo, @kekyo@mi.kekyo.net)
@@ -17,7 +17,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Xml.Linq;
 using GitReader;
-using GitReader.Structures;
+using GitReader.Primitive;
 
 using RelaxVersioner.Writers;
 
@@ -85,7 +85,7 @@ internal static class Utilities
     public static string GetDirectoryNameWithTrailingSeparator(string path) =>
         GetDirectoryNameWithoutTrailingSeparator(path) + Path.DirectorySeparatorChar;
 
-    public static async Task<StructuredRepository?> OpenRepositoryAsync(
+    public static async Task<PrimitiveRepository?> OpenRepositoryAsync(
         Logger logger, string candidatePath)
     {
         var repository = await TraversePathToRootAsync(candidatePath, async path =>
@@ -94,7 +94,7 @@ internal static class Utilities
             if (Directory.Exists(gitPath) ||
                 File.Exists(gitPath))  // submodule
             {
-                var r = await Repository.Factory.OpenStructureAsync(path);
+                var r = await Repository.Factory.OpenPrimitiveAsync(path);
                 logger.Message(LogImportance.Low, "Repository opened, Path={0}", path);
                 return r;
             }

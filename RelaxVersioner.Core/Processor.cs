@@ -1,4 +1,4 @@
-﻿////////////////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////////////
 //
 // RelaxVersioner - Git tag/branch based, full-automatic version generator.
 // Copyright (c) Kouji Matsui (@kozy_kekyo, @kekyo@mi.kekyo.net)
@@ -17,7 +17,8 @@ using System.Threading.Tasks;
 using System.Xml.Linq;
 
 using GitReader;
-using GitReader.Structures;
+using GitReader.IO;
+using GitReader.Primitive;
 
 using RelaxVersioner.Writers;
 
@@ -66,13 +67,13 @@ public sealed class Processor
         Logger logger,
         WriteProviderBase writeProvider,
         ProcessorContext context,
-        StructuredRepository? repository,
-        Branch? targetBranch,
+        PrimitiveRepository repository,
+        PrimitiveReference? targetBranch,
         DateTimeOffset generated,
         CancellationToken ct)
     {
-        var commit = targetBranch != null ?
-            await targetBranch.GetHeadCommitAsync(ct) :
+        var commit = targetBranch is { } tb ?
+            await repository.GetCommitAsync(tb, ct) :
             null;
 
         var commitId = commit?.Hash.ToString() ??
@@ -86,14 +87,22 @@ public sealed class Processor
         var committer = FormatSignature(commit?.Committer);
         var commitDate = commit?.Committer.Date ?? generated;
 
-        var branches = commit?.Branches.
-            Select(b => b.Name).
-            ToArray() ?? Array.Empty<string>();
+        var branches = commit is { } c1 ?
+            (await repository.GetBranchHeadReferencesAsync(ct)).
+                Where(b => b.Target.Equals(c1.Hash)).
+                Select(b => b.Name).
+                ToArray() :
+            [];
         var branchesString = string.Join(",", branches);
 
-        var tags = commit?.Tags.
+        var tags = commit is { } c2 ?
+            (await LooseConcurrentScope.Default.WhenAll(
+                (await repository.GetTagReferencesAsync(ct)).
+                Select(t => repository.GetTagAsync(t, ct)))).
+            Where(t => t.Hash.Equals(c2.Hash)).
             Select(b => b.Name).
-            ToArray() ?? Array.Empty<string>();
+            ToArray() :
+            [];
         var tagsString = string.Join(",", tags);
 
         var safeVersion = Utilities.GetSafeVersionFromDate(commitDate);
@@ -145,6 +154,21 @@ public sealed class Processor
 
         writeProvider.Write(context, keyValues, generated);
 
+        string subject;
+        string body;
+
+        if (commit is { } c)
+        {
+            var index = c.Message.IndexOf("\n\n");
+            subject = ((index >= 0) ? c.Message.Substring(0, index) : c.Message).Trim('\n').Replace('\n', ' ');
+            body = (index >= 0) ? c.Message.Substring(index + 2) : string.Empty;
+        }
+        else
+        {
+            subject = null;
+            body = null;
+        }
+
         return new Result(
             versionLabel,
             shortVersion,
@@ -157,8 +181,8 @@ public sealed class Processor
             commitDate,
             author,
             committer,
-            commit?.Subject,
-            commit?.Body);
+            subject,
+            body);
     }
 
     public async Task<Result> RunAsync(
@@ -175,7 +199,7 @@ public sealed class Processor
             writeProvider,
             context,
             repository,
-            repository?.Head,
+            await repository.GetCurrentHeadReferenceAsync(ct),
             DateTimeOffset.Now,
             ct);
     }

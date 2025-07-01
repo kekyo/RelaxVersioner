@@ -12,7 +12,7 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using GitReader.IO;
-using GitReader.Structures;
+using GitReader.Primitive;
 
 namespace RelaxVersioner;
 
@@ -20,18 +20,18 @@ internal static class Analyzer
 {
     private readonly struct ScheduledCommit
     {
-        public readonly Commit Commit;
-        public readonly Commit[] Parents;
+        public readonly PrimitiveCommit Commit;
+        public readonly PrimitiveCommit[] Parents;
 
         public ScheduledCommit(
-            Commit commit, Commit[] parents)
+            PrimitiveCommit commit, PrimitiveCommit[] parents)
         {
             this.Commit = commit;
             this.Parents = parents;
         }
 
         public void Deconstruct(
-            out Commit commit, out Commit[] parents)
+            out PrimitiveCommit commit, out PrimitiveCommit[] parents)
         {
             commit = this.Commit;
             parents = this.Parents;
@@ -70,7 +70,9 @@ internal static class Analyzer
     }
 
     private static async Task<Version> LookupVersionLabelRecursiveAsync(
-        Commit commit, Dictionary<Commit, Version> reached, CancellationToken ct)
+        PrimitiveRepository repository,
+        PrimitiveCommit commit,
+        Dictionary<PrimitiveCommit, Version> reached, CancellationToken ct)
     {
         var scheduledStack = new Stack<ScheduledCommit>();
         var version = Version.Default;
@@ -89,7 +91,7 @@ internal static class Analyzer
             }
 
             // Detected mostly larger version tag.
-            var candidates = commit.Tags.
+            var candidates = (await repository.GetRelatedTagsAsync(commit, ct)).
                 Select(tag => Version.TryParse(tag.Name, out var v) ? v : null!).
                 Where(v => v?.ComponentCount >= 2).     // "1.2" or more.
                 OrderByDescending(v => v).
@@ -101,7 +103,11 @@ internal static class Analyzer
                 break;
             }
 
-            var parents = await commit.GetParentCommitsAsync(ct);
+            var parents = (await LooseConcurrentScope.Default.WhenAll(
+                commit.Parents.Select(parentCommitHash => repository.GetCommitAsync(parentCommitHash, ct)))).
+                Where(parentCommitHash => parentCommitHash.HasValue).
+                Select(parentCommitHash => parentCommitHash!.Value).
+                ToArray();
             if (parents.Length == 0)
             {
                 reached.Add(commit, version);
@@ -124,7 +130,7 @@ internal static class Analyzer
             {
                 for (var index = 1; index < pcs.Length; index++)
                 {
-                    var v = await LookupVersionLabelRecursiveAsync(pcs[index], reached, ct);
+                    var v = await LookupVersionLabelRecursiveAsync(repository, pcs[index], reached, ct);
                     if (v.CompareTo(version) > 0)
                     {
                         version = v;
@@ -140,19 +146,20 @@ internal static class Analyzer
     }
 
     private static async Task<Version> RunLookupVersionLabelAsync(
-        Branch branch, CancellationToken ct)
+        PrimitiveRepository repository,
+        PrimitiveReference branch, CancellationToken ct)
     {
-        var headCommit = await branch.GetHeadCommitAsync(ct);
-        return await LookupVersionLabelRecursiveAsync(headCommit, new(), ct);
+        var headCommit = await repository.GetCommitAsync(branch, ct);
+        return await LookupVersionLabelRecursiveAsync(repository, headCommit!.Value, new(), ct);
     }
 
     public static async Task<Version> LookupVersionLabelAsync(
-        StructuredRepository repository,
+        PrimitiveRepository repository,
         bool checkWorkingDirectoryStatus,
         CancellationToken ct)
     {
         // Check if repository has any commits (to handle initial state)
-        if (repository.Head is not { } branch)
+        if (await repository.GetCurrentHeadReferenceAsync(ct) is not { } branch)
         {
             return Version.Default; // Return default version (0.0.1) if no HEAD
         }
@@ -161,14 +168,19 @@ internal static class Analyzer
         {
             var (baseVersion, workingDirectoryStatus) = await LooseConcurrentScope.Default.Join(
                 // Get the base version from commit tags
-                RunLookupVersionLabelAsync(branch, ct),
+                RunLookupVersionLabelAsync(repository, branch, ct),
                 // Check working directory status
                 repository.GetWorkingDirectoryStatusAsync(ct));
 
             // If there are modified files, increment the version
             if (workingDirectoryStatus.StagedFiles.Count > 0 ||
-                workingDirectoryStatus.UnstagedFiles.Count > 0 ||
-                workingDirectoryStatus.UntrackedFiles.Count > 0)
+                workingDirectoryStatus.UnstagedFiles.Count > 0)
+            {
+                return IncrementLastVersionComponent(baseVersion);
+            }
+
+            var untrackedFiles = await repository.GetUntrackedFilesAsync(workingDirectoryStatus, ct);
+            if (untrackedFiles.Count > 0)
             {
                 return IncrementLastVersionComponent(baseVersion);
             }
@@ -177,7 +189,7 @@ internal static class Analyzer
         }
         else
         {
-            return await RunLookupVersionLabelAsync(branch, ct);
+            return await RunLookupVersionLabelAsync(repository, branch, ct);
         }
     }
 }
