@@ -1,0 +1,47 @@
+' This is auto-generated version information attributes by RelaxVersioner [RELAXVERSIONER_VERSION_PLACEHOLDER], Do not edit.
+' Generated date: [DATE_PLACEHOLDER]
+
+Imports System.Reflection
+
+<Assembly: AssemblyVersion("[ASSEMBLY_VERSION_PLACEHOLDER]")>
+<Assembly: AssemblyFileVersion("[FILE_VERSION_PLACEHOLDER]")>
+<Assembly: AssemblyInformationalVersion("[VERSION_PLACEHOLDER]-[COMMIT_ID_PLACEHOLDER]")>
+<Assembly: AssemblyConfiguration("")>
+<Assembly: AssemblyMetadata("CommitId","[COMMIT_ID_PLACEHOLDER]")>
+<Assembly: AssemblyMetadata("Date","[DATE_PLACEHOLDER]")>
+<Assembly: AssemblyMetadata("Branch","[BRANCH_PLACEHOLDER]")>
+<Assembly: AssemblyMetadata("Tags","[TAGS_PLACEHOLDER]")>
+<Assembly: AssemblyMetadata("Author","[AUTHOR_PLACEHOLDER]")>
+<Assembly: AssemblyMetadata("Committer","[COMMITTER_PLACEHOLDER]")>
+<Assembly: AssemblyMetadata("Subject","[SUBJECT_PLACEHOLDER]")>
+<Assembly: AssemblyMetadata("Body","[BODY_PLACEHOLDER]")>
+<Assembly: AssemblyMetadata("Build","")>
+<Assembly: AssemblyMetadata("Generated","[DATE_PLACEHOLDER]")>
+<Assembly: AssemblyMetadata("TargetFrameworkMoniker","")>
+<Assembly: AssemblyMetadata("ApplicationDisplayVersion","[APPLICATION_DISPLAY_VERSION_PLACEHOLDER]")>
+<Assembly: AssemblyMetadata("ApplicationVersion","[APPLICATION_VERSION_PLACEHOLDER]")>
+<Assembly: AssemblyMetadata("AssemblyName","")>
+<Assembly: AssemblyMetadata("RootNamespace","")>
+<Assembly: AssemblyMetadata("PlatformTarget","")>
+<Assembly: AssemblyMetadata("Platform","")>
+<Assembly: AssemblyMetadata("RuntimeIdentifier","")>
+<Assembly: AssemblyMetadata("BuildOn","")>
+<Assembly: AssemblyMetadata("SdkVersion","")>
+
+#if NET10 || NET11 || NET20 || NET30 || NET35 || NET40
+
+Namespace global.System.Reflection
+    <AttributeUsage(AttributeTargets.Assembly, AllowMultiple := True, Inherited := False)>
+    Friend NotInheritable Class AssemblyMetadataAttribute
+        Inherits Attribute
+        Public Sub New(key As String, value As String)
+            Me.Key = key
+            Me.Value = value
+        End Sub
+        Public ReadOnly Property Key As String
+        Public ReadOnly Property Value As String
+    End Class
+End Namespace
+
+#endif
+

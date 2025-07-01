@@ -29,19 +29,19 @@ public sealed class AnalyzerVersionComponentTests
             Directory.CreateDirectory(tempPath);
             
             await TestUtilities.InitializeGitRepositoryWithMainBranch(tempPath);
-            await TestUtilities.RunGitCommand(tempPath, "config user.email \"test@example.com\"");
-            await TestUtilities.RunGitCommand(tempPath, "config user.name \"Test User\"");
+            await TestUtilities.RunGitCommandAsync(tempPath, "config user.email \"test@example.com\"");
+            await TestUtilities.RunGitCommandAsync(tempPath, "config user.name \"Test User\"");
             
             var testFile = Path.Combine(tempPath, "test.txt");
             File.WriteAllText(testFile, "content");
-            await TestUtilities.RunGitCommand(tempPath, "add test.txt");
-            await TestUtilities.RunGitCommand(tempPath, "commit -m \"Initial commit\"");
-            await TestUtilities.RunGitCommand(tempPath, "tag v5");  // Major only (but should be ignored due to ComponentCount < 2)
+            await TestUtilities.RunGitCommandAsync(tempPath, "add test.txt");
+            await TestUtilities.RunGitCommandAsync(tempPath, "commit -m \"Initial commit\"");
+            await TestUtilities.RunGitCommandAsync(tempPath, "tag v5");  // Major only (but should be ignored due to ComponentCount < 2)
             
             // Create another commit to increment from default
             File.WriteAllText(testFile, "modified");
-            await TestUtilities.RunGitCommand(tempPath, "add test.txt");
-            await TestUtilities.RunGitCommand(tempPath, "commit -m \"Second commit\"");
+            await TestUtilities.RunGitCommandAsync(tempPath, "add test.txt");
+            await TestUtilities.RunGitCommandAsync(tempPath, "commit -m \"Second commit\"");
             
             using var repository = await Repository.Factory.OpenPrimitiveAsync(tempPath);
             var version = await Analyzer.LookupVersionLabelAsync(repository, false, default);
@@ -68,18 +68,18 @@ public sealed class AnalyzerVersionComponentTests
             Directory.CreateDirectory(tempPath);
             
             await TestUtilities.InitializeGitRepositoryWithMainBranch(tempPath);
-            await TestUtilities.RunGitCommand(tempPath, "config user.email \"test@example.com\"");
-            await TestUtilities.RunGitCommand(tempPath, "config user.name \"Test User\"");
+            await TestUtilities.RunGitCommandAsync(tempPath, "config user.email \"test@example.com\"");
+            await TestUtilities.RunGitCommandAsync(tempPath, "config user.name \"Test User\"");
             
             var testFile = Path.Combine(tempPath, "test.txt");
             File.WriteAllText(testFile, "content");
-            await TestUtilities.RunGitCommand(tempPath, "add test.txt");
-            await TestUtilities.RunGitCommand(tempPath, "commit -m \"Initial commit\"");
-            await TestUtilities.RunGitCommand(tempPath, "tag v3.5");  // Two components
+            await TestUtilities.RunGitCommandAsync(tempPath, "add test.txt");
+            await TestUtilities.RunGitCommandAsync(tempPath, "commit -m \"Initial commit\"");
+            await TestUtilities.RunGitCommandAsync(tempPath, "tag v3.5");  // Two components
             
             File.WriteAllText(testFile, "modified");
-            await TestUtilities.RunGitCommand(tempPath, "add test.txt");
-            await TestUtilities.RunGitCommand(tempPath, "commit -m \"Second commit\"");
+            await TestUtilities.RunGitCommandAsync(tempPath, "add test.txt");
+            await TestUtilities.RunGitCommandAsync(tempPath, "commit -m \"Second commit\"");
             
             using var repository = await Repository.Factory.OpenPrimitiveAsync(tempPath);
             var version = await Analyzer.LookupVersionLabelAsync(repository, false, default);
@@ -106,18 +106,18 @@ public sealed class AnalyzerVersionComponentTests
             Directory.CreateDirectory(tempPath);
             
             await TestUtilities.InitializeGitRepositoryWithMainBranch(tempPath);
-            await TestUtilities.RunGitCommand(tempPath, "config user.email \"test@example.com\"");
-            await TestUtilities.RunGitCommand(tempPath, "config user.name \"Test User\"");
+            await TestUtilities.RunGitCommandAsync(tempPath, "config user.email \"test@example.com\"");
+            await TestUtilities.RunGitCommandAsync(tempPath, "config user.name \"Test User\"");
             
             var testFile = Path.Combine(tempPath, "test.txt");
             File.WriteAllText(testFile, "content");
-            await TestUtilities.RunGitCommand(tempPath, "add test.txt");
-            await TestUtilities.RunGitCommand(tempPath, "commit -m \"Initial commit\"");
-            await TestUtilities.RunGitCommand(tempPath, "tag v2.1.7");  // Three components
+            await TestUtilities.RunGitCommandAsync(tempPath, "add test.txt");
+            await TestUtilities.RunGitCommandAsync(tempPath, "commit -m \"Initial commit\"");
+            await TestUtilities.RunGitCommandAsync(tempPath, "tag v2.1.7");  // Three components
             
             File.WriteAllText(testFile, "modified");
-            await TestUtilities.RunGitCommand(tempPath, "add test.txt");
-            await TestUtilities.RunGitCommand(tempPath, "commit -m \"Second commit\"");
+            await TestUtilities.RunGitCommandAsync(tempPath, "add test.txt");
+            await TestUtilities.RunGitCommandAsync(tempPath, "commit -m \"Second commit\"");
             
             using var repository = await Repository.Factory.OpenPrimitiveAsync(tempPath);
             var version = await Analyzer.LookupVersionLabelAsync(repository, false, default);
@@ -144,18 +144,18 @@ public sealed class AnalyzerVersionComponentTests
             Directory.CreateDirectory(tempPath);
             
             await TestUtilities.InitializeGitRepositoryWithMainBranch(tempPath);
-            await TestUtilities.RunGitCommand(tempPath, "config user.email \"test@example.com\"");
-            await TestUtilities.RunGitCommand(tempPath, "config user.name \"Test User\"");
+            await TestUtilities.RunGitCommandAsync(tempPath, "config user.email \"test@example.com\"");
+            await TestUtilities.RunGitCommandAsync(tempPath, "config user.name \"Test User\"");
             
             var testFile = Path.Combine(tempPath, "test.txt");
             File.WriteAllText(testFile, "content");
-            await TestUtilities.RunGitCommand(tempPath, "add test.txt");
-            await TestUtilities.RunGitCommand(tempPath, "commit -m \"Initial commit\"");
-            await TestUtilities.RunGitCommand(tempPath, "tag v1.2.3.4");  // Four components
+            await TestUtilities.RunGitCommandAsync(tempPath, "add test.txt");
+            await TestUtilities.RunGitCommandAsync(tempPath, "commit -m \"Initial commit\"");
+            await TestUtilities.RunGitCommandAsync(tempPath, "tag v1.2.3.4");  // Four components
             
             File.WriteAllText(testFile, "modified");
-            await TestUtilities.RunGitCommand(tempPath, "add test.txt");
-            await TestUtilities.RunGitCommand(tempPath, "commit -m \"Second commit\"");
+            await TestUtilities.RunGitCommandAsync(tempPath, "add test.txt");
+            await TestUtilities.RunGitCommandAsync(tempPath, "commit -m \"Second commit\"");
             
             using var repository = await Repository.Factory.OpenPrimitiveAsync(tempPath);
             var version = await Analyzer.LookupVersionLabelAsync(repository, false, default);
@@ -182,18 +182,18 @@ public sealed class AnalyzerVersionComponentTests
             Directory.CreateDirectory(tempPath);
             
             await TestUtilities.InitializeGitRepositoryWithMainBranch(tempPath);
-            await TestUtilities.RunGitCommand(tempPath, "config user.email \"test@example.com\"");
-            await TestUtilities.RunGitCommand(tempPath, "config user.name \"Test User\"");
+            await TestUtilities.RunGitCommandAsync(tempPath, "config user.email \"test@example.com\"");
+            await TestUtilities.RunGitCommandAsync(tempPath, "config user.name \"Test User\"");
             
             var testFile = Path.Combine(tempPath, "test.txt");
             File.WriteAllText(testFile, "content");
-            await TestUtilities.RunGitCommand(tempPath, "add test.txt");
-            await TestUtilities.RunGitCommand(tempPath, "commit -m \"Initial commit\"");
-            await TestUtilities.RunGitCommand(tempPath, "tag v0.0.0.0");  // All zeros
+            await TestUtilities.RunGitCommandAsync(tempPath, "add test.txt");
+            await TestUtilities.RunGitCommandAsync(tempPath, "commit -m \"Initial commit\"");
+            await TestUtilities.RunGitCommandAsync(tempPath, "tag v0.0.0.0");  // All zeros
             
             File.WriteAllText(testFile, "modified");
-            await TestUtilities.RunGitCommand(tempPath, "add test.txt");
-            await TestUtilities.RunGitCommand(tempPath, "commit -m \"Second commit\"");
+            await TestUtilities.RunGitCommandAsync(tempPath, "add test.txt");
+            await TestUtilities.RunGitCommandAsync(tempPath, "commit -m \"Second commit\"");
             
             using var repository = await Repository.Factory.OpenPrimitiveAsync(tempPath);
             var version = await Analyzer.LookupVersionLabelAsync(repository, false, default);
@@ -220,21 +220,21 @@ public sealed class AnalyzerVersionComponentTests
             Directory.CreateDirectory(tempPath);
             
             await TestUtilities.InitializeGitRepositoryWithMainBranch(tempPath);
-            await TestUtilities.RunGitCommand(tempPath, "config user.email \"test@example.com\"");
-            await TestUtilities.RunGitCommand(tempPath, "config user.name \"Test User\"");
+            await TestUtilities.RunGitCommandAsync(tempPath, "config user.email \"test@example.com\"");
+            await TestUtilities.RunGitCommandAsync(tempPath, "config user.name \"Test User\"");
             
             var testFile = Path.Combine(tempPath, "test.txt");
             File.WriteAllText(testFile, "content");
-            await TestUtilities.RunGitCommand(tempPath, "add test.txt");
-            await TestUtilities.RunGitCommand(tempPath, "commit -m \"Initial commit\"");
-            await TestUtilities.RunGitCommand(tempPath, "tag v1.0.0");
+            await TestUtilities.RunGitCommandAsync(tempPath, "add test.txt");
+            await TestUtilities.RunGitCommandAsync(tempPath, "commit -m \"Initial commit\"");
+            await TestUtilities.RunGitCommandAsync(tempPath, "tag v1.0.0");
             
             // Create 10 additional commits
             for (int i = 1; i <= 10; i++)
             {
                 File.WriteAllText(testFile, $"content {i}");
-                await TestUtilities.RunGitCommand(tempPath, "add test.txt");
-                await TestUtilities.RunGitCommand(tempPath, $"commit -m \"Commit {i}\"");
+                await TestUtilities.RunGitCommandAsync(tempPath, "add test.txt");
+                await TestUtilities.RunGitCommandAsync(tempPath, $"commit -m \"Commit {i}\"");
             }
             
             using var repository = await Repository.Factory.OpenPrimitiveAsync(tempPath);
@@ -262,19 +262,19 @@ public sealed class AnalyzerVersionComponentTests
             Directory.CreateDirectory(tempPath);
             
             await TestUtilities.InitializeGitRepositoryWithMainBranch(tempPath);
-            await TestUtilities.RunGitCommand(tempPath, "config user.email \"test@example.com\"");
-            await TestUtilities.RunGitCommand(tempPath, "config user.name \"Test User\"");
+            await TestUtilities.RunGitCommandAsync(tempPath, "config user.email \"test@example.com\"");
+            await TestUtilities.RunGitCommandAsync(tempPath, "config user.name \"Test User\"");
             
             var testFile = Path.Combine(tempPath, "test.txt");
             File.WriteAllText(testFile, "content");
-            await TestUtilities.RunGitCommand(tempPath, "add test.txt");
-            await TestUtilities.RunGitCommand(tempPath, "commit -m \"Initial commit\"");
+            await TestUtilities.RunGitCommandAsync(tempPath, "add test.txt");
+            await TestUtilities.RunGitCommandAsync(tempPath, "commit -m \"Initial commit\"");
             
             // Add tags with different component counts
-            await TestUtilities.RunGitCommand(tempPath, "tag v2.0");          // 2 components: 2.0.0.0
-            await TestUtilities.RunGitCommand(tempPath, "tag v1.9.9");        // 3 components: 1.9.9.0
-            await TestUtilities.RunGitCommand(tempPath, "tag v2.0.0.5");      // 4 components: 2.0.0.5 - should be largest
-            await TestUtilities.RunGitCommand(tempPath, "tag v1.9.9.9");      // 4 components: 1.9.9.9
+            await TestUtilities.RunGitCommandAsync(tempPath, "tag v2.0");          // 2 components: 2.0.0.0
+            await TestUtilities.RunGitCommandAsync(tempPath, "tag v1.9.9");        // 3 components: 1.9.9.0
+            await TestUtilities.RunGitCommandAsync(tempPath, "tag v2.0.0.5");      // 4 components: 2.0.0.5 - should be largest
+            await TestUtilities.RunGitCommandAsync(tempPath, "tag v1.9.9.9");      // 4 components: 1.9.9.9
             
             using var repository = await Repository.Factory.OpenPrimitiveAsync(tempPath);
             var version = await Analyzer.LookupVersionLabelAsync(repository, false, default);
@@ -301,19 +301,19 @@ public sealed class AnalyzerVersionComponentTests
             Directory.CreateDirectory(tempPath);
             
             await TestUtilities.InitializeGitRepositoryWithMainBranch(tempPath);
-            await TestUtilities.RunGitCommand(tempPath, "config user.email \"test@example.com\"");
-            await TestUtilities.RunGitCommand(tempPath, "config user.name \"Test User\"");
+            await TestUtilities.RunGitCommandAsync(tempPath, "config user.email \"test@example.com\"");
+            await TestUtilities.RunGitCommandAsync(tempPath, "config user.name \"Test User\"");
             
             var testFile = Path.Combine(tempPath, "test.txt");
             File.WriteAllText(testFile, "content");
-            await TestUtilities.RunGitCommand(tempPath, "add test.txt");
-            await TestUtilities.RunGitCommand(tempPath, "commit -m \"Initial commit\"");
+            await TestUtilities.RunGitCommandAsync(tempPath, "add test.txt");
+            await TestUtilities.RunGitCommandAsync(tempPath, "commit -m \"Initial commit\"");
             
             // Test edge cases in version comparison
-            await TestUtilities.RunGitCommand(tempPath, "tag v1.0.10");       // 1.0.10.0
-            await TestUtilities.RunGitCommand(tempPath, "tag v1.0.9.1");      // 1.0.9.1 (smaller build but has revision)
-            await TestUtilities.RunGitCommand(tempPath, "tag v1.0.10.0");     // 1.0.10.0 - should be largest
-            await TestUtilities.RunGitCommand(tempPath, "tag v1.0.2.99");     // 1.0.2.99 (much smaller build)
+            await TestUtilities.RunGitCommandAsync(tempPath, "tag v1.0.10");       // 1.0.10.0
+            await TestUtilities.RunGitCommandAsync(tempPath, "tag v1.0.9.1");      // 1.0.9.1 (smaller build but has revision)
+            await TestUtilities.RunGitCommandAsync(tempPath, "tag v1.0.10.0");     // 1.0.10.0 - should be largest
+            await TestUtilities.RunGitCommandAsync(tempPath, "tag v1.0.2.99");     // 1.0.2.99 (much smaller build)
             
             using var repository = await Repository.Factory.OpenPrimitiveAsync(tempPath);
             var version = await Analyzer.LookupVersionLabelAsync(repository, false, default);
@@ -340,18 +340,18 @@ public sealed class AnalyzerVersionComponentTests
             Directory.CreateDirectory(tempPath);
             
             await TestUtilities.InitializeGitRepositoryWithMainBranch(tempPath);
-            await TestUtilities.RunGitCommand(tempPath, "config user.email \"test@example.com\"");
-            await TestUtilities.RunGitCommand(tempPath, "config user.name \"Test User\"");
+            await TestUtilities.RunGitCommandAsync(tempPath, "config user.email \"test@example.com\"");
+            await TestUtilities.RunGitCommandAsync(tempPath, "config user.name \"Test User\"");
             
             var testFile = Path.Combine(tempPath, "test.txt");
             File.WriteAllText(testFile, "content");
-            await TestUtilities.RunGitCommand(tempPath, "add test.txt");
-            await TestUtilities.RunGitCommand(tempPath, "commit -m \"Initial commit\"");
-            await TestUtilities.RunGitCommand(tempPath, "tag v65534.65534.65534.65534");  // Near ushort.MaxValue
+            await TestUtilities.RunGitCommandAsync(tempPath, "add test.txt");
+            await TestUtilities.RunGitCommandAsync(tempPath, "commit -m \"Initial commit\"");
+            await TestUtilities.RunGitCommandAsync(tempPath, "tag v65534.65534.65534.65534");  // Near ushort.MaxValue
             
             File.WriteAllText(testFile, "modified");
-            await TestUtilities.RunGitCommand(tempPath, "add test.txt");
-            await TestUtilities.RunGitCommand(tempPath, "commit -m \"Second commit\"");
+            await TestUtilities.RunGitCommandAsync(tempPath, "add test.txt");
+            await TestUtilities.RunGitCommandAsync(tempPath, "commit -m \"Second commit\"");
             
             using var repository = await Repository.Factory.OpenPrimitiveAsync(tempPath);
             var version = await Analyzer.LookupVersionLabelAsync(repository, false, default);

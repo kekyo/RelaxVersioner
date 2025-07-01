@@ -280,4 +280,7 @@ internal static class Utilities
         }
         return sb.ToString();
     }
+
+    public static string TrimUnusableCharacters(string str) =>
+        str.Trim(' ', '\t', '\r', '\n', '\0');
 }

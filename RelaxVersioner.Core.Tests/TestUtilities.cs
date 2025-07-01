@@ -9,13 +9,23 @@
 
 using System;
 using System.Diagnostics;
+using System.IO;
 using System.Threading.Tasks;
 
 namespace RelaxVersioner;
 
 public static class TestUtilities
 {
-    public static async Task RunGitCommand(string workingDirectory, string arguments)
+    // Makes safer exactly utf8 content reading.
+    // System.IO.File.ReadAllText() is broken in end of file lines, why....
+    public static async Task<string> ReadAllTextAsync(string path)
+    {
+        using var s = File.OpenRead(path);
+        var tr = new StreamReader(s, Utilities.UTF8, true);
+        return await tr.ReadToEndAsync();
+    }
+
+    public static async Task RunGitCommandAsync(string workingDirectory, string arguments)
     {
         using var process = new Process
         {
@@ -43,7 +53,7 @@ public static class TestUtilities
         }
     }
 
-    public static async Task<string> RunGitCommandWithOutput(string workingDirectory, string arguments)
+    public static async Task<string> RunGitCommandWithOutputAsync(string workingDirectory, string arguments)
     {
         using var process = new Process
         {
@@ -78,20 +88,20 @@ public static class TestUtilities
         try
         {
             // Try modern Git init with initial branch specification
-            await RunGitCommand(workingDirectory, "init --initial-branch=main");
+            await RunGitCommandAsync(workingDirectory, "init --initial-branch=main");
         }
         catch
         {
             // Fallback for older Git versions
-            await RunGitCommand(workingDirectory, "init");
-            await RunGitCommand(workingDirectory, "config init.defaultBranch main");
+            await RunGitCommandAsync(workingDirectory, "init");
+            await RunGitCommandAsync(workingDirectory, "config init.defaultBranch main");
             // Check if we need to rename the branch
             try
             {
-                var currentBranch = await RunGitCommandWithOutput(workingDirectory, "branch --show-current");
+                var currentBranch = await RunGitCommandWithOutputAsync(workingDirectory, "branch --show-current");
                 if (currentBranch.Trim() != "main")
                 {
-                    await RunGitCommand(workingDirectory, "branch -m main");
+                    await RunGitCommandAsync(workingDirectory, "branch -m main");
                 }
             }
             catch

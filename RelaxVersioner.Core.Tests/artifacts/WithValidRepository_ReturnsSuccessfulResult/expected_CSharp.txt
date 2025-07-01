@@ -1,0 +1,49 @@
+// This is auto-generated version information attributes by RelaxVersioner [RELAXVERSIONER_VERSION_PLACEHOLDER], Do not edit.
+// Generated date: [DATE_PLACEHOLDER]
+
+using System.Reflection;
+
+[assembly: AssemblyVersion("[ASSEMBLY_VERSION_PLACEHOLDER]")]
+[assembly: AssemblyFileVersion("[FILE_VERSION_PLACEHOLDER]")]
+[assembly: AssemblyInformationalVersion("[VERSION_PLACEHOLDER]-[COMMIT_ID_PLACEHOLDER]")]
+[assembly: AssemblyConfiguration("")]
+[assembly: AssemblyMetadata("CommitId","[COMMIT_ID_PLACEHOLDER]")]
+[assembly: AssemblyMetadata("Date","[DATE_PLACEHOLDER]")]
+[assembly: AssemblyMetadata("Branch","[BRANCH_PLACEHOLDER]")]
+[assembly: AssemblyMetadata("Tags","[TAGS_PLACEHOLDER]")]
+[assembly: AssemblyMetadata("Author","[AUTHOR_PLACEHOLDER]")]
+[assembly: AssemblyMetadata("Committer","[COMMITTER_PLACEHOLDER]")]
+[assembly: AssemblyMetadata("Subject","[SUBJECT_PLACEHOLDER]")]
+[assembly: AssemblyMetadata("Body","[BODY_PLACEHOLDER]")]
+[assembly: AssemblyMetadata("Build","")]
+[assembly: AssemblyMetadata("Generated","[DATE_PLACEHOLDER]")]
+[assembly: AssemblyMetadata("TargetFrameworkMoniker","")]
+[assembly: AssemblyMetadata("ApplicationDisplayVersion","[APPLICATION_DISPLAY_VERSION_PLACEHOLDER]")]
+[assembly: AssemblyMetadata("ApplicationVersion","[APPLICATION_VERSION_PLACEHOLDER]")]
+[assembly: AssemblyMetadata("AssemblyName","")]
+[assembly: AssemblyMetadata("RootNamespace","")]
+[assembly: AssemblyMetadata("PlatformTarget","")]
+[assembly: AssemblyMetadata("Platform","")]
+[assembly: AssemblyMetadata("RuntimeIdentifier","")]
+[assembly: AssemblyMetadata("BuildOn","")]
+[assembly: AssemblyMetadata("SdkVersion","")]
+
+#if NET10 || NET11 || NET20 || NET30 || NET35 || NET40
+
+namespace System.Reflection
+{
+    [AttributeUsage(AttributeTargets.Assembly, AllowMultiple = true, Inherited = false)]
+    internal sealed class AssemblyMetadataAttribute : Attribute
+    {
+        public AssemblyMetadataAttribute(string key, string value)
+        {
+            this.Key = key;
+            this.Value = value;
+        }
+        public string Key { get; private set; }
+        public string Value { get; private set; }
+    }
+}
+
+#endif
+

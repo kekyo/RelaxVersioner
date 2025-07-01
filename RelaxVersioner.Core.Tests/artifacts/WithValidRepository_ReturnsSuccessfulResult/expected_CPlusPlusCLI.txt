@@ -1,0 +1,55 @@
+// This is auto-generated version information attributes by RelaxVersioner [RELAXVERSIONER_VERSION_PLACEHOLDER], Do not edit.
+// Generated date: [DATE_PLACEHOLDER]
+
+#include "stdafx.h"
+
+#if defined(NET20) || defined(NET30) || defined(NET35) || defined(NET40)
+
+namespace System
+{
+	namespace Reflection
+	{
+		[System::AttributeUsage(System::AttributeTargets::Assembly, AllowMultiple = true, Inherited = false)]
+		private ref class AssemblyMetadataAttribute sealed : public System::Attribute
+		{
+		private:
+			System::String^ key_;
+			System::String^ value_;
+		public:
+			AssemblyMetadataAttribute(System::String^ key, System::String^ value)
+				: key_(key), value_(value) { }
+			property System::String^ Key { System::String^ get() { return key_; } }
+			property System::String^ Value { System::String^ get() { return value_; } }
+		};
+	}
+}
+
+#endif
+
+using namespace System::Reflection;
+
+[assembly: AssemblyVersion("[ASSEMBLY_VERSION_PLACEHOLDER]")];
+[assembly: AssemblyFileVersion("[FILE_VERSION_PLACEHOLDER]")];
+[assembly: AssemblyInformationalVersion("[VERSION_PLACEHOLDER]-[COMMIT_ID_PLACEHOLDER]")];
+[assembly: AssemblyConfiguration("")];
+[assembly: AssemblyMetadata("CommitId","[COMMIT_ID_PLACEHOLDER]")];
+[assembly: AssemblyMetadata("Date","[DATE_PLACEHOLDER]")];
+[assembly: AssemblyMetadata("Branch","[BRANCH_PLACEHOLDER]")];
+[assembly: AssemblyMetadata("Tags","[TAGS_PLACEHOLDER]")];
+[assembly: AssemblyMetadata("Author","[AUTHOR_PLACEHOLDER]")];
+[assembly: AssemblyMetadata("Committer","[COMMITTER_PLACEHOLDER]")];
+[assembly: AssemblyMetadata("Subject","[SUBJECT_PLACEHOLDER]")];
+[assembly: AssemblyMetadata("Body","[BODY_PLACEHOLDER]")];
+[assembly: AssemblyMetadata("Build","")];
+[assembly: AssemblyMetadata("Generated","[DATE_PLACEHOLDER]")];
+[assembly: AssemblyMetadata("TargetFrameworkMoniker","")];
+[assembly: AssemblyMetadata("ApplicationDisplayVersion","[APPLICATION_DISPLAY_VERSION_PLACEHOLDER]")];
+[assembly: AssemblyMetadata("ApplicationVersion","[APPLICATION_VERSION_PLACEHOLDER]")];
+[assembly: AssemblyMetadata("AssemblyName","")];
+[assembly: AssemblyMetadata("RootNamespace","")];
+[assembly: AssemblyMetadata("PlatformTarget","")];
+[assembly: AssemblyMetadata("Platform","")];
+[assembly: AssemblyMetadata("RuntimeIdentifier","")];
+[assembly: AssemblyMetadata("BuildOn","")];
+[assembly: AssemblyMetadata("SdkVersion","")];
+

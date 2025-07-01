@@ -32,31 +32,31 @@ public sealed class AnalyzerPerformanceTests
             Directory.CreateDirectory(tempPath);
             
             await TestUtilities.InitializeGitRepositoryWithMainBranch(tempPath);
-            await TestUtilities.RunGitCommand(tempPath, "config user.email \"test@example.com\"");
-            await TestUtilities.RunGitCommand(tempPath, "config user.name \"Test User\"");
+            await TestUtilities.RunGitCommandAsync(tempPath, "config user.email \"test@example.com\"");
+            await TestUtilities.RunGitCommandAsync(tempPath, "config user.name \"Test User\"");
             
             var testFile = Path.Combine(tempPath, "test.txt");
             File.WriteAllText(testFile, "initial");
-            await TestUtilities.RunGitCommand(tempPath, "add test.txt");
-            await TestUtilities.RunGitCommand(tempPath, "commit -m \"Initial commit\"");
-            await TestUtilities.RunGitCommand(tempPath, "tag v1.0.0");
+            await TestUtilities.RunGitCommandAsync(tempPath, "add test.txt");
+            await TestUtilities.RunGitCommandAsync(tempPath, "commit -m \"Initial commit\"");
+            await TestUtilities.RunGitCommandAsync(tempPath, "tag v1.0.0");
             
             // Create large history (200 commits)
             for (int i = 1; i <= 200; i++)
             {
                 File.WriteAllText(testFile, $"content {i}");
-                await TestUtilities.RunGitCommand(tempPath, "add test.txt");
-                await TestUtilities.RunGitCommand(tempPath, $"commit -m \"Commit {i}\"");
+                await TestUtilities.RunGitCommandAsync(tempPath, "add test.txt");
+                await TestUtilities.RunGitCommandAsync(tempPath, $"commit -m \"Commit {i}\"");
                 
                 // Add some tags sporadically - but not on the last commit
                 if (i % 50 == 0 && i < 200)
                 {
-                    await TestUtilities.RunGitCommand(tempPath, $"tag v1.{i / 50}.0");
+                    await TestUtilities.RunGitCommandAsync(tempPath, $"tag v1.{i / 50}.0");
                 }
                 // Add the final tag to the 199th commit (not HEAD)
                 else if (i == 199)
                 {
-                    await TestUtilities.RunGitCommand(tempPath, "tag v1.4.0");
+                    await TestUtilities.RunGitCommandAsync(tempPath, "tag v1.4.0");
                 }
             }
             
@@ -94,19 +94,19 @@ public sealed class AnalyzerPerformanceTests
             Directory.CreateDirectory(tempPath);
             
             await TestUtilities.InitializeGitRepositoryWithMainBranch(tempPath);
-            await TestUtilities.RunGitCommand(tempPath, "config user.email \"test@example.com\"");
-            await TestUtilities.RunGitCommand(tempPath, "config user.name \"Test User\"");
+            await TestUtilities.RunGitCommandAsync(tempPath, "config user.email \"test@example.com\"");
+            await TestUtilities.RunGitCommandAsync(tempPath, "config user.name \"Test User\"");
             
             var testFile = Path.Combine(tempPath, "test.txt");
             File.WriteAllText(testFile, "content");
-            await TestUtilities.RunGitCommand(tempPath, "add test.txt");
-            await TestUtilities.RunGitCommand(tempPath, "commit -m \"Initial commit\"");
+            await TestUtilities.RunGitCommandAsync(tempPath, "add test.txt");
+            await TestUtilities.RunGitCommandAsync(tempPath, "commit -m \"Initial commit\"");
             
             // Add many tags to the same commit
             for (int i = 1; i <= 100; i++)
             {
-                await TestUtilities.RunGitCommand(tempPath, $"tag v{i}.0.0");
-                await TestUtilities.RunGitCommand(tempPath, $"tag invalid-tag-{i}");  // Invalid tags
+                await TestUtilities.RunGitCommandAsync(tempPath, $"tag v{i}.0.0");
+                await TestUtilities.RunGitCommandAsync(tempPath, $"tag invalid-tag-{i}");  // Invalid tags
             }
             
             var stopwatch = Stopwatch.StartNew();
@@ -143,32 +143,32 @@ public sealed class AnalyzerPerformanceTests
             Directory.CreateDirectory(tempPath);
             
             await TestUtilities.InitializeGitRepositoryWithMainBranch(tempPath);
-            await TestUtilities.RunGitCommand(tempPath, "config user.email \"test@example.com\"");
-            await TestUtilities.RunGitCommand(tempPath, "config user.name \"Test User\"");
+            await TestUtilities.RunGitCommandAsync(tempPath, "config user.email \"test@example.com\"");
+            await TestUtilities.RunGitCommandAsync(tempPath, "config user.name \"Test User\"");
             
             var testFile = Path.Combine(tempPath, "test.txt");
             File.WriteAllText(testFile, "base");
-            await TestUtilities.RunGitCommand(tempPath, "add test.txt");
-            await TestUtilities.RunGitCommand(tempPath, "commit -m \"Base commit\"");
-            await TestUtilities.RunGitCommand(tempPath, "tag v1.0.0");
+            await TestUtilities.RunGitCommandAsync(tempPath, "add test.txt");
+            await TestUtilities.RunGitCommandAsync(tempPath, "commit -m \"Base commit\"");
+            await TestUtilities.RunGitCommandAsync(tempPath, "tag v1.0.0");
             
             // Create complex merge tree with many branches
             for (int i = 1; i <= 20; i++)
             {
-                await TestUtilities.RunGitCommand(tempPath, $"checkout -b branch{i}");
+                await TestUtilities.RunGitCommandAsync(tempPath, $"checkout -b branch{i}");
                 File.WriteAllText(testFile, $"branch {i} content");
-                await TestUtilities.RunGitCommand(tempPath, "add test.txt");
-                await TestUtilities.RunGitCommand(tempPath, $"commit -m \"Branch {i} commit\"");
+                await TestUtilities.RunGitCommandAsync(tempPath, "add test.txt");
+                await TestUtilities.RunGitCommandAsync(tempPath, $"commit -m \"Branch {i} commit\"");
                 
                 // Add tags to some branches
                 if (i % 5 == 0)
                 {
-                    await TestUtilities.RunGitCommand(tempPath, $"tag v{i / 5 + 1}.0.0");
+                    await TestUtilities.RunGitCommandAsync(tempPath, $"tag v{i / 5 + 1}.0.0");
                 }
                 
                 // Merge back to main
-                await TestUtilities.RunGitCommand(tempPath, "checkout main");
-                await TestUtilities.RunGitCommand(tempPath, $"merge branch{i} --no-ff --no-edit");
+                await TestUtilities.RunGitCommandAsync(tempPath, "checkout main");
+                await TestUtilities.RunGitCommandAsync(tempPath, $"merge branch{i} --no-ff --no-edit");
             }
             
             var stopwatch = Stopwatch.StartNew();
@@ -205,14 +205,14 @@ public sealed class AnalyzerPerformanceTests
             Directory.CreateDirectory(tempPath);
             
             await TestUtilities.InitializeGitRepositoryWithMainBranch(tempPath);
-            await TestUtilities.RunGitCommand(tempPath, "config user.email \"test@example.com\"");
-            await TestUtilities.RunGitCommand(tempPath, "config user.name \"Test User\"");
+            await TestUtilities.RunGitCommandAsync(tempPath, "config user.email \"test@example.com\"");
+            await TestUtilities.RunGitCommandAsync(tempPath, "config user.name \"Test User\"");
             
             var testFile = Path.Combine(tempPath, "test.txt");
             File.WriteAllText(testFile, "content");
-            await TestUtilities.RunGitCommand(tempPath, "add test.txt");
-            await TestUtilities.RunGitCommand(tempPath, "commit -m \"Initial commit\"");
-            await TestUtilities.RunGitCommand(tempPath, "tag v1.0.0");
+            await TestUtilities.RunGitCommandAsync(tempPath, "add test.txt");
+            await TestUtilities.RunGitCommandAsync(tempPath, "commit -m \"Initial commit\"");
+            await TestUtilities.RunGitCommandAsync(tempPath, "tag v1.0.0");
             
             using var repository = await Repository.Factory.OpenPrimitiveAsync(tempPath);
             using var cts = new CancellationTokenSource();
@@ -244,14 +244,14 @@ public sealed class AnalyzerPerformanceTests
             Directory.CreateDirectory(tempPath);
             
             await TestUtilities.InitializeGitRepositoryWithMainBranch(tempPath);
-            await TestUtilities.RunGitCommand(tempPath, "config user.email \"test@example.com\"");
-            await TestUtilities.RunGitCommand(tempPath, "config user.name \"Test User\"");
+            await TestUtilities.RunGitCommandAsync(tempPath, "config user.email \"test@example.com\"");
+            await TestUtilities.RunGitCommandAsync(tempPath, "config user.name \"Test User\"");
             
             var testFile = Path.Combine(tempPath, "test.txt");
             File.WriteAllText(testFile, "content");
-            await TestUtilities.RunGitCommand(tempPath, "add test.txt");
-            await TestUtilities.RunGitCommand(tempPath, "commit -m \"Initial commit\"");
-            await TestUtilities.RunGitCommand(tempPath, "tag v1.0.0");
+            await TestUtilities.RunGitCommandAsync(tempPath, "add test.txt");
+            await TestUtilities.RunGitCommandAsync(tempPath, "commit -m \"Initial commit\"");
+            await TestUtilities.RunGitCommandAsync(tempPath, "tag v1.0.0");
             
             // Create multiple concurrent tasks
             var tasks = new Task<Version>[10];
@@ -299,14 +299,14 @@ public sealed class AnalyzerPerformanceTests
             Directory.CreateDirectory(tempPath);
             
             await TestUtilities.InitializeGitRepositoryWithMainBranch(tempPath);
-            await TestUtilities.RunGitCommand(tempPath, "config user.email \"test@example.com\"");
-            await TestUtilities.RunGitCommand(tempPath, "config user.name \"Test User\"");
+            await TestUtilities.RunGitCommandAsync(tempPath, "config user.email \"test@example.com\"");
+            await TestUtilities.RunGitCommandAsync(tempPath, "config user.name \"Test User\"");
             
             var testFile = Path.Combine(tempPath, "test.txt");
             File.WriteAllText(testFile, "content");
-            await TestUtilities.RunGitCommand(tempPath, "add test.txt");
-            await TestUtilities.RunGitCommand(tempPath, "commit -m \"Initial commit\"");
-            await TestUtilities.RunGitCommand(tempPath, "tag v1.0.0");
+            await TestUtilities.RunGitCommandAsync(tempPath, "add test.txt");
+            await TestUtilities.RunGitCommandAsync(tempPath, "commit -m \"Initial commit\"");
+            await TestUtilities.RunGitCommandAsync(tempPath, "tag v1.0.0");
             
             // Create many untracked files
             for (int i = 1; i <= 100; i++)

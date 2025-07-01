@@ -99,6 +99,9 @@ public sealed class Processor
 
         var shortVersion = versionLabel.ToString(3);
 
+        // Extract subject and body before writing to ensure they're available in keyValues
+        var (subject, body) = commit?.CrackMessage() ?? new(null!, null!);
+
         foreach (var entry in new (string key, object? value)[]
         {
             ("generated", generated),
@@ -121,6 +124,8 @@ public sealed class Processor
             ("tfid", context.TargetFrameworkIdentity),
             ("tfv", context.TargetFrameworkVersion),
             ("tfp", context.TargetFrameworkProfile),
+            ("subject", subject),
+            ("body", body),
         })
         {
             logger.Message(LogImportance.Low, "Values: {0}={1}", entry.key, entry.value);
@@ -128,21 +133,6 @@ public sealed class Processor
         }
 
         writeProvider.Write(context, keyValues, generated);
-
-        string? subject;
-        string? body;
-
-        if (commit is { } c)
-        {
-            var index = c.Message.IndexOf("\n\n", StringComparison.InvariantCulture);
-            subject = ((index >= 0) ? c.Message.Substring(0, index) : c.Message).Trim('\n').Replace('\n', ' ');
-            body = (index >= 0) ? c.Message.Substring(index + 2) : string.Empty;
-        }
-        else
-        {
-            subject = null;
-            body = null;
-        }
 
         return new Result(
             versionLabel,
