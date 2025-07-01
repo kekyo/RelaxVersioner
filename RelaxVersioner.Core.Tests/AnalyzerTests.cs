@@ -8,7 +8,7 @@
 ////////////////////////////////////////////////////////////////////////////////////////
 
 using GitReader;
-using GitReader.Structures;
+using GitReader.Primitive;
 using NUnit.Framework;
 using System.IO;
 using System.Threading.Tasks;
@@ -30,7 +30,7 @@ public sealed class AnalyzerTests
     [TestCase("MultiRoot2", "0.10.22")]
     public async Task LookupVersionLabel(string repositoryName, string expectedString)
     {
-        using var repository = await Repository.Factory.OpenStructureAsync(
+        using var repository = await Repository.Factory.OpenPrimitiveAsync(
             Path.Combine(TestsSetUp.BasePath, repositoryName));
 
         var actual = await Analyzer.LookupVersionLabelAsync(repository, false, default);
