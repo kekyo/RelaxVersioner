@@ -124,7 +124,7 @@ public static class Program
                 logger.Error("");
                 return 1;
             }
-            
+
             if (!verbose)
             {
                 logger.SetImportance(LogImportance.Ignore);
@@ -138,7 +138,7 @@ public static class Program
             {
                 ResultWriter.Write(resultPath!, result);
             }
-            
+
             var dryrunDisplay = context.IsDryRun ?
                 " (dryrun)" : string.Empty;
             var languageDisplay = context.IsDryRun ?

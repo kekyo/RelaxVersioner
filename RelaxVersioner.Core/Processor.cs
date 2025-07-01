@@ -25,25 +25,25 @@ namespace RelaxVersioner;
 
 public sealed class ProcessorContext
 {
-    public string ProjectDirectory;
-    public string OutputPath;
-    public string Language;
-    public string Namespace;
-    public string TargetFramework;
-    public string TargetFrameworkIdentity;
-    public string TargetFrameworkVersion;
-    public string TargetFrameworkProfile;
+    public string ProjectDirectory = null!;
+    public string OutputPath = null!;
+    public string Language = null!;
+    public string? Namespace;
+    public string? TargetFramework;
+    public string? TargetFrameworkIdentity;
+    public string? TargetFrameworkVersion;
+    public string? TargetFrameworkProfile;
     public bool GenerateStatic;
-    public string BuildIdentifier;
-    public string PropertiesPath;
-    public string TextFormat;
-    public string ReplaceInputPath;
-    public string BracketStart;
-    public string BracketEnd;
+    public string? BuildIdentifier;
+    public string? PropertiesPath;
+    public string TextFormat = "{versionLabel}";
+    public string? ReplaceInputPath;
+    public string BracketStart = "{";
+    public string BracketEnd = "}";
     public bool IsDryRun;
     public bool IsQuietOnStandardOutput;
     public bool CheckWorkingDirectoryStatus;
-    public string[] NpmPrefixes;
+    public string[]? NpmPrefixes;
 }
 
 public sealed class Processor
@@ -66,8 +66,8 @@ public sealed class Processor
         Logger logger,
         WriteProviderBase writeProvider,
         ProcessorContext context,
-        StructuredRepository repository,
-        Branch targetBranch,
+        StructuredRepository? repository,
+        Branch? targetBranch,
         DateTimeOffset generated,
         CancellationToken ct)
     {
@@ -107,15 +107,15 @@ public sealed class Processor
             (!string.IsNullOrWhiteSpace(context.PropertiesPath) &&
              File.Exists(context.PropertiesPath)) ?
              XDocument.Load(context.PropertiesPath).
-             Root.Elements().
-             ToDictionary(e => e.Name.LocalName, e => (object)e.Value) :
-             new Dictionary<string, object>();
+             Root!.Elements().
+             ToDictionary(e => e.Name.LocalName, e => (object?)e.Value) :
+             new Dictionary<string, object?>();
 
         var versionLabel = await versionLabelTask;
 
         var shortVersion = versionLabel.ToString(3);
 
-        foreach (var entry in new (string key, object value)[]
+        foreach (var entry in new (string key, object? value)[]
         {
             ("generated", generated),
             ("branch", targetBranch),

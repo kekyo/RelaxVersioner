@@ -7,8 +7,6 @@
 //
 ////////////////////////////////////////////////////////////////////////////////////////
 
-#nullable enable
-
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -49,7 +47,7 @@ internal sealed class NpmReplaceProvider : WriteProviderBase
             
             jt["version"] = formattedVersion;
 
-            if (context.NpmPrefixes.Length >= 1)
+            if (context.NpmPrefixes?.Length >= 1)
             {
                 void ReplaceSubKey(string key)
                 {
