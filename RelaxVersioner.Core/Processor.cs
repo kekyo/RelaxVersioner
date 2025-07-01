@@ -24,29 +24,6 @@ using RelaxVersioner.Writers;
 
 namespace RelaxVersioner;
 
-public sealed class ProcessorContext
-{
-    public string ProjectDirectory = null!;
-    public string OutputPath = null!;
-    public string Language = null!;
-    public string? Namespace;
-    public string? TargetFramework;
-    public string? TargetFrameworkIdentity;
-    public string? TargetFrameworkVersion;
-    public string? TargetFrameworkProfile;
-    public bool GenerateStatic;
-    public string? BuildIdentifier;
-    public string? PropertiesPath;
-    public string TextFormat = "{versionLabel}";
-    public string? ReplaceInputPath;
-    public string BracketStart = "{";
-    public string BracketEnd = "}";
-    public bool IsDryRun;
-    public bool IsQuietOnStandardOutput;
-    public bool CheckWorkingDirectoryStatus;
-    public string[]? NpmPrefixes;
-}
-
 public sealed class Processor
 {
     private readonly Logger logger;
@@ -67,14 +44,13 @@ public sealed class Processor
         Logger logger,
         WriteProviderBase writeProvider,
         ProcessorContext context,
-        PrimitiveRepository repository,
+        PrimitiveRepository? repository,
         PrimitiveReference? targetBranch,
         DateTimeOffset generated,
         CancellationToken ct)
     {
-        var commit = targetBranch is { } tb ?
-            await repository.GetCommitAsync(tb, ct) :
-            null;
+        var commit = (repository is { } r1 && targetBranch is { } tb) ?
+            await r1.GetCommitAsync(tb, ct) : null;
 
         var commitId = commit?.Hash.ToString() ??
             "unknown";
@@ -87,18 +63,18 @@ public sealed class Processor
         var committer = FormatSignature(commit?.Committer);
         var commitDate = commit?.Committer.Date ?? generated;
 
-        var branches = commit is { } c1 ?
-            (await repository.GetBranchHeadReferencesAsync(ct)).
+        var branches = (repository is { } r2 && commit is { } c1) ?
+            (await r2.GetBranchHeadReferencesAsync(ct)).
                 Where(b => b.Target.Equals(c1.Hash)).
                 Select(b => b.Name).
                 ToArray() :
             [];
         var branchesString = string.Join(",", branches);
 
-        var tags = commit is { } c2 ?
+        var tags = (repository is { } r3 && commit is { } c2) ?
             (await LooseConcurrentScope.Default.WhenAll(
-                (await repository.GetTagReferencesAsync(ct)).
-                Select(t => repository.GetTagAsync(t, ct)))).
+                (await r3.GetTagReferencesAsync(ct)).
+                Select(t => r3.GetTagAsync(t, ct)))).
             Where(t => t.Hash.Equals(c2.Hash)).
             Select(b => b.Name).
             ToArray() :
@@ -109,16 +85,15 @@ public sealed class Processor
         var intDateVersion = Utilities.GetIntDateVersionFromDate(commitDate);
         var epochIntDateVersion = Utilities.GetEpochIntDateVersionFromDate(commitDate);
 
-        var versionLabelTask = repository is { } ?
-            Analyzer.LookupVersionLabelAsync(repository, context.CheckWorkingDirectoryStatus, ct) :
+        var versionLabelTask = repository is { } r4 ?
+            Analyzer.LookupVersionLabelAsync(r4, context.CheckWorkingDirectoryStatus, ct) :
             Task.FromResult(Version.Default);
         var keyValues =
-            (!string.IsNullOrWhiteSpace(context.PropertiesPath) &&
-             File.Exists(context.PropertiesPath)) ?
-             XDocument.Load(context.PropertiesPath).
-             Root!.Elements().
-             ToDictionary(e => e.Name.LocalName, e => (object?)e.Value) :
-             new Dictionary<string, object?>();
+            (!string.IsNullOrWhiteSpace(context.PropertiesPath) && File.Exists(context.PropertiesPath)) ?
+                 XDocument.Load(context.PropertiesPath!).
+                 Root!.Elements().
+                 ToDictionary(e => e.Name.LocalName, e => (object?)e.Value) :
+                 new Dictionary<string, object?>();
 
         var versionLabel = await versionLabelTask;
 
@@ -154,12 +129,12 @@ public sealed class Processor
 
         writeProvider.Write(context, keyValues, generated);
 
-        string subject;
-        string body;
+        string? subject;
+        string? body;
 
         if (commit is { } c)
         {
-            var index = c.Message.IndexOf("\n\n");
+            var index = c.Message.IndexOf("\n\n", StringComparison.InvariantCulture);
             subject = ((index >= 0) ? c.Message.Substring(0, index) : c.Message).Trim('\n').Replace('\n', ' ');
             body = (index >= 0) ? c.Message.Substring(index + 2) : string.Empty;
         }
@@ -194,12 +169,15 @@ public sealed class Processor
         using var repository = await Utilities.OpenRepositoryAsync(
             logger, context.ProjectDirectory);
 
+        var targetBranch = repository is { } r ?
+            await r.GetCurrentHeadReferenceAsync(ct) : null;
+        
         return await WriteVersionSourceFileAsync(
             logger,
             writeProvider,
             context,
             repository,
-            await repository.GetCurrentHeadReferenceAsync(ct),
+            targetBranch,
             DateTimeOffset.Now,
             ct);
     }
