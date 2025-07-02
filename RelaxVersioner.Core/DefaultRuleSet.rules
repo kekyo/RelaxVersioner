@@ -57,8 +57,8 @@
         <Rule name="AssemblyMetadata" key="Tags">{tags}</Rule>
         <Rule name="AssemblyMetadata" key="Author">{author}</Rule>
         <Rule name="AssemblyMetadata" key="Committer">{committer}</Rule>
-        <Rule name="AssemblyMetadata" key="Subject">{commit.Subject}</Rule>
-        <Rule name="AssemblyMetadata" key="Body">{commit.Body}</Rule>
+        <Rule name="AssemblyMetadata" key="Subject">{subject}</Rule>
+        <Rule name="AssemblyMetadata" key="Body">{body}</Rule>
         <Rule name="AssemblyMetadata" key="Build">{buildIdentifier}</Rule>
         <Rule name="AssemblyMetadata" key="Generated">{generated:F}</Rule>
         <Rule name="AssemblyMetadata" key="TargetFrameworkMoniker">{tfm}</Rule>

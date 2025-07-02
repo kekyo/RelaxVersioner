@@ -1,4 +1,4 @@
-﻿////////////////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////////////
 //
 // RelaxVersioner - Git tag/branch based, full-automatic version generator.
 // Copyright (c) Kouji Matsui (@kozy_kekyo, @kekyo@mi.kekyo.net)
@@ -17,7 +17,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Xml.Linq;
 using GitReader;
-using GitReader.Structures;
+using GitReader.Primitive;
 
 using RelaxVersioner.Writers;
 
@@ -49,12 +49,13 @@ internal static class Utilities
         return typeof(Utilities).Assembly.
             GetTypes().
             Where(type => type.IsSealed && type.IsClass && typeof(WriteProviderBase).IsAssignableFrom(type)).
-            Select(type => (WriteProviderBase)Activator.CreateInstance(type)).
-            ToDictionary(writer => writer.Language, StringComparer.InvariantCultureIgnoreCase);
+            Select(type => (WriteProviderBase?)Activator.CreateInstance(type)).
+            Where(writer => writer != null).
+            ToDictionary(writer => writer!.Language, writer => writer!, StringComparer.InvariantCultureIgnoreCase);
     }
 
-    private static async Task<T> TraversePathToRootAsync<T>(
-        string candidatePath, Func<string, Task<T>> action)
+    private static async Task<T?> TraversePathToRootAsync<T>(
+        string candidatePath, Func<string, Task<T?>> action)
         where T : class
     {
         var path = Path.GetFullPath(candidatePath).
@@ -84,7 +85,7 @@ internal static class Utilities
     public static string GetDirectoryNameWithTrailingSeparator(string path) =>
         GetDirectoryNameWithoutTrailingSeparator(path) + Path.DirectorySeparatorChar;
 
-    public static async Task<StructuredRepository> OpenRepositoryAsync(
+    public static async Task<PrimitiveRepository?> OpenRepositoryAsync(
         Logger logger, string candidatePath)
     {
         var repository = await TraversePathToRootAsync(candidatePath, async path =>
@@ -93,7 +94,7 @@ internal static class Utilities
             if (Directory.Exists(gitPath) ||
                 File.Exists(gitPath))  // submodule
             {
-                var r = await Repository.Factory.OpenStructureAsync(path);
+                var r = await Repository.Factory.OpenPrimitiveAsync(path);
                 logger.Message(LogImportance.Low, "Repository opened, Path={0}", path);
                 return r;
             }
@@ -117,11 +118,12 @@ internal static class Utilities
         this Dictionary<TKey, TValue> dictionary,
         TKey key,
         TValue defaultValue)
+        where TKey : notnull
     {
-        Debug.Assert(dictionary != null);
-        Debug.Assert(key != null);
+        if (dictionary == null)
+            throw new ArgumentNullException(nameof(dictionary));
 
-        if (dictionary.TryGetValue(key, out TValue value) == false)
+        if (dictionary.TryGetValue(key, out TValue? value) == false)
         {
             value = defaultValue;
         }
@@ -163,7 +165,7 @@ internal static class Utilities
             var rulePath = Path.Combine(path, "RelaxVersioner.rules");
             if (File.Exists(rulePath))
             {
-                XElement element = null;
+                XElement? element = null;
                 try
                 {
                     element = XElement.Load(rulePath);
@@ -200,7 +202,7 @@ internal static class Utilities
              where !string.IsNullOrWhiteSpace(language?.Value)
              select new { language, rules }).
             GroupBy(
-                entry => entry.language.Value.Trim(),
+                entry => entry.language.Value!.Trim(),
                 entry => entry.rules,
                 StringComparer.InvariantCultureIgnoreCase).
             ToDictionary(
@@ -221,7 +223,7 @@ internal static class Utilities
                 let name = rule.Attribute("name")
                 let key = rule.Attribute("key")
                 where !string.IsNullOrWhiteSpace(name?.Value)
-                select new Rule(name.Value.Trim(), key?.Value.Trim(), rule.Value.Trim()));
+                select new Rule(name!.Value.Trim(), key?.Value?.Trim() ?? "", rule.Value.Trim()));
     }
 
     public static XElement GetDefaultRuleSet()
@@ -230,7 +232,7 @@ internal static class Utilities
         using (var stream = type.Assembly.GetManifestResourceStream(
             type, "DefaultRuleSet.rules"))
         {
-            return XElement.Load(stream);
+            return XElement.Load(stream!);
         }
     }
 
@@ -278,4 +280,7 @@ internal static class Utilities
         }
         return sb.ToString();
     }
+
+    public static string TrimUnusableCharacters(string str) =>
+        str.Trim(' ', '\t', '\r', '\n', '\0');
 }

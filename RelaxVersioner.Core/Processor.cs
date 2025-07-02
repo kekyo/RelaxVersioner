@@ -1,4 +1,4 @@
-﻿////////////////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////////////
 //
 // RelaxVersioner - Git tag/branch based, full-automatic version generator.
 // Copyright (c) Kouji Matsui (@kozy_kekyo, @kekyo@mi.kekyo.net)
@@ -17,34 +17,12 @@ using System.Threading.Tasks;
 using System.Xml.Linq;
 
 using GitReader;
-using GitReader.Structures;
+using GitReader.IO;
+using GitReader.Primitive;
 
 using RelaxVersioner.Writers;
 
 namespace RelaxVersioner;
-
-public sealed class ProcessorContext
-{
-    public string ProjectDirectory;
-    public string OutputPath;
-    public string Language;
-    public string Namespace;
-    public string TargetFramework;
-    public string TargetFrameworkIdentity;
-    public string TargetFrameworkVersion;
-    public string TargetFrameworkProfile;
-    public bool GenerateStatic;
-    public string BuildIdentifier;
-    public string PropertiesPath;
-    public string TextFormat;
-    public string ReplaceInputPath;
-    public string BracketStart;
-    public string BracketEnd;
-    public bool IsDryRun;
-    public bool IsQuietOnStandardOutput;
-    public bool CheckWorkingDirectoryStatus;
-    public string[] NpmPrefixes;
-}
 
 public sealed class Processor
 {
@@ -66,14 +44,13 @@ public sealed class Processor
         Logger logger,
         WriteProviderBase writeProvider,
         ProcessorContext context,
-        StructuredRepository repository,
-        Branch targetBranch,
+        PrimitiveRepository? repository,
+        PrimitiveReference? targetBranch,
         DateTimeOffset generated,
         CancellationToken ct)
     {
-        var commit = targetBranch != null ?
-            await targetBranch.GetHeadCommitAsync(ct) :
-            null;
+        var commit = (repository is { } r1 && targetBranch is { } tb) ?
+            await r1.GetCommitAsync(tb, ct) : null;
 
         var commitId = commit?.Hash.ToString() ??
             "unknown";
@@ -86,36 +63,46 @@ public sealed class Processor
         var committer = FormatSignature(commit?.Committer);
         var commitDate = commit?.Committer.Date ?? generated;
 
-        var branches = commit?.Branches.
-            Select(b => b.Name).
-            ToArray() ?? Array.Empty<string>();
+        var branches = (repository is { } r2 && commit is { } c1) ?
+            (await r2.GetBranchHeadReferencesAsync(ct)).
+                Where(b => b.Target.Equals(c1.Hash)).
+                Select(b => b.Name).
+                ToArray() :
+            [];
         var branchesString = string.Join(",", branches);
 
-        var tags = commit?.Tags.
+        var tags = (repository is { } r3 && commit is { } c2) ?
+            (await LooseConcurrentScope.Default.WhenAll(
+                (await r3.GetTagReferencesAsync(ct)).
+                Select(t => r3.GetTagAsync(t, ct)))).
+            Where(t => t.Hash.Equals(c2.Hash)).
             Select(b => b.Name).
-            ToArray() ?? Array.Empty<string>();
+            ToArray() :
+            [];
         var tagsString = string.Join(",", tags);
 
         var safeVersion = Utilities.GetSafeVersionFromDate(commitDate);
         var intDateVersion = Utilities.GetIntDateVersionFromDate(commitDate);
         var epochIntDateVersion = Utilities.GetEpochIntDateVersionFromDate(commitDate);
 
-        var versionLabelTask = repository is { } ?
-            Analyzer.LookupVersionLabelAsync(repository, context.CheckWorkingDirectoryStatus, ct) :
+        var versionLabelTask = repository is { } r4 ?
+            Analyzer.LookupVersionLabelAsync(r4, context.CheckWorkingDirectoryStatus, ct) :
             Task.FromResult(Version.Default);
         var keyValues =
-            (!string.IsNullOrWhiteSpace(context.PropertiesPath) &&
-             File.Exists(context.PropertiesPath)) ?
-             XDocument.Load(context.PropertiesPath).
-             Root.Elements().
-             ToDictionary(e => e.Name.LocalName, e => (object)e.Value) :
-             new Dictionary<string, object>();
+            (!string.IsNullOrWhiteSpace(context.PropertiesPath) && File.Exists(context.PropertiesPath)) ?
+                 XDocument.Load(context.PropertiesPath!).
+                 Root!.Elements().
+                 ToDictionary(e => e.Name.LocalName, e => (object?)e.Value) :
+                 new Dictionary<string, object?>();
 
         var versionLabel = await versionLabelTask;
 
         var shortVersion = versionLabel.ToString(3);
 
-        foreach (var entry in new (string key, object value)[]
+        // Extract subject and body before writing to ensure they're available in keyValues
+        var (subject, body) = commit?.CrackMessage() ?? new(null!, null!);
+
+        foreach (var entry in new (string key, object? value)[]
         {
             ("generated", generated),
             ("branch", targetBranch),
@@ -137,6 +124,8 @@ public sealed class Processor
             ("tfid", context.TargetFrameworkIdentity),
             ("tfv", context.TargetFrameworkVersion),
             ("tfp", context.TargetFrameworkProfile),
+            ("subject", subject),
+            ("body", body),
         })
         {
             logger.Message(LogImportance.Low, "Values: {0}={1}", entry.key, entry.value);
@@ -157,8 +146,8 @@ public sealed class Processor
             commitDate,
             author,
             committer,
-            commit?.Subject,
-            commit?.Body);
+            subject,
+            body);
     }
 
     public async Task<Result> RunAsync(
@@ -170,12 +159,15 @@ public sealed class Processor
         using var repository = await Utilities.OpenRepositoryAsync(
             logger, context.ProjectDirectory);
 
+        var targetBranch = repository is { } r ?
+            await r.GetCurrentHeadReferenceAsync(ct) : null;
+        
         return await WriteVersionSourceFileAsync(
             logger,
             writeProvider,
             context,
             repository,
-            repository?.Head,
+            targetBranch,
             DateTimeOffset.Now,
             ct);
     }

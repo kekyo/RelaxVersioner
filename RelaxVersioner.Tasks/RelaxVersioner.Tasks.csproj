@@ -2,7 +2,6 @@
 
   <PropertyGroup>
     <TargetFrameworks>net40;net46;netstandard2.0</TargetFrameworks>
-    <Nullable>Enable</Nullable>
 
     <AssemblyName>RelaxVersioner.Tasks</AssemblyName>
     <AssemblyTitle>RelaxVersioner.Tasks</AssemblyTitle>
@@ -29,7 +28,7 @@
   <ItemGroup>
     <PackageReference Include="Microsoft.NETFramework.ReferenceAssemblies" Version="1.0.3" PrivateAssets="All" />
     <PackageReference Condition="'$(RV_BOOTSTRAP)' != 'True'"
-                      Include="RelaxVersioner" Version="3.13.0" PrivateAssets="all" />
+                      Include="RelaxVersioner" Version="3.17.0" PrivateAssets="all" />
   </ItemGroup>
 
 </Project>

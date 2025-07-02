@@ -7,8 +7,6 @@
 //
 ////////////////////////////////////////////////////////////////////////////////////////
 
-#nullable enable
-
 using NamingFormatter;
 using System;
 using System.Collections.Generic;
@@ -161,7 +159,7 @@ internal abstract class SourceCodeWriteProviderBase : WriteProviderBase
         Utilities.NormalizeControlCharsForCLike(str);
 
     protected virtual string GetArgumentString(string argumentValue) =>
-        $"\"{NormalizeControlChars(argumentValue.Trim(' ', '\t', '\r', '\n', '\0'))}\"";
+        $"\"{NormalizeControlChars(Utilities.TrimUnusableCharacters(argumentValue))}\"";
 
     protected abstract void WriteBeforeLiteralBody(SourceCodeWriter tw);
     protected abstract void WriteBeforeNestedLiteralBody(SourceCodeWriter tw, string name);

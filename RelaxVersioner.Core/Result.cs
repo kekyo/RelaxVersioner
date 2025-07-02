@@ -7,8 +7,6 @@
 //
 ////////////////////////////////////////////////////////////////////////////////////////
 
-#nullable enable
-
 using System;
 
 namespace RelaxVersioner;
@@ -22,19 +20,19 @@ public readonly struct Result
     public readonly string EpochIntDateVersion;
     public readonly string CommitId;
     public readonly string[] Tags;
-    public readonly string Branch;
+    public readonly string? Branch;
     public readonly DateTimeOffset Date;
     public readonly string Author;
     public readonly string Committer;
-    public readonly string Subject;
-    public readonly string Body;
+    public readonly string? Subject;
+    public readonly string? Body;
 
     public Result(Version version, string shortVersion, Version safeVersion,
         string intDateVersion, string epochIntDateVersion,
         string commitId,
-        string branch, string[] tags, DateTimeOffset date,
+        string? branch, string[] tags, DateTimeOffset date,
         string author, string committer,
-        string subject, string body)
+        string? subject, string? body)
     {
         this.Version = version;
         this.ShortVersion = shortVersion;

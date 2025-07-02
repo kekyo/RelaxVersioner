@@ -7,8 +7,6 @@
 //
 ////////////////////////////////////////////////////////////////////////////////////////
 
-#nullable enable
-
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -101,7 +99,13 @@ public sealed class Version :
             return build;
         }
         var revision = Compare(this.Revision, rhs.Revision);
-        return revision;
+        if (revision != 0)
+        {
+            return revision;
+        }
+        
+        // If numerically equivalent, prefer the version with more components
+        return this.ComponentCount.CompareTo(rhs.ComponentCount);
     }
     
     public int ComponentCount

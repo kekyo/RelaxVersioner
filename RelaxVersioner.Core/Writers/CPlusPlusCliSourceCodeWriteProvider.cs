@@ -7,8 +7,6 @@
 //
 ////////////////////////////////////////////////////////////////////////////////////////
 
-#nullable enable
-
 namespace RelaxVersioner.Writers;
 
 internal sealed class CPlusPlusCliSourceCodeWriteProvider : SourceCodeWriteProviderBase
