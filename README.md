@@ -531,6 +531,8 @@ When you are using a nuspec file to generate a NuGet package, there are addition
 
 ## History
 
+* 3.18.0:
+  * Updated GitReader to 1.16.0 and uses primitive-interface instead of structured-interface.
 * 3.17.0:
   * Included untracked files to cwd mode.
   * Updated GitReader to 1.14.0.
