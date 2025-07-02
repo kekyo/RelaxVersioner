@@ -2,7 +2,7 @@
 
   <PropertyGroup>
     <TargetFrameworks>net48;net6.0;net7.0;net8.0;net9.0</TargetFrameworks>
-    <NoWarn>$(NoWarn);NU5104</NoWarn>
+    <NoWarn>$(NoWarn);CS0436;NU5104</NoWarn>
   </PropertyGroup>
 
   <ItemGroup>
@@ -10,6 +10,7 @@
     <PackageReference Include="NUnit" Version="4.2.2" />
     <PackageReference Include="NUnit3TestAdapter" Version="4.6.0" />
     <PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
+    <PackageReference Include="RelaxVersioner" Version="3.17.0" PrivateAssets="all" />
   </ItemGroup>
 
   <ItemGroup>
@@ -17,11 +18,17 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="artifacts\" />
+    <Folder Include="artifacts\*\" />
   </ItemGroup>
 
   <ItemGroup>
-    <None Update="artifacts\*.zip">
+    <None Update="artifacts\*">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="artifacts\**\*">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="artifacts\expected_CommitHistory.txt">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
   </ItemGroup>

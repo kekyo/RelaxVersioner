@@ -29,16 +29,16 @@ public sealed class Analyzer_WorkingDirectory
             Directory.CreateDirectory(tempPath);
             
             // Initialize git repository
-            await TestUtilities.RunGitCommand(tempPath, "init");
-            await TestUtilities.RunGitCommand(tempPath, "config user.email \"test@example.com\"");
-            await TestUtilities.RunGitCommand(tempPath, "config user.name \"Test User\"");
+            await TestUtilities.InitializeGitRepositoryWithMainBranch(tempPath);
+            await TestUtilities.RunGitCommandAsync(tempPath, "config user.email \"test@example.com\"");
+            await TestUtilities.RunGitCommandAsync(tempPath, "config user.name \"Test User\"");
             
             // Create initial commit with version tag
             var testFile = Path.Combine(tempPath, "test.txt");
             File.WriteAllText(testFile, "initial content");
-            await TestUtilities.RunGitCommand(tempPath, "add test.txt");
-            await TestUtilities.RunGitCommand(tempPath, "commit -m \"Initial commit\"");
-            await TestUtilities.RunGitCommand(tempPath, "tag v1.2.3");
+            await TestUtilities.RunGitCommandAsync(tempPath, "add test.txt");
+            await TestUtilities.RunGitCommandAsync(tempPath, "commit -m \"Initial commit\"");
+            await TestUtilities.RunGitCommandAsync(tempPath, "tag v1.2.3");
             
             // Test 1: Clean working directory - should return tagged version
             Hash root;
@@ -59,7 +59,7 @@ public sealed class Analyzer_WorkingDirectory
             }
             
             // Test 3: Staged file - should increment version
-            await TestUtilities.RunGitCommand(tempPath, "add test.txt");
+            await TestUtilities.RunGitCommandAsync(tempPath, "add test.txt");
             using (var repository = await Repository.Factory.OpenPrimitiveAsync(tempPath))
             {
                 var version = await Analyzer.LookupVersionLabelAsync(repository, true, default);
@@ -67,7 +67,7 @@ public sealed class Analyzer_WorkingDirectory
             }
             
             // Test 4: Commit staged file and test untracked file
-            await TestUtilities.RunGitCommand(tempPath, "commit -m \"Test\"");
+            await TestUtilities.RunGitCommandAsync(tempPath, "commit -m \"Test\"");
             using (var repository = await Repository.Factory.OpenPrimitiveAsync(tempPath))
             {
                 var version = await Analyzer.LookupVersionLabelAsync(repository, true, default);
@@ -82,13 +82,13 @@ public sealed class Analyzer_WorkingDirectory
             }
             
             // Test 5: Reset
-            await TestUtilities.RunGitCommand(tempPath, $"reset --hard {root}");
+            await TestUtilities.RunGitCommandAsync(tempPath, $"reset --hard {root}");
             using (var repository = await Repository.Factory.OpenPrimitiveAsync(tempPath))
             {
                 var version = await Analyzer.LookupVersionLabelAsync(repository, true, default);
                 Assert.That(version.ToString(), Is.EqualTo("1.2.4"));
             }
-            await TestUtilities.RunGitCommand(tempPath, $"clean -xfd");   // Remove `untracked.txt`
+            await TestUtilities.RunGitCommandAsync(tempPath, $"clean -xfd");   // Remove `untracked.txt`
             using (var repository = await Repository.Factory.OpenPrimitiveAsync(tempPath))
             {
                 var version = await Analyzer.LookupVersionLabelAsync(repository, true, default);
@@ -122,9 +122,9 @@ public sealed class Analyzer_WorkingDirectory
             Directory.CreateDirectory(tempPath);
             
             // Initialize empty git repository
-            await TestUtilities.RunGitCommand(tempPath, "init");
-            await TestUtilities.RunGitCommand(tempPath, "config user.email \"test@example.com\"");
-            await TestUtilities.RunGitCommand(tempPath, "config user.name \"Test User\"");
+            await TestUtilities.InitializeGitRepositoryWithMainBranch(tempPath);
+            await TestUtilities.RunGitCommandAsync(tempPath, "config user.email \"test@example.com\"");
+            await TestUtilities.RunGitCommandAsync(tempPath, "config user.name \"Test User\"");
             
             // Test 1: Initial repository with no commits and no files - should return default version
             using (var repository = await Repository.Factory.OpenPrimitiveAsync(tempPath))
@@ -143,7 +143,7 @@ public sealed class Analyzer_WorkingDirectory
             }
             
             // Test 3: Initial repository with staged file (but no commits) - should still return default version
-            await TestUtilities.RunGitCommand(tempPath, "add test.txt");
+            await TestUtilities.RunGitCommandAsync(tempPath, "add test.txt");
             using (var repository = await Repository.Factory.OpenPrimitiveAsync(tempPath))
             {
                 var version = await Analyzer.LookupVersionLabelAsync(repository, false, default);
@@ -162,7 +162,7 @@ public sealed class Analyzer_WorkingDirectory
             // Test 5: Add another file and stage it alongside unstaged changes
             var testFile2 = Path.Combine(tempPath, "test2.txt");
             File.WriteAllText(testFile2, "second file content");
-            await TestUtilities.RunGitCommand(tempPath, "add test2.txt");
+            await TestUtilities.RunGitCommandAsync(tempPath, "add test2.txt");
             using (var repository = await Repository.Factory.OpenPrimitiveAsync(tempPath))
             {
                 var version = await Analyzer.LookupVersionLabelAsync(repository, false, default);
