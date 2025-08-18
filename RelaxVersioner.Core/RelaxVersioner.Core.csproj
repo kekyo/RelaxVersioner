@@ -17,7 +17,7 @@
     <PackageReference Include="Newtonsoft.Json" Version="13.0.1" />
     <PackageReference Include="Microsoft.NETFramework.ReferenceAssemblies" Version="1.0.3" PrivateAssets="All" />
     <PackageReference Condition="'$(RV_BOOTSTRAP)' != 'True'"
-                      Include="RelaxVersioner" Version="3.17.0" PrivateAssets="all" />
+                      Include="RelaxVersioner" Version="3.18.0" PrivateAssets="all" />
   </ItemGroup>
 
   <ItemGroup>
