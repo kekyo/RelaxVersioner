@@ -553,6 +553,8 @@ nuspecファイルを使ってパッケージを生成する場合は、デフ�
 
 ## 履歴
 
+* 3.19.0:
+  * net8.0の自動informational versionが競合する可能性があるので無効にしました。
 * 3.18.0:
   * GitReader を 1.16.0 に更新し、structured-interface の代わりに primitive-interface を使用。
 * 3.17.0:
