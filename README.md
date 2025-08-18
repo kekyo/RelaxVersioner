@@ -221,7 +221,11 @@ For example, in a CI/CD environment like GitHub Actions, you can apply versions 
 
 ----
 
-## Using with Node.js projects
+## Using with NPM package projects
+
+NOTE: RelaxVersioner's NPM package support is limited in functionality.
+See also [screw-up](https://github.com/kekyo/screw-up/) for version control for NPM projects.
+screw-up uses the same version analysis algorithm as RelaxVersioner. It is optimized for use with NPM projects.
 
 The CLI interface has special options for NPM (Node.js package manager).
 Change to the directory where the `package.json` file is located and run the CLI as follows:

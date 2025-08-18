@@ -223,7 +223,11 @@ ABC0123456789abc ... XYZ
 
 ----
 
-## Node.jsプロジェクトで使う
+## NPMパッケージプロジェクトで使う
+
+注意: RelaxVersionerのNPMパッケージ対応は、機能が限定的です。
+NPMプロジェクト向けのバージョン管理を行う [screw-up](https://github.com/kekyo/screw-up/) をお勧めします。
+screw-upは、RelaxVersionerと同じバージョン探索アルゴリズムを使います。そして、NPMプロジェクトで使うことを前提に最適化されています。
 
 CLIインターフェイスには、NPM (Node.js package manager) 向けの特別なオプションがあります。
 `package.json` ファイルが存在するディレクトリに移動して、以下のようにCLIを実行します:
