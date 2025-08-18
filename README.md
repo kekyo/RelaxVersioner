@@ -535,6 +535,8 @@ When you are using a nuspec file to generate a NuGet package, there are addition
 
 ## History
 
+* 3.19.0:
+  * Disabled the automatic informational version of net8.0 because it might cause conflicts.
 * 3.18.0:
   * Updated GitReader to 1.16.0 and uses primitive-interface instead of structured-interface.
 * 3.17.0:
