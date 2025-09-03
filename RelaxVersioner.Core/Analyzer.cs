@@ -7,10 +7,12 @@
 //
 ////////////////////////////////////////////////////////////////////////////////////////
 
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
+using GitReader;
 using GitReader.IO;
 using GitReader.Primitive;
 
@@ -18,6 +20,69 @@ namespace RelaxVersioner;
 
 internal static class Analyzer
 {
+    // Tag cache for optimized tag lookups
+    private sealed class TagCache
+    {
+        private readonly Dictionary<Hash, List<PrimitiveTag>> commitToTags;
+        
+        private TagCache(Dictionary<Hash, List<PrimitiveTag>> commitToTags)
+        {
+            this.commitToTags = commitToTags;
+        }
+        
+        public static async Task<TagCache> BuildAsync(
+            PrimitiveRepository repository,
+            CancellationToken ct)
+        {
+            var cache = new Dictionary<Hash, List<PrimitiveTag>>();
+            var allTagReferences = await repository.GetTagReferencesAsync(ct);
+            
+            // Process all tags in parallel to build commit->tags mapping
+            await LooseConcurrentScope.Default.WhenAll(
+                allTagReferences.Select(async tagRef =>
+                {
+                    var tag = await repository.GetTagAsync(tagRef, ct);
+                    
+                    // Determine the actual commit hash for this tag
+                    Hash commitHash;
+                    if (tag.Type == ObjectTypes.Commit)
+                    {
+                        // Lightweight tag or annotated tag pointing to commit
+                        commitHash = tag.Hash;
+                    }
+                    else if (tagRef.CommitHash.HasValue)
+                    {
+                        // Annotated tag with peeled-tag info
+                        commitHash = tagRef.CommitHash.Value;
+                    }
+                    else
+                    {
+                        // Annotated tag pointing to non-commit object
+                        // Try to resolve through the tag object
+                        commitHash = tagRef.ObjectOrCommitHash;
+                    }
+                    
+                    lock (cache)
+                    {
+                        if (!cache.TryGetValue(commitHash, out var list))
+                        {
+                            list = new List<PrimitiveTag>();
+                            cache[commitHash] = list;
+                        }
+                        list.Add(tag);
+                    }
+                }));
+            
+            return new TagCache(cache);
+        }
+        
+        public PrimitiveTag[] GetTagsForCommit(Hash commitHash)
+        {
+            return commitToTags.TryGetValue(commitHash, out var tags) ?
+                tags.ToArray() : Array.Empty<PrimitiveTag>();
+        }
+    }
+    
     private readonly struct ScheduledCommit
     {
         public readonly PrimitiveCommit Commit;
@@ -72,7 +137,9 @@ internal static class Analyzer
     private static async Task<Version> LookupVersionLabelRecursiveAsync(
         PrimitiveRepository repository,
         PrimitiveCommit commit,
-        Dictionary<PrimitiveCommit, Version> reached, CancellationToken ct)
+        Dictionary<PrimitiveCommit, Version> reached,
+        TagCache tagCache,
+        CancellationToken ct)
     {
         var scheduledStack = new Stack<ScheduledCommit>();
         var version = Version.Default;
@@ -91,7 +158,8 @@ internal static class Analyzer
             }
 
             // Detected mostly larger version tag.
-            var candidates = (await repository.GetRelatedTagsAsync(commit, ct)).
+            // Use cached tags for O(1) lookup instead of scanning all tags
+            var candidates = tagCache.GetTagsForCommit(commit.Hash).
                 Select(tag => Version.TryParse(tag.Name, out var v) ? v : null!).
                 Where(v => v?.ComponentCount >= 2).     // "1.2" or more.
                 OrderByDescending(v => v).
@@ -130,7 +198,7 @@ internal static class Analyzer
             {
                 for (var index = 1; index < pcs.Length; index++)
                 {
-                    var v = await LookupVersionLabelRecursiveAsync(repository, pcs[index], reached, ct);
+                    var v = await LookupVersionLabelRecursiveAsync(repository, pcs[index], reached, tagCache, ct);
                     if (v.CompareTo(version) > 0)
                     {
                         version = v;
@@ -149,8 +217,13 @@ internal static class Analyzer
         PrimitiveRepository repository,
         PrimitiveReference branch, CancellationToken ct)
     {
-        var headCommit = await repository.GetCommitAsync(branch, ct);
-        return await LookupVersionLabelRecursiveAsync(repository, headCommit!.Value, new(), ct);
+        // Build tag cache once for all lookups
+        var (headCommit, tagCache) = await LooseConcurrentScope.Default.Join(
+            repository.GetCommitAsync(branch, ct),
+            TagCache.BuildAsync(repository, ct));
+        
+        return await LookupVersionLabelRecursiveAsync(
+            repository, headCommit!.Value, new(), tagCache, ct);
     }
 
     public static async Task<Version> LookupVersionLabelAsync(
