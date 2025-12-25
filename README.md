@@ -535,6 +535,8 @@ When you are using a nuspec file to generate a NuGet package, there are addition
 
 ## History
 
+* 3.21.0:
+  * It worked fine with .NET 9 fallback even in 3.20.0, but now officially supports .NET 10.
 * 3.20.0:
   * Improved performance for cases where annotated tags are present.
 * 3.19.0:
