@@ -45,6 +45,9 @@
   <UsingTask
     TaskName="DumpPropertiesTask"
     AssemblyFile="$(_RVB_MSBuildTaskPath)" />
+  <UsingTask
+    TaskName="ResolvePackWorkspaceTask"
+    AssemblyFile="$(_RVB_MSBuildTaskPath)" />
     
   <!-- ============================================================================= -->
   <!-- Build before compile definition -->
@@ -299,11 +302,22 @@
       <RelaxVersionerToolingPath Condition="'$(RelaxVersionerToolingPath)' == ''">$([System.IO.Path]::Combine('$(RelaxVersionerToolingDir)','$(_RVB_ExecutableName)'))</RelaxVersionerToolingPath>
 
       <RelaxVersionerOutputDir Condition="'$(RelaxVersionerOutputDir)' == ''">$([System.IO.Path]::Combine('$(MSBuildProjectDirectory)','$(NuspecOutputPath)'))</RelaxVersionerOutputDir>
+      <_RVB_PackWorkspaceRoot Condition="'$(RelaxVersionerDumpBasePath)' == ''">$(RelaxVersionerOutputDir)</_RVB_PackWorkspaceRoot>
+      <_RVB_PackWorkspaceRoot Condition="'$(RelaxVersionerDumpBasePath)' != ''">$([System.IO.Path]::GetFullPath('$(RelaxVersionerDumpBasePath)'))</_RVB_PackWorkspaceRoot>
     </PropertyGroup>
 
+    <ResolvePackWorkspaceTask
+      Condition="'$(_RVB_PackWorkspacePath)' == ''"
+      RootPath="$(_RVB_PackWorkspaceRoot)"
+      TargetFramework="$(TargetFramework)">
+      <Output TaskParameter="RequestKey" PropertyName="_RVB_PackRequestKey" />
+      <Output TaskParameter="WorkspacePath" PropertyName="_RVB_PackWorkspacePath" />
+    </ResolvePackWorkspaceTask>
+
+    <MakeDir Directories="$(_RVB_PackWorkspacePath)" />
+
     <PropertyGroup>
-      <_RVB_DumpBasePath Condition="'$(RelaxVersionerDumpBasePath)' == ''">$(RelaxVersionerOutputDir)</_RVB_DumpBasePath>
-      <_RVB_DumpBasePath Condition="'$(RelaxVersionerDumpBasePath)' != ''">$([System.IO.Path]::GetFullPath('$(RelaxVersionerDumpBasePath)'))</_RVB_DumpBasePath>
+      <_RVB_DumpBasePath>$(_RVB_PackWorkspacePath)</_RVB_DumpBasePath>
 
       <RelaxVersionerPropertiesPath>$([System.IO.Path]::Combine('$(_RVB_DumpBasePath)','RelaxVersioner_Properties.xml'))</RelaxVersionerPropertiesPath>
       <RelaxVersionerResultPath>$([System.IO.Path]::Combine('$(_RVB_DumpBasePath)','RelaxVersioner_Result.xml'))</RelaxVersionerResultPath>
