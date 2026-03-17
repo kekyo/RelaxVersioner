@@ -8,6 +8,7 @@
 ////////////////////////////////////////////////////////////////////////////////////////
 
 using System;
+using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Threading.Tasks;
@@ -27,60 +28,48 @@ public static class TestUtilities
 
     public static async Task RunGitCommandAsync(string workingDirectory, string arguments)
     {
-        using var process = new Process
+        try
         {
-            StartInfo = new ProcessStartInfo
-            {
-                FileName = "git",
-                Arguments = arguments,
-                WorkingDirectory = workingDirectory,
-                UseShellExecute = false,
-                RedirectStandardOutput = true,
-                RedirectStandardError = true,
-                CreateNoWindow = true
-            }
-        };
-        
-        process.Start();
-        
-        // Use Task.Run to wrap the synchronous WaitForExit for compatibility
-        await Task.Run(() => process.WaitForExit());
-        
-        if (process.ExitCode != 0)
+            await RunProcessCoreAsync("git", workingDirectory, arguments, null);
+        }
+        catch (InvalidOperationException ex)
         {
-            var error = process.StandardError.ReadToEnd();
-            throw new InvalidOperationException($"Git command failed: git {arguments}\nError: {error}");
+            throw new InvalidOperationException($"Git command failed: git {arguments}\nError: {ex.Message}", ex);
         }
     }
 
     public static async Task<string> RunGitCommandWithOutputAsync(string workingDirectory, string arguments)
     {
-        using var process = new Process
+        try
         {
-            StartInfo = new ProcessStartInfo
-            {
-                FileName = "git",
-                Arguments = arguments,
-                WorkingDirectory = workingDirectory,
-                UseShellExecute = false,
-                RedirectStandardOutput = true,
-                RedirectStandardError = true,
-                CreateNoWindow = true
-            }
-        };
-        
-        process.Start();
-        
-        // Use Task.Run to wrap the synchronous WaitForExit for compatibility
-        await Task.Run(() => process.WaitForExit());
-        
-        if (process.ExitCode != 0)
-        {
-            var error = process.StandardError.ReadToEnd();
-            throw new InvalidOperationException($"Git command failed: git {arguments}\nError: {error}");
+            var (_, output, _) = await RunProcessCoreAsync("git", workingDirectory, arguments, null);
+            return output;
         }
-        
-        return process.StandardOutput.ReadToEnd();
+        catch (InvalidOperationException ex)
+        {
+            throw new InvalidOperationException($"Git command failed: git {arguments}\nError: {ex.Message}", ex);
+        }
+    }
+
+    public static async Task RunCommandAsync(
+        string fileName,
+        string workingDirectory,
+        string arguments,
+        IReadOnlyDictionary<string, string?>? environmentVariables = null) =>
+        await RunProcessCoreAsync(fileName, workingDirectory, arguments, environmentVariables);
+
+    public static async Task<string> RunCommandWithOutputAsync(
+        string fileName,
+        string workingDirectory,
+        string arguments,
+        IReadOnlyDictionary<string, string?>? environmentVariables = null)
+    {
+        var (_, output, _) = await RunProcessCoreAsync(
+            fileName,
+            workingDirectory,
+            arguments,
+            environmentVariables);
+        return output;
     }
 
     public static async Task InitializeGitRepositoryWithMainBranch(string workingDirectory)
@@ -110,4 +99,51 @@ public static class TestUtilities
             }
         }
     }
-} 
+
+    private static async Task<(int ExitCode, string StandardOutput, string StandardError)> RunProcessCoreAsync(
+        string fileName,
+        string workingDirectory,
+        string arguments,
+        IReadOnlyDictionary<string, string?>? environmentVariables)
+    {
+        using var process = new Process
+        {
+            StartInfo = new ProcessStartInfo
+            {
+                FileName = fileName,
+                Arguments = arguments,
+                WorkingDirectory = workingDirectory,
+                UseShellExecute = false,
+                RedirectStandardOutput = true,
+                RedirectStandardError = true,
+                CreateNoWindow = true
+            }
+        };
+
+        if (environmentVariables != null)
+        {
+            foreach (var (key, value) in environmentVariables)
+            {
+                process.StartInfo.Environment[key] = value ?? string.Empty;
+            }
+        }
+
+        process.Start();
+
+        var standardOutputTask = process.StandardOutput.ReadToEndAsync();
+        var standardErrorTask = process.StandardError.ReadToEndAsync();
+
+        await Task.Run(() => process.WaitForExit());
+
+        var standardOutput = await standardOutputTask;
+        var standardError = await standardErrorTask;
+
+        if (process.ExitCode != 0)
+        {
+            throw new InvalidOperationException(
+                $"Command failed: {fileName} {arguments}\nError: {standardError}");
+        }
+
+        return (process.ExitCode, standardOutput, standardError);
+    }
+}

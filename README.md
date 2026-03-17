@@ -312,10 +312,10 @@ RelaxVersioner saves the files in the following location after build:
 
 To be precise:
 
-* `$(IntermediateOutputPath)` at build time.
-* `$(NuspecOutputPath)` at NuGet package generation.
+* `$(IntermediateOutputPath)` for normal builds.
+* A request-scoped internal workspace under the intermediate output root during NuGet pack. The exact path is internal and should not be treated as stable.
 
-For example, `FooBarProject/obj/Debug/net6.0/` directory hierarchy. Here are the files to save:
+For normal builds, this is typically a directory hierarchy such as `FooBarProject/obj/Debug/net6.0/`. Here are the files to save:
 
 * `RelaxVersioner_Metadata.cs` : Source code including version attributes and `ThisAssembly` class definition, which is the core feature of RelaxVersioner.
 * `RelaxVersioner_Properties.xml` : A dump of all MSBuild properties in XML format, just before RelaxVersioner calculates the version.
@@ -328,7 +328,8 @@ For example, `FooBarProject/obj/Debug/net6.0/` directory hierarchy. Here are the
 
 If you want to reference this information from your program, you can get it from the version attributes or `ThisAssembly`. Other, XML or text files can be referenced by CI/CD (Continuous Integration and Continuous Deployment) to apply version information to the build process. For example, `RelaxVersioner_ShortVersion.txt` contains a string like `2.5.4`, so you may be able to save your build artifacts with a version number when you upload them to the server.
 
-If you want to reference this information from within the MSBuild target, you can use the properties as follows without having to access the text file:
+If you want to reference this information from within the MSBuild target, you can use the properties as follows without having to access the text file.
+Especially during pack, prefer these properties over hard-coding file paths:
 
 ```xml
   <Target Name="AB" AfterTargets="Compile">

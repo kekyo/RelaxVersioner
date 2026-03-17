@@ -314,10 +314,10 @@ RelaxVersionerは、ビルド後に、以下の位置にファイルを保存し
 
 正確には:
 
-* ビルド時は`$(IntermediateOutputPath)`です。
-* NuGetパッケージ生成時は`$(NuspecOutputPath)`です。
+* 通常ビルド時は`$(IntermediateOutputPath)`です。
+* NuGetパッケージ生成時は、pack requestごとの内部ワークスペースが中間出力配下に作成されます。正確なパスは内部実装であり、固定前提で参照しないでください。
 
-例えば、`FooBarProject/obj/Debug/net6.0/` のようなディレクトリ階層です。以下に保存するファイルを示します:
+通常ビルドでは、例えば `FooBarProject/obj/Debug/net6.0/` のようなディレクトリ階層になります。以下に保存するファイルを示します:
 
 * `RelaxVersioner_Metadata.cs` : バージョン属性や`ThisAssembly`クラスの定義を含む、ソースコードです。RelaxVersionerの中心的な役割を果たします。
 * `RelaxVersioner_Properties.xml` : RelaxVersionerがバージョン計算を行う直前の、MSBuildの全てのプロパティを、XML形式でダンプしたものです。
@@ -334,7 +334,8 @@ RelaxVersionerは、ビルド後に、以下の位置にファイルを保存し
 例えば、`RelaxVersioner_ShortVersion.txt`には、`2.5.4`のような文字列が格納されているので、
 ビルド成果物をサーバーにアップロードする際に、バージョン番号をファイル名に追加して保存する事が出来るかもしれません。
 
-これらの情報をMSBuildターゲット内から参照する場合は、テキストファイルにアクセスすることなく、以下のようにプロパティを使用できます:
+これらの情報をMSBuildターゲット内から参照する場合は、テキストファイルにアクセスすることなく、以下のようにプロパティを使用できます。
+特にpack時は、ファイルパスではなくこれらのプロパティを使用することを推奨します:
 
 ```xml
   <Target Name="AB" AfterTargets="Compile">
