@@ -19,6 +19,7 @@
     <RelaxVersionerGenerateStatic Condition="'$(RelaxVersionerGenerateStatic)' == ''">True</RelaxVersionerGenerateStatic>
     <RelaxVersionerCheckWorkingDirectoryStatus Condition="'$(RelaxVersionerCheckWorkingDirectoryStatus)' == ''">True</RelaxVersionerCheckWorkingDirectoryStatus>
     <RelaxVersionerLaunchDebugger Condition="'$(RelaxVersionerLaunchDebugger)' == ''">False</RelaxVersionerLaunchDebugger>
+    <RelaxVersionerPropertyCollectionMode Condition="'$(RelaxVersionerPropertyCollectionMode)' == ''">Legacy</RelaxVersionerPropertyCollectionMode>
   </PropertyGroup>
 
   <!-- ======================== -->
@@ -98,7 +99,9 @@
       <_RVB_DumpBasePath Condition="'$(RelaxVersionerDumpBasePath)' != ''">$([System.IO.Path]::GetFullPath('$(RelaxVersionerDumpBasePath)'))</_RVB_DumpBasePath>
 
       <RelaxVersionerPropertiesPath>$([System.IO.Path]::Combine('$(_RVB_DumpBasePath)','RelaxVersioner_Properties.xml'))</RelaxVersionerPropertiesPath>
+      <RelaxVersionerGlobalPropertiesPath>$([System.IO.Path]::Combine('$(_RVB_DumpBasePath)','RelaxVersioner_GlobalProperties.xml'))</RelaxVersionerGlobalPropertiesPath>
       <RelaxVersionerResultPath>$([System.IO.Path]::Combine('$(_RVB_DumpBasePath)','RelaxVersioner_Result.xml'))</RelaxVersionerResultPath>
+      <_RVB_PropertyCollectionModeMarkerPath>$([System.IO.Path]::Combine('$(_RVB_DumpBasePath)','RelaxVersioner_PropertyCollection_$(RelaxVersionerPropertyCollectionMode).marker'))</_RVB_PropertyCollectionModeMarkerPath>
 
       <RelaxVersionerVersionPath>$([System.IO.Path]::Combine('$(_RVB_DumpBasePath)','RelaxVersioner_Version.txt'))</RelaxVersionerVersionPath>
       <RelaxVersionerShortVersionPath>$([System.IO.Path]::Combine('$(_RVB_DumpBasePath)','RelaxVersioner_ShortVersion.txt'))</RelaxVersionerShortVersionPath>
@@ -115,7 +118,7 @@
     
   <Target Name="RelaxVersionerCoreGenerate"
     Inputs="@(Compile);@(ClCompile)"
-    Outputs="@(_RVB_OutputPath);$(RelaxVersionerPropertiesPath);$(RelaxVersionerResultPath)">
+    Outputs="@(_RVB_OutputPath);$(RelaxVersionerResultPath);$(_RVB_PropertyCollectionModeMarkerPath)">
     
     <PropertyGroup>
       <RelaxVersionerToolingRuntimeName Condition="'$(RelaxVersionerToolingRuntimeName)' == ''">$(_RVB_RuntimeName)</RelaxVersionerToolingRuntimeName>
@@ -154,17 +157,38 @@
     <!-- ======================== -->
     <!-- Execute RelaxVersioner -->
 
-    <DumpPropertiesTask OutputPath="$(RelaxVersionerPropertiesPath)" />
+    <Delete
+      Condition="'$(RelaxVersionerPropertyCollectionMode)' == 'Selective' AND Exists('$(RelaxVersionerPropertiesPath)')"
+      Files="$(RelaxVersionerPropertiesPath)" />
 
-    <ItemGroup>
+    <DumpPropertiesTask
+      Condition="'$(RelaxVersionerPropertyCollectionMode)' != 'Selective'"
+      OutputPath="$(RelaxVersionerPropertiesPath)" />
+
+    <ItemGroup Condition="'$(RelaxVersionerPropertyCollectionMode)' != 'Selective'">
       <FileWrites Include="$(RelaxVersionerPropertiesPath)" />
     </ItemGroup>
 
+    <_RVB_DumpGlobalProperties
+      Condition="'$(RelaxVersionerPropertyCollectionMode)' != 'Legacy'"
+      OutputPath="$(RelaxVersionerGlobalPropertiesPath)">
+      <Output TaskParameter="Available" PropertyName="_RVB_GlobalPropertiesAvailable" />
+    </_RVB_DumpGlobalProperties>
+
+    <ItemGroup Condition="'$(RelaxVersionerPropertyCollectionMode)' != 'Legacy'">
+      <FileWrites Include="$(RelaxVersionerGlobalPropertiesPath)" />
+    </ItemGroup>
+
     <Exec WorkingDirectory="$(RelaxVersionerToolingDir)"
-          Command="$(RelaxVersionerToolingRuntimeName)&quot;$(RelaxVersionerToolingPath)&quot; $(_RVB_LaunchDebuggerOption) $(_RVB_CheckWorkingDirectoryStatusOption) --verbose --language=&quot;$(RelaxVersionerLanguage)&quot; --namespace=&quot;$(RelaxVersionerNamespace)&quot; --tfm=&quot;$(_RVB_TargetFramework)&quot; --tfid=&quot;$(_RVB_TargetFrameworkIdentifier)&quot; --tfv=&quot;$(_RVB_TargetFrameworkVersion)&quot; --tfp=&quot;$(_RVB_TargetFrameworkProfile)&quot; --genStatic=&quot;$(RelaxVersionerGenerateStatic)&quot; --buildIdentifier=&quot;$(RelaxVersionerBuildIdentifier)&quot; --propertiesPath=&quot;$(RelaxVersionerPropertiesPath)&quot; --outputPath=@(_RVB_OutputPath->'&quot;%(FullPath)&quot;',' ') --resultPath=&quot;$(RelaxVersionerResultPath)&quot; &quot;$(MSBuildProjectFullPath)&quot;" />
+          Command="$(RelaxVersionerToolingRuntimeName)&quot;$(RelaxVersionerToolingPath)&quot; $(_RVB_LaunchDebuggerOption) $(_RVB_CheckWorkingDirectoryStatusOption) --verbose --language=&quot;$(RelaxVersionerLanguage)&quot; --namespace=&quot;$(RelaxVersionerNamespace)&quot; --tfm=&quot;$(_RVB_TargetFramework)&quot; --tfid=&quot;$(_RVB_TargetFrameworkIdentifier)&quot; --tfv=&quot;$(_RVB_TargetFrameworkVersion)&quot; --tfp=&quot;$(_RVB_TargetFrameworkProfile)&quot; --genStatic=&quot;$(RelaxVersionerGenerateStatic)&quot; --buildIdentifier=&quot;$(RelaxVersionerBuildIdentifier)&quot; --propertiesPath=&quot;$(RelaxVersionerPropertiesPath)&quot; --globalPropertiesPath=&quot;$(RelaxVersionerGlobalPropertiesPath)&quot; --projectPath=&quot;$(MSBuildProjectFullPath)&quot; --propertyCollectionMode=&quot;$(RelaxVersionerPropertyCollectionMode)&quot; --propertyCollectionTarget=&quot;RelaxVersionerPrepare&quot; --msbuildRuntimeType=&quot;$(MSBuildRuntimeType)&quot; --msbuildBinPath=&quot;$(MSBuildBinPath)&quot; --outputPath=@(_RVB_OutputPath->'&quot;%(FullPath)&quot;',' ') --resultPath=&quot;$(RelaxVersionerResultPath)&quot; &quot;$(MSBuildProjectFullPath)&quot;" />
 
     <ItemGroup>
       <FileWrites Include="$(RelaxVersionerResultPath)" />
+    </ItemGroup>
+
+    <_RVB_WriteTextToFile File="$(_RVB_PropertyCollectionModeMarkerPath)" Text="$(RelaxVersionerPropertyCollectionMode)" />
+    <ItemGroup>
+      <FileWrites Include="$(_RVB_PropertyCollectionModeMarkerPath)" />
     </ItemGroup>
   
   </Target>
@@ -320,7 +344,9 @@
       <_RVB_DumpBasePath>$(_RVB_PackWorkspacePath)</_RVB_DumpBasePath>
 
       <RelaxVersionerPropertiesPath>$([System.IO.Path]::Combine('$(_RVB_DumpBasePath)','RelaxVersioner_Properties.xml'))</RelaxVersionerPropertiesPath>
+      <RelaxVersionerGlobalPropertiesPath>$([System.IO.Path]::Combine('$(_RVB_DumpBasePath)','RelaxVersioner_GlobalProperties.xml'))</RelaxVersionerGlobalPropertiesPath>
       <RelaxVersionerResultPath>$([System.IO.Path]::Combine('$(_RVB_DumpBasePath)','RelaxVersioner_Result.xml'))</RelaxVersionerResultPath>
+      <_RVB_PropertyCollectionModeMarkerPath>$([System.IO.Path]::Combine('$(_RVB_DumpBasePath)','RelaxVersioner_PropertyCollection_$(RelaxVersionerPropertyCollectionMode).marker'))</_RVB_PropertyCollectionModeMarkerPath>
 
       <RelaxVersionerVersionPath>$([System.IO.Path]::Combine('$(_RVB_DumpBasePath)','RelaxVersioner_Version.txt'))</RelaxVersionerVersionPath>
       <RelaxVersionerShortVersionPath>$([System.IO.Path]::Combine('$(_RVB_DumpBasePath)','RelaxVersioner_ShortVersion.txt'))</RelaxVersionerShortVersionPath>
@@ -338,17 +364,38 @@
   <Target Name="RelaxVersionerPackCoreGenerate">
       
     <!-- Execute RelaxVersioner in dryrun mode -->
-    <DumpPropertiesTask OutputPath="$(RelaxVersionerPropertiesPath)" />
+    <Delete
+      Condition="'$(RelaxVersionerPropertyCollectionMode)' == 'Selective' AND Exists('$(RelaxVersionerPropertiesPath)')"
+      Files="$(RelaxVersionerPropertiesPath)" />
 
-    <ItemGroup>
+    <DumpPropertiesTask
+      Condition="'$(RelaxVersionerPropertyCollectionMode)' != 'Selective'"
+      OutputPath="$(RelaxVersionerPropertiesPath)" />
+
+    <ItemGroup Condition="'$(RelaxVersionerPropertyCollectionMode)' != 'Selective'">
       <FileWrites Include="$(RelaxVersionerPropertiesPath)" />
     </ItemGroup>
 
+    <_RVB_DumpGlobalProperties
+      Condition="'$(RelaxVersionerPropertyCollectionMode)' != 'Legacy'"
+      OutputPath="$(RelaxVersionerGlobalPropertiesPath)">
+      <Output TaskParameter="Available" PropertyName="_RVB_GlobalPropertiesAvailable" />
+    </_RVB_DumpGlobalProperties>
+
+    <ItemGroup Condition="'$(RelaxVersionerPropertyCollectionMode)' != 'Legacy'">
+      <FileWrites Include="$(RelaxVersionerGlobalPropertiesPath)" />
+    </ItemGroup>
+
     <Exec WorkingDirectory="$(RelaxVersionerToolingDir)"
-          Command="$(RelaxVersionerToolingRuntimeName)&quot;$(RelaxVersionerToolingPath)&quot; $(_RVB_LaunchDebuggerOption) $(_RVB_CheckWorkingDirectoryStatusOption) --quiet --buildIdentifier=&quot;$(RelaxVersionerBuildIdentifier)&quot; --namespace=&quot;$(RelaxVersionerNamespace)&quot; --tfm=&quot;$(_RVB_TargetFramework)&quot; --tfid=&quot;$(_RVB_TargetFrameworkIdentifier)&quot; --tfv=&quot;$(_RVB_TargetFrameworkVersion)&quot; --tfp=&quot;$(_RVB_TargetFrameworkProfile)&quot; --genStatic=&quot;$(RelaxVersionerGenerateStatic)&quot; --propertiesPath=&quot;$(RelaxVersionerPropertiesPath)&quot; --resultPath=&quot;$(RelaxVersionerResultPath)&quot; &quot;$(MSBuildProjectFullPath)&quot;" />
+          Command="$(RelaxVersionerToolingRuntimeName)&quot;$(RelaxVersionerToolingPath)&quot; $(_RVB_LaunchDebuggerOption) $(_RVB_CheckWorkingDirectoryStatusOption) --quiet --buildIdentifier=&quot;$(RelaxVersionerBuildIdentifier)&quot; --namespace=&quot;$(RelaxVersionerNamespace)&quot; --tfm=&quot;$(_RVB_TargetFramework)&quot; --tfid=&quot;$(_RVB_TargetFrameworkIdentifier)&quot; --tfv=&quot;$(_RVB_TargetFrameworkVersion)&quot; --tfp=&quot;$(_RVB_TargetFrameworkProfile)&quot; --genStatic=&quot;$(RelaxVersionerGenerateStatic)&quot; --propertiesPath=&quot;$(RelaxVersionerPropertiesPath)&quot; --globalPropertiesPath=&quot;$(RelaxVersionerGlobalPropertiesPath)&quot; --projectPath=&quot;$(MSBuildProjectFullPath)&quot; --propertyCollectionMode=&quot;$(RelaxVersionerPropertyCollectionMode)&quot; --propertyCollectionTarget=&quot;RelaxVersionerPackPrepare&quot; --msbuildRuntimeType=&quot;$(MSBuildRuntimeType)&quot; --msbuildBinPath=&quot;$(MSBuildBinPath)&quot; --resultPath=&quot;$(RelaxVersionerResultPath)&quot; &quot;$(MSBuildProjectFullPath)&quot;" />
 
     <ItemGroup>
       <FileWrites Include="$(RelaxVersionerResultPath)" />
+    </ItemGroup>
+
+    <_RVB_WriteTextToFile File="$(_RVB_PropertyCollectionModeMarkerPath)" Text="$(RelaxVersionerPropertyCollectionMode)" />
+    <ItemGroup>
+      <FileWrites Include="$(_RVB_PropertyCollectionModeMarkerPath)" />
     </ItemGroup>
 
   </Target>

@@ -356,6 +356,43 @@ RelaxVersionerは、ビルド後に、以下の位置にファイルを保存し
 MSBuildのカスタムスクリプトを書かなくても、このXMLファイルから情報を引き出すだけで、
 細かなニーズを満たせられるかもしれません。
 
+#### 注意: プロパティ情報収集の制約
+
+RelaxVersioner がプロパティ情報を収集する際は、互換性のない機能を使用してMSBuildから収集しています。
+そのため、将来に渡ってこの機能が使用できるかどうかは不透明です。
+
+そこで、バージョン3.22.0より、新方式のプロパティ参照を実装しています。
+残念ながらこの方式は、従来との互換性が一部失われています:
+
+* プロパティのXMLダンプ (`RelaxVersioner_Properties.xml`) は行われません。
+* 旧方式と同じプロパティが参照できない可能性があります。
+
+従って、この機能はオプトインで有効化出来るようになっています。
+時期は未定ですが、将来のリリースにおいて完全に置き換わる可能性があることに注意して下さい。
+
+新方式を有効化するには、MSBuildのプロパティ `RelaxVersionerPropertyCollectionMode` を明示的に指定して下さい:
+
+```xml
+<PropertyGroup>
+  <RelaxVersionerPropertyCollectionMode>Selective</RelaxVersionerPropertyCollectionMode>
+</PropertyGroup>
+```
+
+CLI では次のように指定できます:
+
+```bash
+rv --propertyCollectionMode=Selective ...
+```
+
+指定可能な値は次の通りです:
+
+* `Legacy` : 現在の既定動作です。従来の XML ダンプ実装を使用し、`RelaxVersioner_Properties.xml` を出力します。
+* `Compare` : 移行用プレビュー動作です。実際のフォーマットには従来の XML ダンプを使い続けますが、同時に新方式によるプロパティ参照も実行し、参照キーの値が異なる場合に warning を出します。
+* `Selective` : プレビュー動作です。ルールやフォーマットで実際に参照しているプロパティ名を先に列挙し、そのキーだけを一般的な MSBuild 取得経路で収集します。このモードでは `RelaxVersioner_Properties.xml` は出力されません。
+
+旧方式で取得できているプロパティ値が、新方式でも同様に取得できるかどうかは、 `Compare` モードを使用することで確認できます。
+問題が発生しないことを確認できれば、 `Selective` モードに設定することで、新方式への移行を確定させることができます。
+
 ### SourceLinkに対応させる方法
 
 [Sourcelink](https://github.com/dotnet/sourcelink) は、

@@ -9,6 +9,7 @@
 
 using System;
 using System.Diagnostics;
+using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices;
 using System.Threading.Tasks;
@@ -58,6 +59,19 @@ public static class Program
                 { "genStatic=", $"generate static informations", v => context.GenerateStatic = bool.TryParse(v, out var genStatic) ? genStatic : true },
                 { "buildIdentifier=", $"build identifier", v => context.BuildIdentifier = v },
                 { "propertiesPath=", $"properties file", v => context.PropertiesPath = v },
+                { "globalPropertiesPath=", "global properties file", v => context.GlobalPropertiesPath = v },
+                { "projectPath=", "MSBuild project file path", v => context.ProjectPath = v },
+                { "propertyCollectionMode=", "property collection mode [Legacy|Selective|Compare]", v =>
+                    {
+                        if (Enum.TryParse<PropertyCollectionMode>(v, true, out var mode))
+                        {
+                            context.PropertyCollectionMode = mode;
+                        }
+                    }
+                },
+                { "propertyCollectionTarget=", "property collection target name", v => context.PropertyCollectionTargetName = v },
+                { "msbuildRuntimeType=", "MSBuild runtime type", v => context.MsBuildRuntimeType = v },
+                { "msbuildBinPath=", "MSBuild bin path", v => context.MsBuildBinPath = v },
                 { "o|outputPath=", $"output source file", v => context.OutputPath = v },
                 { "resultPath=", $"output result via xml file", v => resultPath = v },
                 { "f|format=", $"set text format", v => context.TextFormat = v },
@@ -131,6 +145,18 @@ public static class Program
             }
 
             context.ProjectDirectory = trails[0];
+            if (string.IsNullOrWhiteSpace(context.ProjectPath) &&
+                File.Exists(context.ProjectDirectory))
+            {
+                context.ProjectPath = Path.GetFullPath(context.ProjectDirectory);
+            }
+
+            if ((context.PropertyCollectionMode != PropertyCollectionMode.Legacy) &&
+                string.Equals(context.Language, "Replace", StringComparison.Ordinal) &&
+                string.IsNullOrWhiteSpace(context.ReplaceInputPath))
+            {
+                context.ReplaceInputText = await Console.In.ReadToEndAsync();
+            }
 
             var result = await processor.RunAsync(context, default);
 

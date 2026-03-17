@@ -13,6 +13,7 @@ using System.Diagnostics;
 using System.Globalization;
 using System.IO;
 using System.Linq;
+using System.Threading;
 using System.Text;
 using System.Threading.Tasks;
 using System.Xml.Linq;
@@ -29,6 +30,53 @@ internal static class Utilities
         { Path.DirectorySeparatorChar, Path.AltDirectorySeparatorChar };
         
     public static readonly Encoding UTF8 = new UTF8Encoding(false);
+
+    public static string NormalizeCandidateDirectoryPath(string candidatePath)
+    {
+        if (candidatePath == null)
+            throw new ArgumentNullException(nameof(candidatePath));
+
+        var fullPath = Path.GetFullPath(candidatePath).
+            TrimEnd(directorySeparatorChar_);
+
+        return File.Exists(fullPath) ?
+            Path.GetDirectoryName(fullPath)! :
+            fullPath;
+    }
+
+    public static string? ResolveProjectPath(string candidatePath)
+    {
+        if (candidatePath == null)
+            throw new ArgumentNullException(nameof(candidatePath));
+
+        var fullPath = Path.GetFullPath(candidatePath);
+        if (File.Exists(fullPath))
+        {
+            return fullPath;
+        }
+
+        var directoryPath = NormalizeCandidateDirectoryPath(candidatePath);
+        if (!Directory.Exists(directoryPath))
+        {
+            return null;
+        }
+
+        return new[]
+            {
+                "*.csproj",
+                "*.fsproj",
+                "*.vbproj",
+                "*.vcxproj",
+                "*.shproj",
+                "*.proj",
+            }.
+            SelectMany(pattern => Directory.EnumerateFiles(
+                directoryPath,
+                pattern,
+                SearchOption.TopDirectoryOnly)).
+            Distinct(StringComparer.OrdinalIgnoreCase).
+            SingleOrDefault();
+    }
 
     [DebuggerStepThrough]
     public static async Task<(T0 v0, T1 v1)> Join<T0, T1>(
@@ -58,8 +106,7 @@ internal static class Utilities
         string candidatePath, Func<string, Task<T?>> action)
         where T : class
     {
-        var path = Path.GetFullPath(candidatePath).
-            TrimEnd(directorySeparatorChar_);
+        var path = NormalizeCandidateDirectoryPath(candidatePath);
 
         while (true)
         {
@@ -155,10 +202,10 @@ internal static class Utilities
 
     public static IEnumerable<XElement> LoadRuleSets(string candidatePath)
     {
-        Debug.Assert(candidatePath != null);
+        if (candidatePath == null)
+            throw new ArgumentNullException(nameof(candidatePath));
 
-        var path = Path.GetFullPath(candidatePath).
-            TrimEnd(directorySeparatorChar_);
+        var path = NormalizeCandidateDirectoryPath(candidatePath);
 
         while (true)
         {
@@ -283,4 +330,57 @@ internal static class Utilities
 
     public static string TrimUnusableCharacters(string str) =>
         str.Trim(' ', '\t', '\r', '\n', '\0');
+
+    public static (string FileName, string ArgumentsPrefix) ResolveMsBuildInvocation(
+        string? runtimeType,
+        string? msbuildBinPath)
+    {
+        switch (runtimeType)
+        {
+            case "Core":
+                return ("dotnet", "msbuild ");
+            case "Full":
+                var executablePath = string.IsNullOrWhiteSpace(msbuildBinPath) ?
+                    "MSBuild.exe" :
+                    Path.Combine(msbuildBinPath, "MSBuild.exe");
+                return (executablePath, string.Empty);
+            case "Mono":
+                return ("msbuild", string.Empty);
+            default:
+                return ("dotnet", "msbuild ");
+        }
+    }
+
+    public static async Task<(int ExitCode, string StandardOutput, string StandardError)> RunProcessAsync(
+        string fileName,
+        string workingDirectory,
+        string arguments,
+        CancellationToken ct)
+    {
+        using var process = new Process
+        {
+            StartInfo = new ProcessStartInfo
+            {
+                FileName = fileName,
+                Arguments = arguments,
+                WorkingDirectory = workingDirectory,
+                UseShellExecute = false,
+                RedirectStandardOutput = true,
+                RedirectStandardError = true,
+                CreateNoWindow = true,
+            }
+        };
+
+        process.Start();
+
+        var standardOutputTask = process.StandardOutput.ReadToEndAsync();
+        var standardErrorTask = process.StandardError.ReadToEndAsync();
+
+        await Task.Run(() => process.WaitForExit(), ct);
+
+        var standardOutput = await standardOutputTask;
+        var standardError = await standardErrorTask;
+
+        return (process.ExitCode, standardOutput, standardError);
+    }
 }

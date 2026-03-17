@@ -348,6 +348,43 @@ Especially during pack, prefer these properties over hard-coding file paths:
 
 `RelaxVersioner_Properties.xml` contains a lot of very useful information, and you may be able to pull information from this XML file to meet your specific needs without having to write custom MSBuild scripts.
 
+#### NOTE: Limitation for Properties aggregation
+
+RelaxVersioner has been collecting properties from MSBuild by using a non-compatible technique.
+Because of that, there is no guarantee that this mechanism will remain available in the future.
+
+To address this, RelaxVersioner 3.22.0 introduces a new property aggregation path.
+Unfortunately, this new path is not perfectly compatible with the legacy behavior:
+
+* The XML property dump (`RelaxVersioner_Properties.xml`) is not generated.
+* The exact same set of properties may not be available as before.
+
+For that reason, this feature is currently opt-in.
+The timing is not fixed yet, but please note that a future release may replace the legacy mechanism completely.
+
+To enable the new path, explicitly set the MSBuild property `RelaxVersionerPropertyCollectionMode`:
+
+```xml
+<PropertyGroup>
+  <RelaxVersionerPropertyCollectionMode>Selective</RelaxVersionerPropertyCollectionMode>
+</PropertyGroup>
+```
+
+Or from the CLI:
+
+```bash
+rv --propertyCollectionMode=Selective ...
+```
+
+The available values are:
+
+* `Legacy` : The current default behavior. RelaxVersioner uses the existing XML dump implementation and writes `RelaxVersioner_Properties.xml`.
+* `Compare` : A migration preview mode. RelaxVersioner still formats using the legacy XML dump, but also resolves properties through the new path and emits warnings when the requested keys produce different values.
+* `Selective` : A preview mode. RelaxVersioner first enumerates the placeholders that are actually referenced by rules or formats, then collects only those keys through a supported MSBuild entry point. In this mode `RelaxVersioner_Properties.xml` is not generated.
+
+You can use `Compare` mode to verify whether the property values that are available in the legacy implementation are also resolved in the new implementation.
+Once you have confirmed that no problem occurs, switch to `Selective` mode to complete the migration to the new path.
+
 ### SourceLink integration
 
 [Sourcelink](https://github.com/dotnet/sourcelink) is a cool stuff debugger integration package for showing source code on-the-fly downloading from Git source code repository. 
