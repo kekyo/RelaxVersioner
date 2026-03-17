@@ -14,7 +14,6 @@ using System.IO;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
-using System.Xml.Linq;
 
 using GitReader;
 using GitReader.IO;
@@ -88,12 +87,7 @@ public sealed class Processor
         var versionLabelTask = repository is { } r4 ?
             Analyzer.LookupVersionLabelAsync(r4, context.CheckWorkingDirectoryStatus, ct) :
             Task.FromResult(Version.Default);
-        var keyValues =
-            (!string.IsNullOrWhiteSpace(context.PropertiesPath) && File.Exists(context.PropertiesPath)) ?
-                 XDocument.Load(context.PropertiesPath!).
-                 Root!.Elements().
-                 ToDictionary(e => e.Name.LocalName, e => (object?)e.Value) :
-                 new Dictionary<string, object?>();
+        var keyValues = await PropertyCollector.LoadAsync(logger, context, ct);
 
         var versionLabel = await versionLabelTask;
 

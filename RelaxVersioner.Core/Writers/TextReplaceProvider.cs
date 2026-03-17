@@ -60,9 +60,11 @@ internal sealed class TextReplaceProvider : WriteProviderBase
                 context.OutputPath,
                 stream =>
                 {
-                    using var tr = context.ReplaceInputPath is { } rip ?
-                        new StreamReader(rip, Utilities.UTF8, true) :
-                        Console.In;
+                    using var tr = context.ReplaceInputText is { } bufferedInput ?
+                        new StringReader(bufferedInput) :
+                        context.ReplaceInputPath is { } rip ?
+                            new StreamReader(rip, Utilities.UTF8, true) :
+                            Console.In;
                     var tw = new StreamWriter(stream, Utilities.UTF8);
 
                     Replace(tr, tw);
@@ -75,9 +77,11 @@ internal sealed class TextReplaceProvider : WriteProviderBase
                 return;
             }
 
-            using var tr = context.ReplaceInputPath is { } rip ?
-                new StreamReader(rip, Utilities.UTF8, true) :
-                Console.In;
+            using var tr = context.ReplaceInputText is { } bufferedInput ?
+                new StringReader(bufferedInput) :
+                context.ReplaceInputPath is { } rip ?
+                    new StreamReader(rip, Utilities.UTF8, true) :
+                    Console.In;
             Replace(tr, Console.Out);
         }
     }

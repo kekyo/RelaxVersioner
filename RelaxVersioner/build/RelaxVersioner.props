@@ -127,4 +127,65 @@
     </Task>
   </UsingTask>
 
+  <UsingTask
+    TaskName="_RVB_DumpGlobalProperties"
+    TaskFactory="$(_RVB_TaskFactory)"
+    AssemblyFile="$(MSBuildToolsPath)\Microsoft.Build.Tasks.Core.dll" >
+    <ParameterGroup>
+      <OutputPath ParameterType="Microsoft.Build.Framework.ITaskItem" Required="true" />
+      <Available Output="true" ParameterType="System.Boolean" />
+    </ParameterGroup>
+    <Task>
+      <Using Namespace="System"/>
+      <Using Namespace="System.Collections"/>
+      <Using Namespace="System.IO"/>
+      <Using Namespace="System.Text"/>
+      <Using Namespace="System.Xml.Linq"/>
+      <Using Namespace="Microsoft.Build.Framework"/>
+      <Code Type="Fragment" Language="cs">
+<![CDATA[
+        string path = Path.GetFullPath(OutputPath.ItemSpec);
+        string directoryPath = Path.GetDirectoryName(path);
+        if (!Directory.Exists(directoryPath))
+        {
+            Directory.CreateDirectory(directoryPath);
+        }
+
+        var root = new XElement("Properties");
+        Available = false;
+
+        object engine = BuildEngine;
+        Type interfaceType = engine?.GetType().GetInterface("Microsoft.Build.Framework.IBuildEngine6");
+        var method = interfaceType?.GetMethod("GetGlobalProperties", Type.EmptyTypes);
+        object result = method?.Invoke(engine, null);
+        if (result is IEnumerable entries)
+        {
+            foreach (object entry in entries)
+            {
+                Type entryType = entry?.GetType();
+                string key = entryType?.GetProperty("Key")?.GetValue(entry, null)?.ToString();
+                if (string.IsNullOrWhiteSpace(key))
+                {
+                    continue;
+                }
+
+                string value = entryType?.GetProperty("Value")?.GetValue(entry, null)?.ToString() ?? string.Empty;
+                root.Add(new XElement("Property", new XAttribute("Name", key), value));
+            }
+
+            Available = true;
+        }
+
+        var document = new XDocument(root);
+        using (Stream fs = new FileStream(path, FileMode.Create, FileAccess.ReadWrite, FileShare.Read))
+        {
+            TextWriter tw = new StreamWriter(fs, new UTF8Encoding(false));
+            document.Save(tw);
+            tw.Flush();
+        }
+]]>
+      </Code>
+    </Task>
+  </UsingTask>
+
 </Project>

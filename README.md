@@ -312,10 +312,10 @@ RelaxVersioner saves the files in the following location after build:
 
 To be precise:
 
-* `$(IntermediateOutputPath)` at build time.
-* `$(NuspecOutputPath)` at NuGet package generation.
+* `$(IntermediateOutputPath)` for normal builds.
+* A request-scoped internal workspace under the intermediate output root during NuGet pack. The exact path is internal and should not be treated as stable.
 
-For example, `FooBarProject/obj/Debug/net6.0/` directory hierarchy. Here are the files to save:
+For normal builds, this is typically a directory hierarchy such as `FooBarProject/obj/Debug/net6.0/`. Here are the files to save:
 
 * `RelaxVersioner_Metadata.cs` : Source code including version attributes and `ThisAssembly` class definition, which is the core feature of RelaxVersioner.
 * `RelaxVersioner_Properties.xml` : A dump of all MSBuild properties in XML format, just before RelaxVersioner calculates the version.
@@ -328,7 +328,8 @@ For example, `FooBarProject/obj/Debug/net6.0/` directory hierarchy. Here are the
 
 If you want to reference this information from your program, you can get it from the version attributes or `ThisAssembly`. Other, XML or text files can be referenced by CI/CD (Continuous Integration and Continuous Deployment) to apply version information to the build process. For example, `RelaxVersioner_ShortVersion.txt` contains a string like `2.5.4`, so you may be able to save your build artifacts with a version number when you upload them to the server.
 
-If you want to reference this information from within the MSBuild target, you can use the properties as follows without having to access the text file:
+If you want to reference this information from within the MSBuild target, you can use the properties as follows without having to access the text file.
+Especially during pack, prefer these properties over hard-coding file paths:
 
 ```xml
   <Target Name="AB" AfterTargets="Compile">
@@ -346,6 +347,43 @@ If you want to reference this information from within the MSBuild target, you ca
 ```
 
 `RelaxVersioner_Properties.xml` contains a lot of very useful information, and you may be able to pull information from this XML file to meet your specific needs without having to write custom MSBuild scripts.
+
+#### NOTE: Limitation for Properties aggregation
+
+RelaxVersioner has been collecting properties from MSBuild by using a non-compatible technique.
+Because of that, there is no guarantee that this mechanism will remain available in the future.
+
+To address this, RelaxVersioner 3.22.0 introduces a new property aggregation path.
+Unfortunately, this new path is not perfectly compatible with the legacy behavior:
+
+* The XML property dump (`RelaxVersioner_Properties.xml`) is not generated.
+* The exact same set of properties may not be available as before.
+
+For that reason, this feature is currently opt-in.
+The timing is not fixed yet, but please note that a future release may replace the legacy mechanism completely.
+
+To enable the new path, explicitly set the MSBuild property `RelaxVersionerPropertyCollectionMode`:
+
+```xml
+<PropertyGroup>
+  <RelaxVersionerPropertyCollectionMode>Selective</RelaxVersionerPropertyCollectionMode>
+</PropertyGroup>
+```
+
+Or from the CLI:
+
+```bash
+rv --propertyCollectionMode=Selective ...
+```
+
+The available values are:
+
+* `Legacy` : The current default behavior. RelaxVersioner uses the existing XML dump implementation and writes `RelaxVersioner_Properties.xml`.
+* `Compare` : A migration preview mode. RelaxVersioner still formats using the legacy XML dump, but also resolves properties through the new path and emits warnings when the requested keys produce different values.
+* `Selective` : A preview mode. RelaxVersioner first enumerates the placeholders that are actually referenced by rules or formats, then collects only those keys through a supported MSBuild entry point. In this mode `RelaxVersioner_Properties.xml` is not generated.
+
+You can use `Compare` mode to verify whether the property values that are available in the legacy implementation are also resolved in the new implementation.
+Once you have confirmed that no problem occurs, switch to `Selective` mode to complete the migration to the new path.
 
 ### SourceLink integration
 
@@ -535,6 +573,11 @@ When you are using a nuspec file to generate a NuGet package, there are addition
 
 ## History
 
+* 3.22.0:
+  * Fixed an issue where parallel builds sometimes failed during package builds (#28)
+  * Implemented a new property collection mode.
+    Since the previous method may fail when the .NET version is upgraded, it will eventually be deprecated and fully phased out.
+    For details, see `RelaxVersionerPropertyCollectionMode`.
 * 3.21.0:
   * It worked fine with .NET 9 fallback even in 3.20.0, but now officially supports .NET 10.
 * 3.20.0:
