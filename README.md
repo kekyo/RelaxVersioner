@@ -573,6 +573,11 @@ When you are using a nuspec file to generate a NuGet package, there are addition
 
 ## History
 
+* 3.22.0:
+  * Fixed an issue where parallel builds sometimes failed during package builds (#28)
+  * Implemented a new property collection mode.
+    Since the previous method may fail when the .NET version is upgraded, it will eventually be deprecated and fully phased out.
+    For details, see `RelaxVersionerPropertyCollectionMode`.
 * 3.21.0:
   * It worked fine with .NET 9 fallback even in 3.20.0, but now officially supports .NET 10.
 * 3.20.0:
