@@ -12,12 +12,12 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="GitReader" Version="1.16.0" />
+    <PackageReference Include="GitReader" Version="1.17.0" />
     <PackageReference Include="NamingFormatter" Version="2.5.0" />
     <PackageReference Include="Newtonsoft.Json" Version="13.0.4" />
     <PackageReference Include="Microsoft.NETFramework.ReferenceAssemblies" Version="1.0.3" PrivateAssets="All" />
     <PackageReference Condition="'$(RV_BOOTSTRAP)' != 'True'"
-                      Include="RelaxVersioner" Version="3.21.0" PrivateAssets="all" />
+                      Include="RelaxVersioner" Version="3.22.0" PrivateAssets="all" />
   </ItemGroup>
 
   <ItemGroup>
