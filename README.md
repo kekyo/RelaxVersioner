@@ -573,6 +573,8 @@ When you are using a nuspec file to generate a NuGet package, there are addition
 
 ## History
 
+* 3.24.0:
+  * Updated GitReader to 1.18.0.
 * 3.23.0:
   * Updated GitReader to 1.17.0.
 * 3.22.0:

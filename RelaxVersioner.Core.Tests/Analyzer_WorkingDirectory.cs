@@ -185,4 +185,59 @@ public sealed class Analyzer_WorkingDirectory
             }
         }
     }
-} 
+
+    [Test]
+    public async Task LookupVersionLabelWithCleanSubmodule()
+    {
+        var tempPath = Path.Combine(Path.GetTempPath(), $"RelaxVersionerTest_{System.Guid.NewGuid():N}");
+        var childRepositoryPath = Path.Combine(tempPath, "child");
+        var parentRepositoryPath = Path.Combine(tempPath, "parent");
+
+        try
+        {
+            Directory.CreateDirectory(childRepositoryPath);
+            await TestUtilities.InitializeGitRepositoryWithMainBranch(childRepositoryPath);
+            await TestUtilities.RunGitCommandAsync(childRepositoryPath, "config user.email \"test@example.com\"");
+            await TestUtilities.RunGitCommandAsync(childRepositoryPath, "config user.name \"Test User\"");
+
+            File.WriteAllText(Path.Combine(childRepositoryPath, "child.txt"), "child content");
+            await TestUtilities.RunGitCommandAsync(childRepositoryPath, "add child.txt");
+            await TestUtilities.RunGitCommandAsync(childRepositoryPath, "commit -m \"Initial child commit\"");
+
+            Directory.CreateDirectory(parentRepositoryPath);
+            await TestUtilities.InitializeGitRepositoryWithMainBranch(parentRepositoryPath);
+            await TestUtilities.RunGitCommandAsync(parentRepositoryPath, "config user.email \"test@example.com\"");
+            await TestUtilities.RunGitCommandAsync(parentRepositoryPath, "config user.name \"Test User\"");
+
+            File.WriteAllText(Path.Combine(parentRepositoryPath, "parent.txt"), "parent content");
+            await TestUtilities.RunGitCommandAsync(parentRepositoryPath, "add parent.txt");
+            await TestUtilities.RunGitCommandAsync(parentRepositoryPath, "commit -m \"Initial parent commit\"");
+
+            await TestUtilities.RunGitCommandAsync(
+                parentRepositoryPath,
+                $"-c protocol.file.allow=always submodule add \"{childRepositoryPath}\" modules/child");
+            await TestUtilities.RunGitCommandAsync(parentRepositoryPath, "commit -m \"Add child submodule\"");
+            await TestUtilities.RunGitCommandAsync(parentRepositoryPath, "tag v1.2.3");
+
+            using (var repository = await Repository.Factory.OpenPrimitiveAsync(parentRepositoryPath))
+            {
+                var version = await Analyzer.LookupVersionLabelAsync(repository, true, default);
+                Assert.That(version.ToString(), Is.EqualTo("1.2.3"));
+            }
+        }
+        finally
+        {
+            if (Directory.Exists(tempPath))
+            {
+                try
+                {
+                    Directory.Delete(tempPath, true);
+                }
+                catch
+                {
+                    // Ignore cleanup errors
+                }
+            }
+        }
+    }
+}
